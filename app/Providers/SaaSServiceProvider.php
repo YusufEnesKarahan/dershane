@@ -47,5 +47,17 @@ class SaaSServiceProvider extends ServiceProvider
         Blade::directive('themeStyles', function (): string {
             return "<?php echo '<style>' . app('saas.theme')->renderCssVariables() . '</style>'; ?>";
         });
+
+        // Register Blade directive for Dynamic SEO Tags
+        Blade::directive('seo', function (string $expression): string {
+            $expression = $expression ?: '[]';
+            return "<?php echo app('saas.theme')->renderSeoTags({$expression}); ?>";
+        });
+
+        // Register Blade directive for Breadcrumbs rendering
+        Blade::directive('breadcrumbs', function (string $expression): string {
+            return "<?php echo view('components.breadcrumb', ['items' => {$expression}])->render(); ?>";
+        });
     }
 }
+
