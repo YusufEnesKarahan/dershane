@@ -1,22 +1,29 @@
 # Coding Standards (Kodlama Standartları)
 
-Bu doküman, projede yazılan tüm kodların tutarlılığını ve kalitesini güvence altına almak için uyulması gereken standartları detaylandırır.
+Bu doküman, SaaS projesinde yazılan kodların kalitesini ve sürdürülebilirliğini korumak amacıyla genişletilmiştir.
 
-## 1. PHP Standartları
-- **Strict Types:** Tüm PHP dosyaları kesinlikle `declare(strict_types=1);` ile başlamalıdır.
-- **Tip Belirtimi (Type Hinting):** Metot parametreleri ve dönüş değerleri (return types) kesinlikle tip belirtilerek yazılmalıdır. Nullable değerler için uygun `?type` veya `type|null` yapıları kullanılmalıdır.
-- **PHP 8.4 Özellikleri:** PHP 8.4 ile gelen yeni sözdizimi özellikleri (Property Promotion, Constructor Property Promotion, Match ifadeleri vb.) aktif olarak kullanılmalıdır.
+## 1. Tip Güvenliği (Type Safety) ve Enums
+- **Enums Kullanımı:** Durumlar (status), tipler (types), roller (roles), para birimleri (currencies) ve diller (languages) gibi sabit listeler için kesinlikle `App\Core\Enums` altındaki PHP 8.4 uyumlu backing enum'lar kullanılacaktır. Kod tabanında kesinlikle magic string veya magic integer kullanılmayacaktır.
+  - *Doğru:* `UserType::ADMIN->value`
+  - *Yanlış:* `'admin'`
+- **Strict Types:** Tüm PHP dosyalarının ilk satırı `declare(strict_types=1);` olmak zorundadır.
 
-## 2. İsimlendirme Felsefesi
-- **Anlamlı İsimlendirme:** Kod içerisinde satır içi açıklayıcı yorumlar yazmak yerine, değişken, metot ve sınıf isimleri işlevini tam olarak belirtecek şekilde seçilmelidir (Self-documenting code).
-  - *Kötü:* `public function calc($d); // indirim hesaplar`
-  - *İyi:* `public function calculateDiscountedPrice(float $originalPrice): float;`
-- **Kısaltmalardan Kaçınma:** Anlaşılmayı zorlaştıran kısaltmalar yerine kelimelerin tam halleri tercih edilmelidir.
+## 2. Veri Taşıma Nesneleri (DTOs)
+- Kontrolcülerden (Controllers) servislere veya katmanlar arasına veri taşınırken diziler yerine `App\Core\DTO` altındaki tip güvenli DTO'lar kullanılacaktır.
+- Tüm DTO'lar `BaseDTO`'yu kalıtım almalı ve constructor property promotion özelliğiyle yazılmalıdır:
+  ```php
+  class PaginationDTO extends BaseDTO {
+      public function __construct(
+          public int $page = 1,
+          public int $perPage = 15,
+      ) {}
+  }
+  ```
 
-## 3. Kod Biçimlendirme ve Araçlar
-- **Laravel Pint:** Kod tabanındaki tüm dosyalar Laravel Pint standartlarına (default Laravel preset) göre biçimlendirilmelidir.
-- **PHPStan Seviyesi:** Statik analizde Seviye 8 hedeflenmeli, tip uyumsuzlukları ve potansiyel hatalar geliştirme aşamasında çözülmelidir.
+## 3. Tek Sorumluluk Prensipli Eylemler (Actions)
+- İş mantığını (business logic) bölmek için `App\Actions` altındaki single-action sınıflar kullanılacaktır.
+- Her action sınıfı `BaseAction` sınıfından türetilmeli ve tek bir `execute()` metodu barındırmalıdır. Bu sayede kodun test edilebilirliği ve tekrar kullanılabilirliği maksimuma çıkarılır.
 
-## 4. Blade & CSS Standartları
-- **Blade Dosyaları:** HTML elemanları hiyerarşik ve düzgün girintilenmiş olmalıdır. Blade direktifleri (`@if`, `@foreach`, `@extends`) standart şekilde kullanılmalıdır.
-- **Tailwind CSS:** Dynamic CSS class'ları oluştururken Tailwind sınıfları doğrudan yazılmalıdır. Mümkün olduğunca `@apply` kullanımından kaçınılmalı, tasarım sistemi CSS değişkenleri üzerinden yönetilmelidir.
+## 4. Kod Biçimlendirme (Formatting)
+- **Laravel Pint:** Geliştiriciler kodlarını commitlemeden önce mutlaka `php vendor/bin/pint` komutu ile biçimlendirmelidir.
+- **PHPStan:** Yapılan geliştirmelerin PHPStan Seviye 8 statik analiz kurallarına tam uyum göstermesi zorunludur.

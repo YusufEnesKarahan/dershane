@@ -1,54 +1,45 @@
 # Folder Structure (Klasör Yapısı)
 
-Proje, gelecekte büyüyebilecek, karmaşıklığı azaltacak ve ekip çalışmasına uygun **Feature-First** ve **Domain-Driven** odaklı bir klasör yapısını benimsemektedir.
+ hard hardening sprinti sonrasında projenin güncel klasör yapısı ve hiyerarşisi aşağıdaki şekildedir:
 
 ```text
 ├── app/
-│   ├── Core/                   # Ortak ve paylaşılan çekirdek bileşenler
-│   │   ├── Contracts/          # Ortak arayüzler (Interfaces)
-│   │   ├── Services/           # Genel ve entegrasyon servisleri
-│   │   ├── Traits/             # Yeniden kullanılabilir PHP Trait'leri
-│   │   ├── Helpers/            # Yardımcı sınıflar ve fonksiyonlar
-│   │   ├── Enums/              # Sabit değer grupları (Enums)
-│   │   ├── Exceptions/         # Özel hata sınıfları (Custom Exceptions)
-│   │   ├── DTO/                # Veri Transfer Nesneleri (Data Transfer Objects)
-│   │   └── Support/            # Yardımcı diğer destek sınıfları
+│   ├── Actions/                # Tek sorumluluğu olan iş kuralları (Create, Update, Delete, Restore, Archive)
+│   ├── ViewModels/             # View katmanına veri taşıyan sınıflar (Frontend, Admin, Shared)
+│   ├── Domains/                # İş odaklı alt domain'ler
+│   │   ├── CMS/                # İçerik yönetim alanı
+│   │   ├── CRM/                # Müşteri ve aday öğrenci alanı
+│   │   ├── ERP/                # Finans, kurum işleri alanı
+│   │   ├── Education/          # Dershane/Eğitim süreçleri alanı
+│   │   ├── Core/               # Çekirdek iş mantığı
+│   │   └── Shared/             # Paylaşılan ortak domain servisleri
 │   │
-│   ├── Features/               # Uygulamanın uç noktaları ve özellik odaklı iş mantığı (Controllers vb.)
-│   ├── Domains/                # İş kuralları ve veritabanı dışı iş mantığı alanları
-│   ├── Actions/                # Tek bir işi gerçekleştiren sınıflar (Single Action Controllers / Services)
-│   ├── ViewModels/             # Görünüm katmanına veri hazırlayan ara sınıflar
-│   ├── Policies/               # Yetkilendirme sınıfları
-│   └── Repositories/           # Veri erişim soyutlama katmanı (Data Access Layer)
+│   ├── Core/                   # Çekirdek mimari yapısı
+│   │   ├── Base/               # Ortak taban sınıflar (BaseService, BaseRepository, BaseAction vb.)
+│   │   ├── DTO/                # Veri taşıma nesneleri (Pagination, Response, Filter, Search DTO'ları)
+│   │   ├── Enums/              # Tip güvenli PHP Enums (Version, Feature, Status, User, Gender, Language, Currency)
+│   │   ├── Exceptions/         # Özel hata tanımları (FeatureDisabled, ModuleNotFound, Theme, Validation)
+│   │   ├── Helpers/            # Küresel fonksiyonlar (Helpers.php)
+│   │   ├── Support/            # Özel Laravel koleksiyonları (Feature, Module, Menu, Theme Koleksiyonları)
+│   │   └── Services/           # Çekirdek servisler (FeatureManager, ThemeManager, SettingsManager, BrandManager)
+│   │
+│   ├── Providers/              # Servis sağlayıcılar (Repository, Feature, Theme, Settings, Domain)
+│   └── Http/                   # İstek ve Middleware katmanları
 │
-├── config/                     # Konfigürasyon dosyaları (Brand, Features, Settings vb.)
+├── config/                     # Konfigürasyon dosyaları (Brand, Features, Settings, Theme, Modules, Permissions, Roles, Menus, Media)
 │
-├── docs/                       # Proje teknik ve mimari dokümantasyonu
-│   ├── architecture/           # Genel mimari kararları
-│   ├── frontend/               # Arayüz mimarisi ve standartları
-│   ├── backend/                # Arka plan servisleri ve API'ler
-│   ├── database/               # Veri modelleri, indeksleme ve veritabanı kuralları
-│   ├── deployment/             # CI/CD, sunucu kurulum ve canlıya alma
-│   ├── coding/                 # Kod yazım kuralları detayları
-│   ├── branding/               # White label ve kurumsal kimlik yönetimi
-│   ├── features/               # Modüller ve yetenek listeleri
-│   ├── modules/                # Büyük ölçekli modüler yapı tasarımları
-│   └── versioning/             # Paket versiyon stratejileri (V1, V2, V3)
+├── routes/                     # Decoupled (Ayrıştırılmış) rota yönetimi
+│   ├── web.php                 # Ana web giriş kapısı (Sadece alt dosyaları include eder)
+│   ├── frontend.php            # Sürüm 1 Kurumsal site rotaları
+│   ├── admin.php               # Sürüm 2 & Sürüm 3 yönetim ve ERP rotaları
+│   ├── auth.php                # Kimlik doğrulama rotaları
+│   └── api.php                 # API uç noktaları rotaları
 │
-├── resources/                  # Frontend kaynakları
-│   ├── views/                  # Blade şablonları
-│   │   ├── frontend/           # Kurumsal web sitesi sayfaları (V1)
-│   │   ├── admin/              # Yönetici paneli sayfaları (V2 & V3)
-│   │   ├── components/         # Yeniden kullanılabilir Blade bileşenleri
-│   │   ├── layouts/            # Ana sayfa şablonları (frontend, admin, auth, guest)
-│   │   └── errors/             # Hata sayfaları (404, 500 vb.)
-│   ├── css/                    # Tailwind CSS dosyaları
-│   └── js/                     # JavaScript ve AlpineJS kodları
-│
-└── routes/                     # Web ve API yönlendirme tanımları
+└── docs/                       # Alt başlıklar altında dokümantasyon klasörü
 ```
 
-## Yapısal Prensipler
-1. **Dikey Bölümleme (Vertical Slicing):** Bir özellik eklenirken tüm katmanları (`Action`, `Repository`, `ViewModel`, `View`) birbirine sıkı sıkıya bağlı olmadan ilgili feature klasörü veya katmanı bazında yönetilir.
-2. **Core Bağımsızlığı:** `Core` klasöründeki kodlar spesifik iş kurallarından arındırılmış olmalıdır. İş kuralları `Domains` ve `Features` altında çözülür.
-3. **Whitelabel Hazırlığı:** `resources/views/layouts` ve `config/brand.php` dosyaları, gelecekteki çoklu marka (White-Label) ve tema özelleştirmelerine uyumlu şekilde yapılandırılmıştır.
+## Dizinlerin Sorumlulukları
+1. **`app/Core/Base/`**: Tüm alt sınıflar için taban mimariyi oluşturur. Projedeki tüm Action'lar `BaseAction`'ı, tüm DTO'lar `BaseDTO`'yu kalıtım alarak ortak kod tekrarını önler.
+2. **`app/Core/Enums/`**: PHP 8.4'ün desteklediği tip güvenli backing enum'lar (`string`) burada tutulur. Bu sayede sihirli kelimeler (magic strings) yerine kontrollü sabitler kullanılır.
+3. **`app/Core/DTO/`**: İstek verilerinin doğrulanıp/filtrelenip servisler arasında güvenle dolaşmasını sağlayan nesnelerdir.
+4. **`routes/`**: Rota karmaşıklığını önlemek için rotalar web.php içinden çıkartılıp işlevlerine göre ayrı dosyalara taşınmıştır.

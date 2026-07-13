@@ -27,7 +27,7 @@ class SaaSServiceProvider extends ServiceProvider
         });
 
         // Load helpers dynamically if helper file exists
-        $helperPath = app_path('Core/Helpers/helpers.php');
+        $helperPath = app_path('Core/Helpers/Helpers.php');
         if (file_exists($helperPath)) {
             require_once $helperPath;
         }
