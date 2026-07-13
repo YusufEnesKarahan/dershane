@@ -19,87 +19,87 @@ Route::name('frontend.')->group(function () {
     // Kurumsal Alt Sayfaları
     Route::prefix('kurumsal')->group(function () {
         Route::get('/hakkimizda', function () {
-            return view('errors.503'); // Temporary fallback view
+            return view('frontend.about');
         })->name('about');
 
         Route::get('/basarilarimiz', function () {
-            return view('errors.503');
+            return view('frontend.achievements');
         })->name('achievements');
 
         Route::get('/sss', function () {
-            return view('errors.503');
+            return view('frontend.faq');
         })->name('faq');
     });
 
     // Kurslar
     Route::prefix('kurslar')->name('courses.')->group(function () {
         Route::get('/', function () {
-            return view('errors.503');
+            return view('frontend.courses.index');
         })->name('index');
 
         Route::get('/{slug}', function (string $slug) {
-            return view('errors.503');
+            return view('frontend.courses.show', compact('slug'));
         })->name('show');
     });
 
     // Branşlar
     Route::get('/branslar', function () {
-        return view('errors.503');
+        return view('frontend.branches');
     })->name('branches');
 
     // Öğretmenler
     Route::get('/ogretmenler', function () {
-        return view('errors.503');
+        return view('frontend.teachers');
     })->name('teachers');
 
     // Galeri
     Route::get('/galeri', function () {
-        return view('errors.503');
+        return view('frontend.gallery');
     })->name('gallery');
 
     // Blog
     Route::prefix('blog')->name('blogs.')->group(function () {
         Route::get('/', function () {
-            return view('errors.503');
+            return view('frontend.blogs.index');
         })->name('index');
 
         Route::get('/{slug}', function (string $slug) {
-            return view('errors.503');
+            return view('frontend.blogs.show', compact('slug'));
         })->name('show');
     });
 
     // Etkinlikler
     Route::get('/etkinlikler', function () {
-        return view('errors.503');
+        return view('frontend.events');
     })->name('events');
 
     // Duyurular
     Route::get('/duyurular', function () {
-        return view('errors.503');
+        return view('frontend.announcements');
     })->name('announcements');
 
     // İletişim
     Route::get('/iletisim', function () {
-        return view('errors.503');
+        return view('frontend.contact');
     })->name('contact');
 
     // Online Ön Kayıt
     Route::get('/on-kayit', function () {
-        return view('errors.503');
+        return view('frontend.pre-register');
     })->name('pre-register');
 
     // Yasal Sayfalar
     Route::prefix('yasal')->name('legal.')->group(function () {
         Route::get('/kvkk', function () {
-            return view('errors.503');
+            return view('frontend.legal.kvkk');
         })->name('kvkk');
 
         Route::get('/cerez-politikasi', function () {
-            return view('errors.503');
+            return view('frontend.legal.cerez');
         })->name('cerez');
 
         Route::get('/gizlilik-politikasi', function () {
-            return view('errors.503');
+            return view('frontend.legal.gizlilik');
         })->name('gizlilik');
     });
 

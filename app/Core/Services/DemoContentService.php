@@ -255,4 +255,103 @@ class DemoContentService
             'socials' => $this->settings->getSocials(),
         ];
     }
+
+    /**
+     * Get Branches.
+     */
+    public function getBranches(): array
+    {
+        return [
+            [
+                'name' => 'Kadıköy Merkez Şube',
+                'address' => 'Caddebostan Mah. Bağdat Caddesi No:245/4 Kadıköy/İstanbul',
+                'phone' => '+90 216 555 12 34',
+                'manager' => 'Ahmet Yılmaz',
+                'image' => '/assets/branding/og-image.jpg',
+            ],
+            [
+                'name' => 'Beşiktaş Şube',
+                'address' => 'Barbaros Bulvarı No: 123 Beşiktaş/İstanbul',
+                'phone' => '+90 212 555 12 34',
+                'manager' => 'Ayşe Demir',
+                'image' => '/assets/branding/og-image.jpg',
+            ],
+        ];
+    }
+
+    /**
+     * Get About Us content.
+     */
+    public function getAbout(): array
+    {
+        return [
+            'story' => 'Kurumumuz 2010 yılında eğitimde fırsat eşitliği ve butik eğitim anlayışıyla yola çıkmıştır.',
+            'mission' => 'Her öğrencinin kendi potansiyelini keşfetmesini sağlamak.',
+            'vision' => 'Türkiye\'nin en yenilikçi ve başarılı eğitim kurumu olmak.',
+            'values' => ['Öğrenci Odaklılık', 'Şeffaflık', 'Yenilikçilik', 'Sürekli Gelişim'],
+            'timeline' => [
+                ['year' => '2010', 'title' => 'Kuruluş', 'desc' => 'İlk şubemiz Kadıköy\'de açıldı.'],
+                ['year' => '2015', 'title' => 'Büyüme', 'desc' => 'İkinci şube ve yeni eğitim modelleri.'],
+                ['year' => '2026', 'title' => 'SaaS Dönüşümü', 'desc' => 'Dijital altyapı ile güçlenen yönetim sistemi.'],
+            ]
+        ];
+    }
+
+    /**
+     * Get Events.
+     */
+    public function getEvents(): array
+    {
+        return [
+            [
+                'title' => 'YKS Motivasyon Semineri',
+                'date' => '15 Nisan 2026',
+                'location' => 'Merkez Şube Konferans Salonu',
+                'desc' => 'Sınav kaygısını azaltma ve motivasyon semineri.',
+            ],
+            [
+                'title' => 'Veli Toplantısı (LGS Grubu)',
+                'date' => '20 Nisan 2026',
+                'location' => 'Online (Zoom)',
+                'desc' => 'Deneme sınav sonuçlarının değerlendirilmesi.',
+            ],
+        ];
+    }
+
+    /**
+     * Get Announcements.
+     */
+    public function getAnnouncements(): array
+    {
+        return [
+            [
+                'title' => 'Erken Kayıt Dönemi Başladı',
+                'date' => '01 Mart 2026',
+                'content' => 'Yeni eğitim dönemi için sınırlı kontenjanlı erken kayıt avantajlarını kaçırmayın.',
+            ],
+            [
+                'title' => 'Türkiye Geneli Deneme Sınavı Sonuçları Açıklandı',
+                'date' => '10 Mart 2026',
+                'content' => 'Öğrencilerimiz sonuç karnelerine portal üzerinden ulaşabilirler.',
+            ],
+        ];
+    }
+
+    /**
+     * Get Legal text based on type.
+     */
+    public function getLegal(string $type): array
+    {
+        $content = match ($type) {
+            'kvkk' => '6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca...',
+            'cerez' => 'Web sitemizde size daha iyi hizmet sunabilmek için çerezler (cookies) kullanılmaktadır...',
+            'gizlilik' => 'Kişisel bilgilerinizin gizliliği ve güvenliği kurumumuz için en önemli önceliktir...',
+            default => 'İlgili metin bulunamadı.'
+        };
+
+        return [
+            'title' => strtoupper($type) . ' Metni',
+            'content' => $content,
+        ];
+    }
 }
