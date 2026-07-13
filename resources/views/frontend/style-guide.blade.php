@@ -37,7 +37,7 @@
         
         <!-- Section 1: Buttons -->
         <x-section bg="white" py="12" class="border border-neutral-100 rounded-premium-2xl p-8 shadow-premium-sm">
-            <x-section-header title="1. Buton Tasarımları (<x-button>)" subtitle="Farklı varyantlar, boyutlar ve yükleme/pasif durumlarının listesi" align="left" />
+            <x-section-header title="1. Buton Tasarımları (x-button)" subtitle="Farklı varyantlar, boyutlar ve yükleme/pasif durumlarının listesi" align="left" />
             
             <div class="space-y-6">
                 <!-- Variants -->
@@ -77,7 +77,7 @@
 
         <!-- Section 2: Form Elements -->
         <x-section bg="white" py="12" class="border border-neutral-100 rounded-premium-2xl p-8 shadow-premium-sm">
-            <x-section-header title="2. Form Elemanları (<x-input>, <x-checkbox>)" subtitle="Metin girdileri, seçim kutuları ve doğrulama durumları" align="left" />
+            <x-section-header title="2. Form Elemanları (x-input, x-checkbox)" subtitle="Metin girdileri, seçim kutuları ve doğrulama durumları" align="left" />
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Text Inputs -->
@@ -112,7 +112,7 @@
 
         <!-- Section 3: Feedback & Status -->
         <x-section bg="white" py="12" class="border border-neutral-100 rounded-premium-2xl p-8 shadow-premium-sm">
-            <x-section-header title="3. Bildirim ve Uyarılar (<x-alert>, <x-badge>)" subtitle="Durum bildirimleri ve rozet stilleri" align="left" />
+            <x-section-header title="3. Bildirim ve Uyarılar (x-alert, x-badge)" subtitle="Durum bildirimleri ve rozet stilleri" align="left" />
             
             <div class="space-y-6">
                 <!-- Alerts -->
@@ -181,7 +181,7 @@
 
                 <!-- FAQ Accordion -->
                 <div class="space-y-4">
-                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Akordeon SSS (<x-faq>)</h4>
+                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Akordeon SSS (x-faq)</h4>
                     <x-faq :items="$faqItems" />
                 </div>
             </div>
@@ -194,20 +194,20 @@
             <div class="space-y-8">
                 <!-- Stats -->
                 <div class="space-y-4">
-                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">İstatistik Göstergeleri (<x-stats>)</h4>
+                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">İstatistik Göstergeleri (x-stats)</h4>
                     <x-stats :items="$statsItems" />
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-neutral-100">
                     <!-- Timeline -->
                     <div class="space-y-4">
-                        <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Kronolojik Yol Haritası (<x-timeline>)</h4>
+                        <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Kronolojik Yol Haritası (x-timeline)</h4>
                         <x-timeline :steps="$timelineSteps" />
                     </div>
 
                     <!-- Empty state -->
                     <div class="space-y-4">
-                        <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Boş Liste Görünümü (<x-empty-state>)</h4>
+                        <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Boş Liste Görünümü (x-empty-state)</h4>
                         <x-empty-state title="Aranan Ders Bulunamadı" subtitle="Arama kriterlerinizi değiştirerek tekrar deneyebilirsiniz.">
                             <x-slot name="actions">
                                 <x-button variant="outline" size="sm">Filtreleri Temizle</x-button>
@@ -225,7 +225,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Spinners -->
                 <div class="space-y-4">
-                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Dönen Yükleyiciler (<x-spinner>)</h4>
+                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">Dönen Yükleyiciler (x-spinner)</h4>
                     <div class="flex gap-4 items-center">
                         <x-spinner size="sm" />
                         <x-spinner size="md" color="secondary" />
@@ -235,7 +235,7 @@
 
                 <!-- Skeletons -->
                 <div class="space-y-4">
-                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">İskelet Yükleyiciler (<x-skeleton>)</h4>
+                    <h4 class="text-xs font-semibold text-neutral/50 uppercase tracking-wider">İskelet Yükleyiciler (x-skeleton)</h4>
                     <div class="space-y-3">
                         <x-skeleton type="text" />
                         <div class="flex items-center gap-3">

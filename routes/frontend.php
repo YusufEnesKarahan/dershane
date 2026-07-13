@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::name('frontend.')->group(function () {
     // Ana Sayfa
     Route::get('/', function () {
-        return view('welcome_placeholder');
+        return view('frontend.home');
     })->name('home');
 
     // Kurumsal Alt Sayfaları
