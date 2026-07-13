@@ -1,37 +1,76 @@
 @props([
-    'id',
+    'name',
     'title' => null,
+    'size' => 'md', // sm, md, lg, xl
 ])
 
-<div x-data="{ open: false }" 
-     x-show="open" 
-     @open-modal.window="if ($event.detail.id === '{{ $id }}') open = true"
-     @close-modal.window="if ($event.detail.id === '{{ $id }}') open = false"
-     class="fixed z-10 inset-0 overflow-y-auto" 
-     style="display: none;">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="open = false">
-            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
+@php
+    $sizes = [
+        'sm' => 'sm:max-w-sm',
+        'md' => 'sm:max-w-md',
+        'lg' => 'sm:max-w-lg',
+        'xl' => 'sm:max-w-xl',
+    ];
 
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    $sizeClass = $sizes[$size] ?? $sizes['md'];
+@endphp
 
-        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-            @if ($title)
-                <div class="mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">{{ $title }}</h3>
-                </div>
-            @endif
+<div x-data="{ open: false }"
+     x-show="open"
+     x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') open = true"
+     x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') open = false"
+     x-on:keydown.escape.window="open = false"
+     class="fixed inset-0 z-50 overflow-y-auto"
+     style="display: none;"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="modal_title_{{ $name }}">
+    
+    <!-- Backdrop Overlay -->
+    <div class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm transition-opacity duration-300" 
+         x-show="open"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @click="open = false"></div>
 
-            <div class="mt-2">
+    <!-- Modal Wrapper -->
+    <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
+        <div class="relative bg-white rounded-premium-xl text-left overflow-hidden shadow-premium-xl transform transition-all sm:my-8 sm:align-middle w-full {{ $sizeClass }}"
+             x-show="open"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+                <h3 class="text-base font-display font-semibold text-neutral tracking-tight" id="modal_title_{{ $name }}">
+                    {{ $title ?? 'İşlem Penceresi' }}
+                </h3>
+                <button type="button" @click="open = false" class="text-neutral/40 hover:text-neutral/60 focus:outline-none transition-colors duration-150" aria-label="Kapat">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="px-6 py-5 text-sm font-sans text-neutral/80 leading-relaxed bg-white">
                 {{ $slot }}
             </div>
 
-            <div class="mt-5 sm:mt-6 flex justify-end space-x-2">
-                <button type="button" @click="open = false" class="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:text-sm">
-                    Kapat
-                </button>
-            </div>
+            <!-- Footer -->
+            @if (isset($footer))
+                <div class="px-6 py-4 border-t border-neutral-100 bg-neutral-50/50 flex justify-end gap-2">
+                    {{ $footer }}
+                </div>
+            @endif
         </div>
     </div>
 </div>

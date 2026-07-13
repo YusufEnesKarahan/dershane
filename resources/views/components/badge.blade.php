@@ -1,17 +1,27 @@
 @props([
-    'color' => 'indigo',
+    'color' => 'primary', // primary, secondary, gray, red, green, yellow, blue
+    'size' => 'md', // sm, md
 ])
 
 @php
+    $baseClasses = 'inline-flex items-center font-medium font-sans rounded-full border tracking-wide transition-colors duration-150';
+
     $colors = [
-        'indigo' => 'bg-indigo-100 text-indigo-800',
-        'gray' => 'bg-gray-100 text-gray-800',
-        'red' => 'bg-red-100 text-red-800',
-        'green' => 'bg-green-100 text-green-800',
-        'yellow' => 'bg-yellow-100 text-yellow-800',
+        'primary' => 'bg-primary/10 text-primary border-primary/20',
+        'secondary' => 'bg-secondary/10 text-secondary border-secondary/20',
+        'gray' => 'bg-neutral-100 text-neutral border-neutral-200/50',
+        'red' => 'bg-danger/10 text-danger border-danger/20',
+        'green' => 'bg-success/10 text-success border-success/20',
+        'yellow' => 'bg-warning/10 text-warning border-warning/20',
+        'blue' => 'bg-info/10 text-info border-info/20',
     ];
 
-    $classes = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . ($colors[$color] ?? $colors['indigo']);
+    $sizes = [
+        'sm' => 'px-2 py-0.5 text-[10px]',
+        'md' => 'px-2.5 py-0.5 text-xs',
+    ];
+
+    $classes = $baseClasses . ' ' . ($colors[$color] ?? $colors['primary']) . ' ' . ($sizes[$size] ?? $sizes['md']);
 @endphp
 
 <span {{ $attributes->merge(['class' => $classes]) }}>

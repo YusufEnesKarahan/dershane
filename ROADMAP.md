@@ -6,6 +6,8 @@
 
 ## Sprint 0.6
 
+## Sprint 0.7
+
 ## Sprint 1
 
 ## Sprint 2
