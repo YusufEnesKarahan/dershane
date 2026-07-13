@@ -45,3 +45,11 @@ Geliştiricilerin ortak işlevlere en kısa ve temiz yolla erişmesini sağlamak
 - `CRM` (Müşteri ilişkileri yönetimi)
 - `ERP` (Kurumsal kaynak planlama altyapısı)
 - `Core` (Sistem alt yapısı)
+
+## 6. Veritabanı ve Şema Mimarisi (Database & Schema Architecture)
+Sistem veritabanı şeması tasarlanırken veri yalıtımı, bütünlük ve paket sürümlerinin (V1, V2, V3) ihtiyaçları doğrultusunda şu kararlar alınmıştır:
+- **Şube Tabanlı Yalıtım:** Tüm eğitim profilleri ve kayıt verileri `branches` tablosuna yabancı anahtar (`branch_id`) ile bağlanarak şubeler arası veri izolasyonu sağlanmıştır.
+- **PHP Enums Uyumu:** SQLite ve MySQL arasındaki geçişleri kolaylaştırmak amacıyla, veritabanı seviyesinde `enum` kolon tipi yerine `varchar` kullanılmış ve durum kontrolleri uygulama katmanında tip güvenli PHP Enums ile sınırlandırılmıştır.
+- **Güvenli Silme (Soft Deletes):** Öğrenci, Veli, Öğretmen ve Kayıt gibi kritik tablolarda `deleted_at` kullanılarak veri kayıplarının önüne geçilmiştir.
+- **Bütünlük Kısıtları (Constraints):** Şube, Derslik ve Kurs gibi ana tablolar silinirken ilişkili aktif verilerin bozulmaması için `ON DELETE RESTRICT` kullanılırken; ders saat planları veya ödevler silindiğinde alt kayıtların otomatik temizlenmesi amacıyla `ON DELETE CASCADE` tercih edilmiştir.
+

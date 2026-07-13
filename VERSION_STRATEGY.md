@@ -26,7 +26,9 @@ Route dosyaları temizlik ve modülerlik açısından ayrılmıştır:
 - `routes/web.php` (Ortak ve V1 Kurumsal Site route'ları)
 - `routes/admin.php` (V2 ve V3 Yönetim/ERP route'ları)
 
-### 4. Veritabanı Şeması
+### 4. Veritabanı Şeması ve Paket Ayrımı
 - Tek bir veritabanı şeması kullanılır.
-- V2 ve V3 paketlerine özel tablolar veya sütunlar, ilgili paket aktif olmadığında sorgulanmaz veya boş bırakılır.
-- Veritabanı tablolarında paket ayrımını sağlayacak veya isteğe bağlı (nullable) alanlar mimariye uygun şekilde tasarlanacaktır.
+- Hangi varlığın (Entity) hangi pakette aktif olacağı detaylı olarak [VERSION_MATRIX.md](file:///c:/Users/Yusuf%20Enes%20Karahan/Desktop/Scripts/dershane/docs/database/VERSION_MATRIX.md) dosyasında tanımlanmıştır.
+- V2 ve V3 paketlerine özel olan gelişmiş tablolar (örn: `lesson_schedules`, `attendances`, `homeworks`), ilgili paket aktif olmadığında sorgulanmaz veya boş bırakılır.
+- Veritabanı tablolarında paket ayrımını sağlayacak veya isteğe bağlı (nullable) alanlar mimariye uygun şekilde tasarlanmıştır.
+
