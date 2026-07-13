@@ -22,13 +22,18 @@ Tüm katmanların standart davranışlar sergilemesi ve tip güvenliğinin (type
 
 ## 3. Yönetici Servisleri (Managers)
 Sistem genelindeki konfigürasyon dosyalarını okumak ve bunları tip güvenliğine uygun şekilde sarmalamak için **Manager** sınıfları geliştirilmiştir:
+- `EditionManager` (Basic/Professional/Ultimate paket yönetimi)
 - `FeatureManager` (Özellik kontrolü)
 - `ThemeManager` (Tema stil ve sayfa kontrolü)
-- `SettingsManager` (Sistem parametreleri yönetimi)
+- `SettingsManager` (Sistem parametreleri yönetimi ve Whitelabel şirket verileri)
 - `BrandManager` (White-label marka ayarları kontrolü)
 
 ## 4. Küresel Yardımcılar (Global Helpers)
-Geliştiricilerin ortak işlevlere en kısa ve temiz yolla erişmesini sağlamak amacıyla global helper'lar (`Helpers.php`) eklenmiştir:
+Geliştiricilerin ortak işlevlere en kısa ve temiz yolla erişmesini sağlamak amacıyla global helper'lar (`Helpers.php` ve `SaaS.php`) eklenmiştir:
+- `edition()` (SaaS EditionManager nesnesi)
+- `edition_name()` (Aktif paket adı gösterimi)
+- `edition_color()` (Pakete özgü CSS renk kodu)
+- `edition_badge()` (Pakete özgü HTML rozet çıktısı)
 - `feature()` (SaaS özellik durumu denetimi)
 - `setting()` (Sistem konfigürasyon verisi)
 - `brand()` (Marka bilgisi)
@@ -47,7 +52,7 @@ Geliştiricilerin ortak işlevlere en kısa ve temiz yolla erişmesini sağlamak
 - `Core` (Sistem alt yapısı)
 
 ## 6. Veritabanı ve Şema Mimarisi (Database & Schema Architecture)
-Sistem veritabanı şeması tasarlanırken veri yalıtımı, bütünlük ve paket sürümlerinin (V1, V2, V3) ihtiyaçları doğrultusunda şu kararlar alınmıştır:
+Sistem veritabanı şeması tasarlanırken veri yalıtımı, bütünlük ve paket sürümlerinin ihtiyaçları doğrultusunda şu kararlar alınmıştır:
 - **Şube Tabanlı Yalıtım:** Tüm eğitim profilleri ve kayıt verileri `branches` tablosuna yabancı anahtar (`branch_id`) ile bağlanarak şubeler arası veri izolasyonu sağlanmıştır.
 - **PHP Enums Uyumu:** SQLite ve MySQL arasındaki geçişleri kolaylaştırmak amacıyla, veritabanı seviyesinde `enum` kolon tipi yerine `varchar` kullanılmış ve durum kontrolleri uygulama katmanında tip güvenli PHP Enums ile sınırlandırılmıştır.
 - **Güvenli Silme (Soft Deletes):** Öğrenci, Veli, Öğretmen ve Kayıt gibi kritik tablolarda `deleted_at` kullanılarak veri kayıplarının önüne geçilmiştir.
@@ -55,8 +60,10 @@ Sistem veritabanı şeması tasarlanırken veri yalıtımı, bütünlük ve pake
 
 ## 7. Arayüz ve Kullanıcı Deneyimi Mimarisi (UI/UX Architecture)
 Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standartlara göre yönetilir:
-- **Temiz Rota Dağılımı:** Web sitesi ve Admin rotaları modüler olarak ayrılmış olup, rota bazlı paket yetkilendirmesi `VERSION_PAGE_MATRIX.md` kılavuzuna göre middleware katmanı ile çözülür.
+- **Temiz Rota Dağılımı:** Web sitesi ve Admin rotaları modüler olarak ayrılmış olup, rota bazlı paket yetkilendirmesi `EDITION_STRATEGY.md` kılavuzuna göre middleware katmanı ile çözülür.
 - **İçerik ve Bilgi Hiyerarşisi:** Sayfaların başlık, içerik bloğu, SEO meta alanları ve eylem çağrıları (CTA) standart şablon yerleşimlerine (Page Blueprint) göre yerleştirilir.
 - **Görsel Standartlar:** Arayüze yüklenecek tüm medya ve görseller `MEDIA_GUIDE.md` dosyasında yer alan en-boy oranlarına ve WebP format standartlarına tabi tutulur.
+- **Marka Özelleştirmeleri (White-label):** Şirket adı, logosu, favicon, birincil/ikincil renkler ve iletişim verileri doğrudan kod içerisine yazılmak yerine `SettingsManager` üzerinden okunarak dinamik olarak yüklenir.
+
 
 

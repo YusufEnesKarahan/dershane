@@ -31,4 +31,44 @@ class SettingsManager
     {
         return (int) Config::get('settings.pagination.default_limit', 15);
     }
+
+    /**
+     * Get the Whitelabel Company display name.
+     */
+    public function getCompanyName(): string
+    {
+        return Config::get('brand.company.name', 'Limit VIP Eğitim Hizmetleri A.Ş.');
+    }
+
+    /**
+     * Get the Whitelabel Company phone number.
+     */
+    public function getPhone(): string
+    {
+        return Config::get('brand.company.phone', '+90 216 555 12 34');
+    }
+
+    /**
+     * Get the Whitelabel Company email address.
+     */
+    public function getMail(): string
+    {
+        return Config::get('brand.company.mail', 'info@limitvip.com');
+    }
+
+    /**
+     * Get the Whitelabel Company physical address.
+     */
+    public function getAddress(): string
+    {
+        return Config::get('brand.company.address', 'Caddebostan Mah. Bağdat Caddesi No:245/4 Kadıköy/İstanbul');
+    }
+
+    /**
+     * Get the Whitelabel Company social media URLs.
+     */
+    public function getSocials(): array
+    {
+        return Config::get('brand.company.socials', []);
+    }
 }

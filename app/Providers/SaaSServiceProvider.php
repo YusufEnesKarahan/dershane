@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Core\Services\EditionManager;
 use App\Core\Services\FeatureFlagService;
 use App\Core\Services\ThemeService;
 use Illuminate\Support\Facades\Blade;
@@ -16,9 +17,14 @@ class SaaSServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Bind Edition Manager
+        $this->app->singleton(EditionManager::class, function (): EditionManager {
+            return new EditionManager;
+        });
+
         // Bind Feature Flag Service
         $this->app->singleton('saas.feature', function (): FeatureFlagService {
-            return new FeatureFlagService;
+            return $this->app->make(FeatureFlagService::class);
         });
 
         // Bind Theme Service for Whitelabeling
@@ -26,10 +32,15 @@ class SaaSServiceProvider extends ServiceProvider
             return new ThemeService;
         });
 
-        // Load helpers dynamically if helper file exists
+        // Load helpers dynamically if helper files exist
         $helperPath = app_path('Core/Helpers/Helpers.php');
         if (file_exists($helperPath)) {
             require_once $helperPath;
+        }
+
+        $saasHelperPath = app_path('Core/Helpers/SaaS.php');
+        if (file_exists($saasHelperPath)) {
+            require_once $saasHelperPath;
         }
     }
 
@@ -41,6 +52,11 @@ class SaaSServiceProvider extends ServiceProvider
         // Register Blade directive for Feature Flags
         Blade::if('feature', function (string $feature): bool {
             return $this->app->make('saas.feature')->isActive($feature);
+        });
+
+        // Register Blade directive for Edition checks
+        Blade::if('edition', function (string $edition): bool {
+            return $this->app->make(EditionManager::class)->current() === $edition;
         });
 
         // Register Blade directive to render theme custom styling variables

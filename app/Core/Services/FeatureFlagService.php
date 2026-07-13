@@ -8,35 +8,28 @@ use Illuminate\Support\Facades\Config;
 
 class FeatureFlagService
 {
+    protected EditionManager $editionManager;
+
+    public function __construct(EditionManager $editionManager)
+    {
+        $this->editionManager = $editionManager;
+    }
+
     /**
      * Determine if the given feature flag is active.
      */
     public function isActive(string $feature): bool
     {
-        $version = Config::get('features.version', 1);
-        $packages = Config::get('features.packages', []);
-
-        // Check if feature is defined in the package of the active version
-        if (isset($packages[$version]['features'][$feature])) {
-            return (bool) $packages[$version]['features'][$feature];
-        }
-
-        // Fallback to global flags override
-        $globalFlags = Config::get('features.flags', []);
-        if (isset($globalFlags[$feature])) {
-            return (bool) $globalFlags[$feature];
-        }
-
-        return false;
+        return $this->editionManager->has($feature);
     }
 
     /**
-     * Get the name of the currently active SaaS version.
+     * Get the name of the currently active SaaS edition.
      */
-    public function getVersionName(): string
+    public function getEditionName(): string
     {
-        $version = Config::get('features.version', 1);
+        $edition = $this->editionManager->current();
 
-        return Config::get("features.packages.{$version}.name", 'Unknown Sürüm');
+        return Config::get("features.packages.{$edition}.name", 'Basic Edition');
     }
 }
