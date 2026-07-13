@@ -32,3 +32,8 @@ Route dosyaları temizlik ve modülerlik açısından ayrılmıştır:
 - V2 ve V3 paketlerine özel olan gelişmiş tablolar (örn: `lesson_schedules`, `attendances`, `homeworks`), ilgili paket aktif olmadığında sorgulanmaz veya boş bırakılır.
 - Veritabanı tablolarında paket ayrımını sağlayacak veya isteğe bağlı (nullable) alanlar mimariye uygun şekilde tasarlanmıştır.
 
+### 5. Sayfa ve Rota Paket Kısıtlamaları
+- Rota düzeyindeki erişim sınırlandırmaları ve modül kısıtlamaları [VERSION_PAGE_MATRIX.md](file:///c:/Users/Yusuf%20Enes%20Karahan/Desktop/Scripts/dershane/docs/frontend/VERSION_PAGE_MATRIX.md) tablosuna göre yönetilir.
+- Lisanssız rota gruplarına erişim durumunda kullanıcı otomatik olarak HTTP 403 (Upgrade required) hata sayfasına veya teklif sayfasına yönlendirilir.
+
+

@@ -8,6 +8,8 @@
 
 ## Sprint 0.7
 
+## Sprint 0.8
+
 ## Sprint 1
 
 ## Sprint 2

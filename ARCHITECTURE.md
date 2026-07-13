@@ -53,3 +53,10 @@ Sistem veritabanı şeması tasarlanırken veri yalıtımı, bütünlük ve pake
 - **Güvenli Silme (Soft Deletes):** Öğrenci, Veli, Öğretmen ve Kayıt gibi kritik tablolarda `deleted_at` kullanılarak veri kayıplarının önüne geçilmiştir.
 - **Bütünlük Kısıtları (Constraints):** Şube, Derslik ve Kurs gibi ana tablolar silinirken ilişkili aktif verilerin bozulmaması için `ON DELETE RESTRICT` kullanılırken; ders saat planları veya ödevler silindiğinde alt kayıtların otomatik temizlenmesi amacıyla `ON DELETE CASCADE` tercih edilmiştir.
 
+## 7. Arayüz ve Kullanıcı Deneyimi Mimarisi (UI/UX Architecture)
+Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standartlara göre yönetilir:
+- **Temiz Rota Dağılımı:** Web sitesi ve Admin rotaları modüler olarak ayrılmış olup, rota bazlı paket yetkilendirmesi `VERSION_PAGE_MATRIX.md` kılavuzuna göre middleware katmanı ile çözülür.
+- **İçerik ve Bilgi Hiyerarşisi:** Sayfaların başlık, içerik bloğu, SEO meta alanları ve eylem çağrıları (CTA) standart şablon yerleşimlerine (Page Blueprint) göre yerleştirilir.
+- **Görsel Standartlar:** Arayüze yüklenecek tüm medya ve görseller `MEDIA_GUIDE.md` dosyasında yer alan en-boy oranlarına ve WebP format standartlarına tabi tutulur.
+
+
