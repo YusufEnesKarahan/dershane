@@ -73,30 +73,29 @@ class ThemeService
     {
         $siteName = Config::get('brand.name', 'Eğitim Kurumu SaaS');
         $title = $seo['title'] ?? Config::get('brand.seo.title_default', 'Modern Eğitim Yönetim Sistemi');
-        $titleFormatted = $title . ' | ' . $siteName;
+        $titleFormatted = $title.' | '.$siteName;
         $description = $seo['description'] ?? Config::get('brand.seo.description_default', 'Dershane ve etüt merkezleri için SaaS yönetim altyapısı.');
         $keywords = $seo['keywords'] ?? Config::get('brand.seo.keywords_default', 'dershane, kurs, etüt, eğitim');
         $image = $seo['image'] ?? asset(Config::get('brand.logo.og_image', '/assets/branding/og-image.jpg'));
         $url = $seo['url'] ?? url()->current();
         $robots = $seo['robots'] ?? 'index, follow';
 
-        return "
-            <title>" . e($titleFormatted) . "</title>
-            <meta name=\"description\" content=\"" . e($description) . "\">
-            <meta name=\"keywords\" content=\"" . e($keywords) . "\">
-            <meta name=\"robots\" content=\"" . e($robots) . "\">
-            <link rel=\"canonical\" href=\"" . e($url) . "\">
-            <meta property=\"og:type\" content=\"website\">
-            <meta property=\"og:title\" content=\"" . e($title) . "\">
-            <meta property=\"og:description\" content=\"" . e($description) . "\">
-            <meta property=\"og:image\" content=\"" . e($image) . "\">
-            <meta property=\"og:url\" content=\"" . e($url) . "\">
-            <meta property=\"og:site_name\" content=\"" . e($siteName) . "\">
-            <meta name=\"twitter:card\" content=\"summary_large_image\">
-            <meta name=\"twitter:title\" content=\"" . e($title) . "\">
-            <meta name=\"twitter:description\" content=\"" . e($description) . "\">
-            <meta name=\"twitter:image\" content=\"" . e($image) . "\">
-        ";
+        return '
+            <title>'.e($titleFormatted).'</title>
+            <meta name="description" content="'.e($description).'">
+            <meta name="keywords" content="'.e($keywords).'">
+            <meta name="robots" content="'.e($robots).'">
+            <link rel="canonical" href="'.e($url).'">
+            <meta property="og:type" content="website">
+            <meta property="og:title" content="'.e($title).'">
+            <meta property="og:description" content="'.e($description).'">
+            <meta property="og:image" content="'.e($image).'">
+            <meta property="og:url" content="'.e($url).'">
+            <meta property="og:site_name" content="'.e($siteName).'">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="'.e($title).'">
+            <meta name="twitter:description" content="'.e($description).'">
+            <meta name="twitter:image" content="'.e($image).'">
+        ';
     }
 }
-

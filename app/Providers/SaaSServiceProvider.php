@@ -51,6 +51,7 @@ class SaaSServiceProvider extends ServiceProvider
         // Register Blade directive for Dynamic SEO Tags
         Blade::directive('seo', function (string $expression): string {
             $expression = $expression ?: '[]';
+
             return "<?php echo app('saas.theme')->renderSeoTags({$expression}); ?>";
         });
 
@@ -60,4 +61,3 @@ class SaaSServiceProvider extends ServiceProvider
         });
     }
 }
-
