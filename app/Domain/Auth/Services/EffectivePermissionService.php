@@ -2,6 +2,7 @@
 namespace App\Domain\Auth\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class EffectivePermissionService
 {
@@ -9,12 +10,16 @@ class EffectivePermissionService
 
     public function effectivePermissions(User $user): array
     {
-        // 1. Base user role permissions from cache
-        $permissions = $this->permissionCache->getUserPermissions($user);
+        $cacheKey = 'effective_permissions_user_' . $user->id;
 
-        // 2. Filter out by Edition limits (if any)
-        // Stubs for future integration with Tenant/Company Edition limits
-        
-        return $permissions;
+        return Cache::rememberForever($cacheKey, function () use ($user) {
+            // Unifies role permissions
+            return $this->permissionCache->getUserPermissions($user);
+        });
+    }
+
+    public function clearCache(User $user): void
+    {
+        Cache::forget('effective_permissions_user_' . $user->id);
     }
 }

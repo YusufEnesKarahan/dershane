@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function hasPermission(string $permission): bool
     {
-        return app(\App\Domain\Auth\Services\AuthorizationService::class)->hasPermission($this, $permission);
+        return app(\App\Domain\Auth\Services\PermissionResolver::class)->hasPermission($this, $permission);
     }
 
     // Helpers

@@ -1,22 +1,138 @@
 <?php
 
-declare(strict_types=1);
-
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Permissions Configurations
-    |--------------------------------------------------------------------------
-    */
-
-    'list' => [
-        'users.view' => 'Kullanıcıları görüntüleme',
-        'users.create' => 'Kullanıcı ekleme',
-        'users.edit' => 'Kullanıcı düzenleme',
-        'users.delete' => 'Kullanıcı silme',
-
-        'students.view' => 'Öğrencileri görüntüleme',
-        'students.create' => 'Öğrenci ekleme',
-        'students.edit' => 'Öğrenci düzenleme',
+    'groups' => [
+        'System' => [
+            'label' => 'Sistem Yönetimi',
+            'icon' => 'cog',
+            'color' => 'neutral',
+            'sort_order' => 1,
+            'permissions' => [
+                'dashboard.view',
+                'branches.view',
+                'branches.manage',
+            ],
+        ],
+        'Users' => [
+            'label' => 'Kullanıcı Yönetimi',
+            'icon' => 'users',
+            'color' => 'blue',
+            'sort_order' => 2,
+            'permissions' => [
+                'users.view',
+                'users.create',
+                'users.update',
+                'users.delete',
+                'users.restore',
+                'users.export',
+            ],
+        ],
+        'Roles' => [
+            'label' => 'Roller ve Yetkiler',
+            'icon' => 'shield',
+            'color' => 'indigo',
+            'sort_order' => 3,
+            'permissions' => [
+                'roles.view',
+                'roles.create',
+                'roles.update',
+                'roles.delete',
+                'roles.assign',
+                'permissions.view',
+                'permissions.assign',
+            ],
+        ],
+        'CMS' => [
+            'label' => 'CMS Yönetimi',
+            'icon' => 'document-text',
+            'color' => 'green',
+            'sort_order' => 4,
+            'permissions' => [
+                'pages.view',
+                'pages.create',
+                'pages.update',
+                'pages.delete',
+                'blogs.view',
+                'blogs.create',
+                'blogs.update',
+                'blogs.delete',
+                'announcements.view',
+                'announcements.create',
+                'announcements.update',
+                'announcements.delete',
+                'gallery.view',
+                'gallery.create',
+                'gallery.delete',
+            ],
+        ],
+        'Education' => [
+            'label' => 'Eğitim Modülleri',
+            'icon' => 'academic-cap',
+            'color' => 'yellow',
+            'sort_order' => 5,
+            'permissions' => [
+                'teachers.view',
+                'teachers.create',
+                'teachers.update',
+                'teachers.delete',
+                'students.view',
+                'students.create',
+                'students.update',
+                'students.delete',
+                'courses.view',
+                'courses.create',
+                'courses.update',
+                'courses.delete',
+                'classrooms.view',
+                'classrooms.manage',
+                'attendance.view',
+                'attendance.manage',
+                'homeworks.view',
+                'homeworks.manage',
+                'registrations.view',
+                'registrations.create',
+                'registrations.update',
+                'registrations.delete',
+            ],
+        ],
+        'CRM' => [
+            'label' => 'CRM Modülleri',
+            'icon' => 'phone',
+            'color' => 'purple',
+            'sort_order' => 6,
+            'permissions' => [
+                'crm.view',
+                'crm.manage',
+                'leads.view',
+                'leads.create',
+                'leads.update',
+                'leads.delete',
+                'contacts.view',
+                'contacts.create',
+                'contacts.update',
+                'contacts.delete',
+            ],
+        ],
+        'Media' => [
+            'label' => 'Medya Kütüphanesi',
+            'icon' => 'photograph',
+            'color' => 'pink',
+            'sort_order' => 7,
+            'permissions' => [
+                'media.view',
+                'media.create',
+                'media.delete',
+            ],
+        ],
+        'Settings' => [
+            'label' => 'Sistem Ayarları',
+            'icon' => 'adjustments',
+            'color' => 'red',
+            'sort_order' => 8,
+            'permissions' => [
+                'settings.view',
+                'settings.update',
+            ],
+        ],
     ],
 ];

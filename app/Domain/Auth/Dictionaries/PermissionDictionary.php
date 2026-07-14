@@ -3,99 +3,98 @@ namespace App\Domain\Auth\Dictionaries;
 
 class PermissionDictionary
 {
-    public const DICTIONARY = [
-        'dashboard.view' => ['label' => 'Dashboard Görüntüleme', 'group' => 'System'],
-        
-        'users.view' => ['label' => 'Kullanıcıları Görüntüle', 'group' => 'Users'],
-        'users.create' => ['label' => 'Kullanıcı Oluştur', 'group' => 'Users'],
-        'users.update' => ['label' => 'Kullanıcı Güncelle', 'group' => 'Users'],
-        'users.delete' => ['label' => 'Kullanıcı Sil', 'group' => 'Users'],
-        'users.restore' => ['label' => 'Kullanıcı Geri Yükle', 'group' => 'Users'],
-        'users.export' => ['label' => 'Kullanıcı Dışa Aktar', 'group' => 'Users'],
+    public const DASHBOARD_VIEW = 'dashboard.view';
 
-        'roles.view' => ['label' => 'Rolleri Görüntüle', 'group' => 'Roles'],
-        'roles.create' => ['label' => 'Rol Oluştur', 'group' => 'Roles'],
-        'roles.update' => ['label' => 'Rol Güncelle', 'group' => 'Roles'],
-        'roles.delete' => ['label' => 'Rol Sil', 'group' => 'Roles'],
-        'roles.assign' => ['label' => 'Rol Ata', 'group' => 'Roles'],
+    public const USERS_VIEW = 'users.view';
+    public const USERS_CREATE = 'users.create';
+    public const USERS_UPDATE = 'users.update';
+    public const USERS_DELETE = 'users.delete';
+    public const USERS_RESTORE = 'users.restore';
+    public const USERS_EXPORT = 'users.export';
 
-        'permissions.view' => ['label' => 'Yetkileri Görüntüle', 'group' => 'Roles'],
-        'permissions.assign' => ['label' => 'Yetki Ata', 'group' => 'Roles'],
+    public const ROLES_VIEW = 'roles.view';
+    public const ROLES_CREATE = 'roles.create';
+    public const ROLES_UPDATE = 'roles.update';
+    public const ROLES_DELETE = 'roles.delete';
+    public const ROLES_ASSIGN = 'roles.assign';
 
-        'pages.view' => ['label' => 'Sayfaları Görüntüle', 'group' => 'CMS'],
-        'pages.create' => ['label' => 'Sayfa Oluştur', 'group' => 'CMS'],
-        'pages.update' => ['label' => 'Sayfa Güncelle', 'group' => 'CMS'],
-        'pages.delete' => ['label' => 'Sayfa Sil', 'group' => 'CMS'],
+    public const PERMISSIONS_VIEW = 'permissions.view';
+    public const PERMISSIONS_ASSIGN = 'permissions.assign';
 
-        'blogs.view' => ['label' => 'Yazıları Görüntüle', 'group' => 'CMS'],
-        'blogs.create' => ['label' => 'Yazı Oluştur', 'group' => 'CMS'],
-        'blogs.update' => ['label' => 'Yazı Güncelle', 'group' => 'CMS'],
-        'blogs.delete' => ['label' => 'Yazı Sil', 'group' => 'CMS'],
+    public const PAGES_VIEW = 'pages.view';
+    public const PAGES_CREATE = 'pages.create';
+    public const PAGES_UPDATE = 'pages.update';
+    public const PAGES_DELETE = 'pages.delete';
 
-        'teachers.view' => ['label' => 'Öğretmenleri Görüntüle', 'group' => 'Education'],
-        'teachers.create' => ['label' => 'Öğretmen Oluştur', 'group' => 'Education'],
-        'teachers.update' => ['label' => 'Öğretmen Güncelle', 'group' => 'Education'],
-        'teachers.delete' => ['label' => 'Öğretmen Sil', 'group' => 'Education'],
+    public const BLOGS_VIEW = 'blogs.view';
+    public const BLOGS_CREATE = 'blogs.create';
+    public const BLOGS_UPDATE = 'blogs.update';
+    public const BLOGS_DELETE = 'blogs.delete';
 
-        'courses.view' => ['label' => 'Kursları Görüntüle', 'group' => 'Education'],
-        'courses.create' => ['label' => 'Kurs Oluştur', 'group' => 'Education'],
-        'courses.update' => ['label' => 'Kurs Güncelle', 'group' => 'Education'],
-        'courses.delete' => ['label' => 'Kurs Sil', 'group' => 'Education'],
+    public const TEACHERS_VIEW = 'teachers.view';
+    public const TEACHERS_CREATE = 'teachers.create';
+    public const TEACHERS_UPDATE = 'teachers.update';
+    public const TEACHERS_DELETE = 'teachers.delete';
 
-        'gallery.view' => ['label' => 'Galeri Görüntüle', 'group' => 'CMS'],
-        'gallery.create' => ['label' => 'Galeri Ekle', 'group' => 'CMS'],
-        'gallery.delete' => ['label' => 'Galeri Sil', 'group' => 'CMS'],
+    public const COURSES_VIEW = 'courses.view';
+    public const COURSES_CREATE = 'courses.create';
+    public const COURSES_UPDATE = 'courses.update';
+    public const COURSES_DELETE = 'courses.delete';
 
-        'media.view' => ['label' => 'Medya Görüntüle', 'group' => 'Media'],
-        'media.create' => ['label' => 'Medya Ekle', 'group' => 'Media'],
-        'media.delete' => ['label' => 'Medya Sil', 'group' => 'Media'],
+    public const GALLERY_VIEW = 'gallery.view';
+    public const GALLERY_CREATE = 'gallery.create';
+    public const GALLERY_DELETE = 'gallery.delete';
 
-        'settings.view' => ['label' => 'Ayarları Görüntüle', 'group' => 'Settings'],
-        'settings.update' => ['label' => 'Ayarları Güncelle', 'group' => 'Settings'],
+    public const MEDIA_VIEW = 'media.view';
+    public const MEDIA_CREATE = 'media.create';
+    public const MEDIA_DELETE = 'media.delete';
 
-        'crm.view' => ['label' => 'CRM Görüntüle', 'group' => 'CRM'],
-        'crm.manage' => ['label' => 'CRM Yönet', 'group' => 'CRM'],
+    public const SETTINGS_VIEW = 'settings.view';
+    public const SETTINGS_UPDATE = 'settings.update';
 
-        'attendance.view' => ['label' => 'Yoklama Görüntüle', 'group' => 'Education'],
-        'attendance.manage' => ['label' => 'Yoklama Yönet', 'group' => 'Education'],
+    public const CRM_VIEW = 'crm.view';
+    public const CRM_MANAGE = 'crm.manage';
 
-        'homeworks.view' => ['label' => 'Ödevleri Görüntüle', 'group' => 'Education'],
-        'homeworks.manage' => ['label' => 'Ödevleri Yönet', 'group' => 'Education'],
+    public const ATTENDANCE_VIEW = 'attendance.view';
+    public const ATTENDANCE_MANAGE = 'attendance.manage';
 
-        'classrooms.view' => ['label' => 'Sınıfları Görüntüle', 'group' => 'Education'],
-        'classrooms.manage' => ['label' => 'Sınıfları Yönet', 'group' => 'Education'],
+    public const HOMEWORKS_VIEW = 'homeworks.view';
+    public const HOMEWORKS_MANAGE = 'homeworks.manage';
 
-        'students.view' => ['label' => 'Öğrencileri Görüntüle', 'group' => 'Education'],
-        'students.create' => ['label' => 'Öğrenci Oluştur', 'group' => 'Education'],
-        'students.update' => ['label' => 'Öğrenci Güncelle', 'group' => 'Education'],
-        'students.delete' => ['label' => 'Öğrenci Sil', 'group' => 'Education'],
+    public const CLASSROOMS_VIEW = 'classrooms.view';
+    public const CLASSROOMS_MANAGE = 'classrooms.manage';
 
-        'leads.view' => ['label' => 'Aday Öğrencileri Görüntüle', 'group' => 'CRM'],
-        'leads.create' => ['label' => 'Aday Öğrenci Oluştur', 'group' => 'CRM'],
-        'leads.update' => ['label' => 'Aday Öğrenci Güncelle', 'group' => 'CRM'],
-        'leads.delete' => ['label' => 'Aday Öğrenci Sil', 'group' => 'CRM'],
+    public const STUDENTS_VIEW = 'students.view';
+    public const STUDENTS_CREATE = 'students.create';
+    public const STUDENTS_UPDATE = 'students.update';
+    public const STUDENTS_DELETE = 'students.delete';
 
-        'contacts.view' => ['label' => 'İletişim Mesajlarını Görüntüle', 'group' => 'CRM'],
-        'contacts.create' => ['label' => 'İletişim Mesajı Oluştur', 'group' => 'CRM'],
-        'contacts.update' => ['label' => 'İletişim Mesajı Güncelle', 'group' => 'CRM'],
-        'contacts.delete' => ['label' => 'İletişim Mesajı Sil', 'group' => 'CRM'],
+    public const LEADS_VIEW = 'leads.view';
+    public const LEADS_CREATE = 'leads.create';
+    public const LEADS_UPDATE = 'leads.update';
+    public const LEADS_DELETE = 'leads.delete';
 
-        'registrations.view' => ['label' => 'Kayıtları Görüntüle', 'group' => 'Education'],
-        'registrations.create' => ['label' => 'Kayıt Oluştur', 'group' => 'Education'],
-        'registrations.update' => ['label' => 'Kayıt Güncelle', 'group' => 'Education'],
-        'registrations.delete' => ['label' => 'Kayıt Sil', 'group' => 'Education'],
+    public const CONTACTS_VIEW = 'contacts.view';
+    public const CONTACTS_CREATE = 'contacts.create';
+    public const CONTACTS_UPDATE = 'contacts.update';
+    public const CONTACTS_DELETE = 'contacts.delete';
 
-        'announcements.view' => ['label' => 'Duyuruları Görüntüle', 'group' => 'CMS'],
-        'announcements.create' => ['label' => 'Duyuru Oluştur', 'group' => 'CMS'],
-        'announcements.update' => ['label' => 'Duyuru Güncelle', 'group' => 'CMS'],
-        'announcements.delete' => ['label' => 'Duyuru Sil', 'group' => 'CMS'],
+    public const REGISTRATIONS_VIEW = 'registrations.view';
+    public const REGISTRATIONS_CREATE = 'registrations.create';
+    public const REGISTRATIONS_UPDATE = 'registrations.update';
+    public const REGISTRATIONS_DELETE = 'registrations.delete';
 
-        'branches.view' => ['label' => 'Şubeleri Görüntüle', 'group' => 'System'],
-        'branches.manage' => ['label' => 'Şubeleri Yönet', 'group' => 'System'],
-    ];
+    public const ANNOUNCEMENTS_VIEW = 'announcements.view';
+    public const ANNOUNCEMENTS_CREATE = 'announcements.create';
+    public const ANNOUNCEMENTS_UPDATE = 'announcements.update';
+    public const ANNOUNCEMENTS_DELETE = 'announcements.delete';
+
+    public const BRANCHES_VIEW = 'branches.view';
+    public const BRANCHES_MANAGE = 'branches.manage';
 
     public static function all(): array
     {
-        return array_keys(self::DICTIONARY);
+        $oClass = new \ReflectionClass(__CLASS__);
+        return array_values($oClass->getConstants());
     }
 }

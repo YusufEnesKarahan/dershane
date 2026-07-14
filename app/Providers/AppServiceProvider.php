@@ -14,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            \App\Core\Contracts\ActivityLoggerInterface::class,
+            \App\Core\Services\Logging\NullActivityLogger::class
+        );
     }
 
     /**

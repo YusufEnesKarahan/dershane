@@ -1,20 +1,25 @@
 <?php
 namespace App\Domain\Auth\Services;
 
-use App\Domain\Auth\Dictionaries\PermissionDictionary;
-
 class PermissionGroupService
 {
     public function getGroupedPermissions(): array
     {
+        $config = config('permissions.groups', []);
         $grouped = [];
-        foreach (PermissionDictionary::DICTIONARY as $name => $meta) {
-            $group = $meta['group'];
-            $grouped[$group][] = [
-                'name' => $name,
-                'label' => $meta['label']
-            ];
+
+        foreach ($config as $key => $group) {
+            $perms = [];
+            foreach ($group['permissions'] as $perm) {
+                // Get display meta
+                $perms[] = [
+                    'name' => $perm,
+                    'label' => ucfirst(str_replace('.', ' ', $perm))
+                ];
+            }
+            $grouped[$group['label']] = $perms;
         }
+
         return $grouped;
     }
 }

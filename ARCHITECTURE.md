@@ -93,3 +93,7 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 ## RBAC & Access Control Refinement
 - **PermissionDictionary:** Centralized permission register.
 - **SystemRoleGuard & Protection Hooks:** Safeguards core accounts and administrative roles from deletion or status change.
+
+## Configuration-Driven RBAC
+- **Config-Driven Permissions:** Groupings and menu configs moved to config files.
+- **PermissionResolver:** Single entry point for permission checks.

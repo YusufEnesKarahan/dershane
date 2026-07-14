@@ -39,3 +39,5 @@
 - [x] Sprint 2.4: User Management Module Completed
 
 - [x] Sprint 2.4.x: User Management Refinement & RBAC Preparation Completed
+
+- [x] Sprint 2.4.y: RBAC Architecture Hardening Completed
