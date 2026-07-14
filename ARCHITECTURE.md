@@ -67,3 +67,16 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 
 
 
+
+## Data Access Layer
+- **Repositories:** Abstract DB queries.
+- **Services:** Handle business logic.
+- **DTOs:** Standardize data passing.
+
+## Authentication Domain
+- **AuthManager:** Post-login context loading.
+- **Actions:** Encapsulate auth logic (LoginAction, LogoutAction).
+
+## Authorization & RBAC
+- **PermissionCache:** Eliminates DB queries during checks.
+- **AuthorizationService:** Central point for permission verification.

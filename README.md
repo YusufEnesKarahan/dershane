@@ -27,3 +27,12 @@ Detaylı geliştirme ve mimari kılavuzlarına aşağıdaki dokümanlardan eriş
 
 ---
 *Bu projenin ticari fikri mülkiyeti korunmaktadır. Tüm modüller modüler, genişletilebilir ve SOLID prensiplerine tam uyumlu şekilde inşa edilmektedir.*
+
+## Database Foundation
+Sprint 2.0 has established the core Database Models, Migrations, Repositories, Services, and DTOs using MySQL and InnoDB.
+
+## Authentication Foundation
+Sprint 2.1 has established a fully custom Authentication Domain with Service and Action classes, ensuring robust session security and password policies.
+
+## Authorization Foundation
+Sprint 2.2 implemented a robust, cache-backed RBAC system with policies, middleware, and granular permissions.
