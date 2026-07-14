@@ -8,6 +8,6 @@ class ProfileController extends Controller
 {
     public function dashboard()
     {
-        return view('auth.dashboard-placeholder');
+        return view('admin.dashboard');
     }
 }

@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             Illuminate\Support\Facades\Route::middleware('web')
                 ->group(base_path('routes/auth.php'));
+            Illuminate\Support\Facades\Route::middleware('web')
+                ->group(base_path('routes/admin.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {

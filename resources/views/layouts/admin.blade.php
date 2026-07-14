@@ -1,45 +1,28 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-50 dark:bg-neutral-900" x-data="{ darkMode: false, sidebarOpen: false, miniSidebar: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; $watch('darkMode', val => localStorage.setItem('darkMode', val)); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>Yönetim Paneli - {{ config('settings.app.name', 'Dershane SaaS') }}</title>
-
-    <!-- Brand theme styling dynamically injected -->
-    @themeStyles
-
-    <!-- Scripts and Styles (Vite) -->
+    <title>@yield('title', config('app.name')) - Admin Panel</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="font-sans antialiased text-gray-900 bg-gray-100">
-    <div class="min-h-screen flex flex-col md:flex-row">
-        <!-- Admin Sidebar Placeholder -->
-        <aside class="w-full md:w-64 bg-slate-900 text-slate-100 flex-shrink-0">
-            <div class="p-4 font-bold border-b border-slate-800">
-                {{ config('settings.app.name', 'Dershane Admin') }}
-            </div>
-            <nav class="p-4 space-y-2">
-                <!-- Navigation links go here -->
-            </nav>
-        </aside>
+<body class="h-full text-neutral-800 dark:text-neutral-200 antialiased selection:bg-primary selection:text-white" :class="{ 'dark': darkMode }">
+    <div id="app" class="flex h-screen overflow-hidden">
+        <!-- Mobile Sidebar Overlay -->
+        <div x-show="sidebarOpen" class="fixed inset-0 z-40 bg-neutral-900/80 backdrop-blur-sm lg:hidden" @click="sidebarOpen = false" x-transition.opacity></div>
 
-        <div class="flex-grow flex flex-col min-w-0">
-            <!-- Header bar -->
-            <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6">
-                <div>
-                    <!-- Breadcrumb space -->
-                    @yield('breadcrumb')
-                </div>
-                <div>
-                    <!-- User menu -->
-                </div>
-            </header>
+        <!-- Sidebar -->
+        <x-admin.sidebar.layout />
 
-            <!-- Page Main Content -->
-            <main class="p-6 flex-grow">
-                {{ $slot ?? '' }}
+        <!-- Main Content Wrapper -->
+        <div class="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
+            <!-- Topbar -->
+            <x-admin.topbar.layout />
+
+            <!-- Content Area -->
+            <main class="flex-1 overflow-y-auto bg-neutral-50 dark:bg-neutral-950 p-4 sm:p-6 lg:p-8">
                 @yield('content')
             </main>
         </div>

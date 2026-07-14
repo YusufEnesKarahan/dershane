@@ -80,3 +80,7 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 ## Authorization & RBAC
 - **PermissionCache:** Eliminates DB queries during checks.
 - **AuthorizationService:** Central point for permission verification.
+
+## Admin Framework
+- **Layout Components:** Custom Blade/Tailwind components for Admin UI (Sidebar, Topbar, CRUD, Tables).
+- **Theme/State:** Alpine.js driven UI states (Dark Mode, Sidebar Collapse).

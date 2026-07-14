@@ -22,5 +22,5 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LogoutController::class, 'destroy'])->name('logout');
     
     // Placeholder dashboard for redirect
-    Route::get('dashboard', [ProfileController::class, 'dashboard'])->name('dashboard');
+    Route::get('dashboard', [ProfileController::class, 'dashboard'])->name('admin.dashboard');
 });

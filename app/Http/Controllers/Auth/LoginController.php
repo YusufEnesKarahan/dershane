@@ -19,7 +19,7 @@ class LoginController extends Controller
 
         if ($action->execute($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->clearRateLimiter();
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         $request->hitRateLimiter();
