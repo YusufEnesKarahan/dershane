@@ -21,6 +21,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\RoleRepositoryInterface::class,
             \App\Core\Repositories\RoleRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\PageRepositoryInterface::class,
+            \App\Core\Repositories\PageRepository::class
+        );
     }
 
     /**

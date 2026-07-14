@@ -5,8 +5,8 @@ use App\Models\{Page, BlogCategory, Blog, Event, Announcement};
 
 class DemoContentSeeder extends Seeder {
     public function run(): void {
-        Page::create(['title' => 'Hakkımızda', 'slug' => 'hakkimizda', 'content' => 'Kurumumuz 2010 yılında kurulmuştur...', 'is_published' => true]);
-        Page::create(['title' => 'İletişim', 'slug' => 'iletisim', 'content' => 'Bize ulaşın...', 'is_published' => true]);
+        Page::create(['title' => 'Hakkımızda', 'slug' => 'hakkimizda', 'content' => 'Kurumumuz 2010 yılında kurulmuştur...', 'status' => 'published', 'template' => 'about']);
+        Page::create(['title' => 'İletişim', 'slug' => 'iletisim', 'content' => 'Bize ulaşın...', 'status' => 'published', 'template' => 'contact']);
 
         $cat = BlogCategory::create(['name' => 'Rehberlik', 'slug' => 'rehberlik', 'description' => 'Sınav stratejileri ve rehberlik']);
         

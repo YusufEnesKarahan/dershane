@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\UserPreferenceController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PageController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -31,7 +32,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('permissions', fn() => 'Permissions Placeholder')->name('permissions.index');
 
     // CMS
-    Route::get('pages', fn() => 'Pages Placeholder')->name('pages.index');
+    Route::post('pages/bulk', [PageController::class, 'bulk'])->name('pages.bulk');
+    Route::post('pages/{id}/restore', [PageController::class, 'restore'])->name('pages.restore');
+    Route::post('pages/{page}/publish', [PageController::class, 'publish'])->name('pages.publish');
+    Route::post('pages/{page}/duplicate', [PageController::class, 'duplicate'])->name('pages.duplicate');
+    Route::get('pages/{page}/preview', [PageController::class, 'preview'])->name('pages.preview');
+    Route::resource('pages', PageController::class);
     Route::get('blogs', fn() => 'Blogs Placeholder')->name('blogs.index');
     Route::get('announcements', fn() => 'Announcements Placeholder')->name('announcements.index');
 

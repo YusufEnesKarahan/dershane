@@ -101,3 +101,8 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 ## Role Management
 - **Permission Matrix Accordion:** Custom interactive authorization matrix.
 - **SystemRoleGuard protection:** Ensures roles like Administrator or Super Admin cannot be deleted or renamed.
+
+## CMS Module
+- **DatabaseContentService:** Fallback strategy. Works with Database page tables first, then falls back to DemoContentService.
+- **Revision system:** Automatically persists snapshots on page edits.
+- **Markdown + Live preview editor:** Interactive authoring area.
