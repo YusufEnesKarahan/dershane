@@ -97,3 +97,7 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 ## Configuration-Driven RBAC
 - **Config-Driven Permissions:** Groupings and menu configs moved to config files.
 - **PermissionResolver:** Single entry point for permission checks.
+
+## Role Management
+- **Permission Matrix Accordion:** Custom interactive authorization matrix.
+- **SystemRoleGuard protection:** Ensures roles like Administrator or Super Admin cannot be deleted or renamed.

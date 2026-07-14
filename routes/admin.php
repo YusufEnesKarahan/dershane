@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\UserPreferenceController;
+use App\Http\Controllers\Admin\RoleController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -22,7 +23,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('profile/avatar', [UserProfileController::class, 'avatar'])->name('profile.avatar');
     Route::post('preferences', [UserPreferenceController::class, 'update'])->name('preferences.update');
 
-    Route::get('roles', fn() => 'Roles Placeholder')->name('roles.index');
+    Route::post('roles/bulk', [RoleController::class, 'bulk'])->name('roles.bulk');
+    Route::post('roles/{id}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+    Route::get('roles/{role}/clone', [RoleController::class, 'showClone'])->name('roles.showClone');
+    Route::post('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
+    Route::resource('roles', RoleController::class);
     Route::get('permissions', fn() => 'Permissions Placeholder')->name('permissions.index');
 
     // CMS

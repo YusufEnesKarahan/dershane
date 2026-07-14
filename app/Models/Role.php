@@ -13,10 +13,10 @@ class Role extends Model
 
     protected $fillable = [
         'name',
-        'guard_name'
+        'guard_name',
+        'description',
+        'color',
     ];
-
-
 
     public function users() {
         return $this->belongsToMany(User::class);
@@ -25,4 +25,8 @@ class Role extends Model
         return $this->belongsToMany(Permission::class);
     }
 
+    public function isSystemRole(): bool
+    {
+        return app(\App\Domain\Auth\Services\SystemRoleGuard::class)->isProtected($this);
+    }
 }
