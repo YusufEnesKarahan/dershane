@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'status', 'last_login_at', 'branch_id', 'preferences'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -28,6 +28,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => \App\Enums\UserStatus::class,
+            'preferences' => 'array',
+            'last_login_at' => 'datetime',
         ];
     }
 
@@ -37,6 +40,9 @@ class User extends Authenticatable
     }
     public function teacher() {
         return $this->hasOne(Teacher::class);
+    }
+    public function branch() {
+        return $this->belongsTo(Branch::class);
     }
 
     public function hasRole(string|array $roles): bool
@@ -49,4 +55,52 @@ class User extends Authenticatable
         return app(\App\Domain\Auth\Services\AuthorizationService::class)->hasPermission($this, $permission);
     }
 
+    // Helpers
+    public function isActive(): bool
+    {
+        return $this->status === \App\Enums\UserStatus::ACTIVE;
+    }
+
+    public function isAdministrator(): bool
+    {
+        return $this->hasRole('Administrator');
+    }
+
+    public function getAvatarUrl(): string
+    {
+        if ($this->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar)) {
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar);
+        }
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=6366f1&color=fff';
+    }
+
+    public function displayName(): string
+    {
+        return $this->name;
+    }
+
+    public function initials(): string
+    {
+        $words = explode(' ', $this->name);
+        $initials = '';
+        foreach ($words as $word) {
+            $initials .= substr($word, 0, 1);
+        }
+        return strtoupper(substr($initials, 0, 2));
+    }
+
+    public function preferredLanguage(): string
+    {
+        return $this->preferences['language'] ?? 'tr';
+    }
+
+    public function preferredTheme(): string
+    {
+        return $this->preferences['theme'] ?? 'light';
+    }
+
+    public function preferredTimezone(): string
+    {
+        return $this->preferences['timezone'] ?? 'Europe/Istanbul';
+    }
 }

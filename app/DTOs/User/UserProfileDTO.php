@@ -1,0 +1,20 @@
+<?php
+namespace App\DTOs\User;
+
+class UserProfileDTO
+{
+    public function __construct(
+        public string $name,
+        public string $email,
+        public ?string $phone = null
+    ) {}
+
+    public static function fromRequest(array $data): self
+    {
+        return new self(
+            name: $data['name'],
+            email: $data['email'],
+            phone: $data['phone'] ?? null
+        );
+    }
+}

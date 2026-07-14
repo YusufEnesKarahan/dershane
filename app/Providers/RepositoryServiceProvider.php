@@ -13,7 +13,10 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Register repository interfaces to concrete implementations here in future.
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\UserRepositoryInterface::class,
+            \App\Core\Repositories\UserRepository::class
+        );
     }
 
     /**

@@ -84,3 +84,8 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 ## Admin Framework
 - **Layout Components:** Custom Blade/Tailwind components for Admin UI (Sidebar, Topbar, CRUD, Tables).
 - **Theme/State:** Alpine.js driven UI states (Dark Mode, Sidebar Collapse).
+
+## User Management
+- **Repository & Service Layer:** Decoupled database operations.
+- **JSON Preferences:** Storing user UI preferences in a JSON column.
+- **Storage disk:** Avatars stored inside storage/app/public/avatars.

@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserProfileController;
+use App\Http\Controllers\Admin\UserPreferenceController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -10,7 +12,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Route::get('dashboard', [ProfileController::class, 'dashboard'])->name('dashboard');
 
     // Access Management
-    Route::get('users', fn() => 'Users Placeholder')->name('users.index');
+    Route::post('users/bulk', [UserController::class, 'bulk'])->name('users.bulk');
+    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::resource('users', UserController::class);
+    
+    Route::get('profile', [UserProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('profile', [UserProfileController::class, 'update'])->name('profile.update');
+    Route::post('profile/password', [UserProfileController::class, 'password'])->name('profile.password');
+    Route::post('profile/avatar', [UserProfileController::class, 'avatar'])->name('profile.avatar');
+    Route::post('preferences', [UserPreferenceController::class, 'update'])->name('preferences.update');
+
     Route::get('roles', fn() => 'Roles Placeholder')->name('roles.index');
     Route::get('permissions', fn() => 'Permissions Placeholder')->name('permissions.index');
 

@@ -35,3 +35,5 @@
 - [x] Sprint 2.2: Authorization (RBAC) & Admin Permission Foundation Completed
 
 - [x] Sprint 2.3: Premium Admin Panel Framework Completed
+
+- [x] Sprint 2.4: User Management Module Completed
