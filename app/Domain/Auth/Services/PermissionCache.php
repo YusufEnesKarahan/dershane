@@ -21,11 +21,17 @@ class PermissionCache
         Cache::forget('user_permissions_' . $user->id);
     }
 
+    public function rebuild(User $user): void
+    {
+        $this->clearUserCache($user);
+        $this->getUserPermissions($user);
+    }
+
     public function clearRoleCache($role): void
     {
-        // When a role changes permissions, we clear cache for all users with that role
+        // When a role changes permissions, we rebuild cache for all users with that role
         foreach ($role->users as $user) {
-            $this->clearUserCache($user);
+            $this->rebuild($user);
         }
     }
 }

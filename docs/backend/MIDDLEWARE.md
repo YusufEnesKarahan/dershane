@@ -17,7 +17,7 @@ Route::get('/admin/users', [UserController::class, 'index'])->middleware('permis
 
 **Protecting a route by Role:**
 ```php
-Route::get('/admin/reports', [ReportController::class, 'index'])->middleware('role:Administrator|Branch Manager');
+Route::get('/admin/reports', [ReportController::class, 'index'])->middleware('role:Administrator');
 ```
 
 **Protecting a route by Edition:**

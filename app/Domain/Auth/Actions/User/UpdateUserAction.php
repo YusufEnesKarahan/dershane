@@ -39,6 +39,16 @@ class UpdateUserAction
             }
         }
 
+        // Prevent last Administrator from being deactivated
+        if ($user->hasRole('Administrator') && $dto->status !== 'ACTIVE') {
+            $adminCount = \App\Models\User::whereHas('roles', function ($q) {
+                $q->where('name', 'Administrator');
+            })->where('status', 'ACTIVE')->count();
+            if ($adminCount <= 1) {
+                abort(403, 'The last active Administrator cannot be deactivated.');
+            }
+        }
+
         $data = [
             'name' => $dto->name,
             'email' => $dto->email,

@@ -89,3 +89,7 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 - **Repository & Service Layer:** Decoupled database operations.
 - **JSON Preferences:** Storing user UI preferences in a JSON column.
 - **Storage disk:** Avatars stored inside storage/app/public/avatars.
+
+## RBAC & Access Control Refinement
+- **PermissionDictionary:** Centralized permission register.
+- **SystemRoleGuard & Protection Hooks:** Safeguards core accounts and administrative roles from deletion or status change.

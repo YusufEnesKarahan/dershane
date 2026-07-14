@@ -7,31 +7,13 @@ use App\Domain\Auth\Services\PermissionManager;
 use App\Domain\Auth\Services\RoleManager;
 use App\Domain\Auth\Services\PermissionCache;
 
+use App\Domain\Auth\Dictionaries\PermissionDictionary;
+
 class RolesAndPermissionsSeeder extends Seeder
 {
     public function run(PermissionManager $permManager, RoleManager $roleManager, PermissionCache $cache): void
     {
-        $permissions = [
-            'dashboard.view',
-            'users.view', 'users.create', 'users.update', 'users.delete',
-            'roles.view', 'roles.create', 'roles.update', 'roles.delete',
-            'permissions.view', 'permissions.assign',
-            'pages.view', 'pages.create', 'pages.update', 'pages.delete',
-            'blogs.view', 'blogs.create', 'blogs.update', 'blogs.delete',
-            'gallery.view', 'gallery.create', 'gallery.update', 'gallery.delete',
-            'announcements.view', 'announcements.create', 'announcements.update', 'announcements.delete',
-            'students.view', 'students.create', 'students.update', 'students.delete',
-            'teachers.view', 'teachers.create', 'teachers.update', 'teachers.delete',
-            'courses.view', 'courses.create', 'courses.update', 'courses.delete',
-            'classrooms.view', 'classrooms.create', 'classrooms.update', 'classrooms.delete',
-            'registrations.view', 'registrations.create', 'registrations.update', 'registrations.delete',
-            'leads.view', 'leads.create', 'leads.update', 'leads.delete',
-            'contacts.view', 'contacts.create', 'contacts.update', 'contacts.delete',
-            'settings.view', 'settings.update',
-            'branches.view', 'branches.create', 'branches.update', 'branches.delete',
-            'media.view', 'media.create', 'media.delete',
-            'logs.view',
-        ];
+        $permissions = PermissionDictionary::all();
 
         $permissionIds = [];
         foreach ($permissions as $permName) {

@@ -38,4 +38,27 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         return $this->find($id)->delete();
     }
+
+    public function bulkDelete(array $ids): int
+    {
+        return $this->model->whereIn($this->model->getKeyName(), $ids)->delete();
+    }
+
+    public function bulkRestore(array $ids): int
+    {
+        if (method_exists($this->model, 'restore')) {
+            return $this->model->withTrashed()->whereIn($this->model->getKeyName(), $ids)->restore();
+        }
+        return 0;
+    }
+
+    public function bulkUpdate(array $ids, array $data): int
+    {
+        return $this->model->whereIn($this->model->getKeyName(), $ids)->update($data);
+    }
+
+    public function bulkStatus(array $ids, string $status): int
+    {
+        return $this->bulkUpdate($ids, ['status' => $status]);
+    }
 }

@@ -1,14 +1,10 @@
 # RBAC Architecture
 
-This platform utilizes a completely custom, cache-backed Role-Based Access Control (RBAC) system optimized for multi-tenancy and high performance.
+This platform utilizes a completely custom, cache-backed Role-Based Access Control (RBAC) system optimized for multi-tenancy.
 
 ## Core Components
-- **AuthorizationService:** The central authority for checking permissions. Evaluates if a User has a role or permission, automatically granting full access to `Administrator`.
-- **PermissionCache:** Caches user permissions infinitely to Redis/File. The cache is automatically cleared when a user's role is updated, or a role's permissions are modified by the `RoleManager`.
-- **PermissionManager & RoleManager:** Dedicated services for creating, deleting, and syncing roles and permissions.
-
-## Database
-- `roles` (name, guard)
-- `permissions` (name, guard)
-- `role_user` (pivot)
-- `permission_role` (pivot)
+- **AuthorizationService**: Evaluates user access. Intercepts checks to automatically grant the `Administrator` role full permissions.
+- **PermissionCache**: Infinite caching layer. Cleared and automatically rebuilt when role permissions are updated, preventing any stale caches without forcing a logout.
+- **SystemRoleGuard**: Hardcoded guard protecting system roles (`Administrator`, `Super Admin`) from being deleted, renamed, or having their permissions stripped.
+- **RoleCloneService**: Utility to duplicate existing roles and permission mappings.
+- **EffectivePermissionService**: Unifies Roles, Editions, and Feature Flags into a single permission payload.

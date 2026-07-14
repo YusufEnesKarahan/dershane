@@ -58,26 +58,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $record ? $record->forceDelete() : false;
     }
 
-    public function bulkDelete(array $ids): int
-    {
-        return $this->model->whereIn('id', $ids)->delete();
-    }
-
-    public function bulkRestore(array $ids): int
-    {
-        return $this->model->withTrashed()->whereIn('id', $ids)->restore();
-    }
-
-    public function bulkUpdate(array $ids, array $data): int
-    {
-        return $this->model->whereIn('id', $ids)->update($data);
-    }
-
-    public function bulkStatus(array $ids, string $status): int
-    {
-        return $this->model->whereIn('id', $ids)->update(['status' => $status]);
-    }
-
     public function bulkAssignRole(array $ids, int $roleId): void
     {
         DB::transaction(function () use ($ids, $roleId) {

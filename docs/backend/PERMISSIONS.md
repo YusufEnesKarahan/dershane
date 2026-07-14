@@ -1,32 +1,19 @@
 # Permission Dictionary
 
-All permissions follow a `resource.action` syntax. Wildcards (`*`) are supported (e.g. `users.*` grants all user permissions).
+All permissions are strictly registered in the `PermissionDictionary` (`app/Domain/Auth/Dictionaries/PermissionDictionary.php`). They follow the `module.action` pattern:
 
-## System
-- `dashboard.view`: Access the admin panel.
-- `settings.view`, `settings.update`
-- `branches.view`, `branches.create`, `branches.update`, `branches.delete`
-- `media.view`, `media.create`, `media.delete`
-- `logs.view`: Access system logs.
-
-## Access Management
-- `users.view`, `users.create`, `users.update`, `users.delete`
-- `roles.view`, `roles.create`, `roles.update`, `roles.delete`
+- `users.view`, `users.create`, `users.update`, `users.delete`, `users.restore`, `users.export`
+- `roles.view`, `roles.create`, `roles.update`, `roles.delete`, `roles.assign`
 - `permissions.view`, `permissions.assign`
-
-## CMS
 - `pages.view`, `pages.create`, `pages.update`, `pages.delete`
 - `blogs.view`, `blogs.create`, `blogs.update`, `blogs.delete`
-- `gallery.*`
-- `announcements.*`
-
-## Education
-- `students.*`
-- `teachers.*`
-- `courses.*`
-- `classrooms.*`
-- `registrations.*`
-
-## CRM
-- `leads.*`
-- `contacts.*`
+- `teachers.view`, `teachers.create`, `teachers.update`, `teachers.delete`
+- `courses.view`, `courses.create`, `courses.update`, `courses.delete`
+- `gallery.view`, `gallery.create`, `gallery.delete`
+- `media.view`, `media.create`, `media.delete`
+- `settings.view`, `settings.update`
+- `crm.view`, `crm.manage`
+- `attendance.view`, `attendance.manage`
+- `homeworks.view`, `homeworks.manage`
+- `classrooms.view`, `classrooms.manage`
+- `branches.view`, `branches.manage`
