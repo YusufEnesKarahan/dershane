@@ -33,6 +33,14 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\MediaFolderRepositoryInterface::class,
             \App\Core\Repositories\MediaFolderRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\PlatformSettingRepositoryInterface::class,
+            \App\Core\Repositories\PlatformSettingRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\SettingGroupRepositoryInterface::class,
+            \App\Core\Repositories\SettingGroupRepository::class
+        );
     }
 
     /**

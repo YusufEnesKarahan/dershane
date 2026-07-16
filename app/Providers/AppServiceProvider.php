@@ -85,5 +85,6 @@ class AppServiceProvider extends ServiceProvider
 
         \App\Models\Page::observe(\App\Observers\PageObserver::class);
         \App\Models\Media::observe(\App\Observers\MediaObserver::class);
+        \App\Models\PlatformSetting::observe(\App\Observers\PlatformSettingObserver::class);
     }
 }

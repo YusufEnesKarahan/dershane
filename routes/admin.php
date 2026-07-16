@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
+use App\Http\Controllers\Admin\PlatformSettingController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -62,6 +63,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // System
     Route::get('branches', fn() => 'Branches Placeholder')->name('branches.index');
-    Route::get('settings', fn() => 'Settings Placeholder')->name('settings.index');
+    Route::get('settings', [PlatformSettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [PlatformSettingController::class, 'update'])->name('settings.update');
+    Route::post('settings/test-mail', [PlatformSettingController::class, 'testMail'])->name('settings.test-mail');
+    Route::post('settings/test-storage', [PlatformSettingController::class, 'testStorage'])->name('settings.test-storage');
+    Route::get('settings/export', [PlatformSettingController::class, 'export'])->name('settings.export');
+    Route::post('settings/import', [PlatformSettingController::class, 'import'])->name('settings.import');
+    Route::post('settings/reset', [PlatformSettingController::class, 'reset'])->name('settings.reset');
     Route::get('logs', fn() => 'Logs Placeholder')->name('logs.index');
 });

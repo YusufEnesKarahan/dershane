@@ -116,3 +116,7 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 - **MediaFolder:** Handles hierarchical asset categorization.
 - **StorageService:** Abstracted Laravel file system uploads.
 - **ImageOptimizerService:** Native PHP GD WebP and thumbnail conversion.
+
+## Configuration & White Label
+- **PlatformSetting:** Key-value parameters stored with encryption supports.
+- **ThemeService:** Dynamic CSS compilation targeting public custom styles.

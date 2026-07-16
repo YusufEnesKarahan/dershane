@@ -8,6 +8,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            PlatformSettingsSeeder::class,
             RolesAndPermissionsSeeder::class,
             BranchSeeder::class,
             DemoContentSeeder::class,
