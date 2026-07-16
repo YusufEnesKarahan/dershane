@@ -32,15 +32,19 @@ class Page extends Model
         'sort_order',
         'is_homepage',
         'is_system',
-        'revisions'
     ];
 
     protected $casts = [
         'is_homepage' => 'boolean',
         'is_system' => 'boolean',
         'published_at' => 'datetime',
-        'revisions' => 'array',
+        'status' => \App\Enums\PageStatus::class,
     ];
+
+    public function revisions()
+    {
+        return $this->hasMany(\App\Models\PageRevision::class, 'page_id')->orderBy('created_at', 'desc');
+    }
 
     public function parent()
     {

@@ -18,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Core\Contracts\ActivityLoggerInterface::class,
             \App\Core\Services\Logging\NullActivityLogger::class
         );
+        $this->app->bind(
+            \App\Domain\CMS\Services\MarkdownRendererInterface::class,
+            \App\Domain\CMS\Services\CommonMarkRenderer::class
+        );
     }
 
     /**
@@ -63,5 +67,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('endcananypermission', function () {
             return "<?php endif; ?>";
         });
+
+        \App\Models\Page::observe(\App\Observers\PageObserver::class);
     }
 }

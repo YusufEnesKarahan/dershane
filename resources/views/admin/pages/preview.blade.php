@@ -12,7 +12,7 @@
                 <p class="lead text-neutral-500 font-medium border-l-4 border-primary pl-4 py-1">{{ $page->excerpt }}</p>
             @endif
             <div class="mt-6 text-neutral-800 dark:text-neutral-200">
-                {!! nl2br(e($page->content)) !!}
+                {!! $htmlContent !!}
             </div>
         </div>
     </x-admin.crud.index-layout>

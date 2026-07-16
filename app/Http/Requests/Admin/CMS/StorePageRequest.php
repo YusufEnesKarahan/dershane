@@ -2,6 +2,8 @@
 namespace App\Http\Requests\Admin\CMS;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\PageStatus;
 
 class StorePageRequest extends FormRequest
 {
@@ -14,7 +16,7 @@ class StorePageRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:pages,slug'],
+            'slug' => ['required', 'string', 'max:255'],
             'content' => ['nullable', 'string'],
             'excerpt' => ['nullable', 'string'],
             'template' => ['nullable', 'string'],
@@ -22,6 +24,7 @@ class StorePageRequest extends FormRequest
             'sort_order' => ['nullable', 'integer'],
             'is_homepage' => ['nullable', 'boolean'],
             'seo' => ['nullable', 'array'],
+            'status' => ['nullable', new Enum(PageStatus::class)],
         ];
     }
 }

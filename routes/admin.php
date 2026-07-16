@@ -30,7 +30,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
     Route::resource('roles', RoleController::class);
     Route::get('permissions', fn() => 'Permissions Placeholder')->name('permissions.index');
-
+    
     // CMS
     Route::post('pages/bulk', [PageController::class, 'bulk'])->name('pages.bulk');
     Route::post('pages/{id}/restore', [PageController::class, 'restore'])->name('pages.restore');

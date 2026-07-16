@@ -9,17 +9,26 @@ use App\DTOs\CMS\PageFilterDTO;
 use App\Http\Requests\Admin\CMS\StorePageRequest;
 use App\Http\Requests\Admin\CMS\UpdatePageRequest;
 use App\Domain\CMS\Services\PageService;
+use App\Domain\CMS\Services\SeoAnalyzerService;
+use App\Domain\CMS\Services\TreeService;
+use App\Domain\CMS\Services\MarkdownRendererInterface;
 use App\Domain\CMS\Actions\CreatePageAction;
 use App\Domain\CMS\Actions\UpdatePageAction;
 use App\Domain\CMS\Actions\DeletePageAction;
 use App\Domain\CMS\Actions\RestorePageAction;
 use App\Domain\CMS\Actions\PublishPageAction;
 use App\Domain\CMS\Actions\DuplicatePageAction;
+use App\Enums\PageStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class PageController extends Controller
 {
-    public function __construct(protected PageService $service) {}
+    public function __construct(
+        protected PageService $service,
+        protected SeoAnalyzerService $seoAnalyzerService,
+        protected TreeService $treeService
+    ) {}
 
     public function index(Request $request)
     {
@@ -28,7 +37,7 @@ class PageController extends Controller
         $filters = PageFilterDTO::fromRequest($request->all());
         $pages = $this->service->paginate($filters);
         
-        $tree = app(\App\Core\Repositories\Interfaces\PageRepositoryInterface::class)->getTree();
+        $tree = $this->treeService->buildTree();
 
         return view('admin.pages.index', compact('pages', 'tree'));
     }
@@ -36,7 +45,7 @@ class PageController extends Controller
     public function create()
     {
         $this->authorize('create', Page::class);
-        $templates = ['default' => 'Varsayılan', 'about' => 'Hakkımızda', 'faq' => 'SSS', 'contact' => 'İletişim'];
+        $templates = config('cms.supported_templates', []);
         $pages = Page::whereNull('parent_id')->get();
 
         return view('admin.pages.create', compact('templates', 'pages'));
@@ -53,10 +62,19 @@ class PageController extends Controller
     public function edit(Page $page)
     {
         $this->authorize('update', $page);
-        $templates = ['default' => 'Varsayılan', 'about' => 'Hakkımızda', 'faq' => 'SSS', 'contact' => 'İletişim'];
+        $templates = config('cms.supported_templates', []);
         $pages = Page::whereNull('parent_id')->where('id', '!=', $page->id)->get();
+        
+        $seoReport = $this->seoAnalyzerService->analyze($page);
+        
+        // Generate a temporary signed route for preview link
+        $previewUrl = URL::temporarySignedRoute(
+            'admin.pages.preview', 
+            now()->addMinutes(config('cms.preview_duration', 120)), 
+            ['page' => $page->id]
+        );
 
-        return view('admin.pages.edit', compact('page', 'templates', 'pages'));
+        return view('admin.pages.edit', compact('page', 'templates', 'pages', 'seoReport', 'previewUrl'));
     }
 
     public function update(UpdatePageRequest $request, Page $page, UpdatePageAction $action)
@@ -87,10 +105,11 @@ class PageController extends Controller
     public function publish(Page $page, Request $request, PublishPageAction $action)
     {
         $this->authorize('update', $page);
-        $status = $request->input('status', 'published');
-        $action->execute($page, $status);
+        $statusStr = $request->input('status', 'published');
+        $status = PageStatus::tryFrom($statusStr) ?? PageStatus::Published;
+        $action->execute($page, $status->value);
 
-        return redirect()->route('admin.pages.index')->with('success', "Page status updated to {$status}.");
+        return redirect()->route('admin.pages.index')->with('success', "Page status updated to {$status->label()}.");
     }
 
     public function duplicate(Page $page, DuplicatePageAction $action)
@@ -101,10 +120,16 @@ class PageController extends Controller
         return redirect()->route('admin.pages.index')->with('success', 'Page duplicated successfully.');
     }
 
-    public function preview(Page $page)
+    public function preview(Page $page, Request $request, MarkdownRendererInterface $renderer)
     {
-        $this->authorize('view', $page);
-        return view('admin.pages.preview', compact('page'));
+        // Enforce Laravel Signed URL validity
+        if (! $request->hasValidSignature()) {
+            abort(401, 'Invalid or expired preview signature.');
+        }
+
+        $htmlContent = $renderer->render($page->content ?? '');
+
+        return view('admin.pages.preview', compact('page', 'htmlContent'));
     }
 
     public function bulk(Request $request, \App\Core\Repositories\Interfaces\PageRepositoryInterface $repository)
@@ -129,10 +154,10 @@ class PageController extends Controller
                 $repository->bulkDelete($ids);
                 break;
             case 'publish':
-                Page::whereIn('id', $ids)->update(['status' => 'published', 'published_at' => now()]);
+                Page::whereIn('id', $ids)->update(['status' => PageStatus::Published->value, 'published_at' => now()]);
                 break;
             case 'archive':
-                Page::whereIn('id', $ids)->update(['status' => 'archived', 'published_at' => null]);
+                Page::whereIn('id', $ids)->update(['status' => PageStatus::Archived->value, 'published_at' => null]);
                 break;
         }
 

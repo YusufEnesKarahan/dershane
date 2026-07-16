@@ -2,6 +2,8 @@
 namespace App\Http\Requests\Admin\CMS;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+use App\Enums\PageStatus;
 
 class UpdatePageRequest extends FormRequest
 {
@@ -12,10 +14,9 @@ class UpdatePageRequest extends FormRequest
 
     public function rules(): array
     {
-        $pageId = $this->route('page')?->id;
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:pages,slug,' . $pageId],
+            'slug' => ['required', 'string', 'max:255'],
             'content' => ['nullable', 'string'],
             'excerpt' => ['nullable', 'string'],
             'template' => ['nullable', 'string'],
@@ -23,6 +24,7 @@ class UpdatePageRequest extends FormRequest
             'sort_order' => ['nullable', 'integer'],
             'is_homepage' => ['nullable', 'boolean'],
             'seo' => ['nullable', 'array'],
+            'status' => ['nullable', new Enum(PageStatus::class)],
         ];
     }
 }

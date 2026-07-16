@@ -106,3 +106,8 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 - **DatabaseContentService:** Fallback strategy. Works with Database page tables first, then falls back to DemoContentService.
 - **Revision system:** Automatically persists snapshots on page edits.
 - **Markdown + Live preview editor:** Interactive authoring area.
+
+## CMS Hardening
+- **page_revisions:** Dedicated database table storing snapshots.
+- **SeoAnalyzerService:** Calculates layout optimizations score.
+- **Signed URL Previews:** Secure temporary signed URLs.

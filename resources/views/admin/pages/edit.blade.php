@@ -2,6 +2,14 @@
 @section('title', 'Sayfa Düzenle')
 @section('content')
     <x-admin.crud.index-layout title="Sayfayı Düzenle" description="{{ $page->title }} sayfa detaylarını güncelleyin.">
+        <x-slot name="actions">
+            @permission('pages.preview')
+                <a href="{{ $previewUrl }}" target="_blank" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 text-sm font-medium rounded-xl transition shadow-sm border border-neutral-200 dark:border-neutral-700">
+                    Önizleme Sayfası (Signed)
+                </a>
+            @endpermission
+        </x-slot>
+
         <div x-data="{ 
             activeTab: 'content',
             contentMarkdown: @js($page->content ?? ''),
@@ -17,8 +25,8 @@
                 <!-- Sekme Butonları -->
                 <div class="flex items-center gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4 mb-6">
                     <button type="button" @click="activeTab = 'content'" :class="activeTab === 'content' ? 'bg-primary text-white' : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'" class="px-4 py-2 text-sm font-medium rounded-xl transition">İçerik Editörü</button>
-                    <button type="button" @click="activeTab = 'seo'" :class="activeTab === 'seo' ? 'bg-primary text-white' : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'" class="px-4 py-2 text-sm font-medium rounded-xl transition">SEO Ayarları</button>
-                    <button type="button" @click="activeTab = 'revisions'" :class="activeTab === 'revisions' ? 'bg-primary text-white' : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'" class="px-4 py-2 text-sm font-medium rounded-xl transition">Revizyon Geçmişi</button>
+                    <button type="button" @click="activeTab = 'seo'" :class="activeTab === 'seo' ? 'bg-primary text-white' : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'" class="px-4 py-2 text-sm font-medium rounded-xl transition">SEO Analizi & Ayarları</button>
+                    <button type="button" @click="activeTab = 'revisions'" :class="activeTab === 'revisions' ? 'bg-primary text-white' : 'bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300'" class="px-4 py-2 text-sm font-medium rounded-xl transition">Revizyon Geçmişi ({{ $page->revisions->count() }})</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -27,7 +35,7 @@
                         <!-- Sekme 1: İçerik Editörü -->
                         <div x-show="activeTab === 'content'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
                             <x-admin.form.field-group label="Sayfa Başlığı" id="title" :error="$errors->first('title')">
-                                <input type="text" name="title" id="title" required x-model="titleText" @input="updateSlug" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                <input type="text" name="title" id="title" required x-model="titleText" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
                             </x-admin.form.field-group>
 
                             <x-admin.form.field-group label="Slug" id="slug" :error="$errors->first('slug')">
@@ -52,46 +60,74 @@
                             </div>
                         </div>
 
-                        <!-- Sekme 2: SEO Paneli -->
-                        <div x-show="activeTab === 'seo'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
-                            <div x-data="{ metaTitle: @js($page->meta_title ?? ''), metaDesc: @js($page->meta_description ?? '') }">
-                                <x-admin.form.field-group label="Meta Title" id="meta_title" :error="$errors->first('seo.meta_title')">
-                                    <input type="text" name="seo[meta_title]" x-model="metaTitle" value="{{ $page->meta_title }}" maxlength="60" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
-                                    <div class="text-[10px] text-neutral-400 mt-1" x-text="metaTitle.length + '/60 karakter'"></div>
-                                </x-admin.form.field-group>
-
-                                <x-admin.form.field-group label="Meta Description" id="meta_description" :error="$errors->first('seo.meta_description')">
-                                    <textarea name="seo[meta_description]" x-model="metaDesc" maxlength="160" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200 h-24">{{ $page->meta_description }}</textarea>
-                                    <div class="text-[10px] text-neutral-400 mt-1" x-text="metaDesc.length + '/160 karakter'"></div>
-                                </x-admin.form.field-group>
+                        <!-- Sekme 2: SEO Paneli & Analiz -->
+                        <div x-show="activeTab === 'seo'" class="space-y-6">
+                            <!-- SEO Score widget -->
+                            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-sm font-bold text-neutral-900 dark:text-white">SEO Skor Analizi</h4>
+                                    <span class="px-3 py-1 text-xs font-bold rounded-full 
+                                        {{ $seoReport['score'] >= 80 ? 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300' : '' }}
+                                        {{ $seoReport['score'] < 80 && $seoReport['score'] >= 50 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' : '' }}
+                                        {{ $seoReport['score'] < 50 ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300' : '' }}
+                                    ">
+                                        Skor: {{ $seoReport['score'] }} / 100
+                                    </span>
+                                </div>
+                                @if(!empty($seoReport['issues']))
+                                    <ul class="text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
+                                        @foreach($seoReport['issues'] as $issue)
+                                            <li class="flex items-start gap-1.5">
+                                                <span class="text-red-500 font-bold">•</span>
+                                                <span>{{ $issue }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-xs text-green-600 dark:text-green-400">Harika! Sayfanız için herhangi bir SEO optimizasyonu eksikliği bulunamadı.</p>
+                                @endif
                             </div>
 
-                            <x-admin.form.field-group label="Meta Keywords" id="meta_keywords" :error="$errors->first('seo.meta_keywords')">
-                                <input type="text" name="seo[meta_keywords]" value="{{ $page->meta_keywords }}" placeholder="Örn: dershane, yks hazırlık" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
-                            </x-admin.form.field-group>
+                            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                                <div x-data="{ metaTitle: @js($page->meta_title ?? ''), metaDesc: @js($page->meta_description ?? '') }">
+                                    <x-admin.form.field-group label="Meta Title" id="meta_title" :error="$errors->first('seo.meta_title')">
+                                        <input type="text" name="seo[meta_title]" x-model="metaTitle" value="{{ $page->meta_title }}" maxlength="60" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                        <div class="text-[10px] text-neutral-400 mt-1" x-text="metaTitle.length + '/60 karakter'"></div>
+                                    </x-admin.form.field-group>
 
-                            <x-admin.form.field-group label="Robots" id="robots" :error="$errors->first('seo.robots')">
-                                <select name="seo[robots]" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
-                                    <option value="index, follow" {{ $page->robots === 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
-                                    <option value="noindex, nofollow" {{ $page->robots === 'noindex, nofollow' ? 'selected' : '' }}>Noindex, Nofollow</option>
-                                </select>
-                            </x-admin.form.field-group>
+                                    <x-admin.form.field-group label="Meta Description" id="meta_description" :error="$errors->first('seo.meta_description')">
+                                        <textarea name="seo[meta_description]" x-model="metaDesc" maxlength="160" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200 h-24">{{ $page->meta_description }}</textarea>
+                                        <div class="text-[10px] text-neutral-400 mt-1" x-text="metaDesc.length + '/160 karakter'"></div>
+                                    </x-admin.form.field-group>
+                                </div>
+
+                                <x-admin.form.field-group label="Meta Keywords" id="meta_keywords" :error="$errors->first('seo.meta_keywords')">
+                                    <input type="text" name="seo[meta_keywords]" value="{{ $page->meta_keywords }}" placeholder="Örn: dershane, yks hazırlık" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                </x-admin.form.field-group>
+
+                                <x-admin.form.field-group label="Robots" id="robots" :error="$errors->first('seo.robots')">
+                                    <select name="seo[robots]" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                        <option value="index, follow" {{ $page->robots === 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
+                                        <option value="noindex, nofollow" {{ $page->robots === 'noindex, nofollow' ? 'selected' : '' }}>Noindex, Nofollow</option>
+                                    </select>
+                                </x-admin.form.field-group>
+                            </div>
                         </div>
 
-                        <!-- Sekme 3: Revizyon Geçmişi -->
+                        <!-- Sekme 3: Revizyon Geçmişi (page_revisions Database entries) -->
                         <div x-show="activeTab === 'revisions'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
-                            <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Kaydedilmiş Revizyonlar (JSON Snapshots)</h3>
+                            <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Kaydedilmiş Revizyon Geçmişi</h3>
                             <div class="space-y-2">
-                                @forelse($page->revisions ?? [] as $rev)
+                                @forelse($page->revisions as $rev)
                                     <div class="p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-lg border border-neutral-100 dark:border-neutral-800 text-xs">
                                         <div class="flex items-center justify-between font-semibold mb-1">
-                                            <span>{{ $rev['title'] }}</span>
-                                            <span class="text-neutral-400">{{ \Carbon\Carbon::parse($rev['timestamp'])->format('d.m.Y H:i') }}</span>
+                                            <span>#{{ $rev->revision_no }} - {{ $rev->title }}</span>
+                                            <span class="text-neutral-400">{{ $rev->created_at->format('d.m.Y H:i') }}</span>
                                         </div>
-                                        <p class="text-neutral-500 line-clamp-2">{{ $rev['content'] }}</p>
+                                        <p class="text-neutral-500 line-clamp-2">{{ $rev->excerpt ?? 'Özet bulunmuyor.' }}</p>
                                     </div>
                                 @empty
-                                    <p class="text-xs text-neutral-400">Henüz hiçbir revizyon geçmişi bulunmuyor.</p>
+                                    <p class="text-xs text-neutral-400">Bu sayfa için henüz hiçbir revizyon kaydı oluşturulmamış.</p>
                                 @endforelse
                             </div>
                         </div>
@@ -104,11 +140,12 @@
                             <div class="border-b border-neutral-100 dark:border-neutral-800 pb-3">
                                 <label class="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Yayın Durumu</label>
                                 <span class="px-2.5 py-1 text-xs font-semibold rounded-full 
-                                    {{ $page->status === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300' : '' }}
-                                    {{ $page->status === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' : '' }}
-                                    {{ $page->status === 'archived' ? 'bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300' : '' }}
+                                    {{ $page->status->value === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300' : '' }}
+                                    {{ $page->status->value === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' : '' }}
+                                    {{ $page->status->value === 'archived' ? 'bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300' : '' }}
+                                    {{ $page->status->value === 'review' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' : '' }}
                                 ">
-                                    {{ ucfirst($page->status) }}
+                                    {{ $page->status->label() }}
                                 </span>
                             </div>
 
@@ -149,19 +186,19 @@
                 </div>
             </x-admin.form.layout>
 
-            @permission('pages.update')
+            @permission('pages.publish')
                 <!-- Publish Workflow actions -->
                 <div class="mt-4 bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
                     <span class="text-xs text-neutral-500">Yayınlama Akışı (Publish Workflow):</span>
                     <div class="flex items-center gap-2">
-                        @if($page->status !== 'published')
+                        @if($page->status->value !== 'published')
                             <form method="POST" action="{{ route('admin.pages.publish', $page) }}">
                                 @csrf
                                 <input type="hidden" name="status" value="published">
                                 <button type="submit" class="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded-lg transition shadow-sm">Yayınla</button>
                             </form>
                         @endif
-                        @if($page->status !== 'archived')
+                        @if($page->status->value !== 'archived')
                             <form method="POST" action="{{ route('admin.pages.publish', $page) }}">
                                 @csrf
                                 <input type="hidden" name="status" value="archived">

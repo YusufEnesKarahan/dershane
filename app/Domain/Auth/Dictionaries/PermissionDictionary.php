@@ -25,6 +25,11 @@ class PermissionDictionary
     public const PAGES_CREATE = 'pages.create';
     public const PAGES_UPDATE = 'pages.update';
     public const PAGES_DELETE = 'pages.delete';
+    public const PAGES_PUBLISH = 'pages.publish';
+    public const PAGES_ARCHIVE = 'pages.archive';
+    public const PAGES_RESTORE = 'pages.restore';
+    public const PAGES_PREVIEW = 'pages.preview';
+    public const PAGES_REVISION = 'pages.revision';
 
     public const BLOGS_VIEW = 'blogs.view';
     public const BLOGS_CREATE = 'blogs.create';

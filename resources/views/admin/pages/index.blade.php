@@ -111,11 +111,12 @@
                                     <x-admin.table.td>{{ $page->parent?->title ?? '-' }}</x-admin.table.td>
                                     <x-admin.table.td>
                                         <span class="px-2.5 py-1 text-xs font-semibold rounded-full 
-                                            {{ $page->status === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300' : '' }}
-                                            {{ $page->status === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' : '' }}
-                                            {{ $page->status === 'archived' ? 'bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300' : '' }}
+                                            {{ $page->status->value === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300' : '' }}
+                                            {{ $page->status->value === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' : '' }}
+                                            {{ $page->status->value === 'archived' ? 'bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300' : '' }}
+                                            {{ $page->status->value === 'review' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' : '' }}
                                         ">
-                                            {{ ucfirst($page->status) }}
+                                            {{ $page->status->label() }}
                                         </span>
                                     </x-admin.table.td>
                                     <x-admin.table.td>{{ ucfirst($page->template ?? 'default') }}</x-admin.table.td>

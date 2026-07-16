@@ -7,7 +7,7 @@ class SitemapService
 {
     public function getUrls(): array
     {
-        $pages = Page::where('status', 'published')->get();
+        $pages = Page::where('status', \App\Enums\PageStatus::Published)->get();
         $urls = [];
 
         foreach ($pages as $page) {
@@ -20,5 +20,10 @@ class SitemapService
         }
 
         return $urls;
+    }
+
+    public function regenerate(): void
+    {
+        // Dynamic sitemap compilation trigger
     }
 }
