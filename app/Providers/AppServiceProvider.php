@@ -22,6 +22,21 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\CMS\Services\MarkdownRendererInterface::class,
             \App\Domain\CMS\Services\CommonMarkRenderer::class
         );
+        $this->app->bind(
+            \App\Domain\Media\Adapters\StorageAdapterInterface::class,
+            \App\Domain\Media\Adapters\LocalStorageAdapter::class
+        );
+        $this->app->bind(
+            \App\Domain\Media\Cache\MediaCacheInvalidatorInterface::class,
+            \App\Domain\Media\Cache\MediaCacheInvalidator::class
+        );
+
+        $this->app->singleton(\App\Domain\Media\Conversions\ConversionStrategyRegistry::class, function () {
+            $registry = new \App\Domain\Media\Conversions\ConversionStrategyRegistry();
+            $registry->register(new \App\Domain\Media\Conversions\ThumbnailConversionStrategy());
+            $registry->register(new \App\Domain\Media\Conversions\WebpConversionStrategy());
+            return $registry;
+        });
     }
 
     /**

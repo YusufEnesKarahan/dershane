@@ -144,4 +144,14 @@ class MediaController extends Controller
             'thumb' => $m->getUrl('thumb')
         ]));
     }
+
+    public function download(Media $media, Request $request)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(401, 'Invalid or expired download signature.');
+        }
+
+        $dir = $media->directory ? $media->directory . '/' : '';
+        return \Illuminate\Support\Facades\Storage::disk($media->disk)->download($dir . $media->filename, $media->original_name);
+    }
 }

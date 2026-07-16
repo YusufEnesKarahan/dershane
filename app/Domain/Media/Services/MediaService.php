@@ -4,6 +4,8 @@ namespace App\Domain\Media\Services;
 use App\DTOs\Media\UploadMediaDTO;
 use App\Core\Repositories\Interfaces\MediaRepositoryInterface;
 use App\Models\Media;
+use App\Jobs\OptimizeImageJob;
+use App\Domain\Media\Adapters\StorageAdapterInterface;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,9 +13,7 @@ class MediaService
 {
     public function __construct(
         protected MediaRepositoryInterface $repository,
-        protected StorageService $storageService,
-        protected ImageOptimizerService $optimizerService,
-        protected ThumbnailService $thumbnailService
+        protected StorageAdapterInterface $storageAdapter
     ) {}
 
     public function upload(UploadMediaDTO $dto): Media
@@ -21,7 +21,7 @@ class MediaService
         $file = $dto->file;
         $checksum = hash_file('sha256', $file->getRealPath());
 
-        // Checksum lookup to prevent duplicate physical uploads
+        // Checksum duplicate detection bypass
         $existing = $this->repository->findByChecksum($checksum);
         if ($existing) {
             return $existing;
@@ -34,11 +34,19 @@ class MediaService
             abort(422, 'Extension not allowed.');
         }
 
-        // Put file physically
-        $dir = $dto->collection;
-        $filename = $this->storageService->putFile($dir, $file);
+        // 1. Temporary upload path first (staging area)
+        $tempDir = 'temp';
+        $filename = uniqid() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+        $this->storageAdapter->put($tempDir, $file, $filename);
 
-        // Fetch image dimensions if relevant
+        // 2. Move file from staging/temp area to target permanent collection path
+        $permanentDir = $dto->collection;
+        $tempPath = $tempDir . '/' . $filename;
+        $permanentPath = $permanentDir . '/' . $filename;
+
+        \Illuminate\Support\Facades\Storage::disk(config('media.disk', 'public'))->move($tempPath, $permanentPath);
+
+        // Fetch image dimensions
         $width = null;
         $height = null;
         $mime = $file->getClientMimeType();
@@ -52,8 +60,8 @@ class MediaService
 
         $media = $this->repository->create([
             'uuid' => Str::uuid()->toString(),
-            'disk' => $this->storageService->getDisk(),
-            'directory' => $dir,
+            'disk' => config('media.disk', 'public'),
+            'directory' => $permanentDir,
             'filename' => $filename,
             'original_name' => $file->getClientOriginalName(),
             'extension' => $ext,
@@ -70,11 +78,9 @@ class MediaService
             'uploaded_by' => Auth::id(),
         ]);
 
-        // Optimization & Thumbnail triggers
+        // Dispatch background job to prevent blocking the upload request!
         if (str_starts_with($mime, 'image/') && $ext !== 'svg') {
-            $filePath = $dir . '/' . $filename;
-            $this->optimizerService->optimize($filePath, $media->disk);
-            $this->thumbnailService->generate($filePath, $media->disk);
+            OptimizeImageJob::dispatch($media);
         }
 
         return $media;

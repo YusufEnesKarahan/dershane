@@ -51,6 +51,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Media Library
     Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media.picker-list');
+    Route::get('media/{media}/download', [MediaController::class, 'download'])->name('media.download');
     Route::post('media-folders', [MediaFolderController::class, 'store'])->name('media-folders.store');
     Route::delete('media-folders/{folder}', [MediaFolderController::class, 'destroy'])->name('media-folders.destroy');
     Route::resource('media', MediaController::class);

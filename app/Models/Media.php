@@ -55,15 +55,19 @@ class Media extends Model
         return $this->hasMany(MediaUsage::class);
     }
 
+    public function variants()
+    {
+        return $this->hasMany(MediaVariant::class);
+    }
+
     public function getUrl(string $conversion = 'original'): string
     {
         $dir = $this->directory ? $this->directory . '/' : '';
         
         if ($conversion !== 'original') {
-            // Checked if file exists for conversion
-            $convertedPath = $dir . $conversion . '/' . $this->filename;
-            if (Storage::disk($this->disk)->exists($convertedPath)) {
-                return Storage::disk($this->disk)->url($convertedPath);
+            $variant = $this->variants()->where('variant_name', $conversion)->first();
+            if ($variant) {
+                return Storage::disk($variant->disk)->url($dir . $variant->filename);
             }
         }
 
