@@ -8,6 +8,16 @@ class DemoContentSeeder extends Seeder {
         Page::create(['title' => 'Hakkımızda', 'slug' => 'hakkimizda', 'content' => 'Kurumumuz 2010 yılında kurulmuştur...', 'status' => 'published', 'template' => 'about']);
         Page::create(['title' => 'İletişim', 'slug' => 'iletisim', 'content' => 'Bize ulaşın...', 'status' => 'published', 'template' => 'contact']);
 
+        // Seed default folders
+        $folders = ['Brand Assets', 'Blog', 'Teachers', 'Courses', 'Gallery', 'Uploads'];
+        foreach ($folders as $idx => $name) {
+            \App\Models\MediaFolder::firstOrCreate([
+                'name' => $name,
+                'slug' => \Illuminate\Support\Str::slug($name),
+                'order_column' => $idx
+            ]);
+        }
+
         $cat = BlogCategory::create(['name' => 'Rehberlik', 'slug' => 'rehberlik', 'description' => 'Sınav stratejileri ve rehberlik']);
         
         Blog::create([

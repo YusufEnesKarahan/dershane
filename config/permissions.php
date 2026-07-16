@@ -126,7 +126,10 @@ return [
             'permissions' => [
                 'media.view',
                 'media.create',
+                'media.update',
                 'media.delete',
+                'media.move',
+                'media.download',
             ],
         ],
         'Settings' => [

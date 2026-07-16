@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\UserPreferenceController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MediaFolderController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -46,6 +48,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('teachers', fn() => 'Teachers Placeholder')->name('teachers.index');
     Route::get('courses', fn() => 'Courses Placeholder')->name('courses.index');
     Route::get('classrooms', fn() => 'Classrooms Placeholder')->name('classrooms.index');
+
+    // Media Library
+    Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media.picker-list');
+    Route::post('media-folders', [MediaFolderController::class, 'store'])->name('media-folders.store');
+    Route::delete('media-folders/{folder}', [MediaFolderController::class, 'destroy'])->name('media-folders.destroy');
+    Route::resource('media', MediaController::class);
 
     // CRM
     Route::get('leads', fn() => 'Leads Placeholder')->name('leads.index');

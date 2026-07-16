@@ -52,7 +52,10 @@ class PermissionDictionary
 
     public const MEDIA_VIEW = 'media.view';
     public const MEDIA_CREATE = 'media.create';
+    public const MEDIA_UPDATE = 'media.update';
     public const MEDIA_DELETE = 'media.delete';
+    public const MEDIA_MOVE = 'media.move';
+    public const MEDIA_DOWNLOAD = 'media.download';
 
     public const SETTINGS_VIEW = 'settings.view';
     public const SETTINGS_UPDATE = 'settings.update';

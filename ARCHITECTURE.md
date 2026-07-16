@@ -111,3 +111,8 @@ Uygulamanın arayüz ve kullanıcı deneyimi yerleşimleri (layouts) şu standar
 - **page_revisions:** Dedicated database table storing snapshots.
 - **SeoAnalyzerService:** Calculates layout optimizations score.
 - **Signed URL Previews:** Secure temporary signed URLs.
+
+## Media Library & DAM
+- **MediaFolder:** Handles hierarchical asset categorization.
+- **StorageService:** Abstracted Laravel file system uploads.
+- **ImageOptimizerService:** Native PHP GD WebP and thumbnail conversion.

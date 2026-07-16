@@ -25,6 +25,14 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\PageRepositoryInterface::class,
             \App\Core\Repositories\PageRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\MediaRepositoryInterface::class,
+            \App\Core\Repositories\MediaRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\MediaFolderRepositoryInterface::class,
+            \App\Core\Repositories\MediaFolderRepository::class
+        );
     }
 
     /**

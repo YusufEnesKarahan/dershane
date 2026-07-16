@@ -44,6 +44,11 @@ return [
                     'permission' => 'pages.view',
                 ],
                 [
+                    'title' => 'Media Library',
+                    'route' => 'admin.media.index',
+                    'permission' => 'media.view',
+                ],
+                [
                     'title' => 'Blogs',
                     'route' => 'admin.blogs.index',
                     'permission' => 'blogs.view',
