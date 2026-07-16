@@ -41,6 +41,22 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\SettingGroupRepositoryInterface::class,
             \App\Core\Repositories\SettingGroupRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\BlogRepositoryInterface::class,
+            \App\Core\Repositories\BlogRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\BlogCategoryRepositoryInterface::class,
+            \App\Core\Repositories\BlogCategoryRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\BlogTagRepositoryInterface::class,
+            \App\Core\Repositories\BlogTagRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\CommentRepositoryInterface::class,
+            \App\Core\Repositories\CommentRepository::class
+        );
     }
 
     /**

@@ -120,3 +120,9 @@ UygulamanÄ±n arayÃ¼z ve kullanÄ±cÄ± deneyimi yerleÅŸimleri (layouts) ÅŸu standar
 ## Configuration & White Label
 - **PlatformSetting:** Key-value parameters stored with encryption supports.
 - **ThemeService:** Dynamic CSS compilation targeting public custom styles.
+
+## Blog & Content Suite
+- **BlogCategory:** Hiyerarþik kategorizasyon aðacý.
+- **BlogTag:** Etiket birleþtirme ve eþleþtirme altyapýsý.
+- **BlogComment:** Nested moderasyon ve spam filtreleme.
+- **ContentAnalyzerService:** Okunabilirlik ve görsel alt etiket analizi.

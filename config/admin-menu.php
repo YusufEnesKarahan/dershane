@@ -53,6 +53,21 @@ return [
                     'route' => 'admin.blogs.index',
                     'permission' => 'blogs.view',
                 ],
+                [
+                    'title' => 'Blog Categories',
+                    'route' => 'admin.categories.index',
+                    'permission' => 'categories.view',
+                ],
+                [
+                    'title' => 'Blog Tags',
+                    'route' => 'admin.tags.index',
+                    'permission' => 'tags.view',
+                ],
+                [
+                    'title' => 'Comments Moderation',
+                    'route' => 'admin.comments.index',
+                    'permission' => 'comments.view',
+                ],
             ],
         ],
         [

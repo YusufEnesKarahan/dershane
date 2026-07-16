@@ -1,8 +1,8 @@
 <?php
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Blog;
+use App\Models\User;
 use App\Domain\Auth\Services\AuthorizationService;
 
 class BlogPolicy
@@ -14,7 +14,7 @@ class BlogPolicy
         return $this->authService->hasPermission($user, 'blogs.view');
     }
 
-    public function view(User $user, Blog $model): bool
+    public function view(User $user, Blog $blog): bool
     {
         return $this->authService->hasPermission($user, 'blogs.view');
     }
@@ -24,12 +24,12 @@ class BlogPolicy
         return $this->authService->hasPermission($user, 'blogs.create');
     }
 
-    public function update(User $user, Blog $model): bool
+    public function update(User $user, Blog $blog): bool
     {
         return $this->authService->hasPermission($user, 'blogs.update');
     }
 
-    public function delete(User $user, Blog $model): bool
+    public function delete(User $user, Blog $blog): bool
     {
         return $this->authService->hasPermission($user, 'blogs.delete');
     }

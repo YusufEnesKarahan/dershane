@@ -25,7 +25,7 @@ class DemoContentSeeder extends Seeder {
             'slug' => 'yks-son-3-ay-stratejisi',
             'content' => 'Netlerinizi artıracak taktikler...',
             'category_id' => $cat->id,
-            'is_published' => true,
+            'status' => 'Published',
             'published_at' => now()
         ]);
 

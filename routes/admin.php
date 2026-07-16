@@ -9,6 +9,10 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
 use App\Http\Controllers\Admin\PlatformSettingController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogTagController;
+use App\Http\Controllers\Admin\BlogCommentController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -41,7 +45,25 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('pages/{page}/duplicate', [PageController::class, 'duplicate'])->name('pages.duplicate');
     Route::get('pages/{page}/preview', [PageController::class, 'preview'])->name('pages.preview');
     Route::resource('pages', PageController::class);
-    Route::get('blogs', fn() => 'Blogs Placeholder')->name('blogs.index');
+    // Blog Suite
+    Route::get('blogs/analytics', [BlogController::class, 'analytics'])->name('blogs.analytics');
+    Route::post('blogs/{blog}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
+    Route::post('blogs/{blog}/archive', [BlogController::class, 'archive'])->name('blogs.archive');
+    Route::post('blogs/{blog}/duplicate', [BlogController::class, 'duplicate'])->name('blogs.duplicate');
+    Route::post('blogs/{blog}/revisions/{revision}/restore', [BlogController::class, 'restoreRevision'])->name('blogs.revisions.restore');
+    Route::resource('blogs', BlogController::class);
+
+    // Blog Categories & Tags
+    Route::resource('categories', BlogCategoryController::class)->only(['index', 'store', 'destroy']);
+    Route::post('tags/merge', [BlogTagController::class, 'merge'])->name('tags.merge');
+    Route::resource('tags', BlogTagController::class)->only(['index', 'store', 'destroy']);
+
+    // Comments Moderation
+    Route::post('comments/{comment}/approve', [BlogCommentController::class, 'approve'])->name('comments.approve');
+    Route::post('comments/{comment}/reject', [BlogCommentController::class, 'reject'])->name('comments.reject');
+    Route::post('comments/{comment}/spam', [BlogCommentController::class, 'spam'])->name('comments.spam');
+    Route::resource('comments', BlogCommentController::class)->only(['index', 'destroy']);
+
     Route::get('announcements', fn() => 'Announcements Placeholder')->name('announcements.index');
 
     // Education

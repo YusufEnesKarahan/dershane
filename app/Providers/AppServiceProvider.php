@@ -86,5 +86,9 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Page::observe(\App\Observers\PageObserver::class);
         \App\Models\Media::observe(\App\Observers\MediaObserver::class);
         \App\Models\PlatformSetting::observe(\App\Observers\PlatformSettingObserver::class);
+        \App\Models\Blog::observe(\App\Observers\BlogObserver::class);
+        \App\Models\BlogComment::observe(\App\Observers\BlogCommentObserver::class);
+        \App\Models\BlogCategory::observe(\App\Observers\BlogCategoryObserver::class);
+        \App\Models\BlogTag::observe(\App\Observers\BlogTagObserver::class);
     }
 }
