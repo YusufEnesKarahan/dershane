@@ -87,6 +87,26 @@ return [
                     'permission' => 'teachers.view',
                 ],
                 [
+                    'title' => 'Teacher Schedules',
+                    'route' => 'admin.teachers.schedules.index',
+                    'permission' => 'teachers.view',
+                ],
+                [
+                    'title' => 'Teacher Performance',
+                    'route' => 'admin.teachers.performance.index',
+                    'permission' => 'teachers.view',
+                ],
+                [
+                    'title' => 'Teacher Salary',
+                    'route' => 'admin.teachers.salary.index',
+                    'permission' => 'teachers.view',
+                ],
+                [
+                    'title' => 'Teacher Contracts',
+                    'route' => 'admin.teachers.contracts.index',
+                    'permission' => 'teachers.view',
+                ],
+                [
                     'title' => 'Courses',
                     'route' => 'admin.courses.index',
                     'permission' => 'courses.view',

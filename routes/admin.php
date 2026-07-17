@@ -13,6 +13,11 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\BlogCommentController;
+use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\TeacherScheduleController;
+use App\Http\Controllers\Admin\TeacherPerformanceController;
+use App\Http\Controllers\Admin\TeacherSalaryController;
+use App\Http\Controllers\Admin\TeacherContractController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -68,7 +73,24 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Education
     Route::get('students', fn() => 'Students Placeholder')->name('students.index');
-    Route::get('teachers', fn() => 'Teachers Placeholder')->name('teachers.index');
+    Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
+    Route::resource('teachers', TeacherController::class);
+    Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([
+        'index' => 'teachers.schedules.index',
+        'store' => 'teachers.schedules.store',
+    ]);
+    Route::resource('teachers-performance', TeacherPerformanceController::class)->only(['index', 'store'])->names([
+        'index' => 'teachers.performance.index',
+        'store' => 'teachers.performance.store',
+    ]);
+    Route::resource('teachers-salary', TeacherSalaryController::class)->only(['index', 'store'])->names([
+        'index' => 'teachers.salary.index',
+        'store' => 'teachers.salary.store',
+    ]);
+    Route::resource('teachers-contracts', TeacherContractController::class)->only(['index', 'store'])->names([
+        'index' => 'teachers.contracts.index',
+        'store' => 'teachers.contracts.store',
+    ]);
     Route::get('courses', fn() => 'Courses Placeholder')->name('courses.index');
     Route::get('classrooms', fn() => 'Classrooms Placeholder')->name('classrooms.index');
 

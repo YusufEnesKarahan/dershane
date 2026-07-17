@@ -41,6 +41,13 @@ class PermissionDictionary
     public const TEACHERS_UPDATE = 'teachers.update';
     public const TEACHERS_DELETE = 'teachers.delete';
 
+    public const TEACHER_DOCUMENTS_MANAGE = 'teacher.documents.manage';
+    public const TEACHER_PERFORMANCE_MANAGE = 'teacher.performance.manage';
+    public const TEACHER_SCHEDULE_MANAGE = 'teacher.schedule.manage';
+    public const TEACHER_SALARY_MANAGE = 'teacher.salary.manage';
+    public const TEACHER_CONTRACTS_MANAGE = 'teacher.contracts.manage';
+    public const TEACHER_ANALYTICS_MANAGE = 'teacher.analytics.manage';
+
     public const COURSES_VIEW = 'courses.view';
     public const COURSES_CREATE = 'courses.create';
     public const COURSES_UPDATE = 'courses.update';

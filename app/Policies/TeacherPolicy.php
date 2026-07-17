@@ -1,8 +1,8 @@
 <?php
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Teacher;
+use App\Models\User;
 use App\Domain\Auth\Services\AuthorizationService;
 
 class TeacherPolicy
@@ -14,7 +14,7 @@ class TeacherPolicy
         return $this->authService->hasPermission($user, 'teachers.view');
     }
 
-    public function view(User $user, Teacher $model): bool
+    public function view(User $user, Teacher $teacher): bool
     {
         return $this->authService->hasPermission($user, 'teachers.view');
     }
@@ -24,12 +24,12 @@ class TeacherPolicy
         return $this->authService->hasPermission($user, 'teachers.create');
     }
 
-    public function update(User $user, Teacher $model): bool
+    public function update(User $user, Teacher $teacher): bool
     {
         return $this->authService->hasPermission($user, 'teachers.update');
     }
 
-    public function delete(User $user, Teacher $model): bool
+    public function delete(User $user, Teacher $teacher): bool
     {
         return $this->authService->hasPermission($user, 'teachers.delete');
     }

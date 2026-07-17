@@ -57,6 +57,22 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\CommentRepositoryInterface::class,
             \App\Core\Repositories\CommentRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\TeacherRepositoryInterface::class,
+            \App\Core\Repositories\TeacherRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\TeacherDocumentRepositoryInterface::class,
+            \App\Core\Repositories\TeacherDocumentRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\TeacherScheduleRepositoryInterface::class,
+            \App\Core\Repositories\TeacherScheduleRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\TeacherPerformanceRepositoryInterface::class,
+            \App\Core\Repositories\TeacherPerformanceRepository::class
+        );
     }
 
     /**

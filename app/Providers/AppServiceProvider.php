@@ -90,5 +90,9 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\BlogComment::observe(\App\Observers\BlogCommentObserver::class);
         \App\Models\BlogCategory::observe(\App\Observers\BlogCategoryObserver::class);
         \App\Models\BlogTag::observe(\App\Observers\BlogTagObserver::class);
+        \App\Models\Teacher::observe(\App\Observers\TeacherObserver::class);
+        \App\Models\TeacherDocument::observe(\App\Observers\TeacherDocumentObserver::class);
+        \App\Models\TeacherSchedule::observe(\App\Observers\TeacherScheduleObserver::class);
+        \App\Models\TeacherPerformance::observe(\App\Observers\TeacherPerformanceObserver::class);
     }
 }
