@@ -87,6 +87,16 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Attendance Sessions',
+                    'route' => 'admin.attendances.sessions.index',
+                    'permission' => 'students.view',
+                ],
+                [
+                    'title' => 'Attendance Analytics',
+                    'route' => 'admin.attendances.analytics',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',

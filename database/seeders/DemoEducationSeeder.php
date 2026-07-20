@@ -151,5 +151,51 @@ class DemoEducationSeeder extends Seeder {
             'enrollment_date' => date('Y-m-d'),
             'status' => 'Active'
         ]);
+
+        $stPresent = \App\Models\AttendanceStatus::create([
+            'code' => 'PRESENT',
+            'name' => 'Katıldı',
+            'color_code' => '#10B981',
+            'is_absence' => false
+        ]);
+
+        \App\Models\AttendanceStatus::create([
+            'code' => 'LATE',
+            'name' => 'Geç Kaldı',
+            'color_code' => '#F59E0B',
+            'is_absence' => false
+        ]);
+
+        \App\Models\AttendanceStatus::create([
+            'code' => 'ABSENT',
+            'name' => 'Devamsız',
+            'color_code' => '#EF4444',
+            'is_absence' => true
+        ]);
+
+        \App\Models\AttendanceStatus::create([
+            'code' => 'EXCUSED',
+            'name' => 'İzinli / Mazeretli',
+            'color_code' => '#3B82F6',
+            'is_absence' => false
+        ]);
+
+        $session = \App\Models\AttendanceSession::create([
+            'classroom_id' => $classroom->id,
+            'course_id' => $course->id,
+            'teacher_id' => $teacher->id,
+            'session_date' => date('Y-m-d'),
+            'start_time' => '09:00:00',
+            'end_time' => '10:30:00',
+            'status' => 'Completed'
+        ]);
+
+        \App\Models\Attendance::create([
+            'attendance_session_id' => $session->id,
+            'student_id' => $student->id,
+            'attendance_status_id' => $stPresent->id,
+            'qr_code_scanned' => true,
+            'check_in_time' => now()
+        ]);
     }
 }

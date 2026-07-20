@@ -23,6 +23,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
             'edition' => \App\Http\Middleware\EditionMiddleware::class,
+            'hq.license' => \App\Http\Middleware\HqLicenseMiddleware::class,
+        ]);
+
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\HqLicenseMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

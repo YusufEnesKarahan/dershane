@@ -250,7 +250,7 @@ class HqService
      */
     public function updateLicense(string $status): void
     {
-        Cache::forever('hq_license_status', $status);
+        Cache::put('hq_license_status', $status, 10);
         Log::channel('hq')->info("INFO: Local license status updated to '{$status}'");
     }
 

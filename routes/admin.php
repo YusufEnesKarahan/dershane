@@ -26,6 +26,8 @@ use App\Http\Controllers\Admin\ClassScheduleController;
 use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\StudentEnrollmentController;
+use App\Http\Controllers\Admin\AttendanceSessionController;
+use App\Http\Controllers\Admin\AttendanceController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -84,6 +86,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('students/{student}/transfer', [StudentController::class, 'transfer'])->name('students.transfer');
     Route::post('students/enrollment', [StudentEnrollmentController::class, 'store'])->name('students.enrollment.store');
     Route::resource('students', StudentController::class);
+    Route::get('attendances/analytics', [AttendanceController::class, 'analytics'])->name('attendances.analytics');
+    Route::get('attendances/sessions/{session}/take', [AttendanceController::class, 'take'])->name('attendances.sessions.take');
+    Route::post('attendances/sessions/{session}/take', [AttendanceController::class, 'storeBulk'])->name('attendances.sessions.store-bulk');
+    Route::resource('attendances/sessions', AttendanceSessionController::class)->names('attendances.sessions');
     Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
     Route::resource('teachers', TeacherController::class);
     Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([
