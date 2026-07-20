@@ -112,6 +112,16 @@ return [
                     'permission' => 'courses.view',
                 ],
                 [
+                    'title' => 'Course Levels',
+                    'route' => 'admin.courses.levels.index',
+                    'permission' => 'courses.view',
+                ],
+                [
+                    'title' => 'Course Analytics',
+                    'route' => 'admin.courses.analytics',
+                    'permission' => 'courses.view',
+                ],
+                [
                     'title' => 'Classrooms',
                     'route' => 'admin.classrooms.index',
                     'permission' => 'classrooms.view',

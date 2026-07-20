@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\TeacherScheduleController;
 use App\Http\Controllers\Admin\TeacherPerformanceController;
 use App\Http\Controllers\Admin\TeacherSalaryController;
 use App\Http\Controllers\Admin\TeacherContractController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CourseLevelController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -91,7 +93,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         'index' => 'teachers.contracts.index',
         'store' => 'teachers.contracts.store',
     ]);
-    Route::get('courses', fn() => 'Courses Placeholder')->name('courses.index');
+    Route::get('courses/analytics', [CourseController::class, 'analytics'])->name('courses.analytics');
+    Route::resource('courses-levels', CourseLevelController::class)->only(['index', 'store', 'destroy'])->names([
+        'index' => 'courses.levels.index',
+        'store' => 'courses.levels.store',
+        'destroy' => 'courses.levels.destroy',
+    ]);
+    Route::resource('courses', CourseController::class);
     Route::get('classrooms', fn() => 'Classrooms Placeholder')->name('classrooms.index');
 
     // Media Library

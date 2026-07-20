@@ -52,15 +52,32 @@ class DemoEducationSeeder extends Seeder {
             'kpi_month' => date('Y-m')
         ]);
 
-        Course::create([
-            'name' => 'YKS (TYT-AYT) Hazırlık',
-            'slug' => 'yks-hazirlik',
-            'description' => 'Yoğunlaştırılmış müfredat...',
-            'price' => 25000.00,
+        $level = \App\Models\CourseLevel::create([
+            'name' => 'YKS (TYT-AYT) Seviyesi',
+            'slug' => 'yks-tyt-ayt-seviyesi',
+        ]);
+
+        $course = Course::create([
+            'code' => 'YKS-2026-FULL',
+            'name' => 'YKS (TYT-AYT) Yoğunlaştırılmış Hazırlık',
+            'slug' => 'yks-yogunlastirilmis-hazirlik',
+            'description' => 'Boğaziçi ve Düzeyli eğitmenler eşliğinde 10 aylık tam müfredat YKS hazırlık programı.',
+            'course_level_id' => $level->id,
             'duration' => '10 Ay',
-            'branch_id' => $branch->id,
+            'capacity' => 120,
+            'status' => 'Published',
             'is_active' => true
         ]);
+
+        \App\Models\CoursePricing::create([
+            'course_id' => $course->id,
+            'price' => 25000.00,
+            'currency' => 'TRY',
+            'installment_options' => 10
+        ]);
+
+        $course->teachers()->attach($teacher->id);
+        $course->branches()->attach($branch->id);
 
         Classroom::create([
             'name' => '12-A Sayısal',
