@@ -121,5 +121,35 @@ class DemoEducationSeeder extends Seeder {
             'branch_id' => $branch->id,
             'description' => 'Resmi Tatil'
         ]);
+
+        $student = \App\Models\Student::create([
+            'student_number' => 'OGR-2026-001',
+            'identity_number' => '12345678901',
+            'first_name' => 'Ahmet',
+            'last_name' => 'Yılmaz',
+            'birth_date' => '2008-05-14',
+            'gender' => 'Erkek',
+            'branch_id' => $branch->id,
+            'classroom_id' => $classroom->id,
+            'status' => 'Active'
+        ]);
+
+        \App\Models\StudentGuardian::create([
+            'student_id' => $student->id,
+            'guardian_name' => 'Mehmet Yılmaz',
+            'relation' => 'Baba',
+            'phone' => '0532 111 22 33',
+            'email' => 'mehmet@example.com',
+            'is_primary' => true
+        ]);
+
+        \App\Models\StudentEnrollment::create([
+            'student_id' => $student->id,
+            'course_id' => $course->id,
+            'academic_term_id' => $term->id,
+            'price_paid' => 25000.00,
+            'enrollment_date' => date('Y-m-d'),
+            'status' => 'Active'
+        ]);
     }
 }

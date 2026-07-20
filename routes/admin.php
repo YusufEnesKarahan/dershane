@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\ClassroomController;
 use App\Http\Controllers\Admin\AcademicCalendarController;
 use App\Http\Controllers\Admin\ClassScheduleController;
 use App\Http\Controllers\Admin\HolidayController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\StudentEnrollmentController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -78,7 +80,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('announcements', fn() => 'Announcements Placeholder')->name('announcements.index');
 
     // Education
-    Route::get('students', fn() => 'Students Placeholder')->name('students.index');
+    Route::get('students/analytics', [StudentController::class, 'analytics'])->name('students.analytics');
+    Route::post('students/{student}/transfer', [StudentController::class, 'transfer'])->name('students.transfer');
+    Route::post('students/enrollment', [StudentEnrollmentController::class, 'store'])->name('students.enrollment.store');
+    Route::resource('students', StudentController::class);
     Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
     Route::resource('teachers', TeacherController::class);
     Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([

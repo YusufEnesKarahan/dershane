@@ -82,6 +82,11 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Student Analytics',
+                    'route' => 'admin.students.analytics',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',
