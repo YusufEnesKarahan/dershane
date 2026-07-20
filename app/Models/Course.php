@@ -1,30 +1,61 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
 {
-    /** @use HasFactory<\Database\Factories\CourseFactory> */
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'slug',
-        'description',
-        'price',
-        'duration',
-        'branch_id',
-        'is_active'
+        'code', 'name', 'slug', 'description', 'course_level_id', 
+        'duration', 'capacity', 'status', 'is_active', 'cover_image',
+        'seo_title', 'seo_description', 'seo_keywords'
     ];
 
-
-
-    public function branch() {
-        return $this->belongsTo(Branch::class);
+    public function level()
+    {
+        return $this->belongsTo(CourseLevel::class, 'course_level_id');
     }
 
+    public function subjects()
+    {
+        return $this->hasMany(CourseSubject::class);
+    }
+
+    public function modules()
+    {
+        return $this->hasMany(CourseModule::class)->orderBy('sort_order');
+    }
+
+    public function materials()
+    {
+        return $this->hasMany(CourseMaterial::class);
+    }
+
+    public function pricings()
+    {
+        return $this->hasMany(CoursePricing::class);
+    }
+
+    public function currentPricing()
+    {
+        return $this->hasOne(CoursePricing::class)->latestOfMany();
+    }
+
+    public function prerequisites()
+    {
+        return $this->belongsToMany(self::class, 'course_prerequisites', 'course_id', 'prerequisite_id');
+    }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(Teacher::class, 'course_teachers');
+    }
+
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'course_branches');
+    }
 }
