@@ -81,6 +81,14 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\CourseLevelRepositoryInterface::class,
             \App\Core\Repositories\CourseLevelRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\ClassroomRepositoryInterface::class,
+            \App\Core\Repositories\ClassroomRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\ClassScheduleRepositoryInterface::class,
+            \App\Core\Repositories\ClassScheduleRepository::class
+        );
     }
 
     /**

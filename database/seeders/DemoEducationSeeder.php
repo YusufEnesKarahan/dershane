@@ -79,10 +79,47 @@ class DemoEducationSeeder extends Seeder {
         $course->teachers()->attach($teacher->id);
         $course->branches()->attach($branch->id);
 
-        Classroom::create([
-            'name' => '12-A Sayısal',
+        $type = \App\Models\ClassroomType::create([
+            'name' => 'Teori & Etüt Sınıfı',
+            'slug' => 'teori-etut-sinifi',
+            'description' => 'Projeksiyon ve akıllı tahta donanımlı derslik.'
+        ]);
+
+        $classroom = Classroom::create([
+            'code' => 'KDK-101',
+            'name' => '12-A Sayısal Dersliği',
             'branch_id' => $branch->id,
-            'capacity' => 12
+            'classroom_type_id' => $type->id,
+            'capacity' => 24,
+            'color_code' => '#4F46E5',
+            'is_active' => true
+        ]);
+
+        $term = \App\Models\AcademicTerm::create([
+            'name' => '2026-2027 Güz Dönemi',
+            'start_date' => now()->startOfMonth(),
+            'end_date' => now()->addMonths(5)->endOfMonth(),
+            'is_active' => true
+        ]);
+
+        \App\Models\ClassSchedule::create([
+            'classroom_id' => $classroom->id,
+            'teacher_id' => $teacher->id,
+            'course_id' => $course->id,
+            'academic_term_id' => $term->id,
+            'day_of_week' => 1, // Pazartesi
+            'start_time' => '09:00:00',
+            'end_time' => '10:30:00',
+            'color_code' => '#4F46E5',
+            'is_active' => true
+        ]);
+
+        \App\Models\Holiday::create([
+            'name' => '29 Ekim Cumhuriyet Bayramı',
+            'start_date' => '2026-10-29',
+            'end_date' => '2026-10-29',
+            'branch_id' => $branch->id,
+            'description' => 'Resmi Tatil'
         ]);
     }
 }

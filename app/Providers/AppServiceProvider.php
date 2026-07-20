@@ -95,5 +95,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\TeacherSchedule::observe(\App\Observers\TeacherScheduleObserver::class);
         \App\Models\TeacherPerformance::observe(\App\Observers\TeacherPerformanceObserver::class);
         \App\Models\Course::observe(\App\Observers\CourseObserver::class);
+        \App\Models\Classroom::observe(\App\Observers\ClassroomObserver::class);
     }
 }

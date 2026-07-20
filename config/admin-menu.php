@@ -126,6 +126,21 @@ return [
                     'route' => 'admin.classrooms.index',
                     'permission' => 'classrooms.view',
                 ],
+                [
+                    'title' => 'Weekly Schedule',
+                    'route' => 'admin.classrooms.schedules.index',
+                    'permission' => 'classrooms.view',
+                ],
+                [
+                    'title' => 'Academic Calendar',
+                    'route' => 'admin.classrooms.academic-calendar.index',
+                    'permission' => 'classrooms.view',
+                ],
+                [
+                    'title' => 'Holidays',
+                    'route' => 'admin.classrooms.holidays.index',
+                    'permission' => 'classrooms.view',
+                ],
             ],
         ],
         [

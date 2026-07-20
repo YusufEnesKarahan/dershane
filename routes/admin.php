@@ -20,6 +20,10 @@ use App\Http\Controllers\Admin\TeacherSalaryController;
 use App\Http\Controllers\Admin\TeacherContractController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CourseLevelController;
+use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\AcademicCalendarController;
+use App\Http\Controllers\Admin\ClassScheduleController;
+use App\Http\Controllers\Admin\HolidayController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -100,7 +104,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         'destroy' => 'courses.levels.destroy',
     ]);
     Route::resource('courses', CourseController::class);
-    Route::get('classrooms', fn() => 'Classrooms Placeholder')->name('classrooms.index');
+    Route::get('classrooms/analytics', [ClassroomController::class, 'analytics'])->name('classrooms.analytics');
+    Route::get('classrooms/academic-calendar', [AcademicCalendarController::class, 'index'])->name('classrooms.academic-calendar.index');
+    Route::post('classrooms/academic-calendar', [AcademicCalendarController::class, 'store'])->name('classrooms.academic-calendar.store');
+    Route::get('classrooms/schedules', [ClassScheduleController::class, 'index'])->name('classrooms.schedules.index');
+    Route::post('classrooms/schedules', [ClassScheduleController::class, 'store'])->name('classrooms.schedules.store');
+    Route::get('classrooms/holidays', [HolidayController::class, 'index'])->name('classrooms.holidays.index');
+    Route::post('classrooms/holidays', [HolidayController::class, 'store'])->name('classrooms.holidays.store');
+    Route::resource('classrooms', ClassroomController::class);
 
     // Media Library
     Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media.picker-list');
