@@ -197,5 +197,28 @@ class DemoEducationSeeder extends Seeder {
             'qr_code_scanned' => true,
             'check_in_time' => now()
         ]);
+
+        $exam = \App\Models\Exam::create([
+            'title' => 'TYT Türkiye Geneli Deneme - 1',
+            'code' => 'TYT-2026-01',
+            'exam_type' => 'TYT',
+            'exam_date' => date('Y-m-d'),
+            'total_questions' => 120,
+            'duration_minutes' => 135,
+            'is_published' => true
+        ]);
+
+        \App\Models\ExamResult::create([
+            'exam_id' => $exam->id,
+            'student_id' => $student->id,
+            'total_correct' => 90,
+            'total_wrong' => 20,
+            'total_empty' => 10,
+            'total_net' => 85.00,
+            'score' => 354.17,
+            'branch_rank' => 1,
+            'global_rank' => 1,
+            'is_absent' => false
+        ]);
     }
 }

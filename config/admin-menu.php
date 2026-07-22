@@ -97,6 +97,16 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Exams',
+                    'route' => 'admin.exams.index',
+                    'permission' => 'students.view',
+                ],
+                [
+                    'title' => 'Exam Analytics',
+                    'route' => 'admin.exams.analytics',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',
