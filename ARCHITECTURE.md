@@ -20,3 +20,4 @@ The platform uses a layered architecture:
 - **Attendance Suite**: Lesson attendance sessions, bulk recording, QR scan support, risk student reports (>15% threshold).
 - **Exam & Assessment Suite**: TYT/AYT/Trial exams, net engine ($Net = Correct - \frac{Wrong}{4}$), 500-pt scaled scores, global/branch standings.
 - **Homework & Assignment Suite**: Individual/Classroom/Course targeting, due date validations, late flags (`is_late`), teacher scoring & feedback, submission analytics.
+- **Finance & Billing Suite**: Invoicing, payment receipts, student debt tracking, installment plans, discounts, scholarships, refunds, and financial collection analytics.

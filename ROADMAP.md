@@ -60,3 +60,4 @@
 - [x] Sprint 3.4: Attendance Management Module Completed
 - [x] Sprint 3.5: Exam & Assessment Module Completed
 - [x] Sprint 3.7: Homework & Assignment Management Module Completed
+- [x] Sprint 3.8: Finance & Billing Module Completed

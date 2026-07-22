@@ -117,6 +117,16 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Finance & Invoices',
+                    'route' => 'admin.invoices.index',
+                    'permission' => 'students.view',
+                ],
+                [
+                    'title' => 'Finance Dashboard',
+                    'route' => 'admin.invoices.dashboard',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',

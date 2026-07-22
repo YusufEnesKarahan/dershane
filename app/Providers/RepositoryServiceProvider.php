@@ -121,6 +121,14 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\AssignmentSubmissionRepositoryInterface::class,
             \App\Core\Repositories\AssignmentSubmissionRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\InvoiceRepositoryInterface::class,
+            \App\Core\Repositories\InvoiceRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\PaymentRepositoryInterface::class,
+            \App\Core\Repositories\PaymentRepository::class
+        );
     }
 
     /**

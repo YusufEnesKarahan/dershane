@@ -249,5 +249,61 @@ class DemoEducationSeeder extends Seeder {
             'max_score' => 100.00,
             'feedback' => 'Türev kuralları ve teğet eğimi analizleri çok başarılı.'
         ]);
+
+        $pmCash = \App\Models\PaymentMethod::create([
+            'name' => 'Nakit',
+            'code' => 'cash',
+            'is_active' => true
+        ]);
+
+        \App\Models\PaymentMethod::create([
+            'name' => 'Kredi Kartı',
+            'code' => 'credit_card',
+            'is_active' => true
+        ]);
+
+        \App\Models\PaymentMethod::create([
+            'name' => 'Banka Havalesi / EFT',
+            'code' => 'bank_transfer',
+            'is_active' => true
+        ]);
+
+        $invoice = \App\Models\Invoice::create([
+            'invoice_number' => 'INV-2026-001',
+            'student_id' => $student->id,
+            'issue_date' => date('Y-m-d'),
+            'due_date' => date('Y-m-d', strtotime('+30 days')),
+            'total_amount' => 25000.00,
+            'paid_amount' => 10000.00,
+            'status' => 'Partial'
+        ]);
+
+        \App\Models\InvoiceItem::create([
+            'invoice_id' => $invoice->id,
+            'description' => '2026-2027 Eğitim Dönemi Kurs Kayıt Ücreti',
+            'quantity' => 1,
+            'unit_price' => 25000.00,
+            'total_price' => 25000.00
+        ]);
+
+        \App\Models\Payment::create([
+            'payment_number' => 'PAY-2026-001',
+            'invoice_id' => $invoice->id,
+            'student_id' => $student->id,
+            'payment_method_id' => $pmCash->id,
+            'amount' => 10000.00,
+            'payment_date' => now(),
+            'notes' => 'Peşinat tahsil edildi.',
+            'status' => 'Completed'
+        ]);
+
+        \App\Models\StudentDebt::create([
+            'student_id' => $student->id,
+            'invoice_id' => $invoice->id,
+            'amount' => 25000.00,
+            'remaining_amount' => 15000.00,
+            'due_date' => date('Y-m-d', strtotime('+30 days')),
+            'status' => 'Partial'
+        ]);
     }
 }
