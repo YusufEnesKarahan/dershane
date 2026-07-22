@@ -30,6 +30,8 @@ use App\Http\Controllers\Admin\AttendanceSessionController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\ExamController;
 use App\Http\Controllers\Admin\ExamResultController;
+use App\Http\Controllers\Admin\AssignmentController;
+use App\Http\Controllers\Admin\AssignmentSubmissionController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -96,6 +98,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('exams/{exam}/results', [ExamResultController::class, 'index'])->name('exams.results.index');
     Route::post('exams/{exam}/results', [ExamResultController::class, 'store'])->name('exams.results.store');
     Route::resource('exams', ExamController::class);
+    Route::get('assignments/analytics', [AssignmentSubmissionController::class, 'analytics'])->name('assignments.analytics');
+    Route::get('assignments/{assignment}/submissions', [AssignmentSubmissionController::class, 'index'])->name('assignments.submissions.index');
+    Route::post('assignments/{assignment}/submissions', [AssignmentSubmissionController::class, 'store'])->name('assignments.submissions.store');
+    Route::post('assignments/{assignment}/evaluate', [AssignmentSubmissionController::class, 'evaluate'])->name('assignments.submissions.evaluate');
+    Route::resource('assignments', AssignmentController::class);
     Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
     Route::resource('teachers', TeacherController::class);
     Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([

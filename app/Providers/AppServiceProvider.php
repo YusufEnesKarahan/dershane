@@ -99,5 +99,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Student::observe(\App\Observers\StudentObserver::class);
         \App\Models\Attendance::observe(\App\Observers\AttendanceObserver::class);
         \App\Models\Exam::observe(\App\Observers\ExamObserver::class);
+        \App\Models\Assignment::observe(\App\Observers\AssignmentObserver::class);
     }
 }

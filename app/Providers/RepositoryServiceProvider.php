@@ -113,6 +113,14 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\ExamResultRepositoryInterface::class,
             \App\Core\Repositories\ExamResultRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\AssignmentRepositoryInterface::class,
+            \App\Core\Repositories\AssignmentRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\AssignmentSubmissionRepositoryInterface::class,
+            \App\Core\Repositories\AssignmentSubmissionRepository::class
+        );
     }
 
     /**

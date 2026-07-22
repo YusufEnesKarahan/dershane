@@ -220,5 +220,34 @@ class DemoEducationSeeder extends Seeder {
             'global_rank' => 1,
             'is_absent' => false
         ]);
+
+        $assignment = \App\Models\Assignment::create([
+            'title' => '12-A Matematik Türev Problem Seti',
+            'code' => 'ODV-2026-01',
+            'description' => 'Sayfa 140-155 arası türev alma kuralları ve teğet denklemi soruları çözülecektir.',
+            'assignment_type' => 'Classroom',
+            'classroom_id' => $classroom->id,
+            'teacher_id' => $teacher->id,
+            'due_date' => date('Y-m-d H:i:s', strtotime('+7 days')),
+            'max_score' => 100,
+            'status' => 'Published'
+        ]);
+
+        $submission = \App\Models\AssignmentSubmission::create([
+            'assignment_id' => $assignment->id,
+            'student_id' => $student->id,
+            'submission_date' => now(),
+            'is_late' => false,
+            'remarks' => 'Tüm sorular eksiksiz çözülüp teslim edildi.',
+            'status' => 'Graded'
+        ]);
+
+        \App\Models\AssignmentScore::create([
+            'submission_id' => $submission->id,
+            'evaluator_id' => 1,
+            'score' => 95.00,
+            'max_score' => 100.00,
+            'feedback' => 'Türev kuralları ve teğet eğimi analizleri çok başarılı.'
+        ]);
     }
 }

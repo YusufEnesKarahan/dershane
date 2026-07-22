@@ -107,6 +107,16 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Assignments',
+                    'route' => 'admin.assignments.index',
+                    'permission' => 'students.view',
+                ],
+                [
+                    'title' => 'Homework Analytics',
+                    'route' => 'admin.assignments.analytics',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',
