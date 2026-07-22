@@ -21,3 +21,4 @@ The platform uses a layered architecture:
 - **Exam & Assessment Suite**: TYT/AYT/Trial exams, net engine ($Net = Correct - \frac{Wrong}{4}$), 500-pt scaled scores, global/branch standings.
 - **Homework & Assignment Suite**: Individual/Classroom/Course targeting, due date validations, late flags (`is_late`), teacher scoring & feedback, submission analytics.
 - **Finance & Billing Suite**: Invoicing, payment receipts, student debt tracking, installment plans, discounts, scholarships, refunds, and financial collection analytics.
+- **Communication & Notification Suite**: Multi-channel dispatching (SMS, Email, System notifications), message template engine, delivery log registry, announcement groups, and read receipts.

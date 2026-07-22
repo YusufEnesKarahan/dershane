@@ -127,6 +127,21 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Notifications',
+                    'route' => 'admin.notifications.index',
+                    'permission' => 'students.view',
+                ],
+                [
+                    'title' => 'Announcements',
+                    'route' => 'admin.announcements.index',
+                    'permission' => 'students.view',
+                ],
+                [
+                    'title' => 'Communication Analytics',
+                    'route' => 'admin.notifications.analytics',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',

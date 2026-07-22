@@ -305,5 +305,45 @@ class DemoEducationSeeder extends Seeder {
             'due_date' => date('Y-m-d', strtotime('+30 days')),
             'status' => 'Partial'
         ]);
+
+        \App\Models\SmsProvider::create([
+            'name' => 'NetGSM',
+            'code' => 'netgsm',
+            'is_active' => true
+        ]);
+
+        \App\Models\MailTemplate::create([
+            'name' => 'Eğitim Kayıt E-Postası',
+            'subject' => 'Kurs Kaydınız Başarıyla Tamamlandı',
+            'body_html' => 'Merhaba {user_name}, dershane kaydınız başarıyla tamamlanmıştır.'
+        ]);
+
+        \App\Models\NotificationTemplate::create([
+            'code' => 'invoice_due',
+            'title' => 'Fatura Vadesi Yaklaştı',
+            'body' => 'Değerli velimiz, faturanızın son ödeme tarihi yaklaşmaktadır. Kalan tutar: {amount}',
+            'channel' => 'System'
+        ]);
+
+        \App\Models\Notification::create([
+            'user_id' => 1,
+            'title' => 'Dershane Sistemine Hoş Geldiniz',
+            'content' => 'Eğitim portalı kullanımınız başarıyla açılmıştır.',
+            'type' => 'System',
+            'status' => 'Unread'
+        ]);
+
+        $group = \App\Models\AnnouncementGroup::create([
+            'name' => 'Tüm Öğrenciler',
+            'code' => 'all_students'
+        ]);
+
+        \App\Models\Announcement::create([
+            'title' => '29 Ekim Cumhuriyet Bayramı Tatili Hakkında',
+            'content' => '29 Ekim Cumhuriyet Bayramı resmi tatili nedeniyle dershanemizde eğitim yapılmayacaktır.',
+            'announcement_group_id' => $group->id,
+            'is_published' => true,
+            'published_at' => now()
+        ]);
     }
 }

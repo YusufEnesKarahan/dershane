@@ -34,6 +34,8 @@ use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\AssignmentSubmissionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\AnnouncementController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -109,6 +111,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
     Route::resource('invoices', InvoiceController::class);
     Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
+    Route::get('notifications/templates', [NotificationController::class, 'templates'])->name('notifications.templates');
+    Route::get('notifications/analytics', [NotificationController::class, 'analytics'])->name('notifications.analytics');
+    Route::resource('notifications', NotificationController::class);
+    Route::resource('announcements', AnnouncementController::class);
     Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
     Route::resource('teachers', TeacherController::class);
     Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([

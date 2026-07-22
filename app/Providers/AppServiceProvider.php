@@ -101,5 +101,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Exam::observe(\App\Observers\ExamObserver::class);
         \App\Models\Assignment::observe(\App\Observers\AssignmentObserver::class);
         \App\Models\Invoice::observe(\App\Observers\InvoiceObserver::class);
+        \App\Models\Notification::observe(\App\Observers\NotificationObserver::class);
     }
 }

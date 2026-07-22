@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Announcement extends Model
 {
-    /** @use HasFactory<\Database\Factories\AnnouncementFactory> */
-    use HasFactory, SoftDeletes;
+    protected $fillable = ['title', 'slug', 'content', 'announcement_group_id', 'is_published', 'is_active', 'published_at'];
 
-    protected $fillable = [
-        'title',
-        'slug',
-        'content',
-        'is_active',
-        'published_at'
-    ];
+    public function group()
+    {
+        return $this->belongsTo(AnnouncementGroup::class, 'announcement_group_id');
+    }
 
+    public function reads()
+    {
+        return $this->hasMany(AnnouncementRead::class);
+    }
 }
