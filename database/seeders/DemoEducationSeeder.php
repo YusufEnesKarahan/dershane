@@ -345,5 +345,25 @@ class DemoEducationSeeder extends Seeder {
             'is_published' => true,
             'published_at' => now()
         ]);
+
+        $parent = \App\Models\User::create([
+            'name' => 'Fatma Yılmaz',
+            'email' => 'parent@dershane.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        // Link parent to student
+        \App\Models\ParentStudent::create([
+            'parent_id' => $parent->id,
+            'student_id' => $student->id,
+            'relation_type' => 'Mother'
+        ]);
+
+        \App\Models\ParentNotification::create([
+            'parent_id' => $parent->id,
+            'title' => 'Öğrencinizin Devamsızlık Bildirimi',
+            'content' => 'Öğrenciniz Ahmet Yılmaz bugün 1. ders saatinde devamsız olarak işaretlenmiştir.',
+            'is_read' => false
+        ]);
     }
 }

@@ -102,5 +102,9 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Assignment::observe(\App\Observers\AssignmentObserver::class);
         \App\Models\Invoice::observe(\App\Observers\InvoiceObserver::class);
         \App\Models\Notification::observe(\App\Observers\NotificationObserver::class);
+
+        if (! \Illuminate\Support\Facades\Cache::has('hq_license_status')) {
+            \Illuminate\Support\Facades\Cache::put('hq_license_status', 'active', 600);
+        }
     }
 }

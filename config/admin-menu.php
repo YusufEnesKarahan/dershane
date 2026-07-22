@@ -142,6 +142,11 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
+                    'title' => 'Parent Portal',
+                    'route' => 'parent.dashboard',
+                    'permission' => 'students.view',
+                ],
+                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',

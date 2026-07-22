@@ -62,3 +62,4 @@
 - [x] Sprint 3.7: Homework & Assignment Management Module Completed
 - [x] Sprint 3.8: Finance & Billing Module Completed
 - [x] Sprint 3.9: Communication & Notification Module Completed
+- [x] Sprint 4.0: Parent Portal Completed
