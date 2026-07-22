@@ -1,20 +1,28 @@
 <?php
+
 namespace App\Domain\Teacher\Services;
 
-use App\Models\Teacher;
-use App\Models\TeacherPerformance;
+use App\DTOs\Teacher\TeacherPerformanceDTO;
+use App\Models\TeacherPerformanceLog;
+use Illuminate\Support\Collection;
 
 class TeacherPerformanceService
 {
-    public function logPerformance(Teacher $teacher, array $metrics): TeacherPerformance
+    public function logPerformance(TeacherPerformanceDTO $dto): TeacherPerformanceLog
     {
-        return TeacherPerformance::create([
-            'teacher_id' => $teacher->id,
-            'attendance_rate' => $metrics['attendance_rate'] ?? 100.0,
-            'student_satisfaction' => $metrics['student_satisfaction'] ?? 5.0,
-            'lesson_count' => $metrics['lesson_count'] ?? 0,
-            'feedback_score' => $metrics['feedback_score'] ?? 5.0,
-            'kpi_month' => $metrics['kpi_month'] ?? now()->format('Y-m'),
+        return TeacherPerformanceLog::create([
+            'teacher_id' => $dto->teacher_id,
+            'metric_type' => $dto->metric_type,
+            'score' => $dto->score,
+            'comments' => $dto->comments,
+            'evaluated_at' => now(),
         ]);
+    }
+
+    public function getLogs(int $teacherId): Collection
+    {
+        return TeacherPerformanceLog::where('teacher_id', $teacherId)
+            ->orderBy('evaluated_at', 'desc')
+            ->get();
     }
 }

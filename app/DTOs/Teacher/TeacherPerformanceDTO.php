@@ -1,13 +1,13 @@
 <?php
+
 namespace App\DTOs\Teacher;
 
 class TeacherPerformanceDTO
 {
     public function __construct(
-        public float $attendance_rate,
-        public float $student_satisfaction,
-        public int $lesson_count,
-        public float $feedback_score,
-        public string $kpi_month
+        public int $teacher_id,
+        public string $metric_type,
+        public float $score,
+        public ?string $comments = null
     ) {}
 }

@@ -1,18 +1,16 @@
 <?php
+
 namespace App\Domain\Teacher\Services;
 
 use App\DTOs\Teacher\CreateTeacherDTO;
 use App\DTOs\Teacher\UpdateTeacherDTO;
-use App\Core\Repositories\Interfaces\TeacherRepositoryInterface;
 use App\Models\Teacher;
 
 class TeacherService
 {
-    public function __construct(protected TeacherRepositoryInterface $repository) {}
-
-    public function create(CreateTeacherDTO $dto): Teacher
+    public function createTeacher(CreateTeacherDTO $dto): Teacher
     {
-        return $this->repository->create([
+        return Teacher::create([
             'user_id' => $dto->user_id,
             'branch_id' => $dto->branch_id,
             'title' => $dto->title,
@@ -25,10 +23,10 @@ class TeacherService
         ]);
     }
 
-    public function update(Teacher $teacher, UpdateTeacherDTO $dto): Teacher
+    public function updateTeacher(int $id, UpdateTeacherDTO $dto): Teacher
     {
-        return $this->repository->update($teacher, [
-            'branch_id' => $dto->branch_id,
+        $teacher = Teacher::findOrFail($id);
+        $teacher->update([
             'title' => $dto->title,
             'bio' => $dto->bio,
             'specialties' => $dto->specialties,
@@ -37,5 +35,6 @@ class TeacherService
             'emergency_contact' => $dto->emergency_contact,
             'status' => $dto->status,
         ]);
+        return $teacher;
     }
 }

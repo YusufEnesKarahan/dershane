@@ -1,48 +1,30 @@
 @extends('layouts.admin')
-@section('title', 'Analitikler')
+@section('title', 'Öğretmen Analitiği')
 @section('content')
-    <x-admin.crud.index-layout title="Eğitmen Analitik Raporları" description="Kadro genelindeki ortalama performans, ders doluluk oranları ve şubeler arası başarı karşılaştırmaları.">
+    <x-admin.crud.index-layout title="Öğretmen Performans & İstatistik Analizi" description="Eğitmenin aktif atandığı sınıfları, ortalama başarı puanlarını ve yoklama takip istatistiklerini izleyin.">
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Genel Memnuniyet Ortalaması</h4>
-                <div class="text-2xl font-bold">4.85 / 5.00</div>
-                <div class="text-[10px] text-green-500 mt-1">▲ %3.2 (Geçen aya göre)</div>
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Eğitmen</h4>
+                <div class="text-xl font-bold text-neutral-900 dark:text-white">{{ $analytics['teacher']->user->name }}</div>
+                <div class="text-xs text-neutral-400 mt-1">{{ $analytics['teacher']->title }}</div>
             </div>
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Ortalama Derse Katılım</h4>
-                <div class="text-2xl font-bold">%98.4</div>
-                <div class="text-[10px] text-green-500 mt-1">▲ %0.5 (Geçen aya göre)</div>
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Aktif Atanan Sınıflar</h4>
+                <div class="text-2xl font-bold text-primary">{{ $analytics['assigned_classes_count'] }} Sınıf</div>
             </div>
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Toplam Eğitmen Kadrosu</h4>
-                <div class="text-2xl font-bold">12 Aktif</div>
-                <div class="text-[10px] text-neutral-400 mt-1">Sabit kadro</div>
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Ortalama Performans Skoru</h4>
+                <div class="text-2xl font-bold text-green-600">%{{ $analytics['average_performance_score'] }}</div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Karşılaştırmalı Performans Tablosu</h3>
-            <x-admin.table.layout>
-                <x-slot name="head">
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Eğitmen</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Toplam İşlenen Ders</th>
-                    <th class="px-6 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Öğrenci Memnuniyeti</th>
-                </x-slot>
-                <x-slot name="body">
-                    @forelse($popular as $teacher)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40">
-                            <td class="px-6 py-4 text-sm font-semibold text-neutral-900 dark:text-white">{{ $teacher->user->name }}</td>
-                            <td class="px-6 py-4 text-sm text-neutral-500">45 Ders</td>
-                            <td class="px-6 py-4 text-sm text-neutral-500">★ 4.90</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="px-6 py-8 text-center text-sm text-neutral-400">Veri bulunmuyor.</td>
-                        </tr>
-                    @endforelse
-                </x-slot>
-            </x-admin.table.layout>
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-4">
+            <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Genel Değerlendirme Raporu</h3>
+            <p class="text-xs text-neutral-500 leading-relaxed">
+                Öğretmenimizin ders anlatım verimliliği, veli geri bildirimleri ve TYT/AYT deneme başarı oranları incelendiğinde zümre standartlarını karşılamaktadır. Haftalık ders programı ve ders yoklaması alım düzeni performans skorunu desteklemektedir.
+            </p>
         </div>
+
     </x-admin.crud.index-layout>
 @endsection

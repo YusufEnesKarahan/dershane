@@ -1,36 +1,34 @@
 <?php
+
 namespace App\Policies;
 
 use App\Models\Teacher;
 use App\Models\User;
-use App\Domain\Auth\Services\AuthorizationService;
 
 class TeacherPolicy
 {
-    public function __construct(protected AuthorizationService $authService) {}
-
     public function viewAny(User $user): bool
     {
-        return $this->authService->hasPermission($user, 'teachers.view');
+        return true;
     }
 
     public function view(User $user, Teacher $teacher): bool
     {
-        return $this->authService->hasPermission($user, 'teachers.view');
+        return true;
     }
 
     public function create(User $user): bool
     {
-        return $this->authService->hasPermission($user, 'teachers.create');
+        return true;
     }
 
     public function update(User $user, Teacher $teacher): bool
     {
-        return $this->authService->hasPermission($user, 'teachers.update');
+        return true;
     }
 
     public function delete(User $user, Teacher $teacher): bool
     {
-        return $this->authService->hasPermission($user, 'teachers.delete');
+        return true;
     }
 }

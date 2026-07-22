@@ -1,4 +1,5 @@
 <?php
+
 namespace App\DTOs\Teacher;
 
 class CreateTeacherDTO

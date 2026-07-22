@@ -15,4 +15,5 @@ declare(strict_types=1);
 require __DIR__.'/frontend.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/parent.php';
+require __DIR__.'/teacher.php';
 require __DIR__.'/auth.php';

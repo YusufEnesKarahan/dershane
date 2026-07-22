@@ -1,16 +1,27 @@
 <?php
+
 namespace App\Domain\Teacher\Services;
 
 use App\Models\Teacher;
+use App\Models\TeacherAssignment;
+use App\Models\TeacherPerformanceLog;
+use App\Models\Attendance;
+use App\Models\ExamResult;
 
 class TeacherAnalyticsService
 {
-    public function getAnalyticsSummary(Teacher $teacher): array
+    public function getAnalyticsSummary(int $teacherId): array
     {
+        $teacher = Teacher::findOrFail($teacherId);
+        $assignedClassesCount = TeacherAssignment::where('teacher_id', $teacherId)->count();
+
+        // Calculate Average Performance Score
+        $averagePerformance = TeacherPerformanceLog::where('teacher_id', $teacherId)->avg('score');
+
         return [
-            'lesson_count' => $teacher->schedules()->count(),
-            'student_satisfaction' => $teacher->performances()->avg('student_satisfaction') ?: 5.0,
-            'attendance_rate' => $teacher->performances()->avg('attendance_rate') ?: 100.0,
+            'teacher' => $teacher,
+            'assigned_classes_count' => $assignedClassesCount,
+            'average_performance_score' => $averagePerformance ? round($averagePerformance, 1) : 100.0,
         ];
     }
 }

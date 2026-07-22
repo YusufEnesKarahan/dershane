@@ -1,49 +1,42 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
+use App\DTOs\Teacher\TeacherPerformanceDTO;
+use App\Domain\Teacher\Actions\EvaluateTeacherPerformance;
 use App\Domain\Teacher\Services\TeacherPerformanceService;
-use App\Core\Repositories\Interfaces\TeacherPerformanceRepositoryInterface;
 use Illuminate\Http\Request;
 
 class TeacherPerformanceController extends Controller
 {
-    public function __construct(
-        protected TeacherPerformanceService $service,
-        protected TeacherPerformanceRepositoryInterface $repository
-    ) {}
+    public function __construct(protected TeacherPerformanceService $performanceService) {}
 
-    public function index(Request $request)
+    public function show($id)
     {
-        $this->authorize('viewAny', Teacher::class);
-
-        $teachers = Teacher::with('user')->get();
-        $teacherId = $request->query('teacher_id');
-        $performances = collect();
-        $teacher = null;
-
-        if ($teacherId) {
-            $teacher = Teacher::with('user')->findOrFail($teacherId);
-            $performances = $this->repository->getByTeacher($teacherId);
-        }
-
-        return view('admin.teachers.performance', compact('teachers', 'teacher', 'performances'));
+        $teacher = Teacher::findOrFail($id);
+        $logs = $this->performanceService->getLogs((int) $id);
+        return view('admin.teachers.performance', compact('teacher', 'logs'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, EvaluateTeacherPerformance $action)
     {
-        $this->authorize('update', Teacher::class);
-
         $request->validate([
             'teacher_id' => 'required|exists:teachers,id',
-            'attendance_rate' => 'required|numeric',
-            'student_satisfaction' => 'required|numeric',
+            'metric_type' => 'required|string',
+            'score' => 'required|numeric|min:0|max:100',
         ]);
 
-        $teacher = Teacher::findOrFail($request->teacher_id);
-        $this->service->logPerformance($teacher, $request->all());
+        $dto = new TeacherPerformanceDTO(
+            (int) $request->teacher_id,
+            $request->metric_type,
+            (float) $request->score,
+            $request->comments
+        );
 
-        return redirect()->back()->with('success', 'KPI metrics logged successfully.');
+        $action->execute($dto);
+
+        return redirect()->back()->with('success', 'Performans değerlendirme kaydı başarıyla eklendi.');
     }
 }

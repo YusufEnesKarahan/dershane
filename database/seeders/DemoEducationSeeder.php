@@ -6,7 +6,7 @@ use App\Models\{Teacher, Course, Classroom, User, Branch};
 class DemoEducationSeeder extends Seeder {
     public function run(): void {
         $branch = Branch::first();
-        $user = User::factory()->create(['name' => 'Kemal Yıldız', 'email' => 'kemal@dershane.com']);
+        $user = User::factory()->create(['name' => 'Kemal Yıldız', 'email' => 'teacher@dershane.com', 'password' => bcrypt('password')]);
         $teacher = Teacher::create([
             'user_id' => $user->id,
             'branch_id' => $branch->id,
@@ -364,6 +364,42 @@ class DemoEducationSeeder extends Seeder {
             'title' => 'Öğrencinizin Devamsızlık Bildirimi',
             'content' => 'Öğrenciniz Ahmet Yılmaz bugün 1. ders saatinde devamsız olarak işaretlenmiştir.',
             'is_read' => false
+        ]);
+
+        \App\Models\TeacherProfile::create([
+            'teacher_id' => $teacher->id,
+            'bio_extended' => 'Uzun yıllar YKS hazırlık gruplarında çalıştı.',
+            'office_hours' => 'Pazartesi 14:00 - 16:00',
+            'room_number' => 'Derslik 101'
+        ]);
+
+        \App\Models\TeacherSubject::create([
+            'teacher_id' => $teacher->id,
+            'subject_name' => 'Matematik',
+            'code' => 'MAT'
+        ]);
+
+        \App\Models\TeacherAssignment::create([
+            'teacher_id' => $teacher->id,
+            'classroom_id' => $classroom->id,
+            'course_id' => $course->id
+        ]);
+
+        \App\Models\TeacherSchedule::create([
+            'teacher_id' => $teacher->id,
+            'classroom_id' => $classroom->id,
+            'course_id' => $course->id,
+            'date' => date('Y-m-d'),
+            'start_time' => '10:00:00',
+            'end_time' => '11:30:00'
+        ]);
+
+        \App\Models\TeacherPerformanceLog::create([
+            'teacher_id' => $teacher->id,
+            'metric_type' => 'Student Success Rate',
+            'score' => 95.50,
+            'comments' => 'YKS başarı ortalaması çok yüksek.',
+            'evaluated_at' => now()
         ]);
     }
 }

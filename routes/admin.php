@@ -115,6 +115,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('notifications/analytics', [NotificationController::class, 'analytics'])->name('notifications.analytics');
     Route::resource('notifications', NotificationController::class);
     Route::resource('announcements', AnnouncementController::class);
+    Route::get('teachers/{teacher}/performance', [TeacherPerformanceController::class, 'show'])->name('teachers.performance');
+    Route::post('teachers/performance', [TeacherPerformanceController::class, 'store'])->name('teachers.performance.store');
     Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
     Route::resource('teachers', TeacherController::class);
     Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([
