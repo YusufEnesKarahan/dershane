@@ -24,3 +24,4 @@ The platform uses a layered architecture:
 - **Communication & Notification Suite**: Multi-channel dispatching (SMS, Email, System notifications), message template engine, delivery log registry, announcement groups, and read receipts.
 - **Parent Portal Suite**: Parent-student profile linkages, portal access monitoring logs, custom parent notifications, device push registers, and tabbed academic/financial trackers.
 - **Teacher Portal Suite**: Staff record registry, teacher profiles, classroom assignments, dynamic schedules, student attendance recording, homework posting & grading, and success rate analytics.
+- **Reporting & BI Suite**: Executive KPI dashboard, database-backed analytics cache, report schedules, file export tracking, and custom executive assessment reports.

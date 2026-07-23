@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\UserPreferenceController;
+use App\Http\Controllers\Admin\ExecutiveDashboardController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
@@ -172,4 +174,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('settings/import', [PlatformSettingController::class, 'import'])->name('settings.import');
     Route::post('settings/reset', [PlatformSettingController::class, 'reset'])->name('settings.reset');
     Route::get('logs', fn() => 'Logs Placeholder')->name('logs.index');
+
+    // Reporting & BI routes
+    Route::get('reporting/dashboard', [ExecutiveDashboardController::class, 'index'])->name('reporting.dashboard');
+    Route::get('reporting/analytics', [ExecutiveDashboardController::class, 'analytics'])->name('reporting.analytics');
+    Route::post('reporting/snapshot', [ExecutiveDashboardController::class, 'snapshot'])->name('reporting.snapshot');
+    Route::get('reporting/reports', [ReportController::class, 'index'])->name('reporting.reports');
+    Route::post('reporting/reports/schedules', [ReportController::class, 'storeSchedule'])->name('reporting.schedules.store');
+    Route::post('reporting/reports/export', [ReportController::class, 'export'])->name('reporting.export');
+    Route::get('reporting/reports/{id}/download', [ReportController::class, 'download'])->name('reporting.download');
 });

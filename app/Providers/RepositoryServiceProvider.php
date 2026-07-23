@@ -145,6 +145,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\TeacherPortalRepositoryInterface::class,
             \App\Core\Repositories\TeacherPortalRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\ReportingRepositoryInterface::class,
+            \App\Core\Repositories\ReportingRepository::class
+        );
     }
 
     /**

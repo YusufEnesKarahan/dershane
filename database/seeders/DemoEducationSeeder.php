@@ -401,5 +401,40 @@ class DemoEducationSeeder extends Seeder {
             'comments' => 'YKS başarı ortalaması çok yüksek.',
             'evaluated_at' => now()
         ]);
+
+        \App\Models\DashboardSnapshot::create([
+            'metrics' => [
+                'student_count' => 12,
+                'teacher_count' => 4,
+                'branch_count' => 1,
+                'today_lessons' => 3,
+                'today_attendance_sessions' => 2,
+                'absence_rate' => 5.5,
+                'avg_tyt_net' => 78.50,
+                'avg_ayt_net' => 54.20,
+                'total_collected' => 15000.00,
+                'pending_debt' => 10000.00,
+                'total_submissions' => 8,
+                'total_notifications' => 12,
+                'calculated_at' => now()->toDateTimeString(),
+            ]
+        ]);
+
+        \App\Models\ReportSchedule::create([
+            'report_type' => 'Weekly Manager Summary',
+            'format' => 'PDF',
+            'email_recipients' => 'director@dershane.com',
+            'cron_expression' => '0 9 * * 1',
+            'is_active' => true
+        ]);
+
+        \App\Models\ExecutiveReport::create([
+            'title' => '2026 Güz Dönemi Performans Analizi',
+            'description' => 'Güz dönemi öğrenci devamlılık durumları ve deneme sınavları ortalama başarı grafikleri.',
+            'content_data' => [
+                'success_rate' => '88%',
+                'absence_rate' => '5.5%'
+            ]
+        ]);
     }
 }

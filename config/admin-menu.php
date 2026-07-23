@@ -214,6 +214,29 @@ return [
             ],
         ],
         [
+            'title' => 'Reporting & BI',
+            'icon' => 'chart-bar',
+            'permission' => 'dashboard.view',
+            'sort' => 4,
+            'children' => [
+                [
+                    'title' => 'Executive Dashboard',
+                    'route' => 'admin.reporting.dashboard',
+                    'permission' => 'dashboard.view',
+                ],
+                [
+                    'title' => 'BI Analytics',
+                    'route' => 'admin.reporting.analytics',
+                    'permission' => 'dashboard.view',
+                ],
+                [
+                    'title' => 'Reports & Schedules',
+                    'route' => 'admin.reporting.reports',
+                    'permission' => 'dashboard.view',
+                ],
+            ],
+        ],
+        [
             'title' => 'CRM',
             'icon' => 'phone',
             'permission' => 'crm.view',
