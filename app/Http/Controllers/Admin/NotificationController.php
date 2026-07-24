@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\User;
 use App\DTOs\Notification\CreateNotificationDTO;
-use App\DTOs\Notification\SendNotificationDTO;
 use App\Domain\Notification\Actions\CreateNotification;
 use App\Domain\Notification\Actions\MarkNotificationRead;
-use App\Domain\Notification\Actions\SendNotification;
+use App\Domain\System\Services\QueueService;
 use App\Domain\Notification\Actions\UpdatePreference;
 use App\DTOs\Notification\NotificationPreferenceDTO;
 use App\Domain\Notification\Services\NotificationAnalyticsService;
@@ -39,7 +38,7 @@ class NotificationController extends Controller
         return view('admin.notifications.dashboard', ['summary' => $this->analyticsService->summary()]);
     }
 
-    public function store(Request $request, CreateNotification $create, SendNotification $send)
+    public function store(Request $request, CreateNotification $create, QueueService $queue)
     {
         $this->authorize('create', Notification::class);
 
@@ -55,7 +54,7 @@ class NotificationController extends Controller
         $dto = new CreateNotificationDTO((int) $request->user_id, $request->title, $request->message, $request->type, $request->channel, $request->input('priority', 'normal'));
 
         $notification = $create->execute($dto);
-        $send->execute(new SendNotificationDTO($notification->id));
+        $queue->sendNotification($notification->id);
 
         return redirect()->back()->with('success', 'Bildirim başarıyla gönderildi ve iletim logu oluşturuldu.');
     }

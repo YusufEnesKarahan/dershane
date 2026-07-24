@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         foreach ([\App\Events\Notifications\StudentRegistered::class, \App\Events\Notifications\PaymentOverdue::class, \App\Events\Notifications\ExamResultPublished::class, \App\Events\Notifications\HomeworkAssigned::class, \App\Events\Notifications\CrmFollowupDue::class] as $event) Event::listen($event, \App\Listeners\Notifications\CreateDomainNotification::class);
+        foreach ([\App\Events\System\PaymentOverdueEvent::class, \App\Events\System\StudentAbsenceDetectedEvent::class, \App\Events\System\ReportGeneratedEvent::class] as $event) Event::listen($event, \App\Listeners\System\DispatchAutomationJob::class);
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Administrator') ? true : null;

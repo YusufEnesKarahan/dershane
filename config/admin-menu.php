@@ -462,6 +462,9 @@ return [
             'permission' => 'settings.view',
             'sort' => 6,
             'children' => [
+                [ 'title' => 'Queue Dashboard', 'route' => 'admin.system.jobs.dashboard', 'permission' => 'system.jobs.manage' ],
+                [ 'title' => 'Failed Jobs', 'route' => 'admin.system.jobs.failed', 'permission' => 'system.jobs.manage' ],
+                [ 'title' => 'Automation Logs', 'route' => 'admin.system.jobs.automation', 'permission' => 'system.jobs.manage' ],
                 [
                     'title' => 'Branches',
                     'route' => 'admin.branches.index',

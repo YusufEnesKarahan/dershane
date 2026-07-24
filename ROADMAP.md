@@ -4,6 +4,10 @@
 
 Completed: central notification persistence, templates, preferences, logs, panel/email/SMS-ready delivery, domain events, analytics, admin screens, and demo data.
 
+## Sprint 4.9 — Queue & Automation
+
+Completed: database queue jobs, monitoring, failed-job dashboard, scheduler automations, job histories, automation logs, and background notification/report/document/finance workflows.
+
 ## Sprint 0
 
 ## Sprint 0.5

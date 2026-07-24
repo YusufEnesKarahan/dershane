@@ -106,6 +106,7 @@ class PermissionDictionary
 
     public const NOTIFICATIONS_VIEW = 'notifications.view';
     public const NOTIFICATIONS_MANAGE = 'notifications.manage';
+    public const SYSTEM_JOBS_MANAGE = 'system.jobs.manage';
 
     public const BRANCHES_VIEW = 'branches.view';
     public const BRANCHES_MANAGE = 'branches.manage';

@@ -4,6 +4,10 @@
 
 Notifications follow DTO → Action → Service → Repository. Existing module observers emit domain events that a shared listener converts to notifications, keeping delivery adapters decoupled from education, finance, and CRM modules.
 
+## Queue & Automation Domain
+
+Long-running work is dispatched through `QueueService`. Jobs use `JobMonitoringService` for lifecycle data, while `AutomationService` is the scheduler boundary and persists scheduled-run outcomes separately from queue attempts.
+
 ## Domain-Driven Modular Design
 
 The platform uses a layered architecture:

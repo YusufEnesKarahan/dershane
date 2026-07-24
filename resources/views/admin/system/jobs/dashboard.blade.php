@@ -1,0 +1,3 @@
+@extends('layouts.admin')
+@section('title','Queue Dashboard')
+@section('content')<x-admin.crud.index-layout title="Queue Dashboard" description="Kuyruk, başarısız işler ve çalışma geçmişi."><div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6"><div class="bg-white p-5 rounded-2xl shadow-premium-sm">Bekleyen: <b>{{ $pending }}</b></div><div class="bg-white p-5 rounded-2xl shadow-premium-sm">Başarısız: <b>{{ $failed }}</b></div><div class="bg-white p-5 rounded-2xl shadow-premium-sm">Tamamlanan: <b>{{ $completed }}</b></div></div>@include('admin.system.jobs.partials.table',['jobs'=>$recent])</x-admin.crud.index-layout>@endsection

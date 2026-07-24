@@ -365,6 +365,13 @@ class DemoEducationSeeder extends Seeder {
             \App\Models\NotificationLog::create(['notification_id' => $notification->id, 'recipient' => $recipient->email, 'channel' => $notification->channel, 'provider' => 'Demo', 'status' => 'Sent', 'sent_at' => $createdAt]);
         }
 
+        foreach (['SendNotificationJob', 'GenerateReportJob', 'ProcessDocumentJob', 'ProcessPaymentReminderJob'] as $index => $jobName) {
+            \App\Models\JobHistory::create(['job_name' => 'App\\Jobs\\'.$jobName, 'status' => $index === 3 ? 'failed' : 'completed', 'payload' => ['demo' => true], 'started_at' => now()->subMinutes($index + 10), 'completed_at' => now()->subMinutes($index + 9), 'error_message' => $index === 3 ? 'Demo provider timeout.' : null]);
+        }
+        foreach (['payment-reminders', 'upcoming-exams', 'attendance-warnings', 'pending-followups', 'weekly-system-report'] as $index => $automation) {
+            \App\Models\AutomationLog::create(['job_name' => $automation, 'status' => $index === 2 ? 'failed' : 'completed', 'payload' => ['demo' => true], 'started_at' => now()->subHours($index + 1), 'completed_at' => now()->subHours($index + 1)->addMinutes(2), 'error_message' => $index === 2 ? 'Demo automation exception.' : null]);
+        }
+
         $group = \App\Models\AnnouncementGroup::create([
             'name' => 'Tüm Öğrenciler',
             'code' => 'all_students'

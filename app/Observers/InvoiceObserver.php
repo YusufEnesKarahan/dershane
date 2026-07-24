@@ -10,6 +10,6 @@ class InvoiceObserver
     public function saved(Invoice $invoice)
     {
         Cache::forget('finance.analytics.summary');
-        if (strtolower($invoice->status) === 'overdue') event(new \App\Events\Notifications\PaymentOverdue($invoice));
+        if (strtolower($invoice->status) === 'overdue') { event(new \App\Events\Notifications\PaymentOverdue($invoice)); event(new \App\Events\System\PaymentOverdueEvent($invoice->id)); }
     }
 }

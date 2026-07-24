@@ -16,6 +16,7 @@ class DocumentObserver
             'ip_address' => request()->ip(),
             'created_at' => now(),
         ]);
+        app(\App\Domain\System\Services\QueueService::class)->processDocument($document->id);
     }
 
     public function updated(Document $document): void

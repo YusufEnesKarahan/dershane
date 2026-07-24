@@ -146,5 +146,9 @@ return [
             'label' => 'Bildirim Merkezi', 'icon' => 'bell', 'color' => 'indigo', 'sort_order' => 9,
             'permissions' => ['notifications.view', 'notifications.manage'],
         ],
+        'System Jobs' => [
+            'label' => 'Kuyruk ve Otomasyon', 'icon' => 'server', 'color' => 'slate', 'sort_order' => 10,
+            'permissions' => ['system.jobs.manage'],
+        ],
     ],
 ];

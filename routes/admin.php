@@ -66,6 +66,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\NotificationAnalyticsController;
+use App\Http\Controllers\Admin\SystemJobController;
 use App\Http\Controllers\Admin\AnnouncementController;
 
 // Admin Framework Routes
@@ -122,6 +123,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('notifications/dashboard', [NotificationController::class, 'dashboard'])->name('notifications.dashboard');
     Route::get('notifications/preferences', [NotificationController::class, 'preferences'])->name('notifications.preferences');
     Route::put('notifications/preferences', [NotificationController::class, 'updatePreferences'])->name('notifications.preferences.update');
+    Route::get('system/jobs', [SystemJobController::class, 'dashboard'])->name('system.jobs.dashboard');
+    Route::get('system/jobs/failed', [SystemJobController::class, 'failed'])->name('system.jobs.failed');
+    Route::get('system/jobs/history', [SystemJobController::class, 'history'])->name('system.jobs.history');
+    Route::get('system/automation-logs', [SystemJobController::class, 'automation'])->name('system.jobs.automation');
     Route::get('notifications/templates', [NotificationTemplateController::class, 'index'])->name('notifications.templates');
     Route::post('notifications/templates', [NotificationTemplateController::class, 'store'])->name('notifications.templates.store');
     Route::get('notifications/analytics', NotificationAnalyticsController::class)->name('notifications.analytics');
