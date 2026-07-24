@@ -27,3 +27,5 @@ The platform uses a layered architecture:
 - **Reporting & BI Suite**: Executive KPI dashboard, database-backed analytics cache, report schedules, file export tracking, and custom executive assessment reports.
 - **CRM & Lead Management Suite**: Pre-enrollment leads capture, sources distribution, status pipelines (Kanban), follow-up timelines, advisor assignments, activity logs, and conversion performance analysis.
 - **Student Admission & Enrollment Suite**: Pre-registration workflow, document upload/approval, dynamic contract templates, student card auto-creation, and Finance invoice auto-billing integration.
+- **Human Resources & Payroll Suite**: Employee rosters, departments & positions registry, dynamic salary payroll generation, leave requests tracking, entrance/exit attendance tracking, expense claims, advance disbursements, and workforce performance analytics.
+- **Asset & Inventory Suite**: Hardware categories and positions registries, assets barcoding tracking, employee assignments (zimmet), consumable stock transactions, suppliers register, purchase order validation, repair logs, and cost analytics.

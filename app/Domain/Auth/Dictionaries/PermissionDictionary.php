@@ -113,6 +113,21 @@ class PermissionDictionary
     public const ADMISSION_APPROVE = 'admission.approve';
     public const ENROLLMENT_MANAGE = 'enrollment.manage';
 
+    public const HR_VIEW = 'hr.view';
+    public const HR_CREATE = 'hr.create';
+    public const HR_UPDATE = 'hr.update';
+    public const HR_APPROVE = 'hr.approve';
+    public const PAYROLL_MANAGE = 'payroll.manage';
+
+    public const ASSETS_VIEW = 'assets.view';
+    public const ASSETS_MANAGE = 'assets.manage';
+
+    public const INVENTORY_VIEW = 'inventory.view';
+    public const INVENTORY_MANAGE = 'inventory.manage';
+
+    public const PURCHASE_VIEW = 'purchase.view';
+    public const PURCHASE_MANAGE = 'purchase.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

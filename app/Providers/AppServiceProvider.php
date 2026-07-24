@@ -105,6 +105,10 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\DashboardSnapshot::observe(\App\Observers\ReportingObserver::class);
         \App\Models\Lead::observe(\App\Observers\LeadObserver::class);
         \App\Models\StudentAdmission::observe(\App\Observers\AdmissionObserver::class);
+        \App\Models\Employee::observe(\App\Observers\EmployeeObserver::class);
+        \App\Models\Payroll::observe(\App\Observers\PayrollObserver::class);
+        \App\Models\Asset::observe(\App\Observers\AssetObserver::class);
+        \App\Models\InventoryItem::observe(\App\Observers\InventoryObserver::class);
 
         if (! \Illuminate\Support\Facades\Cache::has('hq_license_status')) {
             \Illuminate\Support\Facades\Cache::put('hq_license_status', 'active', 600);

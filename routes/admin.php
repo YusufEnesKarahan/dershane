@@ -13,7 +13,24 @@ use App\Http\Controllers\Admin\LeadDashboardController;
 use App\Http\Controllers\Admin\AdmissionController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\ContractController;
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\PayrollController;
+use App\Http\Controllers\Admin\LeaveController;
+use App\Http\Controllers\Admin\EmployeeAttendanceController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\AdvanceController;
+use App\Http\Controllers\Admin\PerformanceController;
+use App\Http\Controllers\Admin\AnalyticsController as HRAnalyticsController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\AssetCategoryController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\MaintenanceController;
+use App\Http\Controllers\Admin\TransferController;
+use App\Http\Controllers\Admin\InventoryAnalyticsController as InvAnalyticsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
@@ -223,4 +240,60 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('contracts', [ContractController::class, 'index'])->name('contracts.index');
     Route::post('contracts/generate', [ContractController::class, 'generate'])->name('contracts.generate');
     Route::post('contracts/{id}/sign', [ContractController::class, 'sign'])->name('contracts.sign');
+
+    // HR Module Routes
+    Route::get('hr/dashboard', [HRAnalyticsController::class, 'dashboard'])->name('hr.dashboard');
+    Route::get('hr/analytics', [HRAnalyticsController::class, 'index'])->name('hr.analytics');
+
+    Route::post('departments/position', [DepartmentController::class, 'storePosition'])->name('positions.store');
+    Route::resource('departments', DepartmentController::class);
+    Route::resource('employees', EmployeeController::class);
+
+    Route::post('payroll/{id}/approve', [PayrollController::class, 'approve'])->name('payroll.approve');
+    Route::post('payroll/{id}/pay', [PayrollController::class, 'pay'])->name('payroll.pay');
+    Route::resource('payroll', PayrollController::class);
+
+    Route::post('leaves/{id}/approve', [LeaveController::class, 'approve'])->name('leaves.approve');
+    Route::post('leaves/{id}/reject', [LeaveController::class, 'reject'])->name('leaves.reject');
+    Route::resource('leaves', LeaveController::class);
+
+    Route::resource('attendance', EmployeeAttendanceController::class);
+
+    Route::post('expenses/{id}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
+    Route::post('expenses/{id}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
+    Route::resource('expenses', ExpenseController::class);
+
+    Route::post('advances/{id}/approve', [AdvanceController::class, 'approve'])->name('advances.approve');
+    Route::post('advances/{id}/reject', [AdvanceController::class, 'reject'])->name('advances.reject');
+    Route::resource('advances', AdvanceController::class);
+
+    Route::resource('performance', PerformanceController::class);
+
+    // Inventory & Asset Module Routes
+    Route::get('inventory/dashboard', [InvAnalyticsController::class, 'dashboard'])->name('inventory.dashboard');
+    Route::get('inventory/analytics', [InvAnalyticsController::class, 'index'])->name('inventory.analytics');
+
+    Route::post('assets/assign', [AssetController::class, 'assign'])->name('assets.assign');
+    Route::post('assets/return/{id}', [AssetController::class, 'returnAssignment'])->name('assets.return');
+    Route::post('assets/{id}/retire', [AssetController::class, 'retire'])->name('assets.retire');
+    Route::resource('assets', AssetController::class);
+
+    Route::post('categories/location', [AssetCategoryController::class, 'storeLocation'])->name('categories.store-location');
+    Route::resource('categories', AssetCategoryController::class);
+
+    Route::post('inventory/transaction', [InventoryController::class, 'transaction'])->name('inventory.transaction');
+    Route::post('inventory/category', [InventoryController::class, 'storeCategory'])->name('inventory.store-category');
+    Route::post('inventory/warehouse', [InventoryController::class, 'storeWarehouse'])->name('inventory.store-warehouse');
+    Route::resource('inventory', InventoryController::class);
+
+    Route::resource('suppliers', SupplierController::class);
+
+    Route::post('purchase/{id}/approve', [PurchaseController::class, 'approve'])->name('purchase.approve');
+    Route::post('purchase/{id}/complete', [PurchaseController::class, 'complete'])->name('purchase.complete');
+    Route::resource('purchase', PurchaseController::class);
+
+    Route::post('maintenance/{id}/complete', [MaintenanceController::class, 'complete'])->name('maintenance.complete');
+    Route::resource('maintenance', MaintenanceController::class);
+
+    Route::resource('transfers', TransferController::class);
 });

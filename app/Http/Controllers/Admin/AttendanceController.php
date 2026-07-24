@@ -1,48 +1,40 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AttendanceSession;
-use App\Models\AttendanceStatus;
-use App\DTOs\Attendance\BulkAttendanceDTO;
-use App\Domain\Attendance\Actions\RecordBulkAttendanceAction;
-use App\Domain\Attendance\Services\AttendanceSessionService;
-use App\Domain\Attendance\Services\AttendanceAnalyticsService;
+use App\Domain\HR\Services\AttendanceService;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
     public function __construct(
-        protected AttendanceSessionService $sessionService,
-        protected AttendanceAnalyticsService $analyticsService
+        protected AttendanceService $attendanceService
     ) {}
 
-    public function take(AttendanceSession $session)
+    public function index()
     {
-        $session->load(['classroom', 'course', 'teacher.user', 'attendances']);
-        $students = $this->sessionService->getEligibleStudents($session);
-        $statuses = AttendanceStatus::all();
-
-        return view('admin.attendances.take', compact('session', 'students', 'statuses'));
+        $attendances = $this->attendanceService->allAttendances();
+        $employees = Employee::where('employment_status', 'Active')->get();
+        return view('admin.hr.attendance', compact('attendances', 'employees'));
     }
 
-    public function storeBulk(Request $request, AttendanceSession $session, RecordBulkAttendanceAction $action)
+    public function store(Request $request)
     {
         $request->validate([
-            'attendances' => 'required|array',
+            'employee_id' => 'required|exists:employees,id',
+            'date' => 'required|date',
+            'check_in' => 'required',
         ]);
 
-        $dto = new BulkAttendanceDTO($session->id, $request->attendances);
-        $action->execute($dto);
+        $this->attendanceService->logAttendance(
+            (int) $request->employee_id,
+            $request->date,
+            $request->check_in,
+            $request->check_out
+        );
 
-        return redirect()->route('admin.attendances.sessions.index')->with('success', 'Yoklama kayıtları başarıyla işlendi.');
-    }
-
-    public function analytics()
-    {
-        $summary = $this->analyticsService->getSummary();
-        $riskStudents = $this->analyticsService->getRiskStudents(15.0);
-
-        return view('admin.attendances.analytics', compact('summary', 'riskStudents'));
+        return redirect()->route('admin.attendance.index')->with('success', 'Giriş çıkış kaydı başarıyla eklendi.');
     }
 }

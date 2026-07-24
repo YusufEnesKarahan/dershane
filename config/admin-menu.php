@@ -308,6 +308,122 @@ return [
             ],
         ],
         [
+            'title' => 'İnsan Kaynakları',
+            'icon' => 'users',
+            'permission' => 'hr.view',
+            'sort' => 6,
+            'children' => [
+                [
+                    'title' => 'İK Paneli',
+                    'route' => 'admin.hr.dashboard',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Personel Listesi',
+                    'route' => 'admin.employees.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Departmanlar',
+                    'route' => 'admin.departments.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Maaş & Bordro',
+                    'route' => 'admin.payroll.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'İzin İstekleri',
+                    'route' => 'admin.leaves.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Giriş / Çıkış',
+                    'route' => 'admin.attendance.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Performans',
+                    'route' => 'admin.performance.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Masraflar',
+                    'route' => 'admin.expenses.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'Avanslar',
+                    'route' => 'admin.advances.index',
+                    'permission' => 'hr.view',
+                ],
+                [
+                    'title' => 'İK Analitiği',
+                    'route' => 'admin.hr.analytics',
+                    'permission' => 'hr.view',
+                ],
+            ],
+        ],
+        [
+            'title' => 'Envanter ve Demirbaş',
+            'icon' => 'archive',
+            'permission' => 'assets.view',
+            'sort' => 6,
+            'children' => [
+                [
+                    'title' => 'Paneli',
+                    'route' => 'admin.inventory.dashboard',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Demirbaş Listesi',
+                    'route' => 'admin.assets.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Kategoriler & Konum',
+                    'route' => 'admin.categories.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Zimmet Listesi',
+                    'route' => 'admin.assignments.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Stok & Malzeme',
+                    'route' => 'admin.inventory.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Tedarikçiler',
+                    'route' => 'admin.suppliers.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Satın Alma',
+                    'route' => 'admin.purchase.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Bakım & Onarım',
+                    'route' => 'admin.maintenance.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Transferler',
+                    'route' => 'admin.transfers.index',
+                    'permission' => 'assets.view',
+                ],
+                [
+                    'title' => 'Envanter Analitiği',
+                    'route' => 'admin.inventory.analytics',
+                    'permission' => 'assets.view',
+                ],
+            ],
+        ],
+        [
             'title' => 'System',
             'icon' => 'cog',
             'permission' => 'settings.view',

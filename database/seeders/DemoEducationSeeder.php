@@ -654,5 +654,268 @@ class DemoEducationSeeder extends Seeder {
                 'description' => 'Kesin kayıt tamamlandı, öğrenci kartı ve faturası oluşturuldu.',
             ]);
         }
+
+        // --- HR SEED DATA ---
+        // 1. Departmanlar
+        $dep1 = \App\Models\Department::create(['name' => 'Eğitim Departmanı', 'code' => 'EGT', 'description' => 'Eğitim-öğretim ve rehberlik süreçlerini yürüten departman.']);
+        $dep2 = \App\Models\Department::create(['name' => 'Finans & Muhasebe', 'code' => 'FIN', 'description' => 'Tahsilat, ödeme, maaş ve fatura süreçlerini yöneten departman.']);
+        $dep3 = \App\Models\Department::create(['name' => 'İdari İşler & İK', 'code' => 'ADM', 'description' => 'Kurum operasyonları, satın almalar ve personel işleri departmanı.']);
+
+        // 2. Pozisyonlar
+        $pos1 = \App\Models\Position::create(['department_id' => $dep1->id, 'name' => 'Kıdemli Eğitmen', 'level' => 'Senior', 'base_salary' => 45000.00, 'description' => 'Sınıf derslerini yürüten kıdemli öğretmen.']);
+        $pos2 = \App\Models\Position::create(['department_id' => $dep2->id, 'name' => 'Muhasebe Uzmanı', 'level' => 'Mid', 'base_salary' => 38000.00, 'description' => 'Finansal kayıtları tutan uzman personel.']);
+        $pos3 = \App\Models\Position::create(['department_id' => $dep3->id, 'name' => 'İK Yöneticisi', 'level' => 'Lead', 'base_salary' => 50000.00, 'description' => 'Personel ve insan kaynakları süreç sorumlusu.']);
+
+        // 3. Personeller (15 Adet)
+        $employees = [];
+        $names = [
+            ['Ahmet', 'Yılmaz'], ['Ayşe', 'Kaya'], ['Mehmet', 'Demir'], ['Fatma', 'Çelik'], ['Mustafa', 'Yıldız'],
+            ['Emine', 'Şahin'], ['Ali', 'Öztürk'], ['Zeynep', 'Aydın'], ['Hüseyin', 'Arslan'], ['Esra', 'Polat'],
+            ['İbrahim', 'Kılıç'], ['Elif', 'Koç'], ['Yusuf', 'Aslan'], ['Merve', 'Özdemir'], ['Murat', 'Tekin']
+        ];
+
+        for ($i = 0; $i < 15; $i++) {
+            $dept = ($i % 3 === 0) ? $dep1 : (($i % 3 === 1) ? $dep2 : $dep3);
+            $pos = ($i % 3 === 0) ? $pos1 : (($i % 3 === 1) ? $pos2 : $pos3);
+            $emp = \App\Models\Employee::create([
+                'employee_no' => 'EMP-' . (1000 + $i),
+                'user_id' => $user->id, // demo user
+                'department_id' => $dept->id,
+                'position_id' => $pos->id,
+                'first_name' => $names[$i][0],
+                'last_name' => $names[$i][1],
+                'tc_no' => '111111111' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
+                'birth_date' => '1990-05-' . str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT),
+                'gender' => ($i % 2 === 0) ? 'Erkek' : 'Kadın',
+                'phone' => '0555 300 00' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
+                'email' => strtolower($names[$i][0]) . '.' . strtolower($names[$i][1]) . '@dershane.com',
+                'address' => 'Örnek Mahallesi No: ' . $i,
+                'hire_date' => '2024-01-15',
+                'contract_type' => 'Full-time',
+                'employment_status' => 'Active',
+                'salary' => $pos->base_salary,
+                'iban' => 'TR90 0006 2000 0000 1234 5678 ' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
+                'emergency_contact' => 'Yakını ' . $i,
+                'emergency_phone' => '0555 400 00' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
+                'notes' => 'Örnek personel açıklaması.'
+            ]);
+            $employees[] = $emp;
+        }
+
+        // 4. İzin Türleri Seedi
+        $lt1 = \App\Models\LeaveType::create(['name' => 'Yıllık İzin', 'code' => 'Annual', 'max_days' => 15]);
+        $lt2 = \App\Models\LeaveType::create(['name' => 'Hastalık İzni', 'code' => 'Sick', 'max_days' => 5]);
+        $lt3 = \App\Models\LeaveType::create(['name' => 'Doğum İzni', 'code' => 'Maternity', 'max_days' => 112]);
+        $lt4 = \App\Models\LeaveType::create(['name' => 'Babalık İzni', 'code' => 'Paternity', 'max_days' => 5]);
+        $lt5 = \App\Models\LeaveType::create(['name' => 'İdari İzin', 'code' => 'Administrative', 'max_days' => 3]);
+        $lt6 = \App\Models\LeaveType::create(['name' => 'Ücretsiz İzin', 'code' => 'Unpaid', 'max_days' => 30]);
+
+        // 5. 10 Adet İzin Talebi
+        for ($i = 0; $i < 10; $i++) {
+            \App\Models\LeaveRequest::create([
+                'employee_id' => $employees[$i]->id,
+                'leave_type_id' => ($i % 2 === 0) ? $lt1->id : $lt2->id,
+                'start_date' => '2026-07-' . str_pad((string)($i + 5), 2, '0', STR_PAD_LEFT),
+                'end_date' => '2026-07-' . str_pad((string)($i + 7), 2, '0', STR_PAD_LEFT),
+                'days' => 3,
+                'reason' => 'Dinlenme ve kişisel işler.',
+                'status' => ($i % 3 === 0) ? 'Approved' : (($i % 3 === 1) ? 'Rejected' : 'Pending'),
+                'approved_by' => $user->id,
+                'approved_at' => now(),
+            ]);
+        }
+
+        // 6. 8 Adet Bordro
+        for ($i = 0; $i < 8; $i++) {
+            $emp = $employees[$i];
+            $gross = $emp->salary + 2000.00 + 1500.00;
+            $insurance = round($gross * 0.14, 2);
+            $tax = round(($gross - $insurance) * 0.15, 2);
+            $net = $gross - $insurance - $tax - 200.00;
+
+            \App\Models\Payroll::create([
+                'employee_id' => $emp->id,
+                'month' => 7,
+                'year' => 2026,
+                'gross_salary' => $gross,
+                'bonus' => 2000.00,
+                'overtime_amount' => 1500.00,
+                'deductions' => 200.00,
+                'tax' => $tax,
+                'insurance' => $insurance,
+                'net_salary' => $net,
+                'status' => ($i % 2 === 0) ? 'Paid' : 'Approved',
+                'payment_date' => ($i % 2 === 0) ? now()->toDateString() : null,
+            ]);
+        }
+
+        // 7. 20 Adet Devamsızlık / Giriş-Çıkış
+        for ($i = 0; $i < 20; $i++) {
+            $emp = $employees[$i % 15];
+            \App\Models\EmployeeAttendance::create([
+                'employee_id' => $emp->id,
+                'date' => '2026-07-' . str_pad((string)(10 + intval($i/2)), 2, '0', STR_PAD_LEFT),
+                'check_in' => '09:15:00',
+                'check_out' => '17:30:00',
+                'worked_minutes' => 495,
+                'overtime_minutes' => 15,
+                'late_minutes' => 15,
+            ]);
+        }
+
+        // 8. 10 Adet Masraf
+        for ($i = 0; $i < 10; $i++) {
+            \App\Models\Expense::create([
+                'employee_id' => $employees[$i]->id,
+                'title' => 'Ofis kırtasiye malzemeleri ve ulaşım.',
+                'amount' => 150.00 * ($i + 1),
+                'category' => 'Ofis Malzemesi',
+                'receipt' => 'EXP-R-' . (5000 + $i),
+                'status' => ($i % 2 === 0) ? 'Approved' : 'Pending',
+            ]);
+        }
+
+        // 9. 5 Adet Avans
+        for ($i = 0; $i < 5; $i++) {
+            \App\Models\Advance::create([
+                'employee_id' => $employees[$i]->id,
+                'amount' => 1000.00 * ($i + 1),
+                'reason' => 'Acil özel harcama ve fatura ödemesi.',
+                'status' => ($i % 2 === 0) ? 'Approved' : 'Pending',
+            ]);
+        }
+
+        // 10. 10 Adet Performans Değerlendirmesi
+        for ($i = 0; $i < 10; $i++) {
+            \App\Models\PerformanceReview::create([
+                'employee_id' => $employees[$i]->id,
+                'reviewer_id' => $user->id,
+                'period' => '2026-Q2',
+                'score' => 75 + $i,
+                'strengths' => 'İş sorumluluğu yüksek, iş birliğine açık.',
+                'weaknesses' => 'Zaman planlaması konusunda gelişmeli.',
+                'comments' => 'Genel gidişatı son derece olumlu.'
+            ]);
+        }
+
+        // --- INVENTORY & ASSET SEED DATA ---
+        // 1. 5 Asset Categories
+        $ac1 = \App\Models\AssetCategory::create(['name' => 'Bilgisayar & Çevre Birimleri', 'code' => 'ELK-COMP', 'description' => 'Laptoplar, masaüstü bilgisayarlar, monitörler.']);
+        $ac2 = \App\Models\AssetCategory::create(['name' => 'Ofis & Sınıf Mobilyaları', 'code' => 'MOB-FURN', 'description' => 'Sandalyeler, masalar, dolaplar, sıralar.']);
+        $ac3 = \App\Models\AssetCategory::create(['name' => 'Görüntüleme Sistemleri', 'code' => 'ELK-PROJ', 'description' => 'Projeksiyonlar, akıllı tahtalar.']);
+        $ac4 = \App\Models\AssetCategory::create(['name' => 'İklimlendirme', 'code' => 'ELK-CLIM', 'description' => 'Klimalar ve ısıtıcı cihazlar.']);
+        $ac5 = \App\Models\AssetCategory::create(['name' => 'Ses & Yayın Sistemleri', 'code' => 'ELK-SND', 'description' => 'Mikrofonlar, hoparlörler ve amfiler.']);
+
+        // 2. 5 Inventory Categories
+        $ic1 = \App\Models\InventoryCategory::create(['name' => 'Kırtasiye Sarf Malzemeleri', 'code' => 'KRT-STN', 'description' => 'Kalemler, dosyalar, klasörler.']);
+        $ic2 = \App\Models\InventoryCategory::create(['name' => 'Temizlik Malzemeleri', 'code' => 'TEM-CLN', 'description' => 'Sabunlar, dezenfektanlar, peçeteler.']);
+        $ic3 = \App\Models\InventoryCategory::create(['name' => 'Matbu Evraklar & Yayınlar', 'code' => 'MAT-DOC', 'description' => 'Sınav kitapçıkları, ders föyleri.']);
+        $ic4 = \App\Models\InventoryCategory::create(['name' => 'İkramlık & Mutfak', 'code' => 'CAT-KIT', 'description' => 'Çay, kahve, şeker, bardaklar.']);
+        $ic5 = \App\Models\InventoryCategory::create(['name' => 'Elektronik Sarf', 'code' => 'ELK-SRF', 'description' => 'Piller, kablolar, tonerler.']);
+
+        // 3. 5 Depolar (Warehouses)
+        $warehouses = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $warehouses[] = \App\Models\Warehouse::create([
+                'branch_id' => $branch->id,
+                'name' => 'Depo Zone ' . $i,
+                'description' => 'Bölüm ' . $i . ' için sarf malzeme depolama alanı.'
+            ]);
+        }
+
+        // 4. Konumlar (Asset Locations)
+        $al1 = \App\Models\AssetLocation::create(['branch_id' => $branch->id, 'name' => 'A Blok 101 Nolu Sınıf', 'description' => 'Eğitim sınıfları.']);
+        $al2 = \App\Models\AssetLocation::create(['branch_id' => $branch->id, 'name' => 'Yönetim Ofisi', 'description' => 'İdarecilerin bulunduğu alan.']);
+        $al3 = \App\Models\AssetLocation::create(['branch_id' => $branch->id, 'name' => 'Rehberlik Servisi', 'description' => 'Öğrenci danışma odası.']);
+        $al4 = \App\Models\AssetLocation::create(['branch_id' => $branch->id, 'name' => 'Öğretmenler Odası', 'description' => 'Eğitmen dinlenme odası.']);
+        $al5 = \App\Models\AssetLocation::create(['branch_id' => $branch->id, 'name' => 'Ana Depo', 'description' => 'Genel demirbaş depolama alanı.']);
+
+        // 5. 30 Demirbaşlar (Assets)
+        $assets = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $cat = ($i % 5 === 1) ? $ac1 : (($i % 5 === 2) ? $ac2 : (($i % 5 === 3) ? $ac3 : (($i % 5 === 4) ? $ac4 : $ac5)));
+            $loc = ($i % 5 === 1) ? $al1 : (($i % 5 === 2) ? $al2 : (($i % 5 === 3) ? $al3 : (($i % 5 === 4) ? $al4 : $al5)));
+            $assets[] = \App\Models\Asset::create([
+                'category_id' => $cat->id,
+                'asset_code' => 'AST-' . (2000 + $i),
+                'name' => $cat->name . ' Cihazı #' . $i,
+                'brand' => 'Marka ' . $i,
+                'model' => 'Model ' . $i,
+                'serial_number' => 'SN-' . rand(100000, 999999),
+                'purchase_date' => '2025-05-10',
+                'purchase_price' => 500.00 * $i,
+                'warranty_end_date' => '2027-05-10',
+                'status' => ($i % 10 === 0) ? 'maintenance' : (($i % 12 === 0) ? 'broken' : 'active'),
+                'location_id' => $loc->id,
+                'description' => 'Demirbaş açıklama detayı ' . $i
+            ]);
+        }
+
+        // 6. 20 Stok Ürünü (Inventory Items)
+        $items = [];
+        for ($i = 1; $i <= 20; $i++) {
+            $cat = ($i % 5 === 1) ? $ic1 : (($i % 5 === 2) ? $ic2 : (($i % 5 === 3) ? $ic3 : (($i % 5 === 4) ? $ic4 : $ic5)));
+            $wh = $warehouses[$i % 5];
+            $items[] = \App\Models\InventoryItem::create([
+                'category_id' => $cat->id,
+                'warehouse_id' => $wh->id,
+                'name' => $cat->name . ' Ürünü #' . $i,
+                'sku' => 'SKU-' . (5000 + $i),
+                'unit' => ($i % 3 === 0) ? 'Kutu' : 'Paket',
+                'quantity' => 10 + ($i * 2),
+                'minimum_quantity' => 5,
+                'description' => 'Sarf malzeme ürün açıklaması ' . $i
+            ]);
+        }
+
+        // 7. 50 Stok Hareketi (Inventory Transactions)
+        for ($i = 1; $i <= 50; $i++) {
+            $item = $items[$i % 20];
+            \App\Models\InventoryTransaction::create([
+                'item_id' => $item->id,
+                'type' => ($i % 3 === 0) ? 'purchase' : 'usage',
+                'quantity' => ($i % 3 === 0) ? 10 : 2,
+                'reference_type' => 'Manual',
+                'reference_id' => $i,
+                'description' => 'Periyodik sarf/giriş işlemi #' . $i,
+                'created_by' => $user->id
+            ]);
+        }
+
+        // 8. 10 Tedarikçi (Suppliers)
+        $suppliers = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $suppliers[] = \App\Models\Supplier::create([
+                'name' => 'Tedarikçi Firma #' . $i,
+                'phone' => '0212 500 00 ' . str_pad((string)$i, 2, '0', STR_PAD_LEFT),
+                'email' => 'info@tedarikci' . $i . '.com',
+                'address' => 'Sanayi Mahallesi No: ' . $i,
+                'tax_number' => 'TX-982374' . str_pad((string)$i, 2, '0', STR_PAD_LEFT)
+            ]);
+        }
+
+        // 9. 5 Satın Alma (Purchase Orders)
+        for ($i = 1; $i <= 5; $i++) {
+            \App\Models\PurchaseOrder::create([
+                'supplier_id' => $suppliers[$i - 1]->id,
+                'order_number' => 'ORD-2026-000' . $i,
+                'order_date' => '2026-07-' . str_pad((string)(10 + $i), 2, '0', STR_PAD_LEFT),
+                'total_amount' => 5000.00 * $i,
+                'status' => ($i % 2 === 0) ? 'completed' : 'approved',
+                'notes' => 'Satın alma siparişi kalemleri #' . $i
+            ]);
+        }
+
+        // 10. 10 Bakım Kaydı (Maintenance Records)
+        for ($i = 1; $i <= 10; $i++) {
+            \App\Models\MaintenanceRecord::create([
+                'asset_id' => $assets[$i]->id,
+                'employee_id' => $employees[$i % 15]->id,
+                'maintenance_date' => '2026-07-' . str_pad((string)(5 + $i), 2, '0', STR_PAD_LEFT),
+                'cost' => 150.00 * $i,
+                'description' => 'Periyodik temizlik, filtre veya parça değişimi.',
+                'status' => 'completed'
+            ]);
+        }
     }
 }

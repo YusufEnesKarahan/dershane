@@ -67,3 +67,5 @@
 - [x] Sprint 4.2: Reporting, BI & Executive Dashboard Completed
 - [x] Sprint 4.3: CRM, Lead Management & Sales Pipeline Completed
 - [x] Sprint 4.4: Student Admission & Enrollment Module Completed
+- [x] Sprint 4.5: Human Resources (HR) & Payroll Management Completed
+- [x] Sprint 4.6: Asset Management & Inventory System Completed

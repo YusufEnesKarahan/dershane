@@ -1,30 +1,43 @@
 <?php
+
 namespace App\Core\Repositories;
 
-use App\Models\Attendance;
 use App\Core\Repositories\Interfaces\AttendanceRepositoryInterface;
-use Illuminate\Support\Collection;
+use App\Models\EmployeeAttendance;
 
 class AttendanceRepository implements AttendanceRepositoryInterface
 {
-    public function getBySession(int $sessionId): Collection
+    public function all()
     {
-        return Attendance::with(['student', 'status'])->where('attendance_session_id', $sessionId)->get();
+        return EmployeeAttendance::with('employee.department')->orderBy('date', 'desc')->get();
     }
 
-    public function recordBulk(int $sessionId, array $records): void
+    public function find(int $id)
     {
-        foreach ($records as $record) {
-            Attendance::updateOrCreate(
-                [
-                    'attendance_session_id' => $sessionId,
-                    'student_id' => $record['student_id'],
-                ],
-                [
-                    'attendance_status_id' => $record['attendance_status_id'],
-                    'remarks' => $record['remarks'] ?? null,
-                ]
-            );
+        return EmployeeAttendance::with('employee')->findOrFail($id);
+    }
+
+    public function create(array $data)
+    {
+        return EmployeeAttendance::create($data);
+    }
+
+    public function update(int $id, array $data)
+    {
+        $attendance = EmployeeAttendance::findOrFail($id);
+        $attendance->update($data);
+        return $attendance;
+    }
+
+    public function getForEmployee(int $employeeId, ?string $startDate = null, ?string $endDate = null)
+    {
+        $query = EmployeeAttendance::where('employee_id', $employeeId);
+        if ($startDate) {
+            $query->where('date', '>=', $startDate);
         }
+        if ($endDate) {
+            $query->where('date', '<=', $endDate);
+        }
+        return $query->orderBy('date', 'asc')->get();
     }
 }

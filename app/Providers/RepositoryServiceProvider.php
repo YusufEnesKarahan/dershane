@@ -169,6 +169,55 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\DocumentRepositoryInterface::class,
             \App\Core\Repositories\DocumentRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\DepartmentRepositoryInterface::class,
+            \App\Core\Repositories\DepartmentRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\EmployeeRepositoryInterface::class,
+            \App\Core\Repositories\EmployeeRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\PayrollRepositoryInterface::class,
+            \App\Core\Repositories\PayrollRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\LeaveRepositoryInterface::class,
+            \App\Core\Repositories\LeaveRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\AttendanceRepositoryInterface::class,
+            \App\Core\Repositories\AttendanceRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\ExpenseRepositoryInterface::class,
+            \App\Core\Repositories\ExpenseRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\PerformanceRepositoryInterface::class,
+            \App\Core\Repositories\PerformanceRepository::class
+        );
+
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\AssetRepositoryInterface::class,
+            \App\Core\Repositories\AssetRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\InventoryRepositoryInterface::class,
+            \App\Core\Repositories\InventoryRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\SupplierRepositoryInterface::class,
+            \App\Core\Repositories\SupplierRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\MaintenanceRepositoryInterface::class,
+            \App\Core\Repositories\MaintenanceRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\TransferRepositoryInterface::class,
+            \App\Core\Repositories\TransferRepository::class
+        );
     }
 
     /**
