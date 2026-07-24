@@ -6,7 +6,7 @@ use App\Http\Controllers\Teacher\TeacherClassController;
 use App\Http\Controllers\Teacher\TeacherAttendanceController;
 use App\Http\Controllers\Teacher\TeacherHomeworkController;
 
-Route::middleware(['auth'])->prefix('teacher')->name('teacher.')->group(function () {
+Route::middleware(['auth', 'role:Teacher|Administrator'])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
     Route::get('classes', [TeacherClassController::class, 'index'])->name('classes');
     

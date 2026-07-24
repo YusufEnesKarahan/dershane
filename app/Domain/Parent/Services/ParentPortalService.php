@@ -21,8 +21,19 @@ class ParentPortalService
         return $this->repository->getLinkedStudents($parentId);
     }
 
+    public function canAccessStudent(int $parentId, int $studentId): bool
+    {
+        $user = \App\Models\User::find($parentId);
+        if ($user && ($user->roles->pluck('name')->contains('Administrator') || $user->hasRole('Administrator'))) {
+            return true;
+        }
+        return $this->repository->isStudentLinked($parentId, $studentId);
+    }
+
     public function getDashboardData(int $parentId, int $studentId): ParentDashboardDTO
     {
+        abort_unless($this->canAccessStudent($parentId, $studentId), 404);
+
         $student = Student::with(['classroom', 'branch'])->findOrFail($studentId);
 
         // Fetch Attendance

@@ -12,26 +12,26 @@ class AssetPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('assets.view') || $user->hasRole('Administrator');
+        return $user->hasPermission('assets.view');
     }
 
     public function view(User $user, Asset $asset): bool
     {
-        return $user->hasPermission('assets.view') || $user->hasRole('Administrator');
+        return $user->hasPermission('assets.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermission('assets.manage') || $user->hasRole('Administrator');
+        return $user->hasPermission('assets.manage');
     }
 
     public function update(User $user, Asset $asset): bool
     {
-        return $user->hasPermission('assets.manage') || $user->hasRole('Administrator');
+        return $user->hasPermission('assets.manage');
     }
 
     public function delete(User $user, Asset $asset): bool
     {
-        return $user->hasPermission('assets.manage') || $user->hasRole('Administrator');
+        return $user->hasPermission('assets.manage');
     }
 }

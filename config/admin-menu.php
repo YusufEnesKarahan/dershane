@@ -25,11 +25,6 @@ return [
                     'route' => 'admin.roles.index',
                     'permission' => 'roles.view',
                 ],
-                [
-                    'title' => 'Permissions',
-                    'route' => 'admin.permissions.index',
-                    'permission' => 'permissions.view',
-                ],
             ],
         ],
         [
@@ -55,18 +50,18 @@ return [
                 ],
                 [
                     'title' => 'Blog Categories',
-                    'route' => 'admin.categories.index',
-                    'permission' => 'categories.view',
+                    'route' => 'admin.blog-categories.index',
+                    'permission' => 'blogs.view',
                 ],
                 [
                     'title' => 'Blog Tags',
                     'route' => 'admin.tags.index',
-                    'permission' => 'tags.view',
+                    'permission' => 'blogs.view',
                 ],
                 [
                     'title' => 'Comments Moderation',
                     'route' => 'admin.comments.index',
-                    'permission' => 'comments.view',
+                    'permission' => 'blogs.view',
                 ],
             ],
         ],
@@ -159,11 +154,6 @@ return [
                 [
                     'title' => 'Teacher Schedules',
                     'route' => 'admin.teachers.schedules.index',
-                    'permission' => 'teachers.view',
-                ],
-                [
-                    'title' => 'Teacher Performance',
-                    'route' => 'admin.teachers.performance.index',
                     'permission' => 'teachers.view',
                 ],
                 [
@@ -266,11 +256,6 @@ return [
                     'title' => 'CRM Analiz',
                     'route' => 'admin.crm.analytics',
                     'permission' => 'crm.view',
-                ],
-                [
-                    'title' => 'Contact Messages',
-                    'route' => 'admin.contacts.index',
-                    'permission' => 'contacts.view',
                 ],
             ],
         ],
@@ -383,12 +368,7 @@ return [
                 ],
                 [
                     'title' => 'Kategoriler & Konum',
-                    'route' => 'admin.categories.index',
-                    'permission' => 'assets.view',
-                ],
-                [
-                    'title' => 'Zimmet Listesi',
-                    'route' => 'admin.assignments.index',
+                    'route' => 'admin.inventory.categories.index',
                     'permission' => 'assets.view',
                 ],
                 [
@@ -465,11 +445,6 @@ return [
                 [ 'title' => 'Queue Dashboard', 'route' => 'admin.system.jobs.dashboard', 'permission' => 'system.jobs.manage' ],
                 [ 'title' => 'Failed Jobs', 'route' => 'admin.system.jobs.failed', 'permission' => 'system.jobs.manage' ],
                 [ 'title' => 'Automation Logs', 'route' => 'admin.system.jobs.automation', 'permission' => 'system.jobs.manage' ],
-                [
-                    'title' => 'Branches',
-                    'route' => 'admin.branches.index',
-                    'permission' => 'branches.view',
-                ],
                 [
                     'title' => 'Settings',
                     'route' => 'admin.settings.index',

@@ -21,7 +21,7 @@ class PlatformSettingPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, PlatformSetting $platformSetting): bool
     {
         return $this->authService->hasPermission($user, 'settings.update');
     }

@@ -1,36 +1,34 @@
 <?php
+
 namespace App\Policies;
 
 use App\Models\User;
 use App\Models\ContactMessage;
-use App\Domain\Auth\Services\AuthorizationService;
 
 class ContactMessagePolicy
 {
-    public function __construct(protected AuthorizationService $authService) {}
-
     public function viewAny(User $user): bool
     {
-        return $this->authService->hasPermission($user, 'contactmessages.view');
+        return $user->hasPermission('contacts.view');
     }
 
     public function view(User $user, ContactMessage $model): bool
     {
-        return $this->authService->hasPermission($user, 'contactmessages.view');
+        return $user->hasPermission('contacts.view');
     }
 
     public function create(User $user): bool
     {
-        return $this->authService->hasPermission($user, 'contactmessages.create');
+        return $user->hasPermission('contacts.create');
     }
 
     public function update(User $user, ContactMessage $model): bool
     {
-        return $this->authService->hasPermission($user, 'contactmessages.update');
+        return $user->hasPermission('contacts.update');
     }
 
     public function delete(User $user, ContactMessage $model): bool
     {
-        return $this->authService->hasPermission($user, 'contactmessages.delete');
+        return $user->hasPermission('contacts.delete');
     }
 }

@@ -106,7 +106,7 @@
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Envanter Operasyonları</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <a href="{{ route('admin.categories.index') }}" class="p-4 bg-teal-50 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900/50 rounded-xl hover:scale-102 transition duration-200">
+                    <a href="{{ route('admin.inventory.categories.index') }}" class="p-4 bg-teal-50 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900/50 rounded-xl hover:scale-102 transition duration-200">
                         <span class="text-xs font-bold text-teal-800 dark:text-teal-300 block">Kategoriler & Konumlar</span>
                         <p class="text-[10px] text-teal-600 dark:text-teal-400 mt-1">Sınıf, şube ve lokasyon tanımları.</p>
                     </a>

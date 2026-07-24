@@ -10,4 +10,6 @@ interface TeacherPortalRepositoryInterface
 {
     public function findByUserId(int $userId): ?Teacher;
     public function getAssignedClasses(int $teacherId): Collection;
+
+    public function hasAssignment(int $teacherId, int $classroomId, int $courseId): bool;
 }

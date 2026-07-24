@@ -76,9 +76,9 @@ class TeacherController extends Controller
         return redirect()->route('admin.teachers.index')->with('success', 'Öğretmen profili güncellendi.');
     }
 
-    public function analytics($id)
+    public function analytics(Teacher $teacher)
     {
-        $analytics = $this->analyticsService->getAnalyticsSummary((int) $id);
+        $analytics = $this->analyticsService->getAnalyticsSummary($teacher->id);
         return view('admin.teachers.analytics', compact('analytics'));
     }
 }

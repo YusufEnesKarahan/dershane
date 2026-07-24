@@ -81,7 +81,7 @@
                         <label class="flex items-start gap-3">
                             <input type="checkbox" name="kvkk" class="mt-1 shrink-0 rounded border-neutral-300 text-primary focus:ring-primary h-4 w-4" required>
                             <span class="text-sm text-neutral/70">
-                                <a href="{{ route('legal.kvkk') }}" class="text-primary hover:underline" target="_blank">KVKK Aydınlatma Metni</a>'ni okudum ve kişisel verilerimin işlenmesini kabul ediyorum.
+                                <a href="{{ route('frontend.legal.kvkk') }}" class="text-primary hover:underline" target="_blank">KVKK Aydınlatma Metni</a>'ni okudum ve kişisel verilerimin işlenmesini kabul ediyorum.
                             </span>
                         </label>
                     </div>

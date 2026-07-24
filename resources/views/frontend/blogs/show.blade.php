@@ -12,7 +12,7 @@
     <!-- PAGE HEADER -->
     <x-section bg="dark" py="20" class="relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-primary/20">
         <x-container class="relative z-10">
-            <a href="{{ route('blogs.index') }}" class="inline-flex items-center text-sm font-semibold text-primary mb-6 hover:text-white transition-colors">
+            <a href="{{ route('frontend.blogs.index') }}" class="inline-flex items-center text-sm font-semibold text-primary mb-6 hover:text-white transition-colors">
                 <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Tüm Yazılara Dön
             </a>

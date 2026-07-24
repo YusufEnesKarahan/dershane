@@ -9,26 +9,26 @@ class InvoicePolicy
 {
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->hasPermission('registrations.view');
     }
 
     public function view(User $user, Invoice $invoice): bool
     {
-        return true;
+        return $user->hasPermission('registrations.view');
     }
 
     public function create(User $user): bool
     {
-        return true;
+        return $user->hasPermission('registrations.create');
     }
 
     public function update(User $user, Invoice $invoice): bool
     {
-        return true;
+        return $user->hasPermission('registrations.create');
     }
 
     public function delete(User $user, Invoice $invoice): bool
     {
-        return true;
+        return $user->hasPermission('registrations.create');
     }
 }

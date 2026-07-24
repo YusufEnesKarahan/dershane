@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Policies;
 
 use App\Models\Classroom;
@@ -8,26 +9,26 @@ class ClassroomPolicy
 {
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->hasPermission('classrooms.view');
     }
 
     public function view(User $user, Classroom $classroom): bool
     {
-        return true;
+        return $user->hasPermission('classrooms.view');
     }
 
     public function create(User $user): bool
     {
-        return true;
+        return $user->hasPermission('classrooms.manage');
     }
 
     public function update(User $user, Classroom $classroom): bool
     {
-        return true;
+        return $user->hasPermission('classrooms.manage');
     }
 
     public function delete(User $user, Classroom $classroom): bool
     {
-        return true;
+        return $user->hasPermission('classrooms.manage');
     }
 }

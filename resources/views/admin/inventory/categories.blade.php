@@ -65,7 +65,7 @@
                     <button onclick="toggleModal('category-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
                 </div>
                 
-                <form method="POST" action="{{ route('admin.categories.store') }}" class="space-y-3 text-xs">
+                <form method="POST" action="{{ route('admin.inventory.categories.store') }}" class="space-y-3 text-xs">
                     @csrf
                     
                     <div class="space-y-1">
@@ -99,7 +99,7 @@
                     <button onclick="toggleModal('location-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
                 </div>
                 
-                <form method="POST" action="{{ route('admin.categories.store-location') }}" class="space-y-3 text-xs">
+                <form method="POST" action="{{ route('admin.inventory.categories.store-location') }}" class="space-y-3 text-xs">
                     @csrf
                     
                     <div class="space-y-1">

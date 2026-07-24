@@ -12,26 +12,26 @@ class InventoryPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('inventory.view') || $user->hasRole('Administrator');
+        return $user->hasPermission('inventory.view');
     }
 
     public function view(User $user, InventoryItem $item): bool
     {
-        return $user->hasPermission('inventory.view') || $user->hasRole('Administrator');
+        return $user->hasPermission('inventory.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermission('inventory.manage') || $user->hasRole('Administrator');
+        return $user->hasPermission('inventory.manage');
     }
 
     public function update(User $user, InventoryItem $item): bool
     {
-        return $user->hasPermission('inventory.manage') || $user->hasRole('Administrator');
+        return $user->hasPermission('inventory.manage');
     }
 
     public function delete(User $user, InventoryItem $item): bool
     {
-        return $user->hasPermission('inventory.manage') || $user->hasRole('Administrator');
+        return $user->hasPermission('inventory.manage');
     }
 }

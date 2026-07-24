@@ -58,6 +58,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\CommentRepository::class
         );
         $this->app->bind(
+            \App\Core\Repositories\Interfaces\ContactMessageRepositoryInterface::class,
+            \App\Core\Repositories\ContactMessageRepository::class
+        );
+        $this->app->bind(
             \App\Core\Repositories\Interfaces\TeacherRepositoryInterface::class,
             \App\Core\Repositories\TeacherRepository::class
         );
@@ -171,7 +175,7 @@ class RepositoryServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             \App\Core\Repositories\Interfaces\DocumentRepositoryInterface::class,
-            \App\Core\Repositories\DocumentRepository::class
+            \App\Core\Repositories\AdmissionDocumentRepository::class
         );
         $this->app->bind(
             \App\Core\Repositories\Interfaces\DepartmentRepositoryInterface::class,

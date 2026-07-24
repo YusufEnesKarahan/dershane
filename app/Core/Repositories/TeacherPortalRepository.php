@@ -20,4 +20,13 @@ class TeacherPortalRepository implements TeacherPortalRepositoryInterface
             ->where('teacher_id', $teacherId)
             ->get();
     }
+
+    public function hasAssignment(int $teacherId, int $classroomId, int $courseId): bool
+    {
+        return TeacherAssignment::query()
+            ->where('teacher_id', $teacherId)
+            ->where('classroom_id', $classroomId)
+            ->where('course_id', $courseId)
+            ->exists();
+    }
 }

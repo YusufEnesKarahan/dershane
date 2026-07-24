@@ -23,7 +23,9 @@ class LeadAnalyticsService
         // Advisor Performance
         $advisorPerformance = DB::table('crm_leads')
             ->join('users', 'crm_leads.advisor_id', '=', 'users.id')
-            ->select('users.name', DB::raw('count(crm_leads.id) as total_assigned'), DB::raw("sum(case when crm_leads.lead_status_id = {$registeredStatusId} then 1 else 0 end) as total_registered"))
+            ->select('users.name')
+            ->selectRaw('count(crm_leads.id) as total_assigned')
+            ->selectRaw('sum(case when crm_leads.lead_status_id = ? then 1 else 0 end) as total_registered', [$registeredStatusId])
             ->groupBy('users.id', 'users.name')
             ->orderBy('total_registered', 'desc')
             ->get();
@@ -46,7 +48,9 @@ class LeadAnalyticsService
         // Branch Performance
         $branchPerformance = DB::table('crm_leads')
             ->join('branches', 'crm_leads.branch_id', '=', 'branches.id')
-            ->select('branches.name', DB::raw('count(crm_leads.id) as total_leads'), DB::raw("sum(case when crm_leads.lead_status_id = {$registeredStatusId} then 1 else 0 end) as converted_leads"))
+            ->select('branches.name')
+            ->selectRaw('count(crm_leads.id) as total_leads')
+            ->selectRaw('sum(case when crm_leads.lead_status_id = ? then 1 else 0 end) as converted_leads', [$registeredStatusId])
             ->groupBy('branches.id', 'branches.name')
             ->get();
 

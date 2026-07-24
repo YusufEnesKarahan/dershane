@@ -12,7 +12,7 @@
     <!-- PAGE HEADER -->
     <x-section bg="dark" py="20" class="relative overflow-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-primary/20">
         <x-container class="relative z-10">
-            <a href="{{ route('courses.index') }}" class="inline-flex items-center text-sm font-semibold text-primary mb-6 hover:text-white transition-colors">
+            <a href="{{ route('frontend.courses.index') }}" class="inline-flex items-center text-sm font-semibold text-primary mb-6 hover:text-white transition-colors">
                 <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Tüm Kurslara Dön
             </a>
@@ -57,7 +57,7 @@
                         <h3 class="text-xl font-bold font-display text-neutral mb-4">Hemen Başvurun</h3>
                         <p class="text-sm text-neutral/70 mb-6">Erken kayıt avantajlarından ve özel indirimlerden yararlanmak için ön kayıt formunu doldurun.</p>
                         
-                        <a href="{{ route('pre-register') }}" class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-premium-sm text-white bg-primary hover:bg-primary-dark transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        <a href="{{ route('frontend.pre-register') }}" class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-premium-sm text-white bg-primary hover:bg-primary-dark transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                             Ön Kayıt Ol
                         </a>
                         

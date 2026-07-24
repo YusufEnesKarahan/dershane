@@ -26,6 +26,11 @@ class TeacherPortalService
         return $this->repository->getAssignedClasses($teacherId);
     }
 
+    public function canManageClassCourse(int $teacherId, int $classroomId, int $courseId): bool
+    {
+        return $this->repository->hasAssignment($teacherId, $classroomId, $courseId);
+    }
+
     public function getClassRoster(int $classroomId): Collection
     {
         return Student::where('classroom_id', $classroomId)->get();

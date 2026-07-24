@@ -31,7 +31,7 @@ class AssetCategoryController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori başarıyla eklendi.');
+        return redirect()->route('admin.inventory.categories.index')->with('success', 'Kategori başarıyla eklendi.');
     }
 
     public function storeLocation(Request $request)
@@ -46,6 +46,6 @@ class AssetCategoryController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Lokasyon başarıyla eklendi.');
+        return redirect()->route('admin.inventory.categories.index')->with('success', 'Lokasyon başarıyla eklendi.');
     }
 }

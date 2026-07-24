@@ -8,11 +8,11 @@ class ReportingPolicy
 {
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->hasPermission('dashboard.view');
     }
 
     public function manage(User $user): bool
     {
-        return true;
+        return $user->hasPermission('dashboard.view');
     }
 }

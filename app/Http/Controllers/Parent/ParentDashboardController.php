@@ -33,7 +33,7 @@ class ParentDashboardController extends Controller
 
         $linkedStudents = $this->portalService->getLinkedStudents($parent->id);
 
-        if ($linkedStudents->isEmpty()) {
+        if ($linkedStudents->isEmpty() && !$parent->hasRole('Administrator')) {
             return view('parent.dashboard', [
                 'student' => null,
                 'linkedStudents' => collect(),
@@ -41,8 +41,22 @@ class ParentDashboardController extends Controller
             ]);
         }
 
+        if ($linkedStudents->isEmpty() && $parent->hasRole('Administrator')) {
+            $linkedStudents = \App\Models\Student::with(['classroom', 'branch'])->limit(10)->get();
+        }
+
         // Select first student by default or by parameter
-        $selectedStudentId = $request->query('student_id', $linkedStudents->first()->id);
+        $selectedStudentId = $request->query('student_id');
+        if (!$selectedStudentId && $linkedStudents->isNotEmpty()) {
+            $selectedStudentId = $linkedStudents->first()->id;
+        }
+
+        if ($selectedStudentId) {
+            abort_unless($this->portalService->canAccessStudent($parent->id, (int) $selectedStudentId), 403);
+        } else {
+            abort(403);
+        }
+
         $dashboardData = $this->portalService->getDashboardData($parent->id, (int) $selectedStudentId);
 
         return view('parent.dashboard', [

@@ -19,26 +19,38 @@ class TeacherHomeworkController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
+        if (!$teacher && $user?->hasRole('Administrator')) {
+            $teacher = \App\Models\Teacher::first();
+        }
         if (!$teacher) {
             return redirect()->back();
         }
 
         $assignedClasses = $this->portalService->getAssignedClasses($teacher->id);
         
-        $classrooms = Classroom::all();
-        $courses = Course::all();
-
-        // Get assignments created by teacher or for their classrooms
         $classroomIds = $assignedClasses->pluck('classroom_id')->toArray();
-        $assignments = Assignment::whereIn('classroom_id', $classroomIds)->orderBy('due_date', 'desc')->get();
+        $courseIds = $assignedClasses->pluck('course_id')->toArray();
+        $classrooms = Classroom::whereIn('id', $classroomIds)->get();
+        $courses = Course::whereIn('id', $courseIds)->get();
+        $assignments = Assignment::query()
+            ->where('teacher_id', $teacher->id)
+            ->whereIn('classroom_id', $classroomIds)
+            ->orderBy('due_date', 'desc')
+            ->get();
 
         $selectedAssignmentId = $request->query('assignment_id');
         $submissions = collect();
         $assignment = null;
 
         if ($selectedAssignmentId) {
-            $assignment = Assignment::findOrFail($selectedAssignmentId);
-            $submissions = AssignmentSubmission::with('student')->where('assignment_id', $selectedAssignmentId)->get();
+            $assignment = Assignment::find($selectedAssignmentId);
+            if ($assignment && $assignment->teacher_id !== $teacher->id) {
+                abort(403, 'Bu ödeve erişim yetkiniz yok.');
+            }
+            if (!$assignment) {
+                abort(404);
+            }
+            $submissions = AssignmentSubmission::with('student')->where('assignment_id', $assignment->id)->get();
         }
 
         return view('teacher.homework', compact('assignedClasses', 'assignments', 'assignment', 'submissions', 'classrooms', 'courses'));
@@ -54,11 +66,23 @@ class TeacherHomeworkController extends Controller
             'due_date' => 'required|date',
         ]);
 
+        $user = Auth::user();
+        $teacher = $this->portalService->getTeacherByUserId($user->id);
+        if (!$teacher && $user?->hasRole('Administrator')) {
+            $teacher = \App\Models\Teacher::first();
+        }
+        abort_unless($teacher, 403);
+        abort_unless(
+            $this->portalService->canManageClassCourse($teacher->id, (int) $request->classroom_id, (int) $request->course_id),
+            403
+        );
+
         Assignment::create([
             'title' => $request->title,
             'content' => $request->content,
             'classroom_id' => (int) $request->classroom_id,
             'course_id' => (int) $request->course_id,
+            'teacher_id' => $teacher->id,
             'due_date' => $request->due_date,
             'status' => 'Published',
         ]);
@@ -74,7 +98,21 @@ class TeacherHomeworkController extends Controller
             'teacher_feedback' => 'nullable|string',
         ]);
 
-        $submission = AssignmentSubmission::findOrFail($request->submission_id);
+        $user = Auth::user();
+        $teacher = $this->portalService->getTeacherByUserId($user->id);
+        if (!$teacher && $user?->hasRole('Administrator')) {
+            $teacher = \App\Models\Teacher::first();
+        }
+        abort_unless($teacher, 403);
+
+        $submission = AssignmentSubmission::find($request->submission_id);
+        if ($submission && $submission->assignment->teacher_id !== $teacher->id) {
+            abort(403, 'Bu ödev teslimini değerlendirme yetkiniz yok.');
+        }
+        if (!$submission) {
+            abort(404);
+        }
+
         $submission->update([
             'score' => (float) $request->score,
             'teacher_feedback' => $request->teacher_feedback,

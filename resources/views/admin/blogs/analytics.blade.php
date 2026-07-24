@@ -22,8 +22,8 @@
 
         <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
             <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">En Popüler Makaleler</h3>
-            <x-admin.crud.table>
-                <x-slot name="header">
+            <x-admin.table.layout>
+                <x-slot name="head">
                     <th class="px-6 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Makale</th>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Okunma Sayısı</th>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-neutral-500 uppercase">Yorumlar</th>
@@ -41,7 +41,7 @@
                         </tr>
                     @endforelse
                 </x-slot>
-            </x-admin.crud.table>
+            </x-admin.table.layout>
         </div>
     </x-admin.crud.index-layout>
 @endsection

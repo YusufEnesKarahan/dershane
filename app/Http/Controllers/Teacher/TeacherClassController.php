@@ -16,6 +16,9 @@ class TeacherClassController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
+        if (!$teacher && $user?->hasRole('Administrator')) {
+            $teacher = \App\Models\Teacher::first();
+        }
         if (!$teacher) {
             return redirect()->back();
         }

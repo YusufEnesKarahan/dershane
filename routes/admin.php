@@ -78,7 +78,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Access Management
     Route::post('users/bulk', [UserController::class, 'bulk'])->name('users.bulk');
     Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->except(['show']);
     
     Route::get('profile', [UserProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile', [UserProfileController::class, 'update'])->name('profile.update');
@@ -91,7 +91,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('roles/{role}/clone', [RoleController::class, 'showClone'])->name('roles.showClone');
     Route::post('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
     Route::resource('roles', RoleController::class);
-    Route::get('permissions', fn() => 'Permissions Placeholder')->name('permissions.index');
     
     // CMS
     Route::post('pages/bulk', [PageController::class, 'bulk'])->name('pages.bulk');
@@ -99,17 +98,17 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('pages/{page}/publish', [PageController::class, 'publish'])->name('pages.publish');
     Route::post('pages/{page}/duplicate', [PageController::class, 'duplicate'])->name('pages.duplicate');
     Route::get('pages/{page}/preview', [PageController::class, 'preview'])->name('pages.preview');
-    Route::resource('pages', PageController::class);
+    Route::resource('pages', PageController::class)->except(['show']);
     // Blog Suite
     Route::get('blogs/analytics', [BlogController::class, 'analytics'])->name('blogs.analytics');
     Route::post('blogs/{blog}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
     Route::post('blogs/{blog}/archive', [BlogController::class, 'archive'])->name('blogs.archive');
     Route::post('blogs/{blog}/duplicate', [BlogController::class, 'duplicate'])->name('blogs.duplicate');
     Route::post('blogs/{blog}/revisions/{revision}/restore', [BlogController::class, 'restoreRevision'])->name('blogs.revisions.restore');
-    Route::resource('blogs', BlogController::class);
+    Route::resource('blogs', BlogController::class)->except(['show']);
 
     // Blog Categories & Tags
-    Route::resource('categories', BlogCategoryController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('blog/categories', BlogCategoryController::class)->only(['index', 'store', 'destroy'])->names('blog-categories');
     Route::post('tags/merge', [BlogTagController::class, 'merge'])->name('tags.merge');
     Route::resource('tags', BlogTagController::class)->only(['index', 'store', 'destroy']);
 
@@ -119,7 +118,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('comments/{comment}/spam', [BlogCommentController::class, 'spam'])->name('comments.spam');
     Route::resource('comments', BlogCommentController::class)->only(['index', 'destroy']);
 
-    Route::get('announcements', fn() => 'Announcements Placeholder')->name('announcements.index');
     Route::get('notifications/dashboard', [NotificationController::class, 'dashboard'])->name('notifications.dashboard');
     Route::get('notifications/preferences', [NotificationController::class, 'preferences'])->name('notifications.preferences');
     Route::put('notifications/preferences', [NotificationController::class, 'updatePreferences'])->name('notifications.preferences.update');
@@ -137,36 +135,32 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('students/analytics', [StudentController::class, 'analytics'])->name('students.analytics');
     Route::post('students/{student}/transfer', [StudentController::class, 'transfer'])->name('students.transfer');
     Route::post('students/enrollment', [StudentEnrollmentController::class, 'store'])->name('students.enrollment.store');
-    Route::resource('students', StudentController::class);
-    Route::get('attendances/analytics', [AttendanceController::class, 'analytics'])->name('attendances.analytics');
-    Route::get('attendances/sessions/{session}/take', [AttendanceController::class, 'take'])->name('attendances.sessions.take');
-    Route::post('attendances/sessions/{session}/take', [AttendanceController::class, 'storeBulk'])->name('attendances.sessions.store-bulk');
-    Route::resource('attendances/sessions', AttendanceSessionController::class)->names('attendances.sessions');
+    Route::resource('students', StudentController::class)->except(['show']);
+    Route::get('attendances/analytics', [AttendanceSessionController::class, 'analytics'])->name('attendances.analytics');
+    Route::get('attendances/sessions/{session}/take', [AttendanceSessionController::class, 'take'])->name('attendances.sessions.take');
+    Route::post('attendances/sessions/{session}/take', [AttendanceSessionController::class, 'storeBulk'])->name('attendances.sessions.store-bulk');
+    Route::resource('attendances/sessions', AttendanceSessionController::class)->only(['index', 'store'])->names('attendances.sessions');
     Route::get('exams/analytics', [ExamResultController::class, 'analytics'])->name('exams.analytics');
     Route::get('exams/{exam}/results', [ExamResultController::class, 'index'])->name('exams.results.index');
     Route::post('exams/{exam}/results', [ExamResultController::class, 'store'])->name('exams.results.store');
-    Route::resource('exams', ExamController::class);
+    Route::resource('exams', ExamController::class)->only(['index', 'store']);
     Route::get('assignments/analytics', [AssignmentSubmissionController::class, 'analytics'])->name('assignments.analytics');
     Route::get('assignments/{assignment}/submissions', [AssignmentSubmissionController::class, 'index'])->name('assignments.submissions.index');
     Route::post('assignments/{assignment}/submissions', [AssignmentSubmissionController::class, 'store'])->name('assignments.submissions.store');
     Route::post('assignments/{assignment}/evaluate', [AssignmentSubmissionController::class, 'evaluate'])->name('assignments.submissions.evaluate');
-    Route::resource('assignments', AssignmentController::class);
+    Route::resource('assignments', AssignmentController::class)->only(['index', 'store']);
     Route::get('invoices/dashboard', [InvoiceController::class, 'dashboard'])->name('invoices.dashboard');
     Route::post('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
-    Route::resource('invoices', InvoiceController::class);
+    Route::resource('invoices', InvoiceController::class)->only(['index', 'store', 'show']);
     Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
-    Route::resource('announcements', AnnouncementController::class);
+    Route::resource('announcements', AnnouncementController::class)->only(['index', 'store']);
     Route::get('teachers/{teacher}/performance', [TeacherPerformanceController::class, 'show'])->name('teachers.performance');
     Route::post('teachers/performance', [TeacherPerformanceController::class, 'store'])->name('teachers.performance.store');
-    Route::get('teachers/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
-    Route::resource('teachers', TeacherController::class);
+    Route::get('teachers/{teacher}/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
+    Route::resource('teachers', TeacherController::class)->only(['index', 'store', 'edit', 'update']);
     Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([
         'index' => 'teachers.schedules.index',
         'store' => 'teachers.schedules.store',
-    ]);
-    Route::resource('teachers-performance', TeacherPerformanceController::class)->only(['index', 'store'])->names([
-        'index' => 'teachers.performance.index',
-        'store' => 'teachers.performance.store',
     ]);
     Route::resource('teachers-salary', TeacherSalaryController::class)->only(['index', 'store'])->names([
         'index' => 'teachers.salary.index',
@@ -182,7 +176,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         'store' => 'courses.levels.store',
         'destroy' => 'courses.levels.destroy',
     ]);
-    Route::resource('courses', CourseController::class);
+    Route::resource('courses', CourseController::class)->except(['show']);
     Route::get('classrooms/analytics', [ClassroomController::class, 'analytics'])->name('classrooms.analytics');
     Route::get('classrooms/academic-calendar', [AcademicCalendarController::class, 'index'])->name('classrooms.academic-calendar.index');
     Route::post('classrooms/academic-calendar', [AcademicCalendarController::class, 'store'])->name('classrooms.academic-calendar.store');
@@ -190,21 +184,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('classrooms/schedules', [ClassScheduleController::class, 'store'])->name('classrooms.schedules.store');
     Route::get('classrooms/holidays', [HolidayController::class, 'index'])->name('classrooms.holidays.index');
     Route::post('classrooms/holidays', [HolidayController::class, 'store'])->name('classrooms.holidays.store');
-    Route::resource('classrooms', ClassroomController::class);
+    Route::resource('classrooms', ClassroomController::class)->except(['show']);
 
     // Media Library
     Route::get('media-picker', [MediaController::class, 'pickerList'])->name('media.picker-list');
     Route::get('media/{media}/download', [MediaController::class, 'download'])->name('media.download');
     Route::post('media-folders', [MediaFolderController::class, 'store'])->name('media-folders.store');
     Route::delete('media-folders/{folder}', [MediaFolderController::class, 'destroy'])->name('media-folders.destroy');
-    Route::resource('media', MediaController::class);
+    Route::resource('media', MediaController::class)->only(['index', 'store', 'destroy']);
 
     // CRM
-    Route::get('leads', fn() => 'Leads Placeholder')->name('leads.index');
-    Route::get('contacts', fn() => 'Contacts Placeholder')->name('contacts.index');
 
     // System
-    Route::get('branches', fn() => 'Branches Placeholder')->name('branches.index');
     Route::get('settings', [PlatformSettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [PlatformSettingController::class, 'update'])->name('settings.update');
     Route::post('settings/test-mail', [PlatformSettingController::class, 'testMail'])->name('settings.test-mail');
@@ -212,7 +203,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('settings/export', [PlatformSettingController::class, 'export'])->name('settings.export');
     Route::post('settings/import', [PlatformSettingController::class, 'import'])->name('settings.import');
     Route::post('settings/reset', [PlatformSettingController::class, 'reset'])->name('settings.reset');
-    Route::get('logs', fn() => 'Logs Placeholder')->name('logs.index');
 
     // Reporting & BI routes
     Route::get('reporting/dashboard', [ExecutiveDashboardController::class, 'index'])->name('reporting.dashboard');
@@ -237,7 +227,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Leads CRUD
     Route::post('leads/{id}/note', [LeadController::class, 'storeNote'])->name('leads.note.store');
     Route::post('leads/{id}/assign', [LeadController::class, 'assign'])->name('leads.assign');
-    Route::resource('leads', LeadController::class);
+    Route::resource('leads', LeadController::class)->only(['index', 'store', 'show', 'update']);
 
     // Admission & Enrollment Routes
     Route::get('admission/dashboard', [AdmissionController::class, 'dashboard'])->name('admission.dashboard');
@@ -246,7 +236,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('admission/convert/{leadId}', [AdmissionController::class, 'convertLead'])->name('admission.convert');
     Route::post('admission/{id}/status', [AdmissionController::class, 'updateStatus'])->name('admission.status.update');
     Route::post('admission/{id}/note', [AdmissionController::class, 'storeNote'])->name('admission.note.store');
-    Route::resource('admission', AdmissionController::class);
+    Route::resource('admission', AdmissionController::class)->only(['index', 'store', 'show']);
 
     Route::post('enrollment/complete', [EnrollmentController::class, 'complete'])->name('enrollment.complete');
     Route::post('enrollment/document/upload', [EnrollmentController::class, 'uploadDocument'])->name('enrollment.document.upload');
@@ -261,28 +251,28 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('hr/analytics', [HRAnalyticsController::class, 'index'])->name('hr.analytics');
 
     Route::post('departments/position', [DepartmentController::class, 'storePosition'])->name('positions.store');
-    Route::resource('departments', DepartmentController::class);
-    Route::resource('employees', EmployeeController::class);
+    Route::resource('departments', DepartmentController::class)->only(['index', 'store']);
+    Route::resource('employees', EmployeeController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::post('payroll/{id}/approve', [PayrollController::class, 'approve'])->name('payroll.approve');
     Route::post('payroll/{id}/pay', [PayrollController::class, 'pay'])->name('payroll.pay');
-    Route::resource('payroll', PayrollController::class);
+    Route::resource('payroll', PayrollController::class)->only(['index', 'store']);
 
     Route::post('leaves/{id}/approve', [LeaveController::class, 'approve'])->name('leaves.approve');
     Route::post('leaves/{id}/reject', [LeaveController::class, 'reject'])->name('leaves.reject');
-    Route::resource('leaves', LeaveController::class);
+    Route::resource('leaves', LeaveController::class)->only(['index', 'store']);
 
-    Route::resource('attendance', EmployeeAttendanceController::class);
+    Route::resource('attendance', EmployeeAttendanceController::class)->only(['index', 'store']);
 
     Route::post('expenses/{id}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
     Route::post('expenses/{id}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');
-    Route::resource('expenses', ExpenseController::class);
+    Route::resource('expenses', ExpenseController::class)->only(['index', 'store']);
 
     Route::post('advances/{id}/approve', [AdvanceController::class, 'approve'])->name('advances.approve');
     Route::post('advances/{id}/reject', [AdvanceController::class, 'reject'])->name('advances.reject');
-    Route::resource('advances', AdvanceController::class);
+    Route::resource('advances', AdvanceController::class)->only(['index', 'store']);
 
-    Route::resource('performance', PerformanceController::class);
+    Route::resource('performance', PerformanceController::class)->only(['index', 'store']);
 
     // Inventory & Asset Module Routes
     Route::get('inventory/dashboard', [InvAnalyticsController::class, 'dashboard'])->name('inventory.dashboard');
@@ -291,26 +281,26 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('assets/assign', [AssetController::class, 'assign'])->name('assets.assign');
     Route::post('assets/return/{id}', [AssetController::class, 'returnAssignment'])->name('assets.return');
     Route::post('assets/{id}/retire', [AssetController::class, 'retire'])->name('assets.retire');
-    Route::resource('assets', AssetController::class);
+    Route::resource('assets', AssetController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::post('categories/location', [AssetCategoryController::class, 'storeLocation'])->name('categories.store-location');
-    Route::resource('categories', AssetCategoryController::class);
+    Route::post('inventory/categories/location', [AssetCategoryController::class, 'storeLocation'])->name('inventory.categories.store-location');
+    Route::resource('inventory/categories', AssetCategoryController::class)->only(['index', 'store'])->names('inventory.categories');
 
     Route::post('inventory/transaction', [InventoryController::class, 'transaction'])->name('inventory.transaction');
     Route::post('inventory/category', [InventoryController::class, 'storeCategory'])->name('inventory.store-category');
     Route::post('inventory/warehouse', [InventoryController::class, 'storeWarehouse'])->name('inventory.store-warehouse');
-    Route::resource('inventory', InventoryController::class);
+    Route::resource('inventory', InventoryController::class)->only(['index', 'store']);
 
-    Route::resource('suppliers', SupplierController::class);
+    Route::resource('suppliers', SupplierController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::post('purchase/{id}/approve', [PurchaseController::class, 'approve'])->name('purchase.approve');
     Route::post('purchase/{id}/complete', [PurchaseController::class, 'complete'])->name('purchase.complete');
-    Route::resource('purchase', PurchaseController::class);
+    Route::resource('purchase', PurchaseController::class)->only(['index', 'store']);
 
     Route::post('maintenance/{id}/complete', [MaintenanceController::class, 'complete'])->name('maintenance.complete');
-    Route::resource('maintenance', MaintenanceController::class);
+    Route::resource('maintenance', MaintenanceController::class)->only(['index', 'store']);
 
-    Route::resource('transfers', TransferController::class);
+    Route::resource('transfers', TransferController::class)->only(['index', 'store']);
 
     // Document Management & Digital Archive Module Routes
     Route::get('documents/dashboard', [DocumentController::class, 'dashboard'])->name('documents.dashboard');
@@ -320,7 +310,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('documents/{id}/share', [DocumentController::class, 'share'])->name('documents.share');
     Route::get('documents/{id}/download', [DocumentController::class, 'download'])->name('documents.download');
     Route::post('documents/{id}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
-    Route::resource('documents', DocumentController::class);
+    Route::resource('documents', DocumentController::class)->except(['edit']);
 
-    Route::resource('document-categories', DocumentCategoryController::class);
+    Route::resource('document-categories', DocumentCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 });

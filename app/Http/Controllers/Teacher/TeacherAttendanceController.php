@@ -19,19 +19,36 @@ class TeacherAttendanceController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
+        if (!$teacher && $user?->hasRole('Administrator')) {
+            $teacher = \App\Models\Teacher::first();
+        }
         if (!$teacher) {
             return redirect()->back();
         }
 
         $assignedClasses = $this->portalService->getAssignedClasses($teacher->id);
-        $sessions = AttendanceSession::with('classroom')->orderBy('session_date', 'desc')->get();
+        $sessions = AttendanceSession::query()
+            ->with('classroom')
+            ->where('teacher_id', $teacher->id)
+            ->orderBy('session_date', 'desc')
+            ->get();
 
         $selectedSessionId = $request->query('session_id');
         $students = collect();
         $session = null;
 
         if ($selectedSessionId) {
-            $session = AttendanceSession::findOrFail($selectedSessionId);
+            $session = AttendanceSession::find($selectedSessionId);
+            if ($session && $session->teacher_id !== $teacher->id) {
+                abort(403, 'Bu yoklama oturumuna erişim yetkiniz yok.');
+            }
+            if (!$session) {
+                abort(404);
+            }
+            abort_unless(
+                $this->portalService->canManageClassCourse($teacher->id, $session->classroom_id, $session->course_id),
+                403
+            );
             $students = Student::where('classroom_id', $session->classroom_id)->get();
         }
 
@@ -46,6 +63,31 @@ class TeacherAttendanceController extends Controller
         ]);
 
         $sessionId = (int) $request->session_id;
+        $user = Auth::user();
+        $teacher = $this->portalService->getTeacherByUserId($user->id);
+        if (!$teacher && $user?->hasRole('Administrator')) {
+            $teacher = \App\Models\Teacher::first();
+        }
+        abort_unless($teacher, 403);
+
+        $session = AttendanceSession::find($sessionId);
+        if ($session && $session->teacher_id !== $teacher->id) {
+            abort(403, 'Bu yoklama oturumuna erişim yetkiniz yok.');
+        }
+        if (!$session) {
+            abort(404);
+        }
+        abort_unless(
+            $this->portalService->canManageClassCourse($teacher->id, $session->classroom_id, $session->course_id),
+            403
+        );
+
+        $studentIds = array_map('intval', array_keys($request->records));
+        $allowedStudentCount = Student::query()
+            ->where('classroom_id', $session->classroom_id)
+            ->whereIn('id', $studentIds)
+            ->count();
+        abort_unless($allowedStudentCount === count(array_unique($studentIds)), 403);
 
         foreach ($request->records as $studentId => $statusCode) {
             $statusRecord = AttendanceStatus::where('code', strtoupper($statusCode))->first();

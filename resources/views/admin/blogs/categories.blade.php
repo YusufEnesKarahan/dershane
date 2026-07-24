@@ -7,7 +7,7 @@
             <!-- Sol Panel: Yeni Kategori Ekle -->
             <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Yeni Kategori Ekle</h3>
-                <x-admin.form.layout :action="route('admin.categories.store')" method="POST">
+                    <x-admin.form.layout :action="route('admin.blog-categories.store')" method="POST">
                     <x-admin.form.field-group label="Kategori Adı" id="name">
                         <input type="text" name="name" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
                     </x-admin.form.field-group>
@@ -45,7 +45,7 @@
                                     <span class="font-semibold text-sm">{{ $cat->name }}</span>
                                     <span class="text-xs text-neutral-400 ml-2">/{{ $cat->slug }}</span>
                                 </div>
-                                <form action="{{ route('admin.categories.destroy', $cat->id) }}" method="POST">
+                                <form action="{{ route('admin.blog-categories.destroy', $cat->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-xs text-red-500 hover:underline">Sil</button>
@@ -58,7 +58,7 @@
                                     @foreach($cat->children as $child)
                                         <div class="flex items-center justify-between text-xs py-1">
                                             <span class="text-neutral-600 dark:text-neutral-400">— {{ $child->name }}</span>
-                                            <form action="{{ route('admin.categories.destroy', $child->id) }}" method="POST">
+                                            <form action="{{ route('admin.blog-categories.destroy', $child->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-500 hover:underline">Sil</button>
