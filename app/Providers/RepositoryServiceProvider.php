@@ -149,6 +149,26 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\ReportingRepositoryInterface::class,
             \App\Core\Repositories\ReportingRepository::class
         );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\LeadRepositoryInterface::class,
+            \App\Core\Repositories\LeadRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\LeadActivityRepositoryInterface::class,
+            \App\Core\Repositories\LeadActivityRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\AdmissionRepositoryInterface::class,
+            \App\Core\Repositories\AdmissionRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\EnrollmentRepositoryInterface::class,
+            \App\Core\Repositories\EnrollmentRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\Interfaces\DocumentRepositoryInterface::class,
+            \App\Core\Repositories\DocumentRepository::class
+        );
     }
 
     /**

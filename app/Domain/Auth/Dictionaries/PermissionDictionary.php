@@ -107,6 +107,12 @@ class PermissionDictionary
     public const BRANCHES_VIEW = 'branches.view';
     public const BRANCHES_MANAGE = 'branches.manage';
 
+    public const ADMISSION_VIEW = 'admission.view';
+    public const ADMISSION_CREATE = 'admission.create';
+    public const ADMISSION_UPDATE = 'admission.update';
+    public const ADMISSION_APPROVE = 'admission.approve';
+    public const ENROLLMENT_MANAGE = 'enrollment.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

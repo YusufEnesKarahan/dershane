@@ -25,3 +25,5 @@ The platform uses a layered architecture:
 - **Parent Portal Suite**: Parent-student profile linkages, portal access monitoring logs, custom parent notifications, device push registers, and tabbed academic/financial trackers.
 - **Teacher Portal Suite**: Staff record registry, teacher profiles, classroom assignments, dynamic schedules, student attendance recording, homework posting & grading, and success rate analytics.
 - **Reporting & BI Suite**: Executive KPI dashboard, database-backed analytics cache, report schedules, file export tracking, and custom executive assessment reports.
+- **CRM & Lead Management Suite**: Pre-enrollment leads capture, sources distribution, status pipelines (Kanban), follow-up timelines, advisor assignments, activity logs, and conversion performance analysis.
+- **Student Admission & Enrollment Suite**: Pre-registration workflow, document upload/approval, dynamic contract templates, student card auto-creation, and Finance invoice auto-billing integration.

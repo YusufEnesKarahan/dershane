@@ -243,14 +243,67 @@ return [
             'sort' => 5,
             'children' => [
                 [
+                    'title' => 'CRM Dashboard',
+                    'route' => 'admin.crm.dashboard',
+                    'permission' => 'crm.view',
+                ],
+                [
                     'title' => 'Leads',
                     'route' => 'admin.leads.index',
-                    'permission' => 'leads.view',
+                    'permission' => 'crm.view',
+                ],
+                [
+                    'title' => 'Pipeline',
+                    'route' => 'admin.crm.pipeline',
+                    'permission' => 'crm.view',
+                ],
+                [
+                    'title' => 'Takipler (Followups)',
+                    'route' => 'admin.crm.followups',
+                    'permission' => 'crm.view',
+                ],
+                [
+                    'title' => 'CRM Analiz',
+                    'route' => 'admin.crm.analytics',
+                    'permission' => 'crm.view',
                 ],
                 [
                     'title' => 'Contact Messages',
                     'route' => 'admin.contacts.index',
                     'permission' => 'contacts.view',
+                ],
+            ],
+        ],
+        [
+            'title' => 'Kayıt Yönetimi',
+            'icon' => 'user-plus',
+            'permission' => 'admission.view',
+            'sort' => 5,
+            'children' => [
+                [
+                    'title' => 'Ön Kayıt Dashboard',
+                    'route' => 'admin.admission.dashboard',
+                    'permission' => 'admission.view',
+                ],
+                [
+                    'title' => 'Ön Kayıt Başvuruları',
+                    'route' => 'admin.admission.index',
+                    'permission' => 'admission.view',
+                ],
+                [
+                    'title' => 'Kayıt Workflow',
+                    'route' => 'admin.admission.workflow',
+                    'permission' => 'admission.view',
+                ],
+                [
+                    'title' => 'Evrak Yönetimi',
+                    'route' => 'admin.admission.documents',
+                    'permission' => 'admission.view',
+                ],
+                [
+                    'title' => 'Kayıt Sözleşmeleri',
+                    'route' => 'admin.contracts.index',
+                    'permission' => 'admission.view',
                 ],
             ],
         ],

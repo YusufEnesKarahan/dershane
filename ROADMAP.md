@@ -65,3 +65,5 @@
 - [x] Sprint 4.0: Parent Portal Completed
 - [x] Sprint 4.1: Teacher Portal & Staff Management Completed
 - [x] Sprint 4.2: Reporting, BI & Executive Dashboard Completed
+- [x] Sprint 4.3: CRM, Lead Management & Sales Pipeline Completed
+- [x] Sprint 4.4: Student Admission & Enrollment Module Completed

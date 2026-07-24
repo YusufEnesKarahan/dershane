@@ -6,6 +6,13 @@ use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\UserPreferenceController;
 use App\Http\Controllers\Admin\ExecutiveDashboardController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\LeadPipelineController;
+use App\Http\Controllers\Admin\LeadAnalyticsController;
+use App\Http\Controllers\Admin\LeadDashboardController;
+use App\Http\Controllers\Admin\AdmissionController;
+use App\Http\Controllers\Admin\EnrollmentController;
+use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
@@ -183,4 +190,37 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('reporting/reports/schedules', [ReportController::class, 'storeSchedule'])->name('reporting.schedules.store');
     Route::post('reporting/reports/export', [ReportController::class, 'export'])->name('reporting.export');
     Route::get('reporting/reports/{id}/download', [ReportController::class, 'download'])->name('reporting.download');
+
+    // CRM Routes
+    Route::get('crm/dashboard', [LeadDashboardController::class, 'index'])->name('crm.dashboard');
+    Route::get('crm/pipeline', [LeadPipelineController::class, 'index'])->name('crm.pipeline');
+    Route::post('crm/pipeline/move', [LeadPipelineController::class, 'move'])->name('crm.pipeline.move');
+    Route::post('crm/pipeline/{id}/convert', [LeadPipelineController::class, 'convert'])->name('crm.pipeline.convert');
+    Route::post('crm/pipeline/{id}/close', [LeadPipelineController::class, 'close'])->name('crm.pipeline.close');
+    Route::get('crm/analytics', [LeadAnalyticsController::class, 'index'])->name('crm.analytics');
+    Route::get('crm/followups', [LeadDashboardController::class, 'followups'])->name('crm.followups');
+    Route::post('crm/followups', [LeadDashboardController::class, 'storeFollowup'])->name('crm.followups.store');
+    Route::post('crm/followups/{id}/complete', [LeadDashboardController::class, 'completeFollowup'])->name('crm.followups.complete');
+
+    // Leads CRUD
+    Route::post('leads/{id}/note', [LeadController::class, 'storeNote'])->name('leads.note.store');
+    Route::post('leads/{id}/assign', [LeadController::class, 'assign'])->name('leads.assign');
+    Route::resource('leads', LeadController::class);
+
+    // Admission & Enrollment Routes
+    Route::get('admission/dashboard', [AdmissionController::class, 'dashboard'])->name('admission.dashboard');
+    Route::get('admission/workflow', [AdmissionController::class, 'workflow'])->name('admission.workflow');
+    Route::get('admission/documents', [AdmissionController::class, 'documents'])->name('admission.documents');
+    Route::post('admission/convert/{leadId}', [AdmissionController::class, 'convertLead'])->name('admission.convert');
+    Route::post('admission/{id}/status', [AdmissionController::class, 'updateStatus'])->name('admission.status.update');
+    Route::post('admission/{id}/note', [AdmissionController::class, 'storeNote'])->name('admission.note.store');
+    Route::resource('admission', AdmissionController::class);
+
+    Route::post('enrollment/complete', [EnrollmentController::class, 'complete'])->name('enrollment.complete');
+    Route::post('enrollment/document/upload', [EnrollmentController::class, 'uploadDocument'])->name('enrollment.document.upload');
+    Route::post('enrollment/document/{id}/approve', [EnrollmentController::class, 'approveDocument'])->name('enrollment.document.approve');
+
+    Route::get('contracts', [ContractController::class, 'index'])->name('contracts.index');
+    Route::post('contracts/generate', [ContractController::class, 'generate'])->name('contracts.generate');
+    Route::post('contracts/{id}/sign', [ContractController::class, 'sign'])->name('contracts.sign');
 });

@@ -143,13 +143,29 @@ class DemoEducationSeeder extends Seeder {
             'is_primary' => true
         ]);
 
+        $initialAdm = \App\Models\StudentAdmission::create([
+            'admission_no' => 'ADM-2026-0000',
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name,
+            'phone' => '0532 111 22 33',
+            'tc_no' => $student->identity_number,
+            'program' => 'YKS Yoğun Hazırlık',
+            'total_amount' => 25000.00,
+            'deposit_amount' => 5000.00,
+            'status' => 'enrolled',
+            'branch_id' => $branch->id,
+        ]);
+
         \App\Models\StudentEnrollment::create([
+            'student_admission_id' => $initialAdm->id,
             'student_id' => $student->id,
-            'course_id' => $course->id,
-            'academic_term_id' => $term->id,
-            'price_paid' => 25000.00,
+            'branch_id' => $branch->id,
+            'classroom_id' => $classroom->id,
+            'enrollment_no' => 'ENR-2026-0000',
             'enrollment_date' => date('Y-m-d'),
-            'status' => 'Active'
+            'academic_year' => '2026-2027',
+            'final_fee' => 25000.00,
+            'status' => 'completed'
         ]);
 
         $stPresent = \App\Models\AttendanceStatus::create([
@@ -436,5 +452,207 @@ class DemoEducationSeeder extends Seeder {
                 'absence_rate' => '5.5%'
             ]
         ]);
+
+        // CRM Seeds
+        $branch2 = Branch::create(['name' => 'Kadıköy Şubesi', 'slug' => 'kadikoy-subesi']);
+        $branch3 = Branch::create(['name' => 'Beşiktaş Şubesi', 'slug' => 'besiktas-subesi']);
+
+        $advisors = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $advisors[] = \App\Models\User::create([
+                'name' => "Danışman Personel {$i}",
+                'email' => "advisor{$i}@dershane.com",
+                'password' => bcrypt('password'),
+            ]);
+        }
+
+        $srcWeb = \App\Models\LeadSource::create(['name' => 'Web Sitesi', 'code' => 'WEBSITE']);
+        $srcIg = \App\Models\LeadSource::create(['name' => 'Instagram', 'code' => 'INSTAGRAM']);
+        $srcGoogle = \App\Models\LeadSource::create(['name' => 'Google Arama', 'code' => 'GOOGLE']);
+        $srcPhone = \App\Models\LeadSource::create(['name' => 'Telefon Arama', 'code' => 'PHONE']);
+
+        $stNew = \App\Models\LeadStatus::create(['name' => 'Yeni Aday', 'code' => 'NEW_LEAD', 'color' => '#4F46E5', 'sort_order' => 1]);
+        $stCalled = \App\Models\LeadStatus::create(['name' => 'Arandı', 'code' => 'CALLED', 'color' => '#10B981', 'sort_order' => 2]);
+        $stContact = \App\Models\LeadStatus::create(['name' => 'Görüşme Yapıldı', 'code' => 'CONTACTED', 'color' => '#F59E0B', 'sort_order' => 3]);
+        $stOffer = \App\Models\LeadStatus::create(['name' => 'Teklif Verildi', 'code' => 'OFFER_SENT', 'color' => '#3B82F6', 'sort_order' => 4]);
+        $stReg = \App\Models\LeadStatus::create(['name' => 'Kayıt Oldu', 'code' => 'REGISTERED', 'color' => '#10B981', 'sort_order' => 5]);
+        $stLost = \App\Models\LeadStatus::create(['name' => 'Kaybedildi', 'code' => 'LOST', 'color' => '#EF4444', 'sort_order' => 6]);
+
+        $names = [
+            ['Kaan', 'Arslan'], ['Esra', 'Kılıç'], ['Murat', 'Çelik'], ['Selin', 'Kaya'], ['Bora', 'Demir'],
+            ['Ece', 'Yurt'], ['Can', 'Yılmaz'], ['İrem', 'Aydın'], ['Deniz', 'Koç'], ['Mert', 'Yıldız'],
+            ['Derya', 'Güler'], ['Burak', 'Şahin'], ['Gözde', 'Öztürk'], ['Emre', 'Kartal'], ['Begüm', 'Bulut'],
+            ['Yiğit', 'Karaca'], ['Ceren', 'Tekin'], ['Oğuz', 'Peker'], ['Melis', 'Yalçın'], ['Alp', 'Uyar']
+        ];
+
+        foreach ($names as $idx => $n) {
+            $advisor = $advisors[$idx % 5];
+            $branch = ($idx % 3 === 0) ? $branch : (($idx % 3 === 1) ? $branch2 : $branch3);
+            $source = ($idx % 4 === 0) ? $srcWeb : (($idx % 4 === 1) ? $srcIg : (($idx % 4 === 2) ? $srcGoogle : $srcPhone));
+            $status = ($idx % 6 === 0) ? $stNew : (($idx % 6 === 1) ? $stCalled : (($idx % 6 === 2) ? $stContact : (($idx % 6 === 3) ? $stOffer : (($idx % 6 === 4) ? $stReg : $stLost))));
+
+            $lead = \App\Models\Lead::create([
+                'first_name' => $n[0],
+                'last_name' => $n[1],
+                'phone' => '0555 000 00' . str_pad($idx, 2, '0', STR_PAD_LEFT),
+                'whatsapp' => '0555 000 00' . str_pad($idx, 2, '0', STR_PAD_LEFT),
+                'email' => strtolower($n[0]) . '@example.com',
+                'school' => 'Anadolu Lisesi',
+                'grade' => '12',
+                'city' => 'İstanbul',
+                'district' => 'Kadıköy',
+                'program' => 'YKS Sayısal',
+                'lead_source_id' => $source->id,
+                'lead_status_id' => $status->id,
+                'branch_id' => $branch->id,
+                'advisor_id' => $advisor->id,
+            ]);
+
+            \App\Models\LeadActivity::create([
+                'lead_id' => $lead->id,
+                'action_type' => 'Created',
+                'description' => 'Aday öğrenci sisteme kaydedildi.',
+                'user_id' => $advisor->id,
+            ]);
+
+            if ($idx % 2 === 0) {
+                \App\Models\LeadNote::create([
+                    'lead_id' => $lead->id,
+                    'user_id' => $advisor->id,
+                    'note_text' => 'Veli kayıt şartlarını ve ödeme seçeneklerini sordu. TYT-AYT hazırlık programı ilgisini çekiyor.',
+                ]);
+            }
+
+            if ($idx % 3 === 0) {
+                \App\Models\LeadFollowup::create([
+                    'lead_id' => $lead->id,
+                    'user_id' => $advisor->id,
+                    'followup_date' => now()->addDays(2),
+                    'reminder_note' => 'Kayıt sözleşmesi gönderilip aranacak.',
+                    'priority' => 'High',
+                    'status' => 'Pending',
+                ]);
+            }
+        }
+
+        // Admission & Enrollment Seeds
+        $contractTpl = \App\Models\ContractTemplate::create([
+            'title' => 'Özel Öğretim Kursu Öğrenci Kayıt Sözleşmesi',
+            'code' => 'KURS-SOZLESME-2026',
+            'content' => "İşbu sözleşme {branch_name} ile {student_name} (T.C.: {tc_no}) arasında {date} tarihinde akdedilmiştir.\nProgram: {program}\nToplam Öğrenim Ücreti: {total_amount}\nÖdenen Kapora: {deposit_amount}\nÖğrenci kurum kurallarına uymayı, kurum ise eğitim hizmetini eksiksiz sunmayı taahhüt eder.",
+            'is_active' => true,
+        ]);
+
+        // 5 Ön Kayıt (Pre-registrations)
+        for ($i = 1; $i <= 5; $i++) {
+            $adm = \App\Models\StudentAdmission::create([
+                'admission_no' => 'ADM-2026-000' . $i,
+                'first_name' => "ÖnkayıtOgrenci{$i}",
+                'last_name' => "Kaya",
+                'phone' => "0555 100 000{$i}",
+                'tc_no' => "1000000000{$i}",
+                'program' => "YKS Sayısal Hazırlık",
+                'total_amount' => 45000.00,
+                'deposit_amount' => 5000.00,
+                'status' => ($i % 2 === 0) ? 'document_pending' : 'pre_registration',
+                'branch_id' => $branch->id,
+            ]);
+
+            \App\Models\AdmissionDocument::create([
+                'student_admission_id' => $adm->id,
+                'document_type' => 'Kimlik',
+                'file_name' => 'TC_Kimlik_Fotokopisi.pdf',
+                'file_path' => 'documents/kimlik_' . $adm->id . '.pdf',
+                'status' => ($i % 2 === 0) ? 'pending' : 'approved',
+            ]);
+
+            \App\Models\AdmissionStatusLog::create([
+                'student_admission_id' => $adm->id,
+                'from_status' => null,
+                'to_status' => $adm->status,
+                'description' => 'Aday ön kayıt başvurusu alındı.',
+            ]);
+        }
+
+        // 5 Kesin Kayıt (Enrolled)
+        for ($j = 1; $j <= 5; $j++) {
+            $admEnr = \App\Models\StudentAdmission::create([
+                'admission_no' => 'ADM-2026-010' . $j,
+                'first_name' => "KesinKayitOgrenci{$j}",
+                'last_name' => "Yılmaz",
+                'phone' => "0555 200 000{$j}",
+                'tc_no' => "2000000000{$j}",
+                'program' => "TYT-AYT Yoğun Kamp",
+                'total_amount' => 50000.00,
+                'deposit_amount' => 10000.00,
+                'status' => 'enrolled',
+                'branch_id' => $branch->id,
+            ]);
+
+            $std = \App\Models\Student::create([
+                'first_name' => $admEnr->first_name,
+                'last_name' => $admEnr->last_name,
+                'identity_number' => $admEnr->tc_no,
+                'student_number' => 'STD-2026-010' . $j,
+                'branch_id' => $branch->id,
+                'status' => 'Active',
+            ]);
+
+            $inv = \App\Models\Invoice::create([
+                'student_id' => $std->id,
+                'invoice_number' => 'INV-202607-' . rand(1000, 9999),
+                'issue_date' => now()->toDateString(),
+                'due_date' => now()->addDays(30)->toDateString(),
+                'total_amount' => 50000.00,
+                'paid_amount' => 10000.00,
+                'status' => 'Partial',
+            ]);
+
+            \App\Models\InvoiceItem::create([
+                'invoice_id' => $inv->id,
+                'description' => 'TYT-AYT Yoğun Kamp Yıllık Öğrenim Faturası',
+                'quantity' => 1,
+                'unit_price' => 50000.00,
+                'total_price' => 50000.00,
+            ]);
+
+            \App\Models\Payment::create([
+                'payment_number' => 'PAY-202607-00' . $j,
+                'invoice_id' => $inv->id,
+                'student_id' => $std->id,
+                'amount' => 10000.00,
+                'payment_date' => now(),
+                'notes' => 'Kesin kayıt kapora ödemesi tahsilatı',
+                'status' => 'Completed',
+            ]);
+
+            \App\Models\StudentEnrollment::create([
+                'student_admission_id' => $admEnr->id,
+                'student_id' => $std->id,
+                'branch_id' => $branch->id,
+                'invoice_id' => $inv->id,
+                'enrollment_no' => 'ENR-2026-000' . $j,
+                'enrollment_date' => now()->toDateString(),
+                'academic_year' => '2026-2027',
+                'final_fee' => 50000.00,
+                'status' => 'completed',
+            ]);
+
+            \App\Models\EnrollmentContract::create([
+                'student_admission_id' => $admEnr->id,
+                'contract_template_id' => $contractTpl->id,
+                'contract_no' => 'CNT-2026-00' . $j,
+                'rendered_content' => "İşbu sözleşme {$branch->name} ile {$admEnr->first_name} {$admEnr->last_name} arasında akdedilmiştir. Yıllık Ücret: 50.000 TL.",
+                'status' => 'signed',
+                'signed_at' => now(),
+            ]);
+
+            \App\Models\AdmissionStatusLog::create([
+                'student_admission_id' => $admEnr->id,
+                'from_status' => 'payment_pending',
+                'to_status' => 'enrolled',
+                'description' => 'Kesin kayıt tamamlandı, öğrenci kartı ve faturası oluşturuldu.',
+            ]);
+        }
     }
 }

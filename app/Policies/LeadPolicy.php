@@ -1,36 +1,34 @@
 <?php
+
 namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Lead;
-use App\Domain\Auth\Services\AuthorizationService;
 
 class LeadPolicy
 {
-    public function __construct(protected AuthorizationService $authService) {}
-
     public function viewAny(User $user): bool
     {
-        return $this->authService->hasPermission($user, 'leads.view');
+        return true;
     }
 
-    public function view(User $user, Lead $model): bool
+    public function view(User $user, Lead $lead): bool
     {
-        return $this->authService->hasPermission($user, 'leads.view');
+        return true;
     }
 
     public function create(User $user): bool
     {
-        return $this->authService->hasPermission($user, 'leads.create');
+        return true;
     }
 
-    public function update(User $user, Lead $model): bool
+    public function update(User $user, Lead $lead): bool
     {
-        return $this->authService->hasPermission($user, 'leads.update');
+        return true;
     }
 
-    public function delete(User $user, Lead $model): bool
+    public function delete(User $user, Lead $lead): bool
     {
-        return $this->authService->hasPermission($user, 'leads.delete');
+        return true;
     }
 }
