@@ -128,6 +128,9 @@ class PermissionDictionary
     public const PURCHASE_VIEW = 'purchase.view';
     public const PURCHASE_MANAGE = 'purchase.manage';
 
+    public const DOCUMENTS_VIEW = 'documents.view';
+    public const DOCUMENTS_MANAGE = 'documents.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

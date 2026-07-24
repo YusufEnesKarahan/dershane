@@ -29,3 +29,4 @@ The platform uses a layered architecture:
 - **Student Admission & Enrollment Suite**: Pre-registration workflow, document upload/approval, dynamic contract templates, student card auto-creation, and Finance invoice auto-billing integration.
 - **Human Resources & Payroll Suite**: Employee rosters, departments & positions registry, dynamic salary payroll generation, leave requests tracking, entrance/exit attendance tracking, expense claims, advance disbursements, and workforce performance analytics.
 - **Asset & Inventory Suite**: Hardware categories and positions registries, assets barcoding tracking, employee assignments (zimmet), consumable stock transactions, suppliers register, purchase order validation, repair logs, and cost analytics.
+- **Document Management & Digital Archive Suite**: Central document taxonomy, polymorphic linkages, version revision tracking, storage validations, role-based sharing permissions, and audit logs tracking.

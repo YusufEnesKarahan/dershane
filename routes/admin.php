@@ -31,6 +31,9 @@ use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\InventoryAnalyticsController as InvAnalyticsController;
+use App\Http\Controllers\Admin\DocumentController;
+use App\Http\Controllers\Admin\DocumentCategoryController;
+use App\Http\Controllers\Admin\DocumentSearchController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
@@ -296,4 +299,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('maintenance', MaintenanceController::class);
 
     Route::resource('transfers', TransferController::class);
+
+    // Document Management & Digital Archive Module Routes
+    Route::get('documents/dashboard', [DocumentController::class, 'dashboard'])->name('documents.dashboard');
+    Route::get('documents/analytics', [DocumentSearchController::class, 'analytics'])->name('documents.analytics');
+    Route::get('documents/search', [DocumentSearchController::class, 'search'])->name('documents.search');
+    Route::post('documents/{id}/version', [DocumentController::class, 'uploadVersion'])->name('documents.version');
+    Route::post('documents/{id}/share', [DocumentController::class, 'share'])->name('documents.share');
+    Route::get('documents/{id}/download', [DocumentController::class, 'download'])->name('documents.download');
+    Route::post('documents/{id}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
+    Route::resource('documents', DocumentController::class);
+
+    Route::resource('document-categories', DocumentCategoryController::class);
 });

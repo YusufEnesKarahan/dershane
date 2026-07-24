@@ -69,3 +69,4 @@
 - [x] Sprint 4.4: Student Admission & Enrollment Module Completed
 - [x] Sprint 4.5: Human Resources (HR) & Payroll Management Completed
 - [x] Sprint 4.6: Asset Management & Inventory System Completed
+- [x] Sprint 4.7: Document Management & Digital Archive System Completed

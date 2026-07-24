@@ -917,5 +917,82 @@ class DemoEducationSeeder extends Seeder {
                 'status' => 'completed'
             ]);
         }
+
+        // --- DOCUMENT MANAGEMENT SEED DATA ---
+        // 1. 10 Document Categories
+        $docCategories = [
+            ['name' => 'Öğrenci Kayıt Belgeleri', 'slug' => 'ogrenci-kayit-belgeleri', 'color' => '#0d9488'],
+            ['name' => 'Personel & Özlük Dosyaları', 'slug' => 'personel-ozluk-dosyalari', 'color' => '#2563eb'],
+            ['name' => 'Öğretmen Belgeleri & Sertifikalar', 'slug' => 'ogretmen-belgeleri', 'color' => '#7c3aed'],
+            ['name' => 'Hizmet & Kayıt Sözleşmeleri', 'slug' => 'hizmet-sozlesmeleri', 'color' => '#db2777'],
+            ['name' => 'Mali Faturalar & Fişler', 'slug' => 'mali-faturalar', 'color' => '#ea580c'],
+            ['name' => 'Banka Dekontları & Tahsilat', 'slug' => 'banka-dekontlari', 'color' => '#16a34a'],
+            ['name' => 'Kurumsal Evraklar & Yönetmelik', 'slug' => 'kurumsal-evraklar', 'color' => '#475569'],
+            ['name' => 'Sınav & Ders Föyleri Arşivi', 'slug' => 'sinav-ders-foyleri', 'color' => '#ca8a04'],
+            ['name' => 'MEB İzin & Resmi Yazışmalar', 'slug' => 'meb-resmi-yazismalar', 'color' => '#dc2626'],
+            ['name' => 'Genel Dijital Arşiv', 'slug' => 'genel-dijital-arsiv', 'color' => '#0891b2'],
+        ];
+
+        $createdDocCats = [];
+        foreach ($docCategories as $c) {
+            $createdDocCats[] = \App\Models\DocumentCategory::create($c);
+        }
+
+        // Fetch students for polymorphic linking
+        $students = \App\Models\Student::limit(20)->get();
+
+        // 2. 100 Document Records
+        for ($i = 1; $i <= 100; $i++) {
+            $cat = $createdDocCats[$i % 10];
+            $ext = ($i % 4 === 0) ? 'pdf' : (($i % 4 === 1) ? 'docx' : (($i % 4 === 2) ? 'xlsx' : 'png'));
+            
+            $docableType = null;
+            $docableId = null;
+            if ($i % 3 === 0 && count($students) > 0) {
+                $docableType = \App\Models\Student::class;
+                $docableId = $students[$i % count($students)]->id;
+            } elseif ($i % 5 === 0 && count($employees) > 0) {
+                $docableType = \App\Models\Employee::class;
+                $docableId = $employees[$i % count($employees)]->id;
+            }
+
+            $doc = \App\Models\Document::create([
+                'documentable_type' => $docableType,
+                'documentable_id' => $docableId,
+                'category_id' => $cat->id,
+                'title' => $cat->name . ' - Doküman #' . $i,
+                'file_name' => 'evrak_' . $i . '.' . $ext,
+                'file_path' => 'storage/documents/evrak_' . $i . '.' . $ext,
+                'type' => $ext,
+                'file_type' => $ext,
+                'file_size' => 102400 * rand(1, 50),
+                'uploaded_by' => $user->id,
+                'status' => 'active',
+                'description' => 'Sistem tarafından otomatik oluşturulmuş dijital arşiv evrak örneği #' . $i,
+                'created_at' => now()->subDays(rand(1, 180)),
+            ]);
+
+            // Version 1
+            \App\Models\DocumentVersion::create([
+                'document_id' => $doc->id,
+                'version_number' => 1,
+                'file_path' => $doc->file_path,
+                'uploaded_by' => $user->id,
+                'notes' => 'İlk yükleme versiyonu.',
+                'created_at' => $doc->created_at,
+            ]);
+
+            // Optional Version 2 for some
+            if ($i % 5 === 0) {
+                \App\Models\DocumentVersion::create([
+                    'document_id' => $doc->id,
+                    'version_number' => 2,
+                    'file_path' => 'storage/documents/v2_evrak_' . $i . '.' . $ext,
+                    'uploaded_by' => $user->id,
+                    'notes' => 'İmzalı nüsha güncellendi.',
+                    'created_at' => $doc->created_at->addDays(2),
+                ]);
+            }
+        }
     }
 }

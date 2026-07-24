@@ -424,6 +424,39 @@ return [
             ],
         ],
         [
+            'title' => 'Dijital Arşiv & Dokümanlar',
+            'icon' => 'folder-open',
+            'permission' => 'documents.view',
+            'sort' => 7,
+            'children' => [
+                [
+                    'title' => 'Arşiv Paneli',
+                    'route' => 'admin.documents.dashboard',
+                    'permission' => 'documents.view',
+                ],
+                [
+                    'title' => 'Tüm Belgeler',
+                    'route' => 'admin.documents.index',
+                    'permission' => 'documents.view',
+                ],
+                [
+                    'title' => 'Yeni Doküman Yükle',
+                    'route' => 'admin.documents.create',
+                    'permission' => 'documents.manage',
+                ],
+                [
+                    'title' => 'Kategori Yönetimi',
+                    'route' => 'admin.document-categories.index',
+                    'permission' => 'documents.manage',
+                ],
+                [
+                    'title' => 'Arşiv Analitiği',
+                    'route' => 'admin.documents.analytics',
+                    'permission' => 'documents.view',
+                ],
+            ],
+        ],
+        [
             'title' => 'System',
             'icon' => 'cog',
             'permission' => 'settings.view',

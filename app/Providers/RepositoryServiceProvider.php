@@ -218,6 +218,19 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\TransferRepositoryInterface::class,
             \App\Core\Repositories\TransferRepository::class
         );
+
+        $this->app->bind(
+            \App\Core\Repositories\DocumentRepository::class,
+            \App\Core\Repositories\EloquentDocumentRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\DocumentCategoryRepository::class,
+            \App\Core\Repositories\EloquentDocumentCategoryRepository::class
+        );
+        $this->app->bind(
+            \App\Core\Repositories\DocumentLogRepository::class,
+            \App\Core\Repositories\EloquentDocumentLogRepository::class
+        );
     }
 
     /**
