@@ -127,9 +127,9 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
-                    'title' => 'Notifications',
-                    'route' => 'admin.notifications.index',
-                    'permission' => 'students.view',
+                    'title' => 'Bildirim Merkezi',
+                    'route' => 'admin.notifications.dashboard',
+                    'permission' => 'notifications.view',
                 ],
                 [
                     'title' => 'Announcements',
@@ -137,9 +137,9 @@ return [
                     'permission' => 'students.view',
                 ],
                 [
-                    'title' => 'Communication Analytics',
+                    'title' => 'Bildirim Analitiği',
                     'route' => 'admin.notifications.analytics',
-                    'permission' => 'students.view',
+                    'permission' => 'notifications.view',
                 ],
                 [
                     'title' => 'Parent Portal',

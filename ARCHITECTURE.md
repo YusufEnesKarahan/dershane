@@ -1,5 +1,9 @@
 # System Architecture Overview
 
+## Notification Domain
+
+Notifications follow DTO → Action → Service → Repository. Existing module observers emit domain events that a shared listener converts to notifications, keeping delivery adapters decoupled from education, finance, and CRM modules.
+
 ## Domain-Driven Modular Design
 
 The platform uses a layered architecture:

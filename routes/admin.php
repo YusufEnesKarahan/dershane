@@ -64,6 +64,8 @@ use App\Http\Controllers\Admin\AssignmentSubmissionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\NotificationTemplateController;
+use App\Http\Controllers\Admin\NotificationAnalyticsController;
 use App\Http\Controllers\Admin\AnnouncementController;
 
 // Admin Framework Routes
@@ -117,6 +119,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('comments', BlogCommentController::class)->only(['index', 'destroy']);
 
     Route::get('announcements', fn() => 'Announcements Placeholder')->name('announcements.index');
+    Route::get('notifications/dashboard', [NotificationController::class, 'dashboard'])->name('notifications.dashboard');
+    Route::get('notifications/preferences', [NotificationController::class, 'preferences'])->name('notifications.preferences');
+    Route::put('notifications/preferences', [NotificationController::class, 'updatePreferences'])->name('notifications.preferences.update');
+    Route::get('notifications/templates', [NotificationTemplateController::class, 'index'])->name('notifications.templates');
+    Route::post('notifications/templates', [NotificationTemplateController::class, 'store'])->name('notifications.templates.store');
+    Route::get('notifications/analytics', NotificationAnalyticsController::class)->name('notifications.analytics');
+    Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::resource('notifications', NotificationController::class)->only(['index', 'store']);
 
     // Education
     Route::get('students/analytics', [StudentController::class, 'analytics'])->name('students.analytics');
@@ -140,9 +150,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
     Route::resource('invoices', InvoiceController::class);
     Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
-    Route::get('notifications/templates', [NotificationController::class, 'templates'])->name('notifications.templates');
-    Route::get('notifications/analytics', [NotificationController::class, 'analytics'])->name('notifications.analytics');
-    Route::resource('notifications', NotificationController::class);
     Route::resource('announcements', AnnouncementController::class);
     Route::get('teachers/{teacher}/performance', [TeacherPerformanceController::class, 'show'])->name('teachers.performance');
     Route::post('teachers/performance', [TeacherPerformanceController::class, 'store'])->name('teachers.performance.store');

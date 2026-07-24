@@ -6,7 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    protected $fillable = ['user_id', 'title', 'content', 'type', 'status'];
+    protected $fillable = [
+        'user_id', 'type', 'title', 'message', 'content', 'data', 'channel', 'priority',
+        'status', 'read_at', 'sent_at',
+    ];
+
+    protected function casts(): array
+    {
+        return ['data' => 'array', 'read_at' => 'datetime', 'sent_at' => 'datetime'];
+    }
 
     public function user()
     {
@@ -16,5 +24,10 @@ class Notification extends Model
     public function logs()
     {
         return $this->hasMany(NotificationLog::class);
+    }
+
+    public function isRead(): bool
+    {
+        return $this->read_at !== null || $this->status === 'Read';
     }
 }

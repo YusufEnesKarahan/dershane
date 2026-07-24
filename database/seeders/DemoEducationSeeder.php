@@ -349,6 +349,22 @@ class DemoEducationSeeder extends Seeder {
             'status' => 'Unread'
         ]);
 
+        // Notification Center: 20 templates and 100 multi-channel samples.
+        $notificationUsers = collect([$user]);
+        for ($i = 1; $i <= 9; $i++) {
+            $notificationUsers->push(User::factory()->create(['name' => 'Bildirim Kullanıcısı '.$i, 'email' => 'notification'.$i.'@dershane.test']));
+        }
+        $templateTypes = ['student', 'parent', 'teacher', 'employee', 'system', 'finance', 'crm'];
+        for ($i = 1; $i <= 20; $i++) {
+            $type = $templateTypes[$i % count($templateTypes)];
+            \App\Models\NotificationTemplate::create(['name' => ucfirst($type).' bildirim şablonu '.$i, 'slug' => 'demo-'.$type.'-'.$i, 'code' => 'demo_'.$type.'_'.$i, 'title' => ucfirst($type).' bildirimi', 'body' => '{{name}} için otomatik oluşturulan bildirim.', 'title_template' => ucfirst($type).' bildirimi', 'body_template' => '{{name}} için otomatik oluşturulan bildirim.', 'channel' => ['panel', 'email', 'sms'][$i % 3], 'is_active' => true]);
+        }
+        for ($i = 1; $i <= 100; $i++) {
+            $recipient = $notificationUsers[$i % $notificationUsers->count()]; $isRead = $i % 3 !== 0; $createdAt = now()->subDays($i % 14);
+            $notification = \App\Models\Notification::create(['user_id' => $recipient->id, 'type' => $templateTypes[$i % count($templateTypes)], 'title' => 'Demo bildirim #'.$i, 'message' => 'Bildirim merkezi örnek mesajı #'.$i.'.', 'content' => 'Bildirim merkezi örnek mesajı #'.$i.'.', 'data' => ['demo' => true, 'sequence' => $i], 'channel' => ['panel', 'email', 'sms'][$i % 3], 'priority' => ['low', 'normal', 'high', 'urgent'][$i % 4], 'status' => $isRead ? 'Read' : 'Unread', 'read_at' => $isRead ? $createdAt->copy()->addHours(2) : null, 'sent_at' => $createdAt, 'created_at' => $createdAt, 'updated_at' => $createdAt]);
+            \App\Models\NotificationLog::create(['notification_id' => $notification->id, 'recipient' => $recipient->email, 'channel' => $notification->channel, 'provider' => 'Demo', 'status' => 'Sent', 'sent_at' => $createdAt]);
+        }
+
         $group = \App\Models\AnnouncementGroup::create([
             'name' => 'Tüm Öğrenciler',
             'code' => 'all_students'

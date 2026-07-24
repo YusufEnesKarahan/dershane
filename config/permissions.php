@@ -142,5 +142,9 @@ return [
                 'settings.update',
             ],
         ],
+        'Notifications' => [
+            'label' => 'Bildirim Merkezi', 'icon' => 'bell', 'color' => 'indigo', 'sort_order' => 9,
+            'permissions' => ['notifications.view', 'notifications.manage'],
+        ],
     ],
 ];

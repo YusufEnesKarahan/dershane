@@ -27,20 +27,19 @@
                         </select>
                     </x-admin.form.field-group>
 
-                    <x-admin.form.field-group label="Gönderim Kanalı" id="type">
+                    <x-admin.form.field-group label="Bildirim Türü" id="type">
                         <select name="type" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
-                            <option value="System">Uygulama İçi (Sistem)</option>
-                            <option value="SMS">SMS (Kısa Mesaj)</option>
-                            <option value="Email">E-Posta</option>
+                            <option value="system">Sistem</option><option value="student">Öğrenci</option><option value="finance">Finans</option><option value="crm">CRM</option>
                         </select>
                     </x-admin.form.field-group>
+                    <x-admin.form.field-group label="Gönderim Kanalı" id="channel"><select name="channel" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"><option value="panel">Panel içi</option><option value="email">E-posta</option><option value="sms">SMS</option></select></x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Bildirim Başlığı" id="title">
                         <input type="text" name="title" required placeholder="Örn: Sınav Sonuçları Açıklandı" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
                     </x-admin.form.field-group>
 
-                    <x-admin.form.field-group label="Mesaj İçeriği" id="content">
-                        <textarea name="content" required rows="4" placeholder="Gönderilecek bildirim mesajı detayı..." class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"></textarea>
+                    <x-admin.form.field-group label="Mesaj İçeriği" id="message">
+                        <textarea name="message" required rows="4" placeholder="Gönderilecek bildirim mesajı detayı..." class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"></textarea>
                     </x-admin.form.field-group>
 
                     <div class="pt-4">
@@ -70,16 +69,16 @@
                                     {{ $notif->user->name }}
                                 </td>
                                 <td class="px-4 py-3 text-xs">
-                                    <span class="px-1.5 py-0.5 text-[9px] font-bold bg-neutral-100 text-neutral-700 rounded mr-1">{{ $notif->type }}</span>
+                                    <span class="px-1.5 py-0.5 text-[9px] font-bold bg-neutral-100 text-neutral-700 rounded mr-1">{{ $notif->channel }}</span>
                                     <span class="font-semibold text-neutral-800">{{ $notif->title }}</span>
-                                    <div class="text-[10px] text-neutral-400 mt-1">{{ Str::limit($notif->content, 50) }}</div>
+                                    <div class="text-[10px] text-neutral-400 mt-1">{{ Str::limit($notif->message, 50) }}</div>
                                 </td>
                                 <td class="px-4 py-3 text-xs text-neutral-500 font-mono">
                                     {{ $notif->created_at->format('d.m.Y H:i') }}
                                 </td>
                                 <td class="px-4 py-3 text-xs">
-                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ $notif->status === 'Read' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800' }}">
-                                        {{ $notif->status === 'Read' ? 'Okundu' : 'İletildi' }}
+                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ $notif->isRead() ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800' }}">
+                                        {{ $notif->isRead() ? 'Okundu' : 'İletildi' }}
                                     </span>
                                 </td>
                             </tr>

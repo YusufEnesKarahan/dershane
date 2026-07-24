@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
-use App\Models\NotificationTemplate;
 use App\Models\User;
-use App\DTOs\Communication\CreateNotificationDTO;
-use App\Domain\Communication\Actions\SendNotification;
-use App\Domain\Communication\Services\NotificationAnalyticsService;
+use App\DTOs\Notification\CreateNotificationDTO;
+use App\DTOs\Notification\SendNotificationDTO;
+use App\Domain\Notification\Actions\CreateNotification;
+use App\Domain\Notification\Actions\MarkNotificationRead;
+use App\Domain\Notification\Actions\SendNotification;
+use App\Domain\Notification\Actions\UpdatePreference;
+use App\DTOs\Notification\NotificationPreferenceDTO;
+use App\Domain\Notification\Services\NotificationAnalyticsService;
 use App\Core\Repositories\Interfaces\NotificationRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -24,45 +28,68 @@ class NotificationController extends Controller
         $this->authorize('viewAny', Notification::class);
 
         $notifications = $this->repository->paginate(15, $request->all());
-        $users = User::all();
+        $users = User::query()->select(['id', 'name', 'email'])->orderBy('name')->get();
 
         return view('admin.notifications.index', compact('notifications', 'users'));
     }
 
-    public function store(Request $request, SendNotification $action)
+    public function dashboard()
+    {
+        $this->authorize('viewAny', Notification::class);
+        return view('admin.notifications.dashboard', ['summary' => $this->analyticsService->summary()]);
+    }
+
+    public function store(Request $request, CreateNotification $create, SendNotification $send)
     {
         $this->authorize('create', Notification::class);
 
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'message' => 'required|string',
             'type' => 'required|string',
+            'channel' => 'required|in:panel,email,sms',
+            'priority' => 'nullable|in:low,normal,high,urgent',
         ]);
 
-        $dto = new CreateNotificationDTO(
-            (int) $request->user_id,
-            $request->title,
-            $request->content,
-            $request->type
-        );
+        $dto = new CreateNotificationDTO((int) $request->user_id, $request->title, $request->message, $request->type, $request->channel, $request->input('priority', 'normal'));
 
-        $action->execute($dto);
+        $notification = $create->execute($dto);
+        $send->execute(new SendNotificationDTO($notification->id));
 
         return redirect()->back()->with('success', 'Bildirim başarıyla gönderildi ve iletim logu oluşturuldu.');
     }
 
     public function templates()
     {
-        $templates = NotificationTemplate::all();
-        return view('admin.notifications.templates', compact('templates'));
+        return view('admin.notifications.templates', ['templates' => \App\Models\NotificationTemplate::query()->latest()->get()]);
     }
 
     public function analytics()
     {
-        $summary = $this->analyticsService->getSummary();
-        $recentLogs = \App\Models\NotificationLog::orderBy('created_at', 'desc')->take(15)->get();
+        $summary = $this->analyticsService->summary();
+        $recentLogs = \App\Models\NotificationLog::query()->with('notification.user')->latest()->take(15)->get();
 
         return view('admin.notifications.analytics', compact('summary', 'recentLogs'));
+    }
+
+    public function markRead(Notification $notification, MarkNotificationRead $action)
+    {
+        $this->authorize('view', $notification);
+        $action->execute($notification);
+        return back()->with('success', 'Bildirim okundu olarak işaretlendi.');
+    }
+
+    public function preferences(Request $request)
+    {
+        $preference = \App\Models\NotificationPreference::firstOrCreate(['user_id' => $request->user()->id]);
+        return view('admin.notifications.preferences', compact('preference'));
+    }
+
+    public function updatePreferences(Request $request, UpdatePreference $action)
+    {
+        $data = $request->validate(['email_enabled' => 'nullable|boolean', 'panel_enabled' => 'nullable|boolean', 'sms_enabled' => 'nullable|boolean']);
+        $action->execute(new NotificationPreferenceDTO($request->user()->id, $request->boolean('email_enabled'), $request->boolean('panel_enabled'), $request->boolean('sms_enabled')));
+        return back()->with('success', 'Bildirim tercihleri güncellendi.');
     }
 }

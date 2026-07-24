@@ -9,5 +9,6 @@ class AssignmentObserver
     public function saved(Assignment $assignment)
     {
         Cache::forget('homework.analytics.summary');
+        if ($assignment->wasRecentlyCreated) event(new \App\Events\Notifications\HomeworkAssigned($assignment));
     }
 }

@@ -45,6 +45,16 @@ class User extends Authenticatable
         return $this->belongsTo(Branch::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function notificationPreference()
+    {
+        return $this->hasOne(NotificationPreference::class);
+    }
+
     public function hasRole(string|array $roles): bool
     {
         return app(\App\Domain\Auth\Services\AuthorizationService::class)->hasRole($this, $roles);

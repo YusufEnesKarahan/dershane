@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Event;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        foreach ([\App\Events\Notifications\StudentRegistered::class, \App\Events\Notifications\PaymentOverdue::class, \App\Events\Notifications\ExamResultPublished::class, \App\Events\Notifications\HomeworkAssigned::class, \App\Events\Notifications\CrmFollowupDue::class] as $event) Event::listen($event, \App\Listeners\Notifications\CreateDomainNotification::class);
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Administrator') ? true : null;
@@ -102,6 +104,8 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Assignment::observe(\App\Observers\AssignmentObserver::class);
         \App\Models\Invoice::observe(\App\Observers\InvoiceObserver::class);
         \App\Models\Notification::observe(\App\Observers\NotificationObserver::class);
+        \App\Models\ExamResult::observe(\App\Observers\ExamResultObserver::class);
+        \App\Models\LeadActivity::observe(\App\Observers\LeadActivityObserver::class);
         \App\Models\DashboardSnapshot::observe(\App\Observers\ReportingObserver::class);
         \App\Models\Lead::observe(\App\Observers\LeadObserver::class);
         \App\Models\StudentAdmission::observe(\App\Observers\AdmissionObserver::class);

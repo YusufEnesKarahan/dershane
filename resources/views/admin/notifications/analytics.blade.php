@@ -10,11 +10,11 @@
             </div>
             <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
                 <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Yayınlanan Duyuru</h4>
-                <div class="text-2xl font-bold text-primary">{{ $summary['total_announcements'] }} Kayıt</div>
+                <div class="text-2xl font-bold text-primary">%{{ $summary['read_rate'] }}</div>
             </div>
             <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
-                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Duyuru Okunma Sayısı</h4>
-                <div class="text-2xl font-bold text-green-600">{{ $summary['total_reads'] }} Kişi</div>
+                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Kanal Sayısı</h4>
+                <div class="text-2xl font-bold text-green-600">{{ count($summary['channel_distribution']) }} Kanal</div>
             </div>
             <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
                 <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">İletim Başarı Oranı</h4>

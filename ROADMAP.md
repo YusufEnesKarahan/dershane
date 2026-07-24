@@ -1,5 +1,9 @@
 # Project Roadmap (Proje Yol Haritası)
 
+## Sprint 4.8 — Notification Center
+
+Completed: central notification persistence, templates, preferences, logs, panel/email/SMS-ready delivery, domain events, analytics, admin screens, and demo data.
+
 ## Sprint 0
 
 ## Sprint 0.5

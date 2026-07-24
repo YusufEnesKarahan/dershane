@@ -133,6 +133,8 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Core\Repositories\Interfaces\NotificationRepositoryInterface::class,
             \App\Core\Repositories\NotificationRepository::class
         );
+        $this->app->bind(\App\Core\Repositories\Interfaces\NotificationTemplateRepositoryInterface::class, \App\Core\Repositories\NotificationTemplateRepository::class);
+        $this->app->bind(\App\Core\Repositories\Interfaces\NotificationLogRepositoryInterface::class, \App\Core\Repositories\NotificationLogRepository::class);
         $this->app->bind(
             \App\Core\Repositories\Interfaces\AnnouncementRepositoryInterface::class,
             \App\Core\Repositories\AnnouncementRepository::class

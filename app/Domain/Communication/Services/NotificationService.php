@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Domain\Communication/Services;
-
 namespace App\Domain\Communication\Services;
 
 use App\DTOs\Communication\CreateNotificationDTO;
@@ -15,13 +13,7 @@ class NotificationService
 
     public function createNotification(CreateNotificationDTO $dto): Notification
     {
-        $notification = $this->repository->create([
-            'user_id' => $dto->user_id,
-            'title' => $dto->title,
-            'content' => $dto->content,
-            'type' => $dto->type,
-            'status' => $dto->status,
-        ]);
+        $notification = $this->repository->create(['user_id' => $dto->user_id, 'title' => $dto->title, 'message' => $dto->content, 'content' => $dto->content, 'type' => $dto->type, 'channel' => strtolower($dto->type) === 'system' ? 'panel' : strtolower($dto->type), 'status' => $dto->status]);
 
         // Auto-create log entry for system channel
         NotificationLog::create([
@@ -30,6 +22,7 @@ class NotificationService
             'channel' => $dto->type,
             'provider' => 'InternalSystem',
             'status' => 'Sent',
+            'sent_at' => now(),
         ]);
 
         return $notification;
