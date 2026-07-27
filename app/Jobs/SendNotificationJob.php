@@ -9,4 +9,33 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-class SendNotificationJob implements ShouldQueue { use Dispatchable, InteractsWithQueue, Queueable, SerializesModels; public int $tries=3; public function __construct(public readonly int $notificationId, public readonly ?string $channel=null) {} public function handle(NotificationService $notifications, JobMonitoringService $monitoring): void { $history=$monitoring->start(new CreateJobLogDTO(self::class,'running',['notification_id'=>$this->notificationId,'channel'=>$this->channel])); try { $notifications->send(Notification::findOrFail($this->notificationId),$this->channel); $monitoring->complete($history); } catch (\Throwable $e) { $monitoring->fail($history,$e); throw $e; } } }
+class SendNotificationJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $tries = 3;
+    public int $timeout = 30;
+    public int $backoff = 5;
+
+    public function __construct(public readonly int $notificationId, public readonly ?string $channel = null)
+    {
+        $this->onQueue('notifications');
+    }
+
+    public function handle(NotificationService $notifications, JobMonitoringService $monitoring): void
+    {
+        $history = $monitoring->start(new CreateJobLogDTO(self::class, 'running', ['notification_id' => $this->notificationId, 'channel' => $this->channel]));
+        try {
+            $notifications->send(Notification::findOrFail($this->notificationId), $this->channel);
+            $monitoring->complete($history);
+        } catch (\Throwable $e) {
+            $monitoring->fail($history, $e);
+            throw $e;
+        }
+    }
+
+    public function failed(\Throwable $exception): void
+    {
+        \Illuminate\Support\Facades\Log::error('SendNotificationJob failed for notification ID ' . $this->notificationId . ': ' . $exception->getMessage());
+    }
+}

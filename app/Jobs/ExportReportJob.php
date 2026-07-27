@@ -15,19 +15,26 @@ class ExportReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public readonly int $exportId) {}
+    public int $tries = 3;
+    public int $timeout = 120;
+    public int $backoff = 10;
+
+    public function __construct(public readonly int $exportId)
+    {
+        $this->onQueue('reports');
+    }
 
     public function handle(ReportingService $reportingService): void
     {
-        try {
-            $reportingService->generateExportFile($this->exportId);
-        } catch (\Throwable $e) {
-            Log::error('ExportReportJob failed: ' . $e->getMessage());
-            $export = ReportExport::find($this->exportId);
-            if ($export) {
-                $export->update(['status' => 'Failed']);
-            }
-            throw $e;
+        $reportingService->generateExportFile($this->exportId);
+    }
+
+    public function failed(\Throwable $exception): void
+    {
+        Log::error('ExportReportJob failed: ' . $exception->getMessage());
+        $export = ReportExport::find($this->exportId);
+        if ($export) {
+            $export->update(['status' => 'Failed']);
         }
     }
 }

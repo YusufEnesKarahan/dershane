@@ -13,7 +13,14 @@ class OptimizeImageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(protected Media $media) {}
+    public int $tries = 2;
+    public int $timeout = 60;
+    public int $backoff = 5;
+
+    public function __construct(protected Media $media)
+    {
+        $this->onQueue('media');
+    }
 
     public function handle(ConversionStrategyRegistry $registry): void
     {
@@ -24,5 +31,10 @@ class OptimizeImageJob implements ShouldQueue
                 $strategy->convert($this->media);
             }
         }
+    }
+
+    public function failed(\Throwable $exception): void
+    {
+        \Illuminate\Support\Facades\Log::error('OptimizeImageJob failed for media ID ' . $this->media->id . ': ' . $exception->getMessage());
     }
 }

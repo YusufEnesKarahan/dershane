@@ -14,13 +14,13 @@ class EmployeeObserver
         }
     }
 
-    public function created(Employee $employee): void
+    public function saved(Employee $employee): void
     {
-        //
+        \Illuminate\Support\Facades\Cache::forget('hr.analytics.summary');
     }
 
-    public function updated(Employee $employee): void
+    public function deleted(Employee $employee): void
     {
-        //
+        \Illuminate\Support\Facades\Cache::forget('hr.analytics.summary');
     }
 }

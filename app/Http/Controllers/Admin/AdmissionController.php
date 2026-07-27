@@ -36,9 +36,9 @@ class AdmissionController extends Controller
     public function index()
     {
         $admissions = $this->admissionService->getAdmissions();
-        $branches = Branch::all();
-        $advisors = User::all();
-        $leads = Lead::whereNotIn('id', $admissions->pluck('lead_id')->filter())->get();
+        $branches = Branch::select('id', 'name')->get();
+        $advisors = User::select('id', 'name', 'email')->get();
+        $leads = Lead::select('id', 'first_name', 'last_name', 'phone')->whereNotIn('id', $admissions->pluck('lead_id')->filter())->get();
 
         return view('admin.admission.index', compact('admissions', 'branches', 'advisors', 'leads'));
     }
@@ -82,7 +82,7 @@ class AdmissionController extends Controller
             return redirect()->route('admin.admission.index')->with('error', 'Kayıt bulunamadı.');
         }
 
-        $classrooms = Classroom::all();
+        $classrooms = Classroom::select('id', 'name', 'branch_id')->get();
 
         return view('admin.admission.show', compact('admission', 'classrooms'));
     }

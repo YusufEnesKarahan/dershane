@@ -15,67 +15,74 @@ class HRAnalyticsService
 {
     public function getDashboardStats()
     {
-        $today = now()->toDateString();
+        return \Illuminate\Support\Facades\Cache::remember('hr.analytics.summary', 600, function () {
+            $today = now()->toDateString();
 
-        $totalEmployees = Employee::count();
-        $activeEmployees = Employee::where('employment_status', 'Active')->count();
-        $checkedInToday = EmployeeAttendance::where('date', $today)->count();
+            $totalEmployees = Employee::count();
+            $activeEmployees = Employee::where('employment_status', 'Active')->count();
+            $checkedInToday = EmployeeAttendance::where('date', $today)->count();
 
-        // On leave today (Approved leaves that cover today)
-        $onLeaveToday = LeaveRequest::where('status', 'Approved')
-            ->where('start_date', '<=', $today)
-            ->where('end_date', '>=', $today)
-            ->count();
+            // On leave today (Approved leaves that cover today)
+            $onLeaveToday = LeaveRequest::where('status', 'Approved')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->count();
 
-        $monthlySalarySum = Employee::where('employment_status', 'Active')->sum('salary');
+            $monthlySalarySum = Employee::where('employment_status', 'Active')->sum('salary');
 
-        $pendingLeaves = LeaveRequest::where('status', 'Pending')->count();
-        $pendingExpenses = Expense::where('status', 'Pending')->count();
-        $pendingAdvances = Advance::where('status', 'Pending')->count();
+            $pendingLeaves = LeaveRequest::where('status', 'Pending')->count();
+            $pendingExpenses = Expense::where('status', 'Pending')->count();
+            $pendingAdvances = Advance::where('status', 'Pending')->count();
 
-        // Performance average
-        $performanceAvg = PerformanceReview::avg('score') ?? 0.0;
+            // Performance average
+            $performanceAvg = PerformanceReview::avg('score') ?? 0.0;
 
-        // Department distribution
-        $departments = Department::withCount('employees')->get();
-        $deptDistribution = [];
-        foreach ($departments as $dept) {
-            $deptDistribution[] = [
-                'name' => $dept->name,
-                'count' => $dept->employees_count
+            // Department distribution
+            $departments = Department::select('id', 'name')->withCount('employees')->get();
+            $deptDistribution = [];
+            foreach ($departments as $dept) {
+                $deptDistribution[] = [
+                    'name' => $dept->name,
+                    'count' => $dept->employees_count
+                ];
+            }
+
+            // Salary history chart values (single grouped query instead of 12 queries in loop)
+            $payrollsGrouped = Payroll::selectRaw('year, month, SUM(net_salary) as total_net, SUM(gross_salary) as total_gross')
+                ->groupBy('year', 'month')
+                ->get()
+                ->keyBy(fn ($item) => $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT));
+
+            $salaryChart = [];
+            for ($i = 5; $i >= 0; $i--) {
+                $date = now()->subMonths($i);
+                $key = $date->format('Y-m');
+
+                $found = $payrollsGrouped->get($key);
+                $totalNet = $found ? $found->total_net : 0.0;
+                $totalGross = $found ? $found->total_gross : 0.0;
+
+                $salaryChart[] = [
+                    'label' => $date->format('M Y'),
+                    'net' => (float)$totalNet,
+                    'gross' => (float)$totalGross
+                ];
+            }
+
+            return [
+                'total_employees' => $totalEmployees,
+                'active_employees' => $activeEmployees,
+                'checked_in_today' => $checkedInToday,
+                'on_leave_today' => $onLeaveToday,
+                'monthly_salary_sum' => $monthlySalarySum,
+                'pending_leaves' => $pendingLeaves,
+                'pending_expenses' => $pendingExpenses,
+                'pending_advances' => $pendingAdvances,
+                'performance_avg' => round($performanceAvg, 2),
+                'department_distribution' => $deptDistribution,
+                'salary_chart' => $salaryChart,
             ];
-        }
-
-        // Salary history chart values (sum of payrolls per month for the last 6 months)
-        $salaryChart = [];
-        for ($i = 5; $i >= 0; $i--) {
-            $date = now()->subMonths($i);
-            $month = $date->month;
-            $year = $date->year;
-
-            $totalNet = Payroll::where('month', $month)->where('year', $year)->sum('net_salary');
-            $totalGross = Payroll::where('month', $month)->where('year', $year)->sum('gross_salary');
-
-            $salaryChart[] = [
-                'label' => $date->format('M Y'),
-                'net' => (float)$totalNet,
-                'gross' => (float)$totalGross
-            ];
-        }
-
-        return [
-            'total_employees' => $totalEmployees,
-            'active_employees' => $activeEmployees,
-            'checked_in_today' => $checkedInToday,
-            'on_leave_today' => $onLeaveToday,
-            'monthly_salary_sum' => $monthlySalarySum,
-            'pending_leaves' => $pendingLeaves,
-            'pending_expenses' => $pendingExpenses,
-            'pending_advances' => $pendingAdvances,
-            'performance_avg' => round($performanceAvg, 2),
-            'department_distribution' => $deptDistribution,
-            'salary_chart' => $salaryChart,
-        ];
+        });
     }
 
     public function getAnalyticsReport()

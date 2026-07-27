@@ -31,32 +31,34 @@ class AdmissionService
 
     public function createFromLead(int $leadId, ?int $userId = null): StudentAdmission
     {
-        $lead = Lead::findOrFail($leadId);
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($leadId, $userId) {
+            $lead = Lead::findOrFail($leadId);
 
-        $dto = new CreateAdmissionDTO(
-            firstName: $lead->first_name,
-            lastName: $lead->last_name,
-            phone: $lead->phone,
-            leadId: $lead->id,
-            branchId: $lead->branch_id,
-            advisorId: $lead->advisor_id ?? $userId,
-            email: $lead->email,
-            school: $lead->school,
-            grade: $lead->grade,
-            program: $lead->program,
-            status: 'lead_converted',
-            notes: 'Aday öğrenci satış pipeline sürecinden ön kayıt sistemine dönüştürüldü.'
-        );
+            $dto = new CreateAdmissionDTO(
+                firstName: $lead->first_name,
+                lastName: $lead->last_name,
+                phone: $lead->phone,
+                leadId: $lead->id,
+                branchId: $lead->branch_id,
+                advisorId: $lead->advisor_id ?? $userId,
+                email: $lead->email,
+                school: $lead->school,
+                grade: $lead->grade,
+                program: $lead->program,
+                status: 'lead_converted',
+                notes: 'Aday öğrenci satış pipeline sürecinden ön kayıt sistemine dönüştürüldü.'
+            );
 
-        $admission = $this->admissionRepo->create($dto);
+            $admission = $this->admissionRepo->create($dto);
 
-        // Update lead status to REGISTERED if code exists
-        $regStatusId = LeadStatus::where('code', 'REGISTERED')->value('id');
-        if ($regStatusId) {
-            $lead->update(['lead_status_id' => $regStatusId]);
-        }
+            // Update lead status to REGISTERED if code exists
+            $regStatusId = LeadStatus::where('code', 'REGISTERED')->value('id');
+            if ($regStatusId) {
+                $lead->update(['lead_status_id' => $regStatusId]);
+            }
 
-        return $admission;
+            return $admission;
+        });
     }
 
     public function updateAdmission(int $id, UpdateAdmissionDTO $dto): bool

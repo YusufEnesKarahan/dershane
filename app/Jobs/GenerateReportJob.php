@@ -9,4 +9,34 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-class GenerateReportJob implements ShouldQueue { use Dispatchable, InteractsWithQueue, Queueable, SerializesModels; public function __construct(public readonly string $title, public readonly array $payload=[]) {} public function handle(ReportingService $reports, JobMonitoringService $monitoring): void { $history=$monitoring->start(new CreateJobLogDTO(self::class,'running',$this->payload)); try { $report=$reports->createExecutiveReport($this->title,'Sistem otomasyonu ile oluşturuldu.',$this->payload+['generated_at'=>now()->toIso8601String()]); event(new ReportGeneratedEvent($report->id)); $monitoring->complete($history); } catch (\Throwable $e) { $monitoring->fail($history,$e); throw $e; } } }
+class GenerateReportJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $tries = 3;
+    public int $timeout = 120;
+    public int $backoff = 10;
+
+    public function __construct(public readonly string $title, public readonly array $payload = [])
+    {
+        $this->onQueue('reports');
+    }
+
+    public function handle(ReportingService $reports, JobMonitoringService $monitoring): void
+    {
+        $history = $monitoring->start(new CreateJobLogDTO(self::class, 'running', $this->payload));
+        try {
+            $report = $reports->createExecutiveReport($this->title, 'Sistem otomasyonu ile oluşturuldu.', $this->payload + ['generated_at' => now()->toIso8601String()]);
+            event(new ReportGeneratedEvent($report->id));
+            $monitoring->complete($history);
+        } catch (\Throwable $e) {
+            $monitoring->fail($history, $e);
+            throw $e;
+        }
+    }
+
+    public function failed(\Throwable $exception): void
+    {
+        \Illuminate\Support\Facades\Log::error('GenerateReportJob failed: ' . $exception->getMessage());
+    }
+}

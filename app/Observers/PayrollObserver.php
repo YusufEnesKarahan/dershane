@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Log;
 
 class PayrollObserver
 {
-    public function created(Payroll $payroll): void
+    public function saved(Payroll $payroll): void
     {
-        //
+        \Illuminate\Support\Facades\Cache::forget('hr.analytics.summary');
     }
 
-    public function updated(Payroll $payroll): void
+    public function deleted(Payroll $payroll): void
     {
-        //
+        \Illuminate\Support\Facades\Cache::forget('hr.analytics.summary');
     }
 }

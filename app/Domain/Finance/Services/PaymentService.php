@@ -14,39 +14,41 @@ class PaymentService
 
     public function recordPayment(RecordPaymentDTO $dto): Payment
     {
-        $payment = $this->repository->create([
-            'payment_number' => $dto->payment_number,
-            'invoice_id' => $dto->invoice_id,
-            'student_id' => $dto->student_id,
-            'payment_method_id' => $dto->payment_method_id,
-            'amount' => $dto->amount,
-            'payment_date' => $dto->payment_date,
-            'notes' => $dto->notes,
-            'status' => 'Completed',
-        ]);
-
-        if ($dto->invoice_id) {
-            $invoice = Invoice::findOrFail($dto->invoice_id);
-            $newPaid = $invoice->paid_amount + $dto->amount;
-            $status = $newPaid >= $invoice->total_amount ? 'Paid' : 'Partial';
-
-            $invoice->update([
-                'paid_amount' => $newPaid,
-                'status' => $status,
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($dto) {
+            $payment = $this->repository->create([
+                'payment_number' => $dto->payment_number,
+                'invoice_id' => $dto->invoice_id,
+                'student_id' => $dto->student_id,
+                'payment_method_id' => $dto->payment_method_id,
+                'amount' => $dto->amount,
+                'payment_date' => $dto->payment_date,
+                'notes' => $dto->notes,
+                'status' => 'Completed',
             ]);
 
-            // Update student debt
-            $debt = StudentDebt::where('invoice_id', $invoice->id)->first();
-            if ($debt) {
-                $rem = max(0, $debt->amount - $newPaid);
-                $debtStatus = $rem == 0 ? 'Paid' : 'Partial';
-                $debt->update([
-                    'remaining_amount' => $rem,
-                    'status' => $debtStatus,
-                ]);
-            }
-        }
+            if ($dto->invoice_id) {
+                $invoice = Invoice::findOrFail($dto->invoice_id);
+                $newPaid = $invoice->paid_amount + $dto->amount;
+                $status = $newPaid >= $invoice->total_amount ? 'Paid' : 'Partial';
 
-        return $payment;
+                $invoice->update([
+                    'paid_amount' => $newPaid,
+                    'status' => $status,
+                ]);
+
+                // Update student debt
+                $debt = StudentDebt::where('invoice_id', $invoice->id)->first();
+                if ($debt) {
+                    $rem = max(0, $debt->amount - $newPaid);
+                    $debtStatus = $rem == 0 ? 'Paid' : 'Partial';
+                    $debt->update([
+                        'remaining_amount' => $rem,
+                        'status' => $debtStatus,
+                    ]);
+                }
+            }
+
+            return $payment;
+        });
     }
 }

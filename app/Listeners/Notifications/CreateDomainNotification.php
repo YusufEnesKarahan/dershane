@@ -6,8 +6,13 @@ use App\Domain\Notification\Services\NotificationService;
 use App\Events\Notifications\{StudentRegistered, PaymentOverdue, ExamResultPublished, HomeworkAssigned, CrmFollowupDue};
 use App\Models\User;
 
-class CreateDomainNotification
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
+
+class CreateDomainNotification implements ShouldQueue
 {
+    use InteractsWithQueue, Queueable;
     public function __construct(private readonly NotificationService $notifications) {}
     public function handle(object $event): void
     {
