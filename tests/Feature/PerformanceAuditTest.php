@@ -27,7 +27,7 @@ class PerformanceAuditTest extends TestCase
         }
 
         $startTime = microtime(true);
-        $response = $this->actingAs($user)->get('/admin/dashboard');
+        $response = $this->actingAs($user)->get('/admin/reporting/dashboard');
         $endTime = microtime(true);
         
         $duration = ($endTime - $startTime) * 1000; // ms
