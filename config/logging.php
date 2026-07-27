@@ -66,6 +66,13 @@ return [
         ],
 
 
+        'critical' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

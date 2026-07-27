@@ -45,6 +45,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\DB::listen(function ($query) {
+            if ($query->time >= 500) {
+                \Illuminate\Support\Facades\Log::warning("SLOW_QUERY", [
+                    'sql' => $query->sql,
+                    'time' => $query->time . 'ms',
+                    'url' => request()->fullUrl(),
+                    'user_id' => auth()->id() ?? 'guest',
+                ]);
+            }
+        });
+
         foreach ([\App\Events\Notifications\StudentRegistered::class, \App\Events\Notifications\PaymentOverdue::class, \App\Events\Notifications\ExamResultPublished::class, \App\Events\Notifications\HomeworkAssigned::class, \App\Events\Notifications\CrmFollowupDue::class] as $event) Event::listen($event, \App\Listeners\Notifications\CreateDomainNotification::class);
         foreach ([\App\Events\System\PaymentOverdueEvent::class, \App\Events\System\StudentAbsenceDetectedEvent::class, \App\Events\System\ReportGeneratedEvent::class] as $event) Event::listen($event, \App\Listeners\System\DispatchAutomationJob::class);
         // Mapped custom policies

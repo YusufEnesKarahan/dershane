@@ -51,4 +51,19 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json(['status' => 'error', 'message' => 'This action is unauthorized.'], 403);
             }
         });
+        $exceptions->report(function (\Throwable $e) {
+            if ($e instanceof \Illuminate\Validation\ValidationException ||
+                $e instanceof \Illuminate\Auth\Access\AuthorizationException ||
+                $e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
+                $e instanceof \Illuminate\Auth\AuthenticationException) {
+                return;
+            }
+
+            \Illuminate\Support\Facades\Log::channel('critical')->critical('CRITICAL_EXCEPTION: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => substr($e->getTraceAsString(), 0, 1000),
+            ]);
+        });
     })->create();

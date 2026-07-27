@@ -25,3 +25,7 @@ Schedule::call(fn () => app(\App\Domain\System\Services\AutomationService::class
 Schedule::call(fn () => app(\App\Domain\System\Services\AutomationService::class)->pendingFollowups())->name('automation:pending-followups')->dailyAt('08:45')->withoutOverlapping();
 Schedule::call(fn () => app(\App\Domain\System\Services\AutomationService::class)->weeklySystemReport())->name('automation:weekly-system-report')->weeklyOn(1, '07:00')->withoutOverlapping();
 Schedule::call(fn () => app(\App\Domain\System\Services\AutomationService::class)->weeklyCleanup())->name('automation:weekly-cleanup')->weeklyOn(1, '07:30')->withoutOverlapping();
+
+Schedule::command('backup:database')->dailyAt('02:00')->withoutOverlapping();
+Schedule::command('storage:clean-temp')->dailyAt('03:00')->withoutOverlapping();
+Schedule::command('system:collect-metrics')->dailyAt('23:59')->withoutOverlapping();

@@ -49,6 +49,10 @@ class HealthController extends Controller
             $status = 'error';
         }
 
+        $diskFree = @disk_free_space(base_path()) ?: 1024 * 1024 * 1024;
+        $diskTotal = @disk_total_space(base_path()) ?: 1024 * 1024 * 1024;
+        $diskUsagePercentage = $diskTotal > 0 ? round((($diskTotal - $diskFree) / $diskTotal) * 100, 2) : 0;
+
         $httpCode = $status === 'ok' ? 200 : 503;
 
         return response()->json([
@@ -57,6 +61,51 @@ class HealthController extends Controller
             'cache' => $cacheStatus,
             'queue' => $queueStatus,
             'storage' => $storageStatus,
+            'disk_usage_percentage' => $diskUsagePercentage,
+            'app_version' => config('app.version', '1.0.0'),
+            'environment' => config('app.env'),
         ], $httpCode);
+    }
+
+    public function queue(): JsonResponse
+    {
+        try {
+            $failedJobs = DB::table('failed_jobs')->count();
+            return response()->json([
+                'status' => 'ok',
+                'failed_jobs' => $failedJobs,
+                'queue' => 'running',
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'failed_jobs' => 0,
+                'queue' => 'down',
+                'message' => $e->getMessage(),
+            ], 503);
+        }
+    }
+
+    public function details(): JsonResponse
+    {
+        $check = $this->check()->getData(true);
+
+        return response()->json([
+            'status' => $check['status'],
+            'database' => $check['database'],
+            'cache' => $check['cache'],
+            'queue' => $check['queue'],
+            'storage' => $check['storage'],
+            'disk_usage_percentage' => $check['disk_usage_percentage'],
+            'app_version' => $check['app_version'],
+            'environment' => $check['environment'],
+            'details' => [
+                'db_connection' => config('database.default'),
+                'cache_store' => config('cache.default'),
+                'queue_connection' => config('queue.default'),
+                'storage_disk' => config('filesystems.default'),
+                'failed_jobs_count' => DB::table('failed_jobs')->count(),
+            ]
+        ]);
     }
 }

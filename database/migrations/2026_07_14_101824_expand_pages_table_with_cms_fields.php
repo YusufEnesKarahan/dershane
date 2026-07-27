@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pages', function (Blueprint $table) {
-            // Drop column is_published to avoid duplication
-            $table->dropColumn('is_published');
+            if (Schema::hasColumn('pages', 'is_published') && config('database.default') !== 'sqlite') {
+                $table->dropColumn('is_published');
+            }
             
             $table->text('excerpt')->nullable()->after('content');
             $table->string('meta_keywords')->nullable()->after('meta_description');
