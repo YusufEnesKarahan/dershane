@@ -9,6 +9,6 @@ class TeacherObserver
 {
     public function saved(Teacher $teacher)
     {
-        Cache::forget('teachers.analytics.summary');
+        Cache::forget('teachers.analytics.summary.' . $teacher->id);
     }
 }

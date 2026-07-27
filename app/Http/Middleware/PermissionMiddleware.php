@@ -12,6 +12,10 @@ class PermissionMiddleware
 
     public function handle(Request $request, Closure $next, string $permission): Response
     {
+        if ($request->routeIs('admin.leads.index')) {
+            dd("HIT LEADS INDEX MIDDLEWARE", $permission, $request->user()->roles->pluck('name'));
+        }
+
         if (! $request->user() || ! $this->authService->hasPermission($request->user(), $permission)) {
             abort(403, 'Unauthorized action.');
         }

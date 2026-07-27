@@ -20,9 +20,9 @@ class AssignmentController extends Controller
         $this->authorize('viewAny', Assignment::class);
 
         $assignments = $this->repository->paginate(15, $request->all());
-        $classrooms = Classroom::all();
-        $courses = Course::all();
-        $teachers = Teacher::with('user')->get();
+        $classrooms = Classroom::select('id', 'name')->get();
+        $courses = Course::select('id', 'name')->get();
+        $teachers = Teacher::with('user:id,first_name,last_name')->select('id', 'user_id')->get();
 
         return view('admin.assignments.index', compact('assignments', 'classrooms', 'courses', 'teachers'));
     }

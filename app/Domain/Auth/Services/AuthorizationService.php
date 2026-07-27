@@ -17,7 +17,7 @@ class AuthorizationService
 
     public function hasPermission(User $user, string $permission): bool
     {
-        if ($this->hasRole($user, 'Administrator')) {
+        if ($this->hasRole($user, 'Super Admin')) {
             return true;
         }
 

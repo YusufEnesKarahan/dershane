@@ -19,7 +19,7 @@ class TeacherAttendanceController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
         if (!$teacher) {
@@ -65,7 +65,7 @@ class TeacherAttendanceController extends Controller
         $sessionId = (int) $request->session_id;
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
         abort_unless($teacher, 403);
@@ -89,18 +89,25 @@ class TeacherAttendanceController extends Controller
             ->count();
         abort_unless($allowedStudentCount === count(array_unique($studentIds)), 403);
 
+        $statuses = AttendanceStatus::pluck('id', 'code')->mapWithKeys(fn($id, $code) => [strtoupper($code) => $id])->toArray();
+        
+        $upsertData = [];
         foreach ($request->records as $studentId => $statusCode) {
-            $statusRecord = AttendanceStatus::where('code', strtoupper($statusCode))->first();
-            $statusId = $statusRecord ? $statusRecord->id : 1;
+            $statusId = $statuses[strtoupper($statusCode)] ?? 1;
+            $upsertData[] = [
+                'attendance_session_id' => $sessionId,
+                'student_id' => (int) $studentId,
+                'attendance_status_id' => $statusId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
 
-            Attendance::updateOrCreate(
-                [
-                    'attendance_session_id' => $sessionId,
-                    'student_id' => (int) $studentId,
-                ],
-                [
-                    'attendance_status_id' => $statusId,
-                ]
+        if (!empty($upsertData)) {
+            Attendance::upsert(
+                $upsertData,
+                ['attendance_session_id', 'student_id'],
+                ['attendance_status_id', 'updated_at']
             );
         }
 

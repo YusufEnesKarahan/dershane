@@ -21,7 +21,7 @@ class TeacherDashboardController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
 
@@ -40,7 +40,7 @@ class TeacherDashboardController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
         if (!$teacher) {

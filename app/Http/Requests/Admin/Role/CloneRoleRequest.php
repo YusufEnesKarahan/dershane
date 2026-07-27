@@ -13,7 +13,7 @@ class CloneRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:roles', 'not_in:Administrator,Super Admin'],
+            'name' => ['required', 'string', 'max:255', 'unique:roles', 'not_in:Super Admin'],
             'description' => ['nullable', 'string'],
             'color' => ['nullable', 'string', 'max:20'],
         ];

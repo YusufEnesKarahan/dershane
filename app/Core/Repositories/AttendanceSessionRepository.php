@@ -10,6 +10,7 @@ class AttendanceSessionRepository implements AttendanceSessionRepositoryInterfac
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
         $query = AttendanceSession::with(['classroom', 'course', 'teacher.user'])
+            ->withCount('attendances')
             ->orderBy('session_date', 'desc')
             ->orderBy('start_time', 'desc');
 

@@ -20,6 +20,6 @@ class CreateDomainNotification
             default => [null, null, 'system', []],
         };
         if (!$title) return;
-        User::query()->whereHas('roles', fn ($query) => $query->where('name', 'Administrator'))->select('id')->each(fn (User $user) => $this->notifications->create(new CreateNotificationDTO($user->id, $title, $message, $type, 'panel', 'normal', $data)));
+        User::query()->whereHas('roles', fn ($query) => $query->where('name', 'Super Admin'))->select('id')->each(fn (User $user) => $this->notifications->create(new CreateNotificationDTO($user->id, $title, $message, $type, 'panel', 'normal', $data)));
     }
 }

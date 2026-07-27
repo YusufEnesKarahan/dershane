@@ -35,7 +35,7 @@ class PolicyHardeningTest extends TestCase
 
         // 1. Roles
         $parentRole = Role::firstOrCreate(['name' => 'Parent']);
-        $adminRole = Role::firstOrCreate(['name' => 'Administrator']);
+        $adminRole = Role::firstOrCreate(['name' => 'Super Admin']);
 
         // 2. Users
         $this->unauthorizedUser = User::create([

@@ -135,6 +135,9 @@ class PermissionDictionary
     public const DOCUMENTS_VIEW = 'documents.view';
     public const DOCUMENTS_MANAGE = 'documents.manage';
 
+    public const FINANCE_VIEW = 'finance.view';
+    public const FINANCE_MANAGE = 'finance.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

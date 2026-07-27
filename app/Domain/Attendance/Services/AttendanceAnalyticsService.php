@@ -10,40 +10,38 @@ class AttendanceAnalyticsService
 {
     public function getRiskStudents(float $thresholdPercentage = 15.0): Collection
     {
-        $students = Student::with(['attendances.status'])->get();
-        $riskStudents = collect();
-
-        foreach ($students as $student) {
-            $totalSessions = $student->attendances->count();
-            if ($totalSessions === 0) continue;
-
-            $absentCount = $student->attendances->filter(fn($a) => $a->status && $a->status->is_absence)->count();
-            $absenceRate = ($absentCount / $totalSessions) * 100;
-
-            if ($absenceRate >= $thresholdPercentage) {
+        return Student::select('id', 'first_name', 'last_name', 'student_number')
+            ->withCount([
+                'attendances as total_sessions',
+                'attendances as absent_count' => function ($query) {
+                    $query->whereHas('status', fn($q) => $q->where('is_absence', true));
+                }
+            ])
+            ->get()
+            ->filter(function ($student) use ($thresholdPercentage) {
+                if ($student->total_sessions === 0) return false;
+                $absenceRate = ($student->absent_count / $student->total_sessions) * 100;
                 $student->absence_rate = round($absenceRate, 1);
-                $student->absent_count = $absentCount;
-                $student->total_sessions = $totalSessions;
-                $riskStudents->push($student);
-            }
-        }
-
-        return $riskStudents;
+                return $absenceRate >= $thresholdPercentage;
+            })
+            ->values();
     }
 
     public function getSummary(): array
     {
-        $totalSessions = AttendanceSession::count();
-        $totalAttendances = Attendance::count();
-        $absenceAttendances = Attendance::whereHas('status', fn($q) => $q->where('is_absence', true))->count();
+        return \Illuminate\Support\Facades\Cache::remember('attendance.analytics.summary', 600, function () {
+            $totalSessions = AttendanceSession::count();
+            $totalAttendances = Attendance::count();
+            $absenceAttendances = Attendance::whereHas('status', fn($q) => $q->where('is_absence', true))->count();
 
-        $overallRate = $totalAttendances > 0 ? round((($totalAttendances - $absenceAttendances) / $totalAttendances) * 100, 1) : 100;
+            $overallRate = $totalAttendances > 0 ? round((($totalAttendances - $absenceAttendances) / $totalAttendances) * 100, 1) : 100;
 
-        return [
-            'total_sessions' => $totalSessions,
-            'total_attendances' => $totalAttendances,
-            'overall_attendance_rate' => $overallRate,
-            'risk_students_count' => $this->getRiskStudents()->count(),
-        ];
+            return [
+                'total_sessions' => $totalSessions,
+                'total_attendances' => $totalAttendances,
+                'overall_attendance_rate' => $overallRate,
+                'risk_students_count' => $this->getRiskStudents()->count(),
+            ];
+        });
     }
 }

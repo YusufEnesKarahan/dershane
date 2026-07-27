@@ -8,11 +8,13 @@ class StudentAnalyticsService
 {
     public function getSummary(): array
     {
-        return [
-            'total_students' => Student::count(),
-            'active_students' => Student::where('status', 'Active')->count(),
-            'graduated_students' => Student::where('status', 'Graduated')->count(),
-            'total_enrollments' => StudentEnrollment::count(),
-        ];
+        return \Illuminate\Support\Facades\Cache::remember('students.analytics.summary', 600, function () {
+            return [
+                'total_students' => Student::count(),
+                'active_students' => Student::where('status', 'Active')->count(),
+                'graduated_students' => Student::where('status', 'Graduated')->count(),
+                'total_enrollments' => StudentEnrollment::count(),
+            ];
+        });
     }
 }

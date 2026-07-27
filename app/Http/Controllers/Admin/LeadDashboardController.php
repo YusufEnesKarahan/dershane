@@ -36,7 +36,7 @@ class LeadDashboardController extends Controller
     public function followups()
     {
         $followups = $this->followupService->getFollowups();
-        $leads = \App\Models\Lead::all();
+        $leads = \App\Models\Lead::select('id', 'first_name', 'last_name', 'phone')->get();
         return view('admin.crm.followups', compact('followups', 'leads'));
     }
 

@@ -13,7 +13,7 @@ class ExportReport
     public function execute(ReportExportDTO $dto): ReportExport
     {
         $export = $this->service->createExport($dto);
-        $this->service->generateExportFile($export->id);
+        \App\Jobs\ExportReportJob::dispatch($export->id);
         return $export;
     }
 }

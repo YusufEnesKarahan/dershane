@@ -1,0 +1,831 @@
+
+--- academic_terms ---
+PRIMARY (id)
+
+--- academic_weeks ---
+PRIMARY (id)
+academic_weeks_academic_term_id_foreign (academic_term_id)
+
+--- admission_documents ---
+PRIMARY (id)
+admission_documents_student_admission_id_foreign (student_admission_id)
+admission_documents_uploaded_by_foreign (uploaded_by)
+admission_documents_approved_by_foreign (approved_by)
+
+--- admission_notes ---
+PRIMARY (id)
+admission_notes_student_admission_id_foreign (student_admission_id)
+admission_notes_user_id_foreign (user_id)
+
+--- admission_status_logs ---
+PRIMARY (id)
+admission_status_logs_student_admission_id_foreign (student_admission_id)
+admission_status_logs_user_id_foreign (user_id)
+
+--- advances ---
+PRIMARY (id)
+advances_employee_id_foreign (employee_id)
+
+--- analytics_cache ---
+PRIMARY (id)
+analytics_cache_cache_key_unique (cache_key)
+
+--- announcement_groups ---
+PRIMARY (id)
+announcement_groups_code_unique (code)
+
+--- announcement_reads ---
+PRIMARY (id)
+announcement_reads_announcement_id_user_id_unique (announcement_id)
+announcement_reads_announcement_id_user_id_unique (user_id)
+announcement_reads_user_id_foreign (user_id)
+
+--- announcements ---
+PRIMARY (id)
+announcements_announcement_group_id_foreign (announcement_group_id)
+
+--- asset_assignments ---
+PRIMARY (id)
+asset_assignments_asset_id_foreign (asset_id)
+asset_assignments_employee_id_foreign (employee_id)
+
+--- asset_categories ---
+PRIMARY (id)
+asset_categories_code_unique (code)
+
+--- asset_locations ---
+PRIMARY (id)
+asset_locations_branch_id_foreign (branch_id)
+
+--- asset_transfers ---
+PRIMARY (id)
+asset_transfers_asset_id_foreign (asset_id)
+asset_transfers_from_location_id_foreign (from_location_id)
+asset_transfers_to_location_id_foreign (to_location_id)
+
+--- assets ---
+PRIMARY (id)
+assets_asset_code_unique (asset_code)
+assets_category_id_foreign (category_id)
+assets_location_id_foreign (location_id)
+
+--- assignment_comments ---
+PRIMARY (id)
+assignment_comments_submission_id_foreign (submission_id)
+assignment_comments_user_id_foreign (user_id)
+
+--- assignment_files ---
+PRIMARY (id)
+assignment_files_assignment_id_foreign (assignment_id)
+assignment_files_submission_id_foreign (submission_id)
+
+--- assignment_scores ---
+PRIMARY (id)
+assignment_scores_submission_id_foreign (submission_id)
+assignment_scores_evaluator_id_foreign (evaluator_id)
+
+--- assignment_submissions ---
+PRIMARY (id)
+assignment_submissions_assignment_id_student_id_unique (assignment_id)
+assignment_submissions_assignment_id_student_id_unique (student_id)
+assignment_submissions_student_id_foreign (student_id)
+
+--- assignments ---
+PRIMARY (id)
+assignments_code_unique (code)
+assignments_classroom_id_foreign (classroom_id)
+assignments_course_id_foreign (course_id)
+assignments_teacher_id_foreign (teacher_id)
+
+--- attendance_excuses ---
+PRIMARY (id)
+attendance_excuses_attendance_id_foreign (attendance_id)
+attendance_excuses_student_id_foreign (student_id)
+attendance_excuses_approved_by_foreign (approved_by)
+
+--- attendance_sessions ---
+PRIMARY (id)
+attendance_sessions_class_schedule_id_foreign (class_schedule_id)
+attendance_sessions_classroom_id_foreign (classroom_id)
+attendance_sessions_course_id_foreign (course_id)
+attendance_sessions_teacher_id_foreign (teacher_id)
+attendance_sessions_created_by_foreign (created_by)
+
+--- attendance_statuses ---
+PRIMARY (id)
+attendance_statuses_code_unique (code)
+
+--- attendances ---
+PRIMARY (id)
+attendances_attendance_session_id_student_id_unique (attendance_session_id)
+attendances_attendance_session_id_student_id_unique (student_id)
+attendances_student_id_foreign (student_id)
+attendances_attendance_status_id_foreign (attendance_status_id)
+
+--- automation_logs ---
+PRIMARY (id)
+automation_logs_job_name_index (job_name)
+automation_logs_status_index (status)
+automation_logs_started_at_index (started_at)
+
+--- blog_categories ---
+PRIMARY (id)
+blog_categories_slug_unique (slug)
+blog_categories_parent_id_foreign (parent_id)
+
+--- blog_comment_reports ---
+PRIMARY (id)
+blog_comment_reports_comment_id_foreign (comment_id)
+blog_comment_reports_reporter_id_foreign (reporter_id)
+
+--- blog_comments ---
+PRIMARY (id)
+blog_comments_blog_id_foreign (blog_id)
+blog_comments_parent_id_foreign (parent_id)
+blog_comments_user_id_foreign (user_id)
+
+--- blog_reactions ---
+PRIMARY (id)
+blog_reactions_blog_id_foreign (blog_id)
+blog_reactions_user_id_foreign (user_id)
+
+--- blog_related_posts ---
+PRIMARY (id)
+blog_related_posts_blog_id_related_id_unique (blog_id)
+blog_related_posts_blog_id_related_id_unique (related_id)
+blog_related_posts_related_id_foreign (related_id)
+
+--- blog_revisions ---
+PRIMARY (id)
+blog_revisions_blog_id_foreign (blog_id)
+blog_revisions_author_id_foreign (author_id)
+
+--- blog_tag_post ---
+PRIMARY (id)
+blog_tag_post_blog_id_foreign (blog_id)
+blog_tag_post_blog_tag_id_foreign (blog_tag_id)
+
+--- blog_tags ---
+PRIMARY (id)
+blog_tags_name_unique (name)
+blog_tags_slug_unique (slug)
+
+--- blog_views ---
+PRIMARY (id)
+blog_views_blog_id_foreign (blog_id)
+
+--- blogs ---
+PRIMARY (id)
+blogs_slug_unique (slug)
+blogs_category_id_foreign (category_id)
+blogs_author_id_foreign (author_id)
+
+--- branches ---
+PRIMARY (id)
+branches_name_unique (name)
+branches_slug_unique (slug)
+branches_manager_id_foreign (manager_id)
+
+--- cache ---
+PRIMARY (key)
+cache_expiration_index (expiration)
+
+--- cache_locks ---
+PRIMARY (key)
+cache_locks_expiration_index (expiration)
+
+--- class_schedules ---
+PRIMARY (id)
+class_schedules_classroom_id_foreign (classroom_id)
+class_schedules_teacher_id_foreign (teacher_id)
+class_schedules_course_id_foreign (course_id)
+class_schedules_academic_term_id_foreign (academic_term_id)
+
+--- classroom_capacities ---
+PRIMARY (id)
+classroom_capacities_classroom_id_foreign (classroom_id)
+
+--- classroom_types ---
+PRIMARY (id)
+classroom_types_slug_unique (slug)
+
+--- classrooms ---
+PRIMARY (id)
+classrooms_code_unique (code)
+classrooms_branch_id_foreign (branch_id)
+classrooms_classroom_type_id_foreign (classroom_type_id)
+classrooms_is_active_index (is_active)
+
+--- contact_messages ---
+PRIMARY (id)
+contact_messages_is_read_index (is_read)
+
+--- contract_templates ---
+PRIMARY (id)
+contract_templates_code_unique (code)
+
+--- course_branches ---
+PRIMARY (id)
+course_branches_course_id_branch_id_unique (course_id)
+course_branches_course_id_branch_id_unique (branch_id)
+course_branches_branch_id_foreign (branch_id)
+
+--- course_levels ---
+PRIMARY (id)
+course_levels_slug_unique (slug)
+
+--- course_materials ---
+PRIMARY (id)
+course_materials_course_id_foreign (course_id)
+
+--- course_modules ---
+PRIMARY (id)
+course_modules_course_id_foreign (course_id)
+
+--- course_prerequisites ---
+PRIMARY (id)
+course_prerequisites_course_id_prerequisite_id_unique (course_id)
+course_prerequisites_course_id_prerequisite_id_unique (prerequisite_id)
+course_prerequisites_prerequisite_id_foreign (prerequisite_id)
+
+--- course_pricings ---
+PRIMARY (id)
+course_pricings_course_id_foreign (course_id)
+
+--- course_subjects ---
+PRIMARY (id)
+course_subjects_course_id_foreign (course_id)
+
+--- course_teachers ---
+PRIMARY (id)
+course_teachers_course_id_teacher_id_unique (course_id)
+course_teachers_course_id_teacher_id_unique (teacher_id)
+course_teachers_teacher_id_foreign (teacher_id)
+
+--- courses ---
+PRIMARY (id)
+courses_code_unique (code)
+courses_slug_unique (slug)
+courses_course_level_id_foreign (course_level_id)
+courses_is_active_index (is_active)
+
+--- crm_leads ---
+PRIMARY (id)
+crm_leads_lead_source_id_foreign (lead_source_id)
+crm_leads_lead_status_id_foreign (lead_status_id)
+crm_leads_branch_id_foreign (branch_id)
+crm_leads_advisor_id_foreign (advisor_id)
+
+--- dashboard_snapshots ---
+PRIMARY (id)
+
+--- departments ---
+PRIMARY (id)
+departments_code_unique (code)
+
+--- discounts ---
+PRIMARY (id)
+discounts_code_unique (code)
+
+--- document_categories ---
+PRIMARY (id)
+document_categories_slug_unique (slug)
+
+--- document_logs ---
+PRIMARY (id)
+document_logs_document_id_foreign (document_id)
+document_logs_user_id_foreign (user_id)
+
+--- document_permissions ---
+PRIMARY (id)
+document_permissions_document_id_foreign (document_id)
+document_permissions_role_id_foreign (role_id)
+
+--- document_versions ---
+PRIMARY (id)
+document_versions_document_id_foreign (document_id)
+document_versions_uploaded_by_foreign (uploaded_by)
+
+--- documents ---
+PRIMARY (id)
+documents_type_index (type)
+documents_documentable_type_documentable_id_index (documentable_type)
+documents_documentable_type_documentable_id_index (documentable_id)
+documents_category_id_foreign (category_id)
+documents_uploaded_by_foreign (uploaded_by)
+
+--- employee_attendances ---
+PRIMARY (id)
+employee_attendances_employee_id_foreign (employee_id)
+
+--- employees ---
+PRIMARY (id)
+employees_employee_no_unique (employee_no)
+employees_user_id_foreign (user_id)
+employees_department_id_foreign (department_id)
+employees_position_id_foreign (position_id)
+
+--- enrollment_contracts ---
+PRIMARY (id)
+enrollment_contracts_contract_no_unique (contract_no)
+enrollment_contracts_student_admission_id_foreign (student_admission_id)
+enrollment_contracts_contract_template_id_foreign (contract_template_id)
+
+--- events ---
+PRIMARY (id)
+events_slug_unique (slug)
+events_event_date_index (event_date)
+
+--- exam_answers ---
+PRIMARY (id)
+exam_answers_exam_result_id_foreign (exam_result_id)
+
+--- exam_rankings ---
+PRIMARY (id)
+exam_rankings_exam_id_foreign (exam_id)
+exam_rankings_student_id_foreign (student_id)
+exam_rankings_branch_id_foreign (branch_id)
+
+--- exam_results ---
+PRIMARY (id)
+exam_results_exam_id_student_id_unique (exam_id)
+exam_results_exam_id_student_id_unique (student_id)
+exam_results_student_id_foreign (student_id)
+
+--- exam_sessions ---
+PRIMARY (id)
+exam_sessions_exam_id_foreign (exam_id)
+exam_sessions_classroom_id_foreign (classroom_id)
+exam_sessions_branch_id_foreign (branch_id)
+
+--- exam_subject_results ---
+PRIMARY (id)
+exam_subject_results_exam_result_id_foreign (exam_result_id)
+
+--- exams ---
+PRIMARY (id)
+exams_code_unique (code)
+
+--- executive_reports ---
+PRIMARY (id)
+
+--- expenses ---
+PRIMARY (id)
+expenses_employee_id_foreign (employee_id)
+
+--- failed_jobs ---
+PRIMARY (id)
+failed_jobs_uuid_unique (uuid)
+failed_jobs_connection_queue_failed_at_index (connection)
+failed_jobs_connection_queue_failed_at_index (queue)
+failed_jobs_connection_queue_failed_at_index (failed_at)
+
+--- galleries ---
+PRIMARY (id)
+galleries_order_index (order)
+galleries_is_active_index (is_active)
+
+--- holidays ---
+PRIMARY (id)
+holidays_branch_id_foreign (branch_id)
+
+--- inventory_categories ---
+PRIMARY (id)
+inventory_categories_code_unique (code)
+
+--- inventory_items ---
+PRIMARY (id)
+inventory_items_sku_unique (sku)
+inventory_items_category_id_foreign (category_id)
+inventory_items_warehouse_id_foreign (warehouse_id)
+
+--- inventory_transactions ---
+PRIMARY (id)
+inventory_transactions_item_id_foreign (item_id)
+inventory_transactions_created_by_foreign (created_by)
+
+--- invoice_items ---
+PRIMARY (id)
+invoice_items_invoice_id_foreign (invoice_id)
+
+--- invoices ---
+PRIMARY (id)
+invoices_invoice_number_unique (invoice_number)
+invoices_student_id_foreign (student_id)
+
+--- job_batches ---
+PRIMARY (id)
+
+--- job_histories ---
+PRIMARY (id)
+job_histories_job_name_index (job_name)
+job_histories_status_index (status)
+job_histories_started_at_index (started_at)
+
+--- jobs ---
+PRIMARY (id)
+jobs_queue_index (queue)
+
+--- lead_activities ---
+PRIMARY (id)
+lead_activities_lead_id_foreign (lead_id)
+lead_activities_user_id_foreign (user_id)
+
+--- lead_assignments ---
+PRIMARY (id)
+lead_assignments_lead_id_foreign (lead_id)
+lead_assignments_from_user_id_foreign (from_user_id)
+lead_assignments_to_user_id_foreign (to_user_id)
+
+--- lead_documents ---
+PRIMARY (id)
+lead_documents_lead_id_foreign (lead_id)
+lead_documents_uploaded_by_foreign (uploaded_by)
+
+--- lead_followups ---
+PRIMARY (id)
+lead_followups_lead_id_foreign (lead_id)
+lead_followups_user_id_foreign (user_id)
+
+--- lead_notes ---
+PRIMARY (id)
+lead_notes_lead_id_foreign (lead_id)
+lead_notes_user_id_foreign (user_id)
+
+--- lead_sources ---
+PRIMARY (id)
+lead_sources_code_unique (code)
+
+--- lead_statuses ---
+PRIMARY (id)
+lead_statuses_code_unique (code)
+
+--- lead_tag_items ---
+PRIMARY (id)
+lead_tag_items_lead_id_foreign (lead_id)
+lead_tag_items_lead_tag_id_foreign (lead_tag_id)
+
+--- lead_tags ---
+PRIMARY (id)
+lead_tags_name_unique (name)
+
+--- leads ---
+PRIMARY (id)
+leads_source_index (source)
+leads_status_index (status)
+
+--- leave_requests ---
+PRIMARY (id)
+leave_requests_employee_id_foreign (employee_id)
+leave_requests_leave_type_id_foreign (leave_type_id)
+leave_requests_approved_by_foreign (approved_by)
+
+--- leave_types ---
+PRIMARY (id)
+leave_types_code_unique (code)
+
+--- mail_templates ---
+PRIMARY (id)
+
+--- maintenance_records ---
+PRIMARY (id)
+maintenance_records_asset_id_foreign (asset_id)
+maintenance_records_employee_id_foreign (employee_id)
+
+--- media ---
+PRIMARY (id)
+media_uuid_unique (uuid)
+media_folder_id_foreign (folder_id)
+media_uploaded_by_foreign (uploaded_by)
+media_checksum_index (checksum)
+
+--- media_folders ---
+PRIMARY (id)
+media_folders_parent_id_foreign (parent_id)
+
+--- media_usages ---
+PRIMARY (id)
+media_usages_media_id_foreign (media_id)
+media_usages_model_type_model_id_index (model_type)
+media_usages_model_type_model_id_index (model_id)
+
+--- media_variants ---
+PRIMARY (id)
+media_variants_media_id_variant_name_unique (media_id)
+media_variants_media_id_variant_name_unique (variant_name)
+
+--- migrations ---
+PRIMARY (id)
+
+--- notification_logs ---
+PRIMARY (id)
+notification_logs_notification_id_foreign (notification_id)
+notification_logs_channel_status_index (channel)
+notification_logs_channel_status_index (status)
+
+--- notification_preferences ---
+PRIMARY (id)
+notification_preferences_user_id_unique (user_id)
+
+--- notification_templates ---
+PRIMARY (id)
+notification_templates_code_unique (code)
+notification_templates_slug_unique (slug)
+
+--- notifications ---
+PRIMARY (id)
+notifications_user_id_read_at_index (user_id)
+notifications_user_id_read_at_index (read_at)
+notifications_channel_created_at_index (channel)
+notifications_channel_created_at_index (created_at)
+
+--- page_revisions ---
+PRIMARY (id)
+page_revisions_page_id_foreign (page_id)
+page_revisions_author_id_foreign (author_id)
+
+--- pages ---
+PRIMARY (id)
+pages_slug_unique (slug)
+pages_author_id_foreign (author_id)
+pages_parent_id_foreign (parent_id)
+pages_status_index (status)
+
+--- parent_access_logs ---
+PRIMARY (id)
+parent_access_logs_parent_id_foreign (parent_id)
+
+--- parent_devices ---
+PRIMARY (id)
+parent_devices_parent_id_foreign (parent_id)
+
+--- parent_notifications ---
+PRIMARY (id)
+parent_notifications_parent_id_foreign (parent_id)
+
+--- parent_students ---
+PRIMARY (id)
+parent_students_parent_id_student_id_unique (parent_id)
+parent_students_parent_id_student_id_unique (student_id)
+parent_students_student_id_foreign (student_id)
+
+--- password_reset_tokens ---
+PRIMARY (email)
+
+--- payment_methods ---
+PRIMARY (id)
+payment_methods_code_unique (code)
+
+--- payment_plans ---
+PRIMARY (id)
+payment_plans_student_id_foreign (student_id)
+
+--- payments ---
+PRIMARY (id)
+payments_payment_number_unique (payment_number)
+payments_invoice_id_foreign (invoice_id)
+payments_student_id_foreign (student_id)
+payments_payment_method_id_foreign (payment_method_id)
+
+--- payrolls ---
+PRIMARY (id)
+payrolls_employee_id_foreign (employee_id)
+
+--- performance_reviews ---
+PRIMARY (id)
+performance_reviews_employee_id_foreign (employee_id)
+performance_reviews_reviewer_id_foreign (reviewer_id)
+
+--- permission_role ---
+permission_role_permission_id_role_id_unique (permission_id)
+permission_role_permission_id_role_id_unique (role_id)
+permission_role_role_id_foreign (role_id)
+
+--- permissions ---
+PRIMARY (id)
+permissions_name_unique (name)
+
+--- platform_settings ---
+PRIMARY (id)
+platform_settings_key_unique (key)
+platform_settings_group_id_foreign (group_id)
+
+--- positions ---
+PRIMARY (id)
+positions_department_id_foreign (department_id)
+
+--- purchase_orders ---
+PRIMARY (id)
+purchase_orders_order_number_unique (order_number)
+purchase_orders_supplier_id_foreign (supplier_id)
+
+--- refunds ---
+PRIMARY (id)
+refunds_payment_id_foreign (payment_id)
+
+--- registration_payments ---
+PRIMARY (id)
+registration_payments_student_admission_id_foreign (student_admission_id)
+registration_payments_received_by_foreign (received_by)
+
+--- registrations ---
+PRIMARY (id)
+registrations_branch_id_foreign (branch_id)
+registrations_grade_index (grade)
+registrations_program_index (program)
+registrations_status_index (status)
+
+--- report_exports ---
+PRIMARY (id)
+report_exports_requested_by_foreign (requested_by)
+
+--- report_schedules ---
+PRIMARY (id)
+
+--- role_user ---
+role_user_role_id_user_id_unique (role_id)
+role_user_role_id_user_id_unique (user_id)
+role_user_user_id_foreign (user_id)
+
+--- roles ---
+PRIMARY (id)
+roles_name_unique (name)
+
+--- schedule_exceptions ---
+PRIMARY (id)
+schedule_exceptions_class_schedule_id_foreign (class_schedule_id)
+
+--- scholarships ---
+PRIMARY (id)
+scholarships_student_id_foreign (student_id)
+
+--- sessions ---
+PRIMARY (id)
+sessions_user_id_index (user_id)
+sessions_last_activity_index (last_activity)
+
+--- setting_files ---
+PRIMARY (id)
+setting_files_setting_id_foreign (setting_id)
+
+--- setting_groups ---
+PRIMARY (id)
+setting_groups_slug_unique (slug)
+
+--- setting_histories ---
+PRIMARY (id)
+setting_histories_setting_id_foreign (setting_id)
+setting_histories_changed_by_foreign (changed_by)
+
+--- sliders ---
+PRIMARY (id)
+sliders_order_index (order)
+sliders_is_active_index (is_active)
+
+--- sms_providers ---
+PRIMARY (id)
+sms_providers_code_unique (code)
+
+--- student_addresses ---
+PRIMARY (id)
+student_addresses_student_id_foreign (student_id)
+
+--- student_admissions ---
+PRIMARY (id)
+student_admissions_admission_no_unique (admission_no)
+student_admissions_lead_id_foreign (lead_id)
+student_admissions_branch_id_foreign (branch_id)
+student_admissions_advisor_id_foreign (advisor_id)
+
+--- student_contacts ---
+PRIMARY (id)
+student_contacts_student_id_foreign (student_id)
+
+--- student_debts ---
+PRIMARY (id)
+student_debts_student_id_foreign (student_id)
+student_debts_invoice_id_foreign (invoice_id)
+
+--- student_documents ---
+PRIMARY (id)
+student_documents_student_id_foreign (student_id)
+
+--- student_enrollments ---
+PRIMARY (id)
+student_enrollments_enrollment_no_unique (enrollment_no)
+student_enrollments_student_admission_id_foreign (student_admission_id)
+student_enrollments_student_id_foreign (student_id)
+student_enrollments_branch_id_foreign (branch_id)
+student_enrollments_classroom_id_foreign (classroom_id)
+student_enrollments_invoice_id_foreign (invoice_id)
+
+--- student_guardians ---
+PRIMARY (id)
+student_guardians_student_id_foreign (student_id)
+
+--- student_notes ---
+PRIMARY (id)
+student_notes_student_id_foreign (student_id)
+student_notes_author_id_foreign (author_id)
+
+--- student_status_histories ---
+PRIMARY (id)
+student_status_histories_student_id_foreign (student_id)
+student_status_histories_changed_by_foreign (changed_by)
+
+--- student_transfers ---
+PRIMARY (id)
+student_transfers_student_id_foreign (student_id)
+student_transfers_from_branch_id_foreign (from_branch_id)
+student_transfers_to_branch_id_foreign (to_branch_id)
+student_transfers_from_classroom_id_foreign (from_classroom_id)
+student_transfers_to_classroom_id_foreign (to_classroom_id)
+
+--- students ---
+PRIMARY (id)
+students_student_number_unique (student_number)
+students_branch_id_foreign (branch_id)
+students_classroom_id_foreign (classroom_id)
+students_identity_number_index (identity_number)
+
+--- suppliers ---
+PRIMARY (id)
+
+--- teacher_activity_logs ---
+PRIMARY (id)
+teacher_activity_logs_teacher_id_foreign (teacher_id)
+
+--- teacher_assignments ---
+PRIMARY (id)
+teacher_assignments_teacher_id_foreign (teacher_id)
+teacher_assignments_classroom_id_foreign (classroom_id)
+teacher_assignments_course_id_foreign (course_id)
+
+--- teacher_availability ---
+PRIMARY (id)
+teacher_availability_teacher_id_foreign (teacher_id)
+
+--- teacher_certificates ---
+PRIMARY (id)
+teacher_certificates_teacher_id_foreign (teacher_id)
+
+--- teacher_contracts ---
+PRIMARY (id)
+teacher_contracts_teacher_id_foreign (teacher_id)
+
+--- teacher_documents ---
+PRIMARY (id)
+teacher_documents_teacher_id_foreign (teacher_id)
+
+--- teacher_experiences ---
+PRIMARY (id)
+teacher_experiences_teacher_id_foreign (teacher_id)
+
+--- teacher_leave_requests ---
+PRIMARY (id)
+teacher_leave_requests_teacher_id_foreign (teacher_id)
+
+--- teacher_notes ---
+PRIMARY (id)
+teacher_notes_teacher_id_foreign (teacher_id)
+teacher_notes_author_id_foreign (author_id)
+
+--- teacher_performance ---
+PRIMARY (id)
+teacher_performance_teacher_id_foreign (teacher_id)
+
+--- teacher_performance_logs ---
+PRIMARY (id)
+teacher_performance_logs_teacher_id_foreign (teacher_id)
+
+--- teacher_profiles ---
+PRIMARY (id)
+teacher_profiles_teacher_id_foreign (teacher_id)
+
+--- teacher_salary_profiles ---
+PRIMARY (id)
+teacher_salary_profiles_teacher_id_foreign (teacher_id)
+
+--- teacher_schedules ---
+PRIMARY (id)
+teacher_schedules_teacher_id_foreign (teacher_id)
+teacher_schedules_classroom_id_foreign (classroom_id)
+teacher_schedules_course_id_foreign (course_id)
+
+--- teacher_subjects ---
+PRIMARY (id)
+teacher_subjects_teacher_id_foreign (teacher_id)
+
+--- teachers ---
+PRIMARY (id)
+teachers_user_id_foreign (user_id)
+teachers_branch_id_foreign (branch_id)
+
+--- users ---
+PRIMARY (id)
+users_email_unique (email)
+users_branch_id_foreign (branch_id)
+
+--- warehouses ---
+PRIMARY (id)
+warehouses_branch_id_foreign (branch_id)

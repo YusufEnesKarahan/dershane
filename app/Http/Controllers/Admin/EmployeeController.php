@@ -26,9 +26,9 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = $this->hrService->allEmployees();
-        $departments = Department::all();
-        $positions = Position::all();
-        $users = User::all();
+        $departments = Department::select('id', 'name')->get();
+        $positions = Position::select('id', 'title')->get();
+        $users = User::select('id', 'first_name', 'last_name')->get();
         return view('admin.hr.employees', compact('employees', 'departments', 'positions', 'users'));
     }
 

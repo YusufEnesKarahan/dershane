@@ -73,7 +73,7 @@ class User extends Authenticatable
 
     public function isAdministrator(): bool
     {
-        return $this->hasRole('Administrator');
+        return $this->hasRole('Super Admin');
     }
 
     public function getAvatarUrl(): string

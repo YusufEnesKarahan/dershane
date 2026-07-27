@@ -8,16 +8,18 @@ class ExamAnalyticsService
 {
     public function getSummary(): array
     {
-        $totalExams = Exam::count();
-        $totalResults = ExamResult::count();
-        $avgNet = ExamResult::where('is_absent', false)->avg('total_net');
-        $topScore = ExamResult::max('score');
+        return \Illuminate\Support\Facades\Cache::remember('exams.analytics.summary', 600, function () {
+            $totalExams = Exam::count();
+            $totalResults = ExamResult::count();
+            $avgNet = ExamResult::where('is_absent', false)->avg('total_net');
+            $topScore = ExamResult::max('score');
 
-        return [
-            'total_exams' => $totalExams,
-            'total_results' => $totalResults,
-            'avg_net' => round($avgNet ?? 0, 2),
-            'top_score' => round($topScore ?? 0, 2),
-        ];
+            return [
+                'total_exams' => $totalExams,
+                'total_results' => $totalResults,
+                'avg_net' => round($avgNet ?? 0, 2),
+                'top_score' => round($topScore ?? 0, 2),
+            ];
+        });
     }
 }

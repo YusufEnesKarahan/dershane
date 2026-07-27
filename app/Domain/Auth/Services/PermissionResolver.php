@@ -11,7 +11,7 @@ class PermissionResolver
 
     public function hasPermission(User $user, string $permission): bool
     {
-        if ($user->hasRole('Administrator')) {
+        if ($user->hasRole('Super Admin')) {
             return true;
         }
 

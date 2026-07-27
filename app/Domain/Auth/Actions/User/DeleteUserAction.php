@@ -17,9 +17,9 @@ class DeleteUserAction
         }
 
         // Prevent deleting last administrator
-        if ($user->hasRole('Administrator')) {
+        if ($user->hasRole('Super Admin')) {
             $adminCount = \App\Models\User::whereHas('roles', function ($q) {
-                $q->where('name', 'Administrator');
+                $q->where('name', 'Super Admin');
             })->count();
             if ($adminCount <= 1) {
                 abort(403, 'System must have at least one Administrator.');

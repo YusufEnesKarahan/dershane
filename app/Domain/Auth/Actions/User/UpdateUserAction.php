@@ -18,9 +18,9 @@ class UpdateUserAction
         $currentUser = auth()->user();
         if ($currentUser && $currentUser->id === $user->id) {
             // Check if removing own admin role
-            $isAdminNow = $user->hasRole('Administrator');
+            $isAdminNow = $user->hasRole('Super Admin');
             $willBeAdmin = in_array(
-                \App\Models\Role::where('name', 'Administrator')->first()?->id,
+                \App\Models\Role::where('name', 'Super Admin')->first()?->id,
                 $dto->roles
             );
             if ($isAdminNow && !$willBeAdmin) {
@@ -29,10 +29,10 @@ class UpdateUserAction
         }
 
         // Check if removing last administrator
-        $adminRoleId = \App\Models\Role::where('name', 'Administrator')->first()?->id;
-        if ($adminRoleId && $user->hasRole('Administrator') && !in_array($adminRoleId, $dto->roles)) {
+        $adminRoleId = \App\Models\Role::where('name', 'Super Admin')->first()?->id;
+        if ($adminRoleId && $user->hasRole('Super Admin') && !in_array($adminRoleId, $dto->roles)) {
             $adminCount = \App\Models\User::whereHas('roles', function ($q) {
-                $q->where('name', 'Administrator');
+                $q->where('name', 'Super Admin');
             })->count();
             if ($adminCount <= 1) {
                 abort(403, 'System must have at least one Administrator.');
@@ -40,9 +40,9 @@ class UpdateUserAction
         }
 
         // Prevent last Administrator from being deactivated
-        if ($user->hasRole('Administrator') && $dto->status !== 'ACTIVE') {
+        if ($user->hasRole('Super Admin') && $dto->status !== 'ACTIVE') {
             $adminCount = \App\Models\User::whereHas('roles', function ($q) {
-                $q->where('name', 'Administrator');
+                $q->where('name', 'Super Admin');
             })->where('status', 'ACTIVE')->count();
             if ($adminCount <= 1) {
                 abort(403, 'The last active Administrator cannot be deactivated.');

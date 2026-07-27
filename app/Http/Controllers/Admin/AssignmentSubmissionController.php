@@ -22,7 +22,7 @@ class AssignmentSubmissionController extends Controller
     public function index(Assignment $assignment)
     {
         $submissions = $this->repository->getByAssignment($assignment->id);
-        $students = Student::all();
+        $students = Student::select('id', 'first_name', 'last_name', 'student_number')->where('classroom_id', $assignment->classroom_id)->get();
 
         return view('admin.assignments.submissions', compact('assignment', 'submissions', 'students'));
     }

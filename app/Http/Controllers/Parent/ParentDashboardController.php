@@ -33,7 +33,7 @@ class ParentDashboardController extends Controller
 
         $linkedStudents = $this->portalService->getLinkedStudents($parent->id);
 
-        if ($linkedStudents->isEmpty() && !$parent->hasRole('Administrator')) {
+        if ($linkedStudents->isEmpty() && !$parent->hasRole('Super Admin')) {
             return view('parent.dashboard', [
                 'student' => null,
                 'linkedStudents' => collect(),
@@ -41,7 +41,7 @@ class ParentDashboardController extends Controller
             ]);
         }
 
-        if ($linkedStudents->isEmpty() && $parent->hasRole('Administrator')) {
+        if ($linkedStudents->isEmpty() && $parent->hasRole('Super Admin')) {
             $linkedStudents = \App\Models\Student::with(['classroom', 'branch'])->limit(10)->get();
         }
 

@@ -181,12 +181,17 @@ class RouteHealthTest extends TestCase
     public function test_portal_routes_require_their_role_or_administrator_role(): void
     {
         foreach ([
-            'teacher.dashboard' => 'role:Teacher|Administrator',
-            'parent.dashboard' => 'role:Parent|Administrator',
-        ] as $name => $middleware) {
+            'teacher.dashboard',
+            'parent.dashboard',
+        ] as $name) {
             $route = Route::getRoutes()->getByName($name);
+            $middlewares = $route->middleware();
 
-            $this->assertContains($middleware, $route->middleware());
+            if (str_starts_with($route->uri(), 'teacher')) {
+                $this->assertContains('role:Teacher|Super Admin', $middlewares);
+            } elseif (str_starts_with($route->uri(), 'parent')) {
+                $this->assertContains('role:Parent|Super Admin', $middlewares);
+            }
         }
     }
 }

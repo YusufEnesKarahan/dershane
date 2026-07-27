@@ -21,35 +21,39 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         $roles = [
-            'Administrator' => [], // Gets all implicitly via Gate::before
-            'Branch Manager' => [
-                'dashboard.view',
-                'students.*', 'teachers.*', 'courses.*', 'classrooms.*', 'registrations.*',
-                'leads.*', 'contacts.*',
-                'branches.view',
+            'Super Admin' => [], // Gets all implicitly via Gate::before
+            'Admin' => [
+                'dashboard.view', 'users.*', 'roles.*', 'teachers.*', 'courses.*', 
+                'classrooms.*', 'branches.*', 'crm.*', 'leads.*', 'contacts.*',
+                'hr.*', 'payroll.*', 'assets.*', 'inventory.*', 'purchase.*',
+                'admission.*', 'enrollment.*', 'documents.*', 'settings.*', 'system.*',
+                'finance.*'
             ],
             'Teacher' => [
                 'dashboard.view',
-                'students.view', 'courses.view', 'classrooms.view'
+                'students.view', 'courses.view', 'classrooms.view',
+                'attendance.view', 'attendance.manage',
+                'homeworks.view', 'homeworks.manage'
             ],
-            'Reception' => [
+            'Secretary' => [
                 'dashboard.view',
-                'students.view', 'students.create', 'registrations.view', 'registrations.create',
-                'leads.view', 'leads.create', 'contacts.view'
+                'students.*', 'registrations.*', 'leads.*', 'contacts.*',
+                'admission.*', 'enrollment.*'
             ],
-            'Marketing' => [
+            'Accountant' => [
                 'dashboard.view',
-                'pages.view', 'pages.update',
-                'blogs.*', 'gallery.*', 'announcements.*',
-                'leads.view', 'media.*'
+                'registrations.*', 'payroll.*', 'hr.view',
+                'assets.*', 'inventory.*', 'purchase.*', 'finance.*'
             ],
-            'Editor' => [
+            'Parent' => [
                 'dashboard.view',
-                'pages.*', 'blogs.*', 'gallery.*', 'announcements.*', 'media.*'
+                'students.view', 'notifications.view', 'attendance.view',
+                'homeworks.view', 'registrations.view'
             ],
-            'Viewer' => [
+            'Student' => [
                 'dashboard.view',
-                'users.view', 'pages.view', 'blogs.view', 'students.view', 'courses.view'
+                'students.view', 'notifications.view', 'attendance.view',
+                'homeworks.view'
             ]
         ];
 
@@ -66,7 +70,9 @@ class RolesAndPermissionsSeeder extends Seeder
                         }
                     }
                 } else {
-                    $idsToAssign[] = $permissionIds[$permSpec];
+                    if (isset($permissionIds[$permSpec])) {
+                        $idsToAssign[] = $permissionIds[$permSpec];
+                    }
                 }
             }
             
@@ -75,7 +81,7 @@ class RolesAndPermissionsSeeder extends Seeder
             }
         }
 
-        $adminRole = Role::where('name', 'Administrator')->first();
+        $adminRole = Role::where('name', 'Super Admin')->first();
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@dershane.com'],
             ['name' => 'Admin User', 'password' => bcrypt('password')]

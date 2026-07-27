@@ -5,7 +5,7 @@ use App\Models\Role;
 
 class SystemRoleGuard
 {
-    protected const PROTECTED_ROLES = ['Administrator', 'Super Admin'];
+    protected const PROTECTED_ROLES = ['Super Admin'];
 
     public function isProtected(string|Role $role): bool
     {

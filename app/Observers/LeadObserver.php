@@ -10,5 +10,6 @@ class LeadObserver
     public function saved(Lead $lead)
     {
         Cache::forget('executive_dashboard_metrics');
+        Cache::forget('crm.analytics.summary');
     }
 }

@@ -10,5 +10,6 @@ class AdmissionObserver
     public function saved(StudentAdmission $admission)
     {
         Cache::forget('executive_dashboard_metrics');
+        Cache::forget('admission.analytics.summary');
     }
 }

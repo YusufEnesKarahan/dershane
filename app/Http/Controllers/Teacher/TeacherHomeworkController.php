@@ -19,7 +19,7 @@ class TeacherHomeworkController extends Controller
     {
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
         if (!$teacher) {
@@ -68,7 +68,7 @@ class TeacherHomeworkController extends Controller
 
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
         abort_unless($teacher, 403);
@@ -100,7 +100,7 @@ class TeacherHomeworkController extends Controller
 
         $user = Auth::user();
         $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Administrator')) {
+        if (!$teacher && $user?->hasRole('Super Admin')) {
             $teacher = \App\Models\Teacher::first();
         }
         abort_unless($teacher, 403);

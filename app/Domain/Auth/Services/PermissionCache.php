@@ -19,6 +19,7 @@ class PermissionCache
     public function clearUserCache(User $user): void
     {
         Cache::forget('user_permissions_' . $user->id);
+        Cache::forget('user.menu.' . $user->id);
         app(\App\Domain\Auth\Services\EffectivePermissionService::class)->clearCache($user);
     }
 

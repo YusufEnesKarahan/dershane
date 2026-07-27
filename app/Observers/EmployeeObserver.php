@@ -16,11 +16,11 @@ class EmployeeObserver
 
     public function created(Employee $employee): void
     {
-        Log::info("Employee created: {$employee->employee_no}");
+        //
     }
 
     public function updated(Employee $employee): void
     {
-        Log::info("Employee updated: {$employee->employee_no}");
+        //
     }
 }

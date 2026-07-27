@@ -37,8 +37,8 @@ class StudentController extends Controller
     {
         $this->authorize('create', Student::class);
 
-        $branches = Branch::all();
-        $classrooms = Classroom::all();
+        $branches = Branch::select('id', 'name')->get();
+        $classrooms = Classroom::select('id', 'name')->get();
 
         return view('admin.students.edit', compact('branches', 'classrooms'));
     }
@@ -90,9 +90,9 @@ class StudentController extends Controller
         $this->authorize('update', Student::class);
 
         $student = $this->repository->findById($student->id);
-        $branches = Branch::all();
-        $classrooms = Classroom::all();
-        $courses = Course::all();
+        $branches = Branch::select('id', 'name')->get();
+        $classrooms = Classroom::select('id', 'name')->get();
+        $courses = Course::select('id', 'name')->get();
 
         return view('admin.students.edit', compact('student', 'branches', 'classrooms', 'courses'));
     }

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Student;
 use App\Models\ParentStudent;
+use App\Models\Permission;
 use App\Models\Teacher;
 use App\Models\TeacherAssignment;
 use App\Models\AttendanceSession;
@@ -45,7 +46,7 @@ class SecurityFixTest extends TestCase
         // 1. Roles
         $parentRole = Role::firstOrCreate(['name' => 'Parent']);
         $teacherRole = Role::firstOrCreate(['name' => 'Teacher']);
-        $adminRole = Role::firstOrCreate(['name' => 'Administrator']);
+        $adminRole = Role::firstOrCreate(['name' => 'Super Admin']);
 
         // 2. Branch
         $this->branch = Branch::firstOrFail();
@@ -184,6 +185,25 @@ class SecurityFixTest extends TestCase
             'course_id' => $this->course->id,
             'status' => 'active'
         ]);
+
+        // Sync required permissions for routes
+        foreach (['students.view', 'notifications.view'] as $permName) {
+            $perm = Permission::firstOrCreate(['name' => $permName]);
+            $parentRole->permissions()->syncWithoutDetaching([$perm->id]);
+        }
+
+        foreach (['attendance.view', 'attendance.manage', 'homeworks.view', 'homeworks.manage'] as $permName) {
+            $perm = Permission::firstOrCreate(['name' => $permName]);
+            $teacherRole->permissions()->syncWithoutDetaching([$perm->id]);
+        }
+
+        // Clear user caches
+        $cache = app(\App\Domain\Auth\Services\PermissionCache::class);
+        $cache->clearUserCache($this->parentUser1);
+        $cache->clearUserCache($this->parentUser2);
+        $cache->clearUserCache($this->teacherUser1);
+        $cache->clearUserCache($this->teacherUser2);
+        $cache->clearUserCache($this->adminUser);
     }
 
     public function test_parent_attempts_to_access_unlinked_student_id_is_forbidden(): void

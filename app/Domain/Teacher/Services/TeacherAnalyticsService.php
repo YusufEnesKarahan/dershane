@@ -12,16 +12,18 @@ class TeacherAnalyticsService
 {
     public function getAnalyticsSummary(int $teacherId): array
     {
-        $teacher = Teacher::findOrFail($teacherId);
-        $assignedClassesCount = TeacherAssignment::where('teacher_id', $teacherId)->count();
+        return \Illuminate\Support\Facades\Cache::remember('teachers.analytics.summary.' . $teacherId, 600, function () use ($teacherId) {
+            $teacher = Teacher::findOrFail($teacherId);
+            $assignedClassesCount = TeacherAssignment::where('teacher_id', $teacherId)->count();
 
-        // Calculate Average Performance Score
-        $averagePerformance = TeacherPerformanceLog::where('teacher_id', $teacherId)->avg('score');
+            // Calculate Average Performance Score
+            $averagePerformance = TeacherPerformanceLog::where('teacher_id', $teacherId)->avg('score');
 
-        return [
-            'teacher' => $teacher,
-            'assigned_classes_count' => $assignedClassesCount,
-            'average_performance_score' => $averagePerformance ? round($averagePerformance, 1) : 100.0,
-        ];
+            return [
+                'teacher' => $teacher,
+                'assigned_classes_count' => $assignedClassesCount,
+                'average_performance_score' => $averagePerformance ? round($averagePerformance, 1) : 100.0,
+            ];
+        });
     }
 }

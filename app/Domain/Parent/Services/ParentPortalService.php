@@ -24,7 +24,7 @@ class ParentPortalService
     public function canAccessStudent(int $parentId, int $studentId): bool
     {
         $user = \App\Models\User::find($parentId);
-        if ($user && ($user->roles->pluck('name')->contains('Administrator') || $user->hasRole('Administrator'))) {
+        if ($user && ($user->roles->pluck('name')->contains('Super Admin') || $user->hasRole('Super Admin'))) {
             return true;
         }
         return $this->repository->isStudentLinked($parentId, $studentId);

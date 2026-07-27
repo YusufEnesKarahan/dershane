@@ -84,12 +84,12 @@ return [
                 [
                     'title' => 'Attendance Sessions',
                     'route' => 'admin.attendances.sessions.index',
-                    'permission' => 'students.view',
+                    'permission' => 'attendance.view',
                 ],
                 [
                     'title' => 'Attendance Analytics',
                     'route' => 'admin.attendances.analytics',
-                    'permission' => 'students.view',
+                    'permission' => 'attendance.view',
                 ],
                 [
                     'title' => 'Exams',
@@ -104,22 +104,22 @@ return [
                 [
                     'title' => 'Assignments',
                     'route' => 'admin.assignments.index',
-                    'permission' => 'students.view',
+                    'permission' => 'homeworks.view',
                 ],
                 [
                     'title' => 'Homework Analytics',
                     'route' => 'admin.assignments.analytics',
-                    'permission' => 'students.view',
+                    'permission' => 'homeworks.view',
                 ],
                 [
                     'title' => 'Finance & Invoices',
                     'route' => 'admin.invoices.index',
-                    'permission' => 'students.view',
+                    'permission' => 'registrations.view',
                 ],
                 [
                     'title' => 'Finance Dashboard',
                     'route' => 'admin.invoices.dashboard',
-                    'permission' => 'students.view',
+                    'permission' => 'registrations.view',
                 ],
                 [
                     'title' => 'Bildirim Merkezi',
