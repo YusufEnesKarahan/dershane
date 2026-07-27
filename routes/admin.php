@@ -72,6 +72,13 @@ use App\Http\Controllers\Admin\AnnouncementController;
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
+    // SaaS Platform Control Layer
+    Route::middleware(['role:Super Admin'])->group(function () {
+        Route::get('platform/licenses', [\App\Http\Controllers\Admin\LicenseController::class, 'index'])->name('platform.licenses.index');
+        Route::get('platform/features', [\App\Http\Controllers\Admin\FeatureFlagController::class, 'index'])->name('platform.features.index');
+        Route::post('platform/features/{feature}/toggle', [\App\Http\Controllers\Admin\FeatureFlagController::class, 'toggle'])->name('platform.features.toggle');
+    });
+
     // Profiles & Preferences (no specific permission required besides 'auth')
     Route::get('profile', [UserProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile', [UserProfileController::class, 'update'])->name('profile.update');

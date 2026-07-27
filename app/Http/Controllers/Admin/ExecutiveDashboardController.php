@@ -11,12 +11,18 @@ class ExecutiveDashboardController extends Controller
 {
     public function __construct(
         protected ExecutiveDashboardService $dashboardService,
-        protected GenerateDashboardSnapshot $snapshotAction
+        protected GenerateDashboardSnapshot $snapshotAction,
+        protected \App\Domain\Platform\Services\LicenseService $licenseService,
+        protected \App\Domain\Platform\Services\FeatureFlagService $featureFlagService
     ) {}
 
     public function index()
     {
         $metrics = $this->dashboardService->getMetrics();
+        $metrics['active_users'] = \App\Models\User::count();
+        $metrics['active_features'] = $this->featureFlagService->getAllFlags()->where('enabled', true)->count();
+        $metrics['license_status'] = $this->licenseService->checkLicense()['status'] ?? 'Yok';
+        
         return view('admin.reporting.dashboard', compact('metrics'));
     }
 

@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\HqLicenseMiddleware::class,
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
+            \App\Http\Middleware\LicenseMiddleware::class,
         ]);
 
         $middleware->appendToGroup('api', [

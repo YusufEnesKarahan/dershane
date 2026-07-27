@@ -99,10 +99,10 @@
         </div>
 
         <!-- Ek Veriler ve Grafik Görünümleri -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
             <!-- Ödev & İletişim Detayları -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4 lg:col-span-1">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Ek Göstergeler & İletişim</h3>
                 
                 <div class="space-y-4 pt-2">
@@ -119,6 +119,31 @@
                     <div class="flex items-center justify-between pb-2">
                         <span class="text-xs text-neutral-500">Metrik Güncellenme Zamanı</span>
                         <span class="text-[10px] text-indigo-500 font-bold font-mono">{{ $metrics['calculated_at'] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SaaS Platform & Lisans Bilgileri -->
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4 lg:col-span-1">
+                <h3 class="text-sm font-bold text-neutral-900 dark:text-white">SaaS Platform</h3>
+                
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">Lisans Durumu</span>
+                        <span class="text-[10px] font-bold text-white px-2 py-0.5 rounded capitalize 
+                            {{ ($metrics['license_status'] ?? '') == 'active' ? 'bg-green-500' : 'bg-amber-500' }}">
+                            {{ $metrics['license_status'] ?? 'Yok' }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">Aktif Kullanıcı</span>
+                        <span class="text-xs font-bold text-neutral-900 dark:text-white font-mono">{{ $metrics['active_users'] ?? 0 }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between pb-2">
+                        <span class="text-xs text-neutral-500">Aktif Feature (Özellik)</span>
+                        <span class="text-xs font-bold text-neutral-900 dark:text-white font-mono">{{ $metrics['active_features'] ?? 0 }}</span>
                     </div>
                 </div>
             </div>
