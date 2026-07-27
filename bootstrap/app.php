@@ -22,10 +22,33 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\HqLicenseMiddleware::class,
+            \App\Http\Middleware\SecurityHeadersMiddleware::class,
+        ]);
+
+        $middleware->appendToGroup('api', [
+            \App\Http\Middleware\SecurityHeadersMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn (Request $request) => $request->is('api/*') || $request->wantsJson(),
         );
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, Request $request) {
+            if ($request->is('api/*') || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'Resource not found.'], 404);
+            }
+        });
+
+        $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, Request $request) {
+            \Illuminate\Support\Facades\Log::warning('Authorization failure: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'ip' => $request->ip(),
+                'url' => $request->fullUrl(),
+            ]);
+
+            if ($request->is('api/*') || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'This action is unauthorized.'], 403);
+            }
+        });
     })->create();

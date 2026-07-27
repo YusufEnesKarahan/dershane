@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             \App\Core\Contracts\ActivityLoggerInterface::class,
-            \App\Core\Services\Logging\NullActivityLogger::class
+            \App\Core\Services\Logging\DatabaseActivityLogger::class
         );
         $this->app->bind(
             \App\Domain\CMS\Services\MarkdownRendererInterface::class,
