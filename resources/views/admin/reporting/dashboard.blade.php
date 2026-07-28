@@ -137,6 +137,71 @@
                     </div>
 
                     <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">Güncelleme</span>
+                        @if($metrics['update_status']['is_available'])
+                            <span class="text-[10px] font-bold text-white px-2 py-0.5 rounded bg-red-500">
+                                Mevcut ({{ $metrics['update_status']['latest_version'] }})
+                            </span>
+                        @else
+                            <span class="text-[10px] font-bold text-white px-2 py-0.5 rounded bg-green-500">
+                                Güncel ({{ $metrics['update_status']['current_version'] }})
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">HQ Status</span>
+                        <span class="text-[10px] font-bold text-white px-2 py-0.5 rounded bg-neutral-500">
+                            Connected: {{ $metrics['hq_status']['connected'] ? 'Yes' : 'No' }}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col gap-1 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">System UUID</span>
+                        <span class="text-[10px] font-mono text-neutral-700 dark:text-neutral-400 truncate" title="{{ $metrics['hq_status']['system_uuid'] }}">
+                            {{ Str::limit($metrics['hq_status']['system_uuid'], 16) }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">HQ API</span>
+                        <span class="text-[10px] font-bold text-white px-2 py-0.5 rounded {{ $metrics['hq_api_status']['has_token'] ? 'bg-green-500' : 'bg-red-500' }}">
+                            {{ $metrics['hq_api_status']['has_token'] ? 'Aktif' : 'Yok' }}
+                        </span>
+                    </div>
+
+                    @if($metrics['hq_api_status']['has_token'])
+                        <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                            <span class="text-xs text-neutral-500">API Expiry</span>
+                            <span class="text-[10px] text-neutral-600 dark:text-neutral-400 font-mono">{{ $metrics['hq_api_status']['expires_at'] }}</span>
+                        </div>
+                    @endif
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Sync Queue</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Pending</span>
+                            <span class="text-xs font-bold text-blue-600">{{ $metrics['hq_sync_status']['pending'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Success</span>
+                            <span class="text-xs font-bold text-green-600">{{ $metrics['hq_sync_status']['completed'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Failed</span>
+                            <span class="text-xs font-bold text-red-600">{{ $metrics['hq_sync_status']['failed'] }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <span class="text-xs text-neutral-500">Last Sync Event</span>
+                        <span class="text-[10px] font-mono text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_sync_status']['last_event'] }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
                         <span class="text-xs text-neutral-500">Aktif Kullanıcı</span>
                         <span class="text-xs font-bold text-neutral-900 dark:text-white font-mono">{{ $metrics['active_users'] ?? 0 }}</span>
                     </div>

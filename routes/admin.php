@@ -77,6 +77,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('platform/licenses', [\App\Http\Controllers\Admin\LicenseController::class, 'index'])->name('platform.licenses.index');
         Route::get('platform/features', [\App\Http\Controllers\Admin\FeatureFlagController::class, 'index'])->name('platform.features.index');
         Route::post('platform/features/{feature}/toggle', [\App\Http\Controllers\Admin\FeatureFlagController::class, 'toggle'])->name('platform.features.toggle');
+        Route::get('platform/updates', [\App\Http\Controllers\Admin\UpdateController::class, 'index'])->name('platform.updates.index');
+        Route::get('platform/hq-integration', [\App\Http\Controllers\Admin\HQIntegrationController::class, 'index'])->name('platform.hq_integration.index');
+        Route::get('platform/api', [\App\Http\Controllers\Admin\HQApiController::class, 'index'])->name('platform.api.index');
+        Route::post('platform/api/regenerate', [\App\Http\Controllers\Admin\HQApiController::class, 'regenerate'])->name('platform.api.regenerate');
+        Route::post('platform/api/revoke', [\App\Http\Controllers\Admin\HQApiController::class, 'revoke'])->name('platform.api.revoke');
+        Route::get('platform/sync', [\App\Http\Controllers\Admin\HQSyncController::class, 'index'])->name('platform.sync.index');
     });
 
     // Profiles & Preferences (no specific permission required besides 'auth')

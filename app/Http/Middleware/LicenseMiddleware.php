@@ -24,8 +24,8 @@ class LicenseMiddleware
             return $next($request);
         }
 
-        // 2. Allow auth routes (login, logout, password reset) and health checks
-        if ($request->routeIs('login', 'logout', 'password.*') || $request->is('health*', 'up')) {
+        // 2. Allow auth routes, health checks, and installation wizard
+        if ($request->routeIs('login', 'logout', 'password.*') || $request->is('health*', 'up', 'install*')) {
             return $next($request);
         }
 

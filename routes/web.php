@@ -25,3 +25,14 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Super Admin'])->get('/health/details', [\App\Http\Controllers\HealthController::class, 'details']);
 });
 
+// Installation Wizard Routes
+Route::prefix('install')->name('install.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\InstallController::class, 'welcome'])->name('welcome');
+    Route::get('/requirements', [\App\Http\Controllers\InstallController::class, 'requirements'])->name('requirements');
+    Route::get('/database', [\App\Http\Controllers\InstallController::class, 'database'])->name('database');
+    Route::post('/database/migrate', [\App\Http\Controllers\InstallController::class, 'runMigration'])->name('migrate');
+    Route::get('/admin', [\App\Http\Controllers\InstallController::class, 'admin'])->name('admin');
+    Route::post('/admin', [\App\Http\Controllers\InstallController::class, 'storeAdmin'])->name('storeAdmin');
+    Route::get('/finish', [\App\Http\Controllers\InstallController::class, 'finish'])->name('finish');
+});
+
