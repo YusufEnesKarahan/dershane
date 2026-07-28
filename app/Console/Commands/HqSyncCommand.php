@@ -2,33 +2,33 @@
 
 namespace App\Console\Commands;
 
-use App\Services\HqService;
 use Illuminate\Console\Command;
+use App\Domain\Platform\Services\HQSchedulerService;
 
-class HqSyncCommand extends Command
+class HQSyncCommand extends Command
 {
     protected $signature = 'hq:sync';
+    protected $description = 'Process pending HQ Sync events';
 
-    protected $description = 'Synchronizes telemetry, heartbeat, and pending commands with central HQ Panel.';
-
-    public function handle(HqService $hqService): int
+    public function handle(HQSchedulerService $schedulerService)
     {
-        $this->info('🔄 HQ Senkronizasyonu Başlatılıyor...');
-
-        $result = $hqService->sync();
-
-        if ($result['success']) {
-            $this->info('✅ HQ Senkronizasyonu Başarılı.');
-            $this->line('Lisans Durumu: ' . ($result['license_status'] ?? 'active'));
-            
-            if (! empty($result['executed_commands'])) {
-                $this->info('🛠️ Çalıştırılan Uzaktan Komutlar: ' . count($result['executed_commands']));
-            }
-            
-            return Command::SUCCESS;
+        if (!config('hq.scheduler.enabled')) {
+            $this->info('HQ Scheduler is currently disabled. Skipping hq:sync.');
+            return 0;
         }
 
-        $this->error('❌ ' . $result['message']);
-        return Command::FAILURE;
+        $this->info('Running HQ Sync Queue Task...');
+        
+        $success = $schedulerService->executeTask('hq:sync', function () use ($schedulerService) {
+            return $schedulerService->processSyncQueue();
+        });
+
+        if ($success) {
+            $this->info('HQ Sync Queue Task completed successfully.');
+            return 0;
+        }
+
+        $this->error('HQ Sync Queue Task failed.');
+        return 1;
     }
 }

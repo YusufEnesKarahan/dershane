@@ -27,5 +27,26 @@ Schedule::call(fn () => app(\App\Domain\System\Services\AutomationService::class
 Schedule::call(fn () => app(\App\Domain\System\Services\AutomationService::class)->weeklyCleanup())->name('automation:weekly-cleanup')->weeklyOn(1, '07:30')->withoutOverlapping();
 
 Schedule::command('backup:database')->dailyAt('02:00')->withoutOverlapping();
+Schedule::command('queue:work --stop-when-empty')
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/queue.log'));
+
+// HQ System Schedules
+Schedule::command('hq:telemetry')
+    ->cron('*/' . config('hq.scheduler.telemetry_interval', 60) . ' * * * *')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
+
+Schedule::command('hq:heartbeat')
+    ->cron('*/' . config('hq.scheduler.heartbeat_interval', 30) . ' * * * *')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
+
+Schedule::command('hq:sync')
+    ->cron('*/' . config('hq.scheduler.sync_interval', 15) . ' * * * *')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
+
 Schedule::command('storage:clean-temp')->dailyAt('03:00')->withoutOverlapping();
 Schedule::command('system:collect-metrics')->dailyAt('23:59')->withoutOverlapping();

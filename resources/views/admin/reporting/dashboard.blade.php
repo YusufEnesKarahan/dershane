@@ -201,7 +201,137 @@
                         <span class="text-[10px] font-mono text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_sync_status']['last_event'] }}</span>
                     </div>
 
-                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Connection</span>
+                        <span class="text-[10px] font-bold text-white px-2 py-0.5 rounded {{ $metrics['hq_connection']['connected'] ? 'bg-green-500' : 'bg-red-500' }}">
+                            {{ $metrics['hq_connection']['connected'] ? 'Bağlı' : 'Bağlı Değil' }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Last Ping</span>
+                            <span class="text-[10px] font-mono text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_connection']['last_ping'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Last Sync</span>
+                            <span class="text-[10px] font-mono text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_connection']['last_sync'] }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Command Status</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Pending</span>
+                            <span class="text-xs font-bold text-blue-600">{{ $metrics['hq_commands']['pending'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Failed</span>
+                            <span class="text-xs font-bold text-red-600">{{ $metrics['hq_commands']['failed'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Last Exec</span>
+                            <span class="text-[10px] font-bold text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_commands']['last_execution'] }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Telemetry Status</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Health</span>
+                            <span class="text-[10px] font-bold {{ $metrics['hq_telemetry_status']['health_status'] === 'HEALTHY' ? 'text-green-600' : 'text-yellow-600' }}">
+                                {{ $metrics['hq_telemetry_status']['health_status'] }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Failed</span>
+                            <span class="text-xs font-bold text-red-600">{{ $metrics['hq_telemetry_status']['failed_count'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Snapshot</span>
+                            <span class="text-[10px] font-bold text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_telemetry_status']['last_snapshot'] }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Automation Status</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Scheduler</span>
+                            <span class="text-[10px] font-bold {{ $metrics['hq_scheduler_status']['enabled'] ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $metrics['hq_scheduler_status']['enabled'] ? 'ENABLED' : 'DISABLED' }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Failed</span>
+                            <span class="text-xs font-bold text-red-600">{{ $metrics['hq_scheduler_status']['failed_count'] }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Last Task</span>
+                            <span class="text-[10px] font-bold text-neutral-700 dark:text-neutral-400">{{ $metrics['hq_scheduler_status']['last_success'] }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Update Status</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Current</span>
+                            <span class="text-[10px] font-bold text-indigo-600">
+                                v{{ $metrics['hq_update_status']['current_version'] }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Latest</span>
+                            <span class="text-[10px] font-bold text-neutral-700 dark:text-neutral-400">
+                                {{ $metrics['hq_update_status']['latest_version'] !== 'None' ? 'v' . $metrics['hq_update_status']['latest_version'] : 'None' }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Pending</span>
+                            <span class="text-xs font-bold {{ $metrics['hq_update_status']['pending_count'] > 0 ? 'text-red-600' : 'text-green-600' }}">
+                                {{ $metrics['hq_update_status']['pending_count'] }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">HQ Central Status</span>
+                        <a href="{{ route('admin.platform.hq_central.index') }}" class="text-[10px] text-indigo-600 hover:underline">Manage</a>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Tenants</span>
+                            <span class="text-[10px] font-bold text-indigo-600">
+                                {{ $metrics['hq_central_status']['total_systems'] }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Online</span>
+                            <span class="text-[10px] font-bold text-green-600">
+                                {{ $metrics['hq_central_status']['online_systems'] }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-neutral-500 uppercase">Offline</span>
+                            <span class="text-[10px] font-bold text-red-600">
+                                {{ $metrics['hq_central_status']['offline_systems'] }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2 mt-4">
                         <span class="text-xs text-neutral-500">Aktif Kullanıcı</span>
                         <span class="text-xs font-bold text-neutral-900 dark:text-white font-mono">{{ $metrics['active_users'] ?? 0 }}</span>
                     </div>

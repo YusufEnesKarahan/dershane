@@ -1,36 +1,48 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | HQ Central Management Configuration
     |--------------------------------------------------------------------------
     |
-    | Production settings for integrating Dershane ERP with HQ Central Platform.
+    | Settings for integrating Dershane ERP with HQ Central Platform.
     |
     */
 
-    'url' => env('HQ_URL', 'http://127.0.0.1:8000'),
+    'base_url' => env('HQ_BASE_URL', 'https://hq.example.com/api'),
 
-    'site_uuid' => env('HQ_SITE_UUID', null),
+    'timeout' => (int) env('HQ_TIMEOUT', 10),
 
-    'api_secret' => env('HQ_API_SECRET', null),
+    'enabled' => env('HQ_ENABLED', true),
 
-    'site_type' => env('HQ_SITE_TYPE', 'dershane'),
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Scheduler Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for automated HQ sync tasks.
+    |
+    */
+    'scheduler' => [
+        'enabled' => env('HQ_SCHEDULER_ENABLED', false),
+        'telemetry_interval' => env('HQ_TELEMETRY_INTERVAL', 60), // in minutes
+        'heartbeat_interval' => env('HQ_HEARTBEAT_INTERVAL', 30),
+        'sync_interval' => env('HQ_SYNC_INTERVAL', 15),
+    ],
 
-    'site_name' => env('HQ_SITE_NAME', env('APP_NAME', 'Dershane ERP')),
-
-    'request_timeout' => (int) env('HQ_REQUEST_TIMEOUT', 10),
-
-    'connect_timeout' => (int) env('HQ_CONNECT_TIMEOUT', 5),
-
-    'retry_count' => (int) env('HQ_RETRY_COUNT', 3),
-
-    'retry_delay' => (int) env('HQ_RETRY_DELAY', 200),
-
-    'sync_interval' => (int) env('HQ_SYNC_INTERVAL', 900),
-
-    'timestamp_tolerance' => (int) env('HQ_TIMESTAMP_TOLERANCE', 300),
-
+    /*
+    |--------------------------------------------------------------------------
+    | Updates Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for automated update checking.
+    |
+    */
+    'updates' => [
+        'enabled' => env('HQ_UPDATES_ENABLED', false),
+        'channel' => env('HQ_UPDATES_CHANNEL', 'stable'),
+        'check_interval' => env('HQ_UPDATES_CHECK_INTERVAL', 3600), // in seconds
+    ],
 ];

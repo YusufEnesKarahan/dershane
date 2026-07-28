@@ -79,6 +79,6 @@ class UpdateManagementTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('admin.platform.updates.index');
         $response->assertViewHas('currentVersion');
-        $response->assertViewHas('isUpdateAvailable');
+        $response->assertViewHas('latestUpdate');
     }
 }
