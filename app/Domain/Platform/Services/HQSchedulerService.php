@@ -43,6 +43,32 @@ class HQSchedulerService
         ];
     }
 
+    public function processBackupHealthChecks(): array
+    {
+        // This is usually run via HQ cron to clean up jobs or retry them.
+        // For simplicity and since HQSchedulerService runs mostly on ERP, if this is HQ side:
+        $backupService = app(\App\Domain\HQ\Services\HQBackupService::class);
+        $backupService->cleanupExpiredBackups();
+
+        // Find failed jobs to retry, or health checks.
+        $failedJobs = \App\Models\HQBackupJob::where('status', 'failed')
+            ->where('created_at', '>=', now()->subDays(1))
+            ->get();
+
+        foreach ($failedJobs as $job) {
+            try {
+                $backupService->retryFailedBackup($job);
+            } catch (\Exception $e) {
+                // log retry failure
+            }
+        }
+
+        return [
+            'status' => 'processed_backups',
+            'retried_count' => $failedJobs->count(),
+        ];
+    }
+
     public function executeTask(string $taskName, callable $closure)
     {
         $startTime = microtime(true);

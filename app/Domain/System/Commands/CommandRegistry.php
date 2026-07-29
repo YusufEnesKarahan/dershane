@@ -26,6 +26,11 @@ class CommandRegistry
         'report_update_finished' => \App\Domain\System\Commands\Handlers\ReportUpdateFinishedHandler::class,
         'sync_configuration' => \App\Domain\System\Commands\Handlers\SyncConfigurationHandler::class,
         'clear_configuration_cache' => \App\Domain\System\Commands\Handlers\ClearConfigurationCacheHandler::class,
+        'backup_check' => \App\Domain\System\Commands\Handlers\BackupCheckHandler::class,
+        'backup_start' => \App\Domain\System\Commands\Handlers\BackupStartHandler::class,
+        'backup_progress' => \App\Domain\System\Commands\Handlers\BackupProgressHandler::class,
+        'backup_finished' => \App\Domain\System\Commands\Handlers\BackupFinishedHandler::class,
+        'backup_restore' => \App\Domain\System\Commands\Handlers\BackupRestoreHandler::class,
     ];
 
     /**

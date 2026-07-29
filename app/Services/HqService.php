@@ -319,11 +319,15 @@ class HqService
         }
 
         $diskUsage = 0;
+        $diskTotalGb = null;
+        $diskFreeGb = null;
         try {
             $total = disk_total_space(base_path());
             $free = disk_free_space(base_path());
             if ($total > 0) {
                 $diskUsage = (int) round((($total - $free) / $total) * 100);
+                $diskTotalGb = (int) round($total / 1073741824);
+                $diskFreeGb = (int) round($free / 1073741824);
             }
         } catch (\Throwable $e) {
             $diskUsage = 0;
@@ -336,11 +340,122 @@ class HqService
             $activeUsers = 0;
         }
 
+        $cpuUsage = null;
+        try {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $cmd = @shell_exec('wmic cpu get loadpercentage 2>nul');
+                if ($cmd && preg_match('/(\d+)/', $cmd, $matches)) {
+                    $cpuUsage = (int)$matches[1];
+                }
+            } else {
+                $cmd = @shell_exec("top -bn1 | grep 'Cpu(s)' | awk '{print $2 + $4}' 2>nul");
+                if ($cmd && is_numeric(trim($cmd))) {
+                    $cpuUsage = (int) round((float) trim($cmd));
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $ramTotalMb = null;
+        $ramFreeMb = null;
+        $ramUsage = null;
+        try {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $total = @shell_exec('wmic OS get TotalVisibleMemorySize /Value 2>nul');
+                $free = @shell_exec('wmic OS get FreePhysicalMemory /Value 2>nul');
+                
+                if ($total && $free && preg_match('/=(\d+)/', $total, $tMatches) && preg_match('/=(\d+)/', $free, $fMatches)) {
+                    $ramTotalMb = (int) round($tMatches[1] / 1024);
+                    $ramFreeMb = (int) round($fMatches[1] / 1024);
+                    if ($ramTotalMb > 0) {
+                        $ramUsage = (int) round((($ramTotalMb - $ramFreeMb) / $ramTotalMb) * 100);
+                    }
+                }
+            } else {
+                $freeCmd = @shell_exec('free -m 2>nul');
+                if ($freeCmd) {
+                    $freeCmdLines = explode("\n", trim($freeCmd));
+                    if (isset($freeCmdLines[1])) {
+                        $parts = preg_split('/\s+/', $freeCmdLines[1]);
+                        if (isset($parts[1]) && isset($parts[6])) { // Total, Available
+                            $ramTotalMb = (int)$parts[1];
+                            $ramFreeMb = (int)$parts[6];
+                            if ($ramTotalMb > 0) {
+                                $ramUsage = (int) round((($ramTotalMb - $ramFreeMb) / $ramTotalMb) * 100);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $dbSizeMb = null;
+        try {
+            $connection = DB::connection();
+            $driver = $connection->getDriverName();
+            if ($driver === 'mysql') {
+                $dbName = $connection->getDatabaseName();
+                $result = DB::select("SELECT SUM(data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = ?", [$dbName]);
+                if (isset($result[0]->size)) {
+                    $dbSizeMb = round($result[0]->size / 1048576, 2);
+                }
+            } elseif ($driver === 'sqlite') {
+                $dbPath = $connection->getDatabaseName();
+                if (file_exists($dbPath)) {
+                    $dbSizeMb = round(filesize($dbPath) / 1048576, 2);
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $storageSizeMb = null;
+        try {
+            $storagePath = storage_path('app');
+            $size = 0;
+            if (file_exists($storagePath)) {
+                $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($storagePath, \FilesystemIterator::SKIP_DOTS));
+                foreach ($iterator as $file) {
+                    $size += $file->getSize();
+                }
+                $storageSizeMb = round($size / 1048576, 2);
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $queueSize = 0;
+        try {
+            if (class_exists('\Illuminate\Support\Facades\Queue')) {
+                $queueSize = \Illuminate\Support\Facades\Queue::size();
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $serverOs = php_uname('s') . ' ' . php_uname('r');
+        $hostname = php_uname('n');
+
         return [
             'php_version' => PHP_VERSION,
             'laravel_version' => app()->version(),
             'db_status' => $dbStatus,
+            'cpu_usage_percentage' => $cpuUsage,
+            'ram_usage_percentage' => $ramUsage,
+            'ram_total_mb' => $ramTotalMb,
+            'ram_free_mb' => $ramFreeMb,
             'disk_usage_percentage' => $diskUsage,
+            'disk_total_gb' => $diskTotalGb,
+            'disk_free_gb' => $diskFreeGb,
+            'database_size_mb' => $dbSizeMb,
+            'storage_size_mb' => $storageSizeMb,
+            'server_os' => $serverOs,
+            'hostname' => $hostname,
+            'queue_size' => $queueSize,
+            'response_time_ms' => null,
             'active_users_count' => $activeUsers,
             'extra' => [
                 'environment' => app()->environment(),

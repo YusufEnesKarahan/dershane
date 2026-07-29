@@ -37,4 +37,12 @@ class HQPolicy
     {
         return $user->hasRole('Super Admin');
     }
+
+    /**
+     * Determine if the user can view audit logs.
+     */
+    public function viewAuditLogs(User $user): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasPermission('hq.viewAuditLogs');
+    }
 }

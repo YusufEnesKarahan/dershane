@@ -37,6 +37,8 @@ class HQLicenseService
                 }
             }
 
+            \App\Events\LicenseChanged::dispatch('license.created', $license, null, $license->toArray());
+
             return $license;
         });
     }
@@ -46,7 +48,9 @@ class HQLicenseService
      */
     public function activateLicense(HQLicense $license): bool
     {
-        return $license->update(['status' => 'active']);
+        $res = $license->update(['status' => 'active']);
+        \App\Events\LicenseChanged::dispatch('license.activated', $license, ['status' => 'suspended'], ['status' => 'active']);
+        return $res;
     }
 
     /**
@@ -54,7 +58,9 @@ class HQLicenseService
      */
     public function suspendLicense(HQLicense $license): bool
     {
-        return $license->update(['status' => 'suspended']);
+        $res = $license->update(['status' => 'suspended']);
+        \App\Events\LicenseChanged::dispatch('license.suspended', $license, ['status' => 'active'], ['status' => 'suspended']);
+        return $res;
     }
 
     /**
@@ -74,20 +80,29 @@ class HQLicenseService
      */
     public function enableFeature(HQLicense $license, string $featureName): HQLicenseFeature
     {
-        return $license->licenseFeatures()->updateOrCreate(
+        $old = $license->licenseFeatures()->where('feature_name', $featureName)->first()?->enabled ?? null;
+        
+        $feature = $license->licenseFeatures()->updateOrCreate(
             ['feature_name' => $featureName],
             ['enabled' => true]
         );
+        
+        \App\Events\LicenseChanged::dispatch('license.feature_enabled', $license, ['enabled' => $old], ['enabled' => true, 'feature' => $featureName]);
+
+        return $feature;
     }
 
-    /**
-     * Disable a specific feature on a license.
-     */
     public function disableFeature(HQLicense $license, string $featureName): HQLicenseFeature
     {
-        return $license->licenseFeatures()->updateOrCreate(
+        $old = $license->licenseFeatures()->where('feature_name', $featureName)->first()?->enabled ?? null;
+        
+        $feature = $license->licenseFeatures()->updateOrCreate(
             ['feature_name' => $featureName],
             ['enabled' => false]
         );
+        
+        \App\Events\LicenseChanged::dispatch('license.feature_disabled', $license, ['enabled' => $old], ['enabled' => false, 'feature' => $featureName]);
+
+        return $feature;
     }
 }

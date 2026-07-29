@@ -60,6 +60,19 @@ class AppServiceProvider extends ServiceProvider
 
         foreach ([\App\Events\Notifications\StudentRegistered::class, \App\Events\Notifications\PaymentOverdue::class, \App\Events\Notifications\ExamResultPublished::class, \App\Events\Notifications\HomeworkAssigned::class, \App\Events\Notifications\CrmFollowupDue::class] as $event) Event::listen($event, \App\Listeners\Notifications\CreateDomainNotification::class);
         foreach ([\App\Events\System\PaymentOverdueEvent::class, \App\Events\System\StudentAbsenceDetectedEvent::class, \App\Events\System\ReportGeneratedEvent::class] as $event) Event::listen($event, \App\Listeners\System\DispatchAutomationJob::class);
+        
+        // HQ Audit Events
+        $auditEvents = [
+            \App\Events\LicenseChanged::class,
+            \App\Events\RemoteCommandExecuted::class,
+            \App\Events\UpdateCompleted::class,
+            \App\Events\ConfigurationChanged::class,
+            \App\Events\BackupCompleted::class,
+            \Illuminate\Auth\Events\Failed::class,
+        ];
+        foreach ($auditEvents as $event) {
+            Event::listen($event, \App\Listeners\CreateAuditLog::class);
+        }
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
@@ -69,6 +82,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('hq.manageTenant', [\App\Policies\HQPolicy::class, 'manageTenant']);
         Gate::define('hq.sendCommand', [\App\Policies\HQPolicy::class, 'sendCommand']);
         Gate::define('hq.manageLicense', [\App\Policies\HQPolicy::class, 'manageLicense']);
+        Gate::define('hq.viewAuditLogs', [\App\Policies\HQPolicy::class, 'viewAuditLogs']);
 
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {

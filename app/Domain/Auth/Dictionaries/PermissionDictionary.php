@@ -138,6 +138,9 @@ class PermissionDictionary
     public const FINANCE_VIEW = 'finance.view';
     public const FINANCE_MANAGE = 'finance.manage';
 
+    public const HQ_BACKUP_MANAGE = 'hq.manageBackup';
+    public const HQ_AUDIT_VIEW = 'hq.viewAuditLogs';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

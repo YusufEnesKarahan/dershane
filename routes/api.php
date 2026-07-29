@@ -29,8 +29,17 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     Route::post('update/progress', [\App\Http\Controllers\Api\HQUpdateApiController::class, 'reportProgress']);
     Route::post('update/finished', [\App\Http\Controllers\Api\HQUpdateApiController::class, 'reportFinished']);
 
+    // Backup Management
+    Route::post('backup/check', [\App\Http\Controllers\Api\HQBackupApiController::class, 'check']);
+    Route::post('backup/start', [\App\Http\Controllers\Api\HQBackupApiController::class, 'start']);
+    Route::post('backup/progress', [\App\Http\Controllers\Api\HQBackupApiController::class, 'progress']);
+    Route::post('backup/finished', [\App\Http\Controllers\Api\HQBackupApiController::class, 'finished']);
+
     // Configuration
     Route::post('configuration/sync', [\App\Http\Controllers\Api\HQConfigurationApiController::class, 'sync']);
     Route::post('configuration/report', [\App\Http\Controllers\Api\HQConfigurationApiController::class, 'report']);
     Route::get('configuration/version', [\App\Http\Controllers\Api\HQConfigurationApiController::class, 'version']);
+    
+    // Audit Trail
+    Route::post('audit/report', [\App\Http\Controllers\Api\HQAuditApiController::class, 'report']);
 });

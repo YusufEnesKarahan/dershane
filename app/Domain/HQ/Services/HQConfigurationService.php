@@ -120,6 +120,8 @@ class HQConfigurationService
             ]);
 
             $this->logAction($profile, 'create_version', 'success', null, $version->toArray());
+            
+            \App\Events\ConfigurationChanged::dispatch('configuration.changed', $version, 'Configuration updated and versioned');
 
             return $version;
         });
@@ -151,6 +153,8 @@ class HQConfigurationService
             $newVersion = $this->versionProfile($profile, "Rolled back to version {$versionNumber}");
             
             $this->logAction($profile, 'rollback_profile', 'success', null, ['rolled_back_to' => $versionNumber, 'new_version' => $newVersion->version]);
+
+            \App\Events\ConfigurationChanged::dispatch('configuration.rollback', $newVersion, "Rolled back to version {$versionNumber}");
 
             return $newVersion;
         });

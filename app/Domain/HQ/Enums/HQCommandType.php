@@ -23,6 +23,12 @@ enum HQCommandType: string
     // Configuration Management
     case SYNC_CONFIGURATION = 'sync_configuration';
     case CLEAR_CONFIGURATION_CACHE = 'clear_configuration_cache';
+    // Backup Management
+    case BACKUP_CHECK = 'backup_check';
+    case BACKUP_START = 'backup_start';
+    case BACKUP_PROGRESS = 'backup_progress';
+    case BACKUP_FINISHED = 'backup_finished';
+    case BACKUP_RESTORE = 'backup_restore';
 
     public static function values(): array
     {

@@ -116,6 +116,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('platform/hq-central/configurations/{configuration}/rollback/{version}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'rollbackForm'])->name('platform.hq_central.configurations.rollback.form');
         Route::post('platform/hq-central/configurations/{configuration}/rollback/{version}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'rollback'])->name('platform.hq_central.configurations.rollback');
 
+        // Backup Management
+        Route::get('platform/hq-central/backups', [\App\Http\Controllers\Admin\HQBackupController::class, 'index'])->name('platform.hq_central.backups.index');
+        Route::get('platform/hq-central/backups/policies', [\App\Http\Controllers\Admin\HQBackupController::class, 'policies'])->name('platform.hq_central.backups.policies');
+        Route::get('platform/hq-central/backups/create', [\App\Http\Controllers\Admin\HQBackupController::class, 'create'])->name('platform.hq_central.backups.create');
+        Route::post('platform/hq-central/backups', [\App\Http\Controllers\Admin\HQBackupController::class, 'store'])->name('platform.hq_central.backups.store');
+        Route::get('platform/hq-central/backups/{job}', [\App\Http\Controllers\Admin\HQBackupController::class, 'show'])->name('platform.hq_central.backups.show');
+        Route::post('platform/hq-central/backups/{job}/retry', [\App\Http\Controllers\Admin\HQBackupController::class, 'retry'])->name('platform.hq_central.backups.retry');
+
+        // Audit Trail
+        Route::get('platform/hq-central/audit', [\App\Http\Controllers\Admin\HQAuditController::class, 'index'])->name('platform.hq_central.audit.index');
+        Route::get('platform/hq-central/audit/{audit}', [\App\Http\Controllers\Admin\HQAuditController::class, 'show'])->name('platform.hq_central.audit.show');
+
         Route::get('platform/hq-central/commands/{command}', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'show'])->name('hq.commands.show');
         
         Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');

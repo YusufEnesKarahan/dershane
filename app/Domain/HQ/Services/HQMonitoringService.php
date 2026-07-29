@@ -84,6 +84,9 @@ class HQMonitoringService
         $pendingUpdates = \App\Models\HQUpdateJob::whereIn('status', ['pending', 'scheduled'])->count();
         $runningUpdates = \App\Models\HQUpdateJob::where('status', 'sent')->count();
 
+        // Audit & Security Metrics
+        $auditStats = app(\App\Domain\HQ\Services\HQAuditService::class)->getStatistics();
+
         return [
             'systems' => [
                 'total' => $totalSystems,
@@ -126,6 +129,7 @@ class HQMonitoringService
                 'pending' => $pendingUpdates,
                 'running' => $runningUpdates,
             ],
+            'audit' => $auditStats,
             // Backwards compatibility for old dashboard view if needed
             'total_systems' => $totalSystems,
             'online_systems' => $onlineSystems,

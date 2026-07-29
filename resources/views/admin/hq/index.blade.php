@@ -159,6 +159,57 @@
             </div>
         </div>
 
+        <!-- Backup Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">Backups</h3>
+                <a href="{{ route('admin.platform.hq_central.backups.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Manage</a>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['backups']['policies'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Active Policies</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['backups']['successful'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Successful</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['backups']['failed'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed Jobs</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ isset($metrics['backups']['storage']) ? number_format($metrics['backups']['storage'] / 1048576, 2) : 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total MB</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security & Activity Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">Security & Activity</h3>
+                <a href="{{ route('admin.platform.hq_central.audit.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">View Logs</a>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['audit']['recent_events_count'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Events (24h)</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['audit']['critical_events_count'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Critical</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ $metrics['audit']['failed_operations_count'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed Ops</p>
+                </div>
+                <div class="flex flex-col justify-end pb-1">
+                    <a href="{{ route('admin.platform.hq_central.audit.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Details &rarr;</a>
+                </div>
+            </div>
+        </div>
+
         <!-- Telemetry Overview -->
         <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-2">
             <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Telemetry Insights (Avg of Last 10)</h3>

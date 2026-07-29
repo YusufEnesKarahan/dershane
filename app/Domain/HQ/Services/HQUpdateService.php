@@ -37,6 +37,8 @@ class HQUpdateService
                 ['job_id' => $job->id, 'version' => $version->version],
                 99 // High priority
             );
+            
+            \App\Events\UpdateCompleted::dispatch('update.dispatched', $job, 'Dispatched to single instance');
 
             return $job;
         });
@@ -63,6 +65,8 @@ class HQUpdateService
                 ['job_id' => $job->id, 'version' => $version->version],
                 99
             );
+            
+            \App\Events\UpdateCompleted::dispatch('update.dispatched', $job, 'Dispatched to tenant');
 
             return $job;
         });
@@ -93,20 +97,22 @@ class HQUpdateService
                     );
                 }
             });
+            
+            \App\Events\UpdateCompleted::dispatch('update.dispatched', $job, 'Dispatched globally');
 
             return $job;
         });
     }
 
-    /**
-     * Cancel an update job.
-     */
     public function cancelUpdate(HQUpdateJob $job): HQUpdateJob
     {
         $job->update([
             'status' => 'cancelled',
             'error_message' => 'Cancelled by HQ Administrator'
         ]);
+        
+        \App\Events\UpdateCompleted::dispatch('update.cancelled', $job, 'Update cancelled manually');
+        
         return $job;
     }
 
@@ -197,9 +203,12 @@ class HQUpdateService
         
         if (!$success) {
             $job->error_message = $message;
+            $job->save();
+            \App\Events\UpdateCompleted::dispatch('update.failed', $job, 'Update failed: ' . $message);
+        } else {
+            $job->save();
+            \App\Events\UpdateCompleted::dispatch('update.completed', $job, 'Update finished successfully');
         }
-
-        $job->save();
 
         return $job;
     }

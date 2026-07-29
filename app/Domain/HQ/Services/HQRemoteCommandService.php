@@ -23,7 +23,7 @@ class HQRemoteCommandService
         ?\DateTimeInterface $scheduledAt = null,
         ?\DateTimeInterface $expiresAt = null
     ): HQCentralCommand {
-        return HQCentralCommand::create([
+        $cmd = HQCentralCommand::create([
             'system_instance_id' => $instance->id,
             'command_type' => $type->value,
             'payload' => $payload,
@@ -32,6 +32,10 @@ class HQRemoteCommandService
             'expires_at' => $expiresAt,
             'status' => 'pending',
         ]);
+        
+        \App\Events\RemoteCommandExecuted::dispatch('command.created', $cmd);
+        
+        return $cmd;
     }
 
     /**
@@ -96,7 +100,11 @@ class HQRemoteCommandService
 
     public function markCommandSent(int $commandId): void
     {
-        HQCentralCommand::where('id', $commandId)->update(['status' => 'sent']);
+        $cmd = HQCentralCommand::find($commandId);
+        if ($cmd) {
+            $cmd->update(['status' => 'sent']);
+            \App\Events\RemoteCommandExecuted::dispatch('command.dispatched', $cmd);
+        }
     }
 
     /**
@@ -117,6 +125,7 @@ class HQRemoteCommandService
                 'response' => $resultPayload,
                 'executed_at' => now(),
             ]);
+            \App\Events\RemoteCommandExecuted::dispatch('command.completed', $command);
             return true;
         }
 
@@ -130,6 +139,7 @@ class HQRemoteCommandService
                 'response' => $resultPayload,
                 'executed_at' => now(),
             ]);
+            \App\Events\RemoteCommandExecuted::dispatch('command.failed', $command);
         } else {
             // Put it back in pending for next pull
             $command->update([
@@ -137,6 +147,7 @@ class HQRemoteCommandService
                 'error_message' => $resultPayload['message'] ?? 'Command failed, retrying...',
                 'response' => $resultPayload,
             ]);
+            \App\Events\RemoteCommandExecuted::dispatch('command.retry', $command);
         }
 
         return true;
