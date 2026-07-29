@@ -104,6 +104,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('platform/hq-central/updates/{update}/cancel', [\App\Http\Controllers\Admin\HQUpdateController::class, 'cancel'])->name('platform.hq_central.updates.cancel');
         Route::post('platform/hq-central/updates/{update}/retry', [\App\Http\Controllers\Admin\HQUpdateController::class, 'retry'])->name('platform.hq_central.updates.retry');
         
+        // Configuration Management
+        Route::get('platform/hq-central/configurations', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'index'])->name('platform.hq_central.configurations.index');
+        Route::get('platform/hq-central/configurations/create', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'create'])->name('platform.hq_central.configurations.create');
+        Route::post('platform/hq-central/configurations', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'store'])->name('platform.hq_central.configurations.store');
+        Route::get('platform/hq-central/configurations/{configuration}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'show'])->name('platform.hq_central.configurations.show');
+        Route::post('platform/hq-central/configurations/{configuration}/items', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'storeItem'])->name('platform.hq_central.configurations.items.store');
+        Route::delete('platform/hq-central/configurations/{configuration}/items/{item}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'destroyItem'])->name('platform.hq_central.configurations.items.destroy');
+        Route::get('platform/hq-central/configurations/{configuration}/history', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'history'])->name('platform.hq_central.configurations.history');
+        Route::post('platform/hq-central/configurations/{configuration}/version', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'version'])->name('platform.hq_central.configurations.version');
+        Route::get('platform/hq-central/configurations/{configuration}/rollback/{version}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'rollbackForm'])->name('platform.hq_central.configurations.rollback.form');
+        Route::post('platform/hq-central/configurations/{configuration}/rollback/{version}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'rollback'])->name('platform.hq_central.configurations.rollback');
+
         Route::get('platform/hq-central/commands/{command}', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'show'])->name('hq.commands.show');
         
         Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');

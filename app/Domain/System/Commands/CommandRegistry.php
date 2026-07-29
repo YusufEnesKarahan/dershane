@@ -24,6 +24,8 @@ class CommandRegistry
         'start_update' => \App\Domain\System\Commands\Handlers\StartUpdateHandler::class,
         'report_update_progress' => \App\Domain\System\Commands\Handlers\ReportUpdateProgressHandler::class,
         'report_update_finished' => \App\Domain\System\Commands\Handlers\ReportUpdateFinishedHandler::class,
+        'sync_configuration' => \App\Domain\System\Commands\Handlers\SyncConfigurationHandler::class,
+        'clear_configuration_cache' => \App\Domain\System\Commands\Handlers\ClearConfigurationCacheHandler::class,
     ];
 
     /**

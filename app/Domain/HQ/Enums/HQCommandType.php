@@ -20,6 +20,9 @@ enum HQCommandType: string
     case START_UPDATE = 'start_update';
     case REPORT_UPDATE_PROGRESS = 'report_update_progress';
     case REPORT_UPDATE_FINISHED = 'report_update_finished';
+    // Configuration Management
+    case SYNC_CONFIGURATION = 'sync_configuration';
+    case CLEAR_CONFIGURATION_CACHE = 'clear_configuration_cache';
 
     public static function values(): array
     {
