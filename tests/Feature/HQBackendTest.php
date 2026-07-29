@@ -209,7 +209,7 @@ class HQBackendTest extends TestCase
 
         $command->refresh();
         $this->assertEquals('completed', $command->status);
-        $this->assertTrue($command->payload['result']['success']);
+        $this->assertTrue($command->response['success']);
     }
 
     public function test_admin_access()

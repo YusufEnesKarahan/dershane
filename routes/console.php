@@ -50,3 +50,8 @@ Schedule::command('hq:sync')
 
 Schedule::command('storage:clean-temp')->dailyAt('03:00')->withoutOverlapping();
 Schedule::command('system:collect-metrics')->dailyAt('23:59')->withoutOverlapping();
+
+Schedule::command('hq:license-check')
+    ->dailyAt('06:00')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/hq_scheduler.log'));

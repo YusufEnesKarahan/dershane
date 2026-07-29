@@ -27,14 +27,19 @@ class HQSchedulerService
 
     public function processSyncQueue(): array
     {
-        // For this foundation sprint, we only mock processing and log its attempt
+        // Process sync queue first
         $pendingEvents = $this->hqSyncService->pending();
         
+        // Then process incoming remote commands
+        $executor = app(\App\Domain\System\Commands\RemoteCommandExecutor::class);
+        $commandResults = $executor->processPendingCommands();
+
         return [
-            'status' => 'mock_processed',
+            'status' => 'mock_processed_with_commands',
             'processed_count' => 0,
             'pending_count' => $pendingEvents,
-            'message' => 'Sync queue processed by scheduler (foundation only)'
+            'commands' => $commandResults,
+            'message' => 'Sync queue and remote commands processed'
         ];
     }
 

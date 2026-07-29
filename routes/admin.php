@@ -77,11 +77,45 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('platform/licenses', [\App\Http\Controllers\Admin\LicenseController::class, 'index'])->name('platform.licenses.index');
         Route::get('platform/features', [\App\Http\Controllers\Admin\FeatureFlagController::class, 'index'])->name('platform.features.index');
         Route::post('platform/features/{feature}/toggle', [\App\Http\Controllers\Admin\FeatureFlagController::class, 'toggle'])->name('platform.features.toggle');
+        Route::get('platform/license-status', [\App\Http\Controllers\Admin\LicenseStatusController::class, 'index'])->name('platform.license_status.index');
         Route::get('platform/updates', [\App\Http\Controllers\Admin\HQUpdateController::class, 'index'])->name('platform.updates.index');
         Route::post('platform/updates/check', [\App\Http\Controllers\Admin\HQUpdateController::class, 'check'])->name('platform.updates.check');
         Route::post('platform/updates/{update}/install', [\App\Http\Controllers\Admin\HQUpdateController::class, 'markInstalled'])->name('platform.updates.mark-installed');
         
         Route::get('platform/hq-central', [\App\Http\Controllers\Admin\HQCentralController::class, 'index'])->name('platform.hq_central.index');
+        Route::get('platform/hq-central/systems', [\App\Http\Controllers\Admin\HQSystemController::class, 'index'])->name('platform.hq_central.systems.index');
+        Route::get('platform/hq-central/systems/{system}', [\App\Http\Controllers\Admin\HQSystemController::class, 'show'])->name('platform.hq_central.systems.show');
+        
+        Route::get('platform/hq-central/commands', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'index'])->name('hq.commands.index');
+        Route::get('platform/hq-central/commands/create', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'create'])->name('hq.commands.create');
+        Route::post('commands/{command}/retry', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'retry'])->name('commands.retry');
+        
+        // Version Management
+        Route::get('platform/hq-central/versions', [\App\Http\Controllers\Admin\HQVersionController::class, 'index'])->name('platform.hq_central.versions.index');
+        Route::get('platform/hq-central/versions/create', [\App\Http\Controllers\Admin\HQVersionController::class, 'create'])->name('platform.hq_central.versions.create');
+        Route::post('platform/hq-central/versions', [\App\Http\Controllers\Admin\HQVersionController::class, 'store'])->name('platform.hq_central.versions.store');
+        Route::get('platform/hq-central/versions/{version}', [\App\Http\Controllers\Admin\HQVersionController::class, 'show'])->name('platform.hq_central.versions.show');
+        Route::post('platform/hq-central/versions/{version}/archive', [\App\Http\Controllers\Admin\HQVersionController::class, 'archive'])->name('platform.hq_central.versions.archive');
+        
+        // Update Management
+        Route::get('platform/hq-central/updates', [\App\Http\Controllers\Admin\HQUpdateController::class, 'index'])->name('platform.hq_central.updates.index');
+        Route::get('platform/hq-central/updates/{update}', [\App\Http\Controllers\Admin\HQUpdateController::class, 'show'])->name('platform.hq_central.updates.show');
+        Route::post('platform/hq-central/updates', [\App\Http\Controllers\Admin\HQUpdateController::class, 'store'])->name('platform.hq_central.updates.store');
+        Route::post('platform/hq-central/updates/{update}/cancel', [\App\Http\Controllers\Admin\HQUpdateController::class, 'cancel'])->name('platform.hq_central.updates.cancel');
+        Route::post('platform/hq-central/updates/{update}/retry', [\App\Http\Controllers\Admin\HQUpdateController::class, 'retry'])->name('platform.hq_central.updates.retry');
+        
+        Route::get('platform/hq-central/commands/{command}', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'show'])->name('hq.commands.show');
+        
+        Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');
+        Route::post('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'store'])->name('platform.hq_central.tenants.store');
+        Route::put('platform/hq-central/tenants/{tenant}', [\App\Http\Controllers\Admin\HQTenantController::class, 'update'])->name('platform.hq_central.tenants.update');
+        
+        Route::get('platform/hq-central/licenses', [\App\Http\Controllers\Admin\HQLicenseController::class, 'index'])->name('platform.hq_central.licenses.index');
+        Route::post('platform/hq-central/licenses', [\App\Http\Controllers\Admin\HQLicenseController::class, 'store'])->name('platform.hq_central.licenses.store');
+        Route::get('platform/hq-central/licenses/{license}', [\App\Http\Controllers\Admin\HQLicenseController::class, 'show'])->name('platform.hq_central.licenses.show');
+        Route::post('platform/hq-central/licenses/{license}/activate', [\App\Http\Controllers\Admin\HQLicenseController::class, 'activate'])->name('platform.hq_central.licenses.activate');
+        Route::post('platform/hq-central/licenses/{license}/suspend', [\App\Http\Controllers\Admin\HQLicenseController::class, 'suspend'])->name('platform.hq_central.licenses.suspend');
+        Route::post('platform/hq-central/licenses/{license}/features', [\App\Http\Controllers\Admin\HQLicenseController::class, 'toggleFeature'])->name('platform.hq_central.licenses.toggleFeature');
         
         Route::get('platform/hq-integration', [\App\Http\Controllers\Admin\HQIntegrationController::class, 'index'])->name('platform.hq_integration.index');
         Route::get('platform/api', [\App\Http\Controllers\Admin\HQApiController::class, 'index'])->name('platform.api.index');

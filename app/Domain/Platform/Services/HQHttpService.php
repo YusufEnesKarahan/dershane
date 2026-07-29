@@ -135,4 +135,9 @@ class HQHttpService
     {
         return $this->send('post', 'updates/check', $payload);
     }
+
+    public function validateLicense(array $payload): array
+    {
+        return $this->send('post', 'hq/license/validate', $payload);
+    }
 }

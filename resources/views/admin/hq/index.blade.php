@@ -8,102 +8,174 @@
             <h1 class="text-2xl font-black mt-2">HQ Central Platform</h1>
             <p class="text-xs text-slate-300 mt-1">Manage connected SaaS instances, view telemetry, and dispatch remote commands.</p>
         </div>
-    </div>
-
-    <!-- Overview Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div class="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Total Systems</span>
-            <p class="text-lg font-black mt-1 text-indigo-600">
-                {{ $metrics['total_systems'] }}
-            </p>
-        </div>
-        <div class="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Online</span>
-            <p class="text-lg font-black mt-1 text-green-600">
-                {{ $metrics['online_systems'] }}
-            </p>
-        </div>
-        <div class="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Offline</span>
-            <p class="text-lg font-black mt-1 text-red-600">
-                {{ $metrics['offline_systems'] }}
-            </p>
-        </div>
-        <div class="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Pending Cmds</span>
-            <p class="text-lg font-black text-neutral-900 dark:text-white mt-1">
-                {{ $metrics['pending_commands'] }}
-            </p>
-        </div>
-        <div class="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Failed Conn (24h)</span>
-            <p class="text-lg font-black mt-1 text-red-600">
-                {{ $metrics['failed_connections'] }}
-            </p>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.platform.hq_central.systems.index') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-colors">
+                View Systems
+            </a>
+            <a href="{{ route('admin.platform.hq_central.tenants.index') }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-colors border border-white/20">
+                Manage Tenants
+            </a>
         </div>
     </div>
 
-    <!-- Systems List -->
-    <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800 flex justify-between items-center bg-neutral-50/50 dark:bg-neutral-800/50">
-            <h3 class="font-bold text-neutral-800 dark:text-neutral-200">Connected Instances</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- System Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">System Overview</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['systems']['total'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Systems</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['systems']['online'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Online</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['systems']['offline'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Offline</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ $metrics['systems']['unknown'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Unknown</p>
+                </div>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-neutral-600 dark:text-neutral-400">
-                <thead class="bg-neutral-50 dark:bg-neutral-800/50 text-neutral-500 font-bold uppercase text-[10px] tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4">System ID</th>
-                        <th class="px-6 py-4">Name</th>
-                        <th class="px-6 py-4">Tenant</th>
-                        <th class="px-6 py-4">Environment</th>
-                        <th class="px-6 py-4">Version</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-right">Last Seen</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800">
-                    @forelse($instances as $instance)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
-                            <td class="px-6 py-4 font-mono text-xs text-neutral-800 dark:text-neutral-300">
-                                {{ Str::limit($instance->system_uuid, 8) }}
-                            </td>
-                            <td class="px-6 py-4 font-bold text-neutral-900 dark:text-white">
-                                {{ $instance->system_name }}
-                            </td>
-                            <td class="px-6 py-4 text-xs font-bold text-indigo-600">
-                                {{ $instance->tenant->name ?? 'Unknown' }}
-                            </td>
-                            <td class="px-6 py-4 text-xs uppercase font-bold text-neutral-500">
-                                {{ $instance->environment }}
-                            </td>
-                            <td class="px-6 py-4 text-xs font-bold text-neutral-700 dark:text-neutral-300">
-                                v{{ $instance->system_version }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 rounded text-[10px] font-bold uppercase 
-                                    @if($instance->status === 'online') bg-green-100 text-green-700 
-                                    @elseif($instance->status === 'offline') bg-red-100 text-red-700 
-                                    @else bg-neutral-100 text-neutral-700 @endif">
-                                    {{ $instance->status }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right text-xs font-mono">
-                                {{ $instance->last_seen_at ? $instance->last_seen_at->diffForHumans() : 'Never' }}
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-neutral-500 font-bold">
-                                Hiçbir sistem bağlantısı bulunamadı.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+
+        <!-- Tenant Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Tenant Overview</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['tenants']['total'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Tenants</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['tenants']['active'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Active</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['tenants']['suspended'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Suspended</p>
+                </div>
+            </div>
         </div>
-        <div class="px-6 py-4 border-t border-neutral-100 dark:border-neutral-800">
-            {{ $instances->links() }}
+
+        <!-- License Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">License Status</h3>
+                <a href="{{ route('admin.platform.hq_central.licenses.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Manage</a>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['licenses']['total'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Licenses</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['licenses']['active'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Active</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['licenses']['expired'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Expired</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ $metrics['licenses']['expiring_soon'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Expiring (<30d)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Communication Health -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Communication Health</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <p class="text-lg font-black text-neutral-900 dark:text-white font-mono">
+                        {{ $metrics['communication']['last_heartbeat'] ? \Carbon\Carbon::parse($metrics['communication']['last_heartbeat'])->diffForHumans() : 'Never' }}
+                    </p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Last Heartbeat</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['communication']['failed_requests'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed (24h)</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['communication']['avg_response_time'] }}ms</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Avg Response</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Queue -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">Command Queue</h3>
+                <a href="{{ route('admin.hq.commands.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Manage</a>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-amber-500">{{ $metrics['commands']['pending'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Pending</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['commands']['completed'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Completed</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['commands']['failed'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">Updates & Deployments</h3>
+                <div class="flex gap-2">
+                    <a href="{{ route('admin.platform.hq_central.versions.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Versions</a>
+                    <a href="{{ route('admin.platform.hq_central.updates.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Queue</a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['updates']['latest_version'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Latest Version</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ $metrics['updates']['behind_latest'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Instances Behind</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['updates']['mandatory_updates'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Mandatory Releases</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['updates']['running'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Running Deployments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Telemetry Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-2">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Telemetry Insights (Avg of Last 10)</h3>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['telemetry']['avg_memory'] }}{{ is_numeric($metrics['telemetry']['avg_memory']) ? '%' : '' }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Avg Memory</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['telemetry']['avg_storage'] }}{{ is_numeric($metrics['telemetry']['avg_storage']) ? '%' : '' }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Avg Storage</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['telemetry']['db_health'] }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Global DB Health</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

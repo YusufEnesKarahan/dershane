@@ -34,4 +34,9 @@ class HQTenant extends Model
     {
         return $this->hasMany(HQSystemInstance::class, 'tenant_id');
     }
+
+    public function licenses()
+    {
+        return $this->hasMany(HQLicense::class, 'tenant_id');
+    }
 }

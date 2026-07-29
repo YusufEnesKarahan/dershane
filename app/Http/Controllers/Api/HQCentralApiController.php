@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domain\HQ\Services\SystemRegistryService;
 use App\Domain\HQ\Services\HQTelemetryService;
-use App\Domain\HQ\Services\HQCommandService;
+use App\Domain\HQ\Services\HQRemoteCommandService;
 use App\Models\HQSystemInstance;
 
 class HQCentralApiController extends Controller
@@ -14,7 +14,7 @@ class HQCentralApiController extends Controller
     public function __construct(
         protected SystemRegistryService $registryService,
         protected HQTelemetryService $telemetryService,
-        protected HQCommandService $commandService
+        protected HQRemoteCommandService $commandService
     ) {}
 
     public function register(Request $request)

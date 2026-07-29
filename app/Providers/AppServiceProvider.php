@@ -38,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
             $registry->register(new \App\Domain\Media\Conversions\WebpConversionStrategy());
             return $registry;
         });
+
+        $this->app->singleton(\App\Domain\License\Services\LicenseVerificationService::class);
     }
 
     /**
@@ -61,6 +63,12 @@ class AppServiceProvider extends ServiceProvider
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
+
+        // HQ Policies
+        Gate::define('hq.viewDashboard', [\App\Policies\HQPolicy::class, 'viewDashboard']);
+        Gate::define('hq.manageTenant', [\App\Policies\HQPolicy::class, 'manageTenant']);
+        Gate::define('hq.sendCommand', [\App\Policies\HQPolicy::class, 'sendCommand']);
+        Gate::define('hq.manageLicense', [\App\Policies\HQPolicy::class, 'manageLicense']);
 
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {

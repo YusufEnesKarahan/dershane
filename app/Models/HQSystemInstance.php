@@ -39,4 +39,24 @@ class HQSystemInstance extends Model
     {
         return $this->hasMany(HQCentralCommand::class, 'system_instance_id');
     }
+
+    public function logs()
+    {
+        return $this->hasMany(HQCentralSyncLog::class, 'system_instance_id');
+    }
+
+    public function licenses()
+    {
+        return $this->hasMany(HQLicense::class, 'system_instance_id');
+    }
+
+    public function currentLicense()
+    {
+        return $this->hasOne(HQLicense::class, 'system_instance_id')
+            ->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->latest('starts_at');
+    }
 }

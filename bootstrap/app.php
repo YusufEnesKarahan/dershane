@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
             'edition' => \App\Http\Middleware\EditionMiddleware::class,
             'hq.license' => \App\Http\Middleware\HqLicenseMiddleware::class,
+            'feature' => \App\Http\Middleware\RequireFeature::class,
         ]);
 
         $middleware->appendToGroup('web', [
