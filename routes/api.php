@@ -42,4 +42,7 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     
     // Audit Trail
     Route::post('audit/report', [\App\Http\Controllers\Api\HQAuditApiController::class, 'report']);
+    
+    // Alerts
+    Route::post('alerts/report', [\App\Http\Controllers\Api\HQAlertApiController::class, 'report']);
 });

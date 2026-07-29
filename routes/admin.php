@@ -124,10 +124,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('platform/hq-central/backups/{job}', [\App\Http\Controllers\Admin\HQBackupController::class, 'show'])->name('platform.hq_central.backups.show');
         Route::post('platform/hq-central/backups/{job}/retry', [\App\Http\Controllers\Admin\HQBackupController::class, 'retry'])->name('platform.hq_central.backups.retry');
 
-        // Audit Trail
+        // HQ Audit & Alerts
         Route::get('platform/hq-central/audit', [\App\Http\Controllers\Admin\HQAuditController::class, 'index'])->name('platform.hq_central.audit.index');
-        Route::get('platform/hq-central/audit/{audit}', [\App\Http\Controllers\Admin\HQAuditController::class, 'show'])->name('platform.hq_central.audit.show');
-
+        Route::get('platform/hq-central/audit/{auditLog}', [\App\Http\Controllers\Admin\HQAuditController::class, 'show'])->name('platform.hq_central.audit.show');
+        
+        Route::get('platform/hq-central/alerts', [\App\Http\Controllers\Admin\HQAlertController::class, 'index'])->name('platform.hq_central.alerts.index');
+        Route::get('platform/hq-central/alerts/{alert}', [\App\Http\Controllers\Admin\HQAlertController::class, 'show'])->name('platform.hq_central.alerts.show');
+        Route::post('platform/hq-central/alerts/{alert}/acknowledge', [\App\Http\Controllers\Admin\HQAlertController::class, 'acknowledge'])->name('platform.hq_central.alerts.acknowledge');
+        Route::post('platform/hq-central/alerts/{alert}/resolve', [\App\Http\Controllers\Admin\HQAlertController::class, 'resolve'])->name('platform.hq_central.alerts.resolve');
+        
         Route::get('platform/hq-central/commands/{command}', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'show'])->name('hq.commands.show');
         
         Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');

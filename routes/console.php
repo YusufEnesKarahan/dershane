@@ -55,3 +55,9 @@ Schedule::command('hq:license-check')
     ->dailyAt('06:00')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
+
+Schedule::call(fn () => app(\App\Domain\HQ\Services\HQSchedulerService::class)->runHourlyChecks())
+    ->hourly()
+    ->name('hq:hourly-checks')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/hq_scheduler.log'));

@@ -73,6 +73,21 @@ class AppServiceProvider extends ServiceProvider
         foreach ($auditEvents as $event) {
             Event::listen($event, \App\Listeners\CreateAuditLog::class);
         }
+
+        // HQ Alert Events
+        $alertEvents = [
+            \App\Events\LicenseChanged::class,
+            \App\Events\RemoteCommandExecuted::class,
+            \App\Events\UpdateCompleted::class,
+            \App\Events\ConfigurationChanged::class,
+            \App\Events\BackupCompleted::class,
+            \App\Events\SystemOfflineDetected::class,
+            \App\Events\SecurityThreatDetected::class,
+            \App\Events\BackupFailedDetected::class,
+        ];
+        foreach ($alertEvents as $event) {
+            Event::listen($event, \App\Listeners\EvaluateAlertRules::class);
+        }
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
@@ -83,6 +98,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('hq.sendCommand', [\App\Policies\HQPolicy::class, 'sendCommand']);
         Gate::define('hq.manageLicense', [\App\Policies\HQPolicy::class, 'manageLicense']);
         Gate::define('hq.viewAuditLogs', [\App\Policies\HQPolicy::class, 'viewAuditLogs']);
+        Gate::define('hq.viewAlerts', [\App\Policies\HQPolicy::class, 'viewAlerts']);
+        Gate::define('hq.manageAlerts', [\App\Policies\HQPolicy::class, 'manageAlerts']);
 
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {

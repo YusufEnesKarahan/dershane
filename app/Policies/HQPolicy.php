@@ -45,4 +45,20 @@ class HQPolicy
     {
         return $user->hasRole('Super Admin') || $user->hasPermission('hq.viewAuditLogs');
     }
+
+    /**
+     * Determine if the user can view alerts.
+     */
+    public function viewAlerts(User $user): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasPermission('hq.viewAlerts');
+    }
+
+    /**
+     * Determine if the user can manage alerts.
+     */
+    public function manageAlerts(User $user): bool
+    {
+        return $user->hasRole('Super Admin');
+    }
 }

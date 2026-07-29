@@ -86,6 +86,9 @@ class HQMonitoringService
 
         // Audit & Security Metrics
         $auditStats = app(\App\Domain\HQ\Services\HQAuditService::class)->getStatistics();
+        
+        // Alert Metrics
+        $alertStats = app(\App\Domain\HQ\Services\HQAlertService::class)->getStatistics();
 
         return [
             'systems' => [
@@ -130,6 +133,7 @@ class HQMonitoringService
                 'running' => $runningUpdates,
             ],
             'audit' => $auditStats,
+            'alerts' => $alertStats,
             // Backwards compatibility for old dashboard view if needed
             'total_systems' => $totalSystems,
             'online_systems' => $onlineSystems,
