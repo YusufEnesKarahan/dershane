@@ -90,6 +90,69 @@ class HQMonitoringService
         // Alert Metrics
         $alertStats = app(\App\Domain\HQ\Services\HQAlertService::class)->getStatistics();
 
+        // Billing Metrics
+        $activeSubscriptions = \App\Models\HQSubscription::where('status', 'active')->count();
+        $expiringSubscriptions = \App\Models\HQSubscription::where('status', 'active')->where('ends_at', '<=', now()->addDays(30))->count();
+        $monthlyRevenue = \App\Models\HQInvoice::where('status', 'paid')->where('paid_at', '>=', now()->startOfMonth())->sum('amount');
+        $failedPayments = \App\Models\HQPayment::where('status', 'failed')->where('created_at', '>=', now()->subDays(7))->count();
+
+        // Global Usage Analytics (from latest daily snapshots)
+        $latestSnapshots = \App\Models\HQUsageSnapshot::where('period', 'daily')
+            ->where('period_start', '>=', now()->subDays(2))
+            ->get()
+            ->groupBy('tenant_id')
+            ->map(fn($group) => $group->sortByDesc('period_start')->first());
+            
+        $globalUsage = [
+            'students' => 0,
+            'teachers' => 0,
+            'storage_gb' => 0,
+            'api_requests' => 0,
+            'emails' => 0,
+            'sms' => 0,
+        ];
+
+        foreach ($latestSnapshots as $snapshot) {
+            $data = $snapshot->data_json ?? [];
+            $globalUsage['students'] += $data['students'] ?? 0;
+            $globalUsage['teachers'] += $data['teachers'] ?? 0;
+            $globalUsage['storage_gb'] += ($data['storage_bytes'] ?? 0) / 1073741824; // convert bytes to GB
+            $globalUsage['api_requests'] += $data['api_requests'] ?? 0;
+            $globalUsage['emails'] += $data['emails_sent'] ?? 0;
+            $globalUsage['sms'] += $data['sms_sent'] ?? 0;
+        }
+
+        // Workflow Metrics
+        $workflowStats = [
+            'total' => 0,
+            'running' => 0,
+            'completed' => 0,
+            'failed' => 0,
+            'avg_duration_sec' => 0,
+        ];
+        
+        if (class_exists(\App\Models\HQWorkflowRun::class)) {
+            $workflowStats['total'] = \App\Models\HQWorkflow::count();
+            $workflowStats['running'] = \App\Models\HQWorkflowRun::where('status', 'running')->count();
+            $workflowStats['completed'] = \App\Models\HQWorkflowRun::where('status', 'completed')->count();
+            $workflowStats['failed'] = \App\Models\HQWorkflowRun::whereIn('status', ['failed', 'timeout'])->count();
+            
+            // Calc avg duration for completed runs
+            $completedRuns = \App\Models\HQWorkflowRun::where('status', 'completed')
+                ->whereNotNull('started_at')
+                ->whereNotNull('completed_at')
+                ->latest()
+                ->take(100)
+                ->get();
+                
+            if ($completedRuns->isNotEmpty()) {
+                $totalSecs = $completedRuns->sum(function($run) {
+                    return $run->completed_at->diffInSeconds($run->started_at);
+                });
+                $workflowStats['avg_duration_sec'] = round($totalSecs / $completedRuns->count());
+            }
+        }
+
         return [
             'systems' => [
                 'total' => $totalSystems,
@@ -134,6 +197,15 @@ class HQMonitoringService
             ],
             'audit' => $auditStats,
             'alerts' => $alertStats,
+            'billing' => [
+                'active_subscriptions' => $activeSubscriptions,
+                'monthly_revenue' => $monthlyRevenue,
+                'failed_payments' => $failedPayments,
+                'expiring_subscriptions' => $expiringSubscriptions,
+            ],
+            'usage' => $globalUsage,
+            'workflows' => $workflowStats,
+            'backups' => app(\App\Domain\HQ\Services\Backup\BackupHealthService::class)->getMetrics(),
             // Backwards compatibility for old dashboard view if needed
             'total_systems' => $totalSystems,
             'online_systems' => $onlineSystems,

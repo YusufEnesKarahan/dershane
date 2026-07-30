@@ -61,4 +61,36 @@ class HQPolicy
     {
         return $user->hasRole('Super Admin');
     }
+
+    /**
+     * Determine if the user can view billing information.
+     */
+    public function viewBilling(User $user): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasPermission('hq.viewBilling');
+    }
+
+    /**
+     * Determine if the user can manage billing/invoices.
+     */
+    public function manageBilling(User $user): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasPermission('hq.manageBilling');
+    }
+
+    /**
+     * Determine if the user can manage subscription plans.
+     */
+    public function managePlans(User $user): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasPermission('hq.managePlans');
+    }
+
+    /**
+     * Determine if the user can manage the fleet and orchestrate deployments.
+     */
+    public function manageFleet(User $user): bool
+    {
+        return $user->hasRole('Super Admin') || $user->hasPermission('hq.manageFleet');
+    }
 }

@@ -30,10 +30,14 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     Route::post('update/finished', [\App\Http\Controllers\Api\HQUpdateApiController::class, 'reportFinished']);
 
     // Backup Management
-    Route::post('backup/check', [\App\Http\Controllers\Api\HQBackupApiController::class, 'check']);
     Route::post('backup/start', [\App\Http\Controllers\Api\HQBackupApiController::class, 'start']);
-    Route::post('backup/progress', [\App\Http\Controllers\Api\HQBackupApiController::class, 'progress']);
-    Route::post('backup/finished', [\App\Http\Controllers\Api\HQBackupApiController::class, 'finished']);
+    Route::post('backup/report', [\App\Http\Controllers\Api\HQBackupApiController::class, 'report']);
+    Route::get('backup/status', [\App\Http\Controllers\Api\HQBackupApiController::class, 'status']);
+    Route::get('backup/policies', [\App\Http\Controllers\Api\HQBackupApiController::class, 'policies']);
+    Route::get('storage', [\App\Http\Controllers\Api\HQBackupApiController::class, 'storage']);
+    
+    // Restore Management
+    Route::post('restore/start', [\App\Http\Controllers\Api\HQRestoreApiController::class, 'start']);
 
     // Configuration
     Route::post('configuration/sync', [\App\Http\Controllers\Api\HQConfigurationApiController::class, 'sync']);
@@ -45,4 +49,25 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     
     // Alerts
     Route::post('alerts/report', [\App\Http\Controllers\Api\HQAlertApiController::class, 'report']);
+    
+    // Billing
+    Route::get('subscription/status', [\App\Http\Controllers\Api\HQBillingApiController::class, 'subscriptionStatus']);
+
+    // Usage & Quota
+    Route::post('usage/report', [\App\Http\Controllers\Api\HQUsageApiController::class, 'report']);
+    Route::get('quota', [\App\Http\Controllers\Api\HQUsageApiController::class, 'quota']);
+    Route::get('usage/history', [\App\Http\Controllers\Api\HQUsageApiController::class, 'history']);
+
+    // Workflow Engine
+    Route::get('workflows', [\App\Http\Controllers\Api\HQWorkflowApiController::class, 'index']);
+    Route::get('workflows/history', [\App\Http\Controllers\Api\HQWorkflowApiController::class, 'history']);
+    Route::post('workflows/run', [\App\Http\Controllers\Api\HQWorkflowApiController::class, 'run']);
+    Route::post('workflows/trigger', [\App\Http\Controllers\Api\HQWorkflowApiController::class, 'trigger']);
+    Route::get('workflows/{workflow}', [\App\Http\Controllers\Api\HQWorkflowApiController::class, 'show']);
+
+    // Fleet Management & Deployment
+    Route::post('deployment/start', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'start']);
+    Route::post('deployment/report', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'report']);
+    Route::get('deployment/status', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'status']);
+    Route::get('release-channel', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'releaseChannels']);
 });

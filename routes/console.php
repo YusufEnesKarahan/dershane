@@ -61,3 +61,9 @@ Schedule::call(fn () => app(\App\Domain\HQ\Services\HQSchedulerService::class)->
     ->name('hq:hourly-checks')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
+
+Schedule::call(fn () => app(\App\Domain\HQ\Services\HQSchedulerService::class)->runDailyBillingChecks())
+    ->dailyAt('00:05')
+    ->name('hq:daily-billing-checks')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/hq_billing.log'));

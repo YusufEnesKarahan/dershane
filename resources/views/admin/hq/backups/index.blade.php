@@ -1,94 +1,143 @@
-@extends('admin.layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Backup & Disaster Recovery')
+@section('title', 'Backup & DR Overview - HQ Central')
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Backup Dashboard</h2>
-            <div class="space-x-3">
-                <a href="{{ route('admin.platform.hq_central.backups.policies') }}" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm transition">
-                    Manage Policies
-                </a>
+<div class="container-fluid px-4 py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 text-gray-800 mb-0">Enterprise Backup & Disaster Recovery</h2>
+            <p class="text-muted mb-0">Monitor backup health, manage policies, and track disaster recovery readiness.</p>
+        </div>
+        <div>
+            <a href="{{ route('admin.platform.hq_central.backups.policies') }}" class="btn btn-primary shadow-sm">
+                <i class="fas fa-shield-alt fa-sm text-white-50 me-1"></i> Manage Policies
+            </a>
+        </div>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Successful Backups</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['successful_backups'] ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Policies</div>
-                <div class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ $stats['total_policies'] }}</div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Successful Jobs</div>
-                <div class="mt-2 text-3xl font-bold text-green-600 dark:text-green-400">{{ $stats['successful_jobs'] }}</div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Failed Jobs</div>
-                <div class="mt-2 text-3xl font-bold text-red-600 dark:text-red-400">{{ $stats['failed_jobs'] }}</div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Storage</div>
-                <div class="mt-2 text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ number_format($stats['total_storage'] / 1048576, 2) }} MB</div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Failed Backups</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['failed_backups'] ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-times-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                <h3 class="font-medium text-gray-800 dark:text-gray-200">Recent Backup Jobs</h3>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Storage Usage</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format(($stats['storage_usage'] ?? 0) / 1048576, 2) }} MB</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hdd fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-sm">
-                        <th class="p-4 font-medium border-b dark:border-gray-700">Instance</th>
-                        <th class="p-4 font-medium border-b dark:border-gray-700">Policy</th>
-                        <th class="p-4 font-medium border-b dark:border-gray-700">Status</th>
-                        <th class="p-4 font-medium border-b dark:border-gray-700">Size</th>
-                        <th class="p-4 font-medium border-b dark:border-gray-700">Finished At</th>
-                        <th class="p-4 font-medium border-b dark:border-gray-700 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm divide-y dark:divide-gray-700">
-                    @forelse($recentJobs as $job)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                        <td class="p-4 text-gray-900 dark:text-gray-200">
-                            {{ $job->systemInstance->system_name ?? 'N/A' }}
-                        </td>
-                        <td class="p-4 text-gray-600 dark:text-gray-400">
-                            {{ $job->policy->name ?? 'N/A' }}
-                            <span class="text-xs uppercase px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">{{ $job->policy->backup_type ?? '' }}</span>
-                        </td>
-                        <td class="p-4">
-                            @if($job->status === 'completed')
-                                <span class="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-medium">Completed</span>
-                            @elseif($job->status === 'failed')
-                                <span class="px-2 py-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded-full text-xs font-medium">Failed</span>
-                            @elseif($job->status === 'running')
-                                <span class="px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-full text-xs font-medium">Running</span>
-                            @else
-                                <span class="px-2 py-1 bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full text-xs font-medium">Pending</span>
-                            @endif
-                        </td>
-                        <td class="p-4 text-gray-600 dark:text-gray-400">
-                            {{ $job->size ? number_format($job->size / 1048576, 2) . ' MB' : '-' }}
-                        </td>
-                        <td class="p-4 text-gray-600 dark:text-gray-400">
-                            {{ $job->finished_at ? $job->finished_at->format('M d, H:i') : '-' }}
-                        </td>
-                        <td class="p-4 text-right">
-                            <a href="{{ route('admin.platform.hq_central.backups.show', $job) }}" class="text-indigo-500 hover:underline text-xs font-medium">View</a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="p-8 text-center text-gray-500">No backup jobs executed yet.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
         </div>
-        
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Restore Success</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['restore_success'] ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-undo-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Quick Links -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Modules</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="{{ route('admin.platform.hq_central.backups.policies') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-clipboard-list me-2 text-primary"></i> Backup Policies</h6>
+                                <small class="text-muted">Manage automated backup schedules and retention rules.</small>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-300"></i>
+                        </a>
+                        <a href="{{ route('admin.platform.hq_central.backups.jobs') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-tasks me-2 text-info"></i> Backup Jobs</h6>
+                                <small class="text-muted">View history of successful and failed backup runs.</small>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-300"></i>
+                        </a>
+                        <a href="{{ route('admin.platform.hq_central.backups.snapshots') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-camera me-2 text-success"></i> Snapshots</h6>
+                                <small class="text-muted">Browse available point-in-time and full snapshots.</small>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-300"></i>
+                        </a>
+                        <a href="{{ route('admin.platform.hq_central.backups.restores') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-undo me-2 text-warning"></i> Restore Jobs</h6>
+                                <small class="text-muted">Monitor dry-runs and actual restoration processes.</small>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-300"></i>
+                        </a>
+                        <a href="{{ route('admin.platform.hq_central.backups.storage') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-hdd me-2 text-secondary"></i> Storage Locations</h6>
+                                <small class="text-muted">Manage S3, Local, MinIO, and FTP storage backends.</small>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-300"></i>
+                        </a>
+                        <a href="{{ route('admin.platform.hq_central.backups.dr_plans') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-fire-extinguisher me-2 text-danger"></i> DR Plans</h6>
+                                <small class="text-muted">Configure and test Disaster Recovery runbooks.</small>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-300"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

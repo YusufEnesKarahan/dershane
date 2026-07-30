@@ -4,85 +4,92 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\HQBackupPolicy;
 use App\Models\HQBackupJob;
+use App\Models\HQBackupStorageLocation;
+use App\Domain\HQ\Services\Backup\BackupOrchestrationService;
 
 class HQBackupApiController extends Controller
 {
-    public function check(Request $request)
+    /**
+     * POST /api/hq/backup/start
+     */
+    public function start(Request $request, BackupOrchestrationService $service)
     {
-        // Handled securely. Usually checks if any backups are active.
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Backup check confirmed',
-            'timestamp' => now()->timestamp,
-        ]);
-    }
+        $policyId = $request->input('policy_id');
+        $policy = HQBackupPolicy::findOrFail($policyId);
 
-    public function start(Request $request)
-    {
-        // Usually called when backup starts successfully locally.
-        $jobId = $request->input('job_id');
-        if ($jobId) {
-            $job = HQBackupJob::find($jobId);
-            if ($job) {
-                $job->update(['status' => 'running', 'started_at' => now()]);
-                \App\Events\BackupCompleted::dispatch('backup.started', $job, 'Backup marked as running');
-            }
+        try {
+            $job = $service->startBackup($policy);
+            return response()->json([
+                'status' => 'success',
+                'job_id' => $job->id,
+                'message' => 'Backup job queued successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
         }
-        
-        return response()->json([
-            'status' => 'success',
-            'backup_id' => $jobId,
-            'message' => 'Backup marked as running',
-            'timestamp' => now()->timestamp,
-        ]);
     }
 
-    public function progress(Request $request)
+    /**
+     * POST /api/hq/backup/report
+     */
+    public function report(Request $request, BackupOrchestrationService $service)
     {
         $jobId = $request->input('job_id');
-        $progress = $request->input('progress');
+        $status = $request->input('status');
         
-        if ($jobId) {
-            $job = HQBackupJob::find($jobId);
-            if ($job) {
-                // We might save progress in metadata
-                $meta = $job->metadata ?? [];
-                $meta['progress'] = $progress;
-                $job->update(['metadata' => $meta]);
-            }
+        $job = HQBackupJob::findOrFail($jobId);
+
+        if ($status === 'completed') {
+            $size = $request->input('size_bytes');
+            $path = $request->input('path');
+            $type = $request->input('snapshot_type', 'full');
+            $service->completeBackup($job, $size, $path, $type);
+        } else {
+            $error = $request->input('error_message', 'Unknown error');
+            $service->failBackup($job, $error);
         }
 
         return response()->json([
             'status' => 'success',
-            'backup_id' => $jobId,
-            'message' => 'Backup progress updated',
-            'timestamp' => now()->timestamp,
+            'message' => 'Backup report processed.'
         ]);
     }
 
-    public function finished(Request $request)
+    /**
+     * GET /api/hq/backup/status
+     */
+    public function status(Request $request)
     {
-        $jobId = $request->input('job_id');
-        
+        $jobId = $request->query('job_id');
         if ($jobId) {
-            $job = HQBackupJob::find($jobId);
-            if ($job) {
-                $job->update([
-                    'status' => 'completed',
-                    'finished_at' => now(),
-                    'size' => $request->input('size'),
-                    'storage_location' => $request->input('storage_location'),
-                ]);
-                \App\Events\BackupCompleted::dispatch('backup.completed', $job, 'Backup finished successfully');
-            }
+            $job = HQBackupJob::findOrFail($jobId);
+            return response()->json(['status' => 'success', 'data' => $job]);
         }
         
-        return response()->json([
-            'status' => 'success',
-            'backup_id' => $jobId,
-            'message' => 'Backup finished successfully',
-            'timestamp' => now()->timestamp,
-        ]);
+        $jobs = HQBackupJob::latest()->limit(50)->get();
+        return response()->json(['status' => 'success', 'data' => $jobs]);
+    }
+
+    /**
+     * GET /api/hq/backup/policies
+     */
+    public function policies(Request $request)
+    {
+        $policies = HQBackupPolicy::with('storageLocation')->get();
+        return response()->json(['status' => 'success', 'data' => $policies]);
+    }
+
+    /**
+     * GET /api/hq/storage
+     */
+    public function storage(Request $request)
+    {
+        $storage = HQBackupStorageLocation::all();
+        return response()->json(['status' => 'success', 'data' => $storage]);
     }
 }

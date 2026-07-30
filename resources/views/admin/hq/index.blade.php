@@ -61,6 +61,29 @@
             </div>
         </div>
 
+        <!-- SaaS Revenue Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">SaaS Revenue Overview</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-green-600">${{ number_format($metrics['billing']['monthly_revenue'] ?? 0) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Monthly Rev</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['billing']['active_subscriptions'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Active Subs</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ $metrics['billing']['expiring_subscriptions'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Expiring Subs</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['billing']['failed_payments'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed Payments</p>
+                </div>
+            </div>
+        </div>
+
         <!-- License Overview -->
         <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
             <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
@@ -237,9 +260,9 @@
         </div>
 
         <!-- Telemetry Overview -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-2">
-            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Telemetry Insights (Avg of Last 10)</h3>
-            <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Telemetry Insights</h3>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
                     <p class="text-2xl font-black text-indigo-600">{{ $metrics['telemetry']['avg_memory'] }}{{ is_numeric($metrics['telemetry']['avg_memory']) ? '%' : '' }}</p>
                     <p class="text-[10px] font-bold text-neutral-500 uppercase">Avg Memory</p>
@@ -248,9 +271,62 @@
                     <p class="text-2xl font-black text-indigo-600">{{ $metrics['telemetry']['avg_storage'] }}{{ is_numeric($metrics['telemetry']['avg_storage']) ? '%' : '' }}</p>
                     <p class="text-[10px] font-bold text-neutral-500 uppercase">Avg Storage</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Workflow Automation -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">Workflow Automation</h3>
+                <a href="{{ route('admin.platform.hq_central.workflows.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Manage</a>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <p class="text-2xl font-black text-green-600">{{ $metrics['telemetry']['db_health'] }}</p>
-                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Global DB Health</p>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['workflows']['total'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Workflows</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['workflows']['running'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Active Runs</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ $metrics['workflows']['failed'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed Runs</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['workflows']['avg_duration_sec'] ?? 0 }}s</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Avg Execution</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Usage Analytics -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-2">
+            <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">Global Usage Analytics (Last 24h)</h3>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ number_format($metrics['usage']['students'] ?? 0) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Students</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ number_format($metrics['usage']['teachers'] ?? 0) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Teachers</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ number_format($metrics['usage']['storage_gb'] ?? 0, 2) }} GB</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Total Storage</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-600">{{ number_format($metrics['usage']['api_requests'] ?? 0) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">API Requests</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ number_format($metrics['usage']['emails'] ?? 0) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Emails Sent</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ number_format($metrics['usage']['sms'] ?? 0) }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">SMS Sent</p>
                 </div>
             </div>
         </div>

@@ -88,6 +88,18 @@ class AppServiceProvider extends ServiceProvider
         foreach ($alertEvents as $event) {
             Event::listen($event, \App\Listeners\EvaluateAlertRules::class);
         }
+
+        // HQ Billing Events
+        $billingEvents = [
+            \App\Events\HQ\Billing\SubscriptionCreated::class,
+            \App\Events\HQ\Billing\SubscriptionUpgraded::class,
+            \App\Events\HQ\Billing\SubscriptionCancelled::class,
+            \App\Events\HQ\Billing\SubscriptionExpired::class,
+        ];
+        foreach ($billingEvents as $event) {
+            Event::listen($event, \App\Listeners\HQ\Billing\SyncTenantLicense::class);
+        }
+
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
@@ -100,6 +112,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('hq.viewAuditLogs', [\App\Policies\HQPolicy::class, 'viewAuditLogs']);
         Gate::define('hq.viewAlerts', [\App\Policies\HQPolicy::class, 'viewAlerts']);
         Gate::define('hq.manageAlerts', [\App\Policies\HQPolicy::class, 'manageAlerts']);
+        Gate::define('hq.viewBilling', [\App\Policies\HQPolicy::class, 'viewBilling']);
+        Gate::define('hq.manageBilling', [\App\Policies\HQPolicy::class, 'manageBilling']);
+        Gate::define('hq.managePlans', [\App\Policies\HQPolicy::class, 'managePlans']);
 
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {

@@ -116,25 +116,58 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('platform/hq-central/configurations/{configuration}/rollback/{version}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'rollbackForm'])->name('platform.hq_central.configurations.rollback.form');
         Route::post('platform/hq-central/configurations/{configuration}/rollback/{version}', [\App\Http\Controllers\Admin\HQConfigurationController::class, 'rollback'])->name('platform.hq_central.configurations.rollback');
 
-        // Backup Management
+        // Backup Management        // HQ Backups & DR
         Route::get('platform/hq-central/backups', [\App\Http\Controllers\Admin\HQBackupController::class, 'index'])->name('platform.hq_central.backups.index');
         Route::get('platform/hq-central/backups/policies', [\App\Http\Controllers\Admin\HQBackupController::class, 'policies'])->name('platform.hq_central.backups.policies');
-        Route::get('platform/hq-central/backups/create', [\App\Http\Controllers\Admin\HQBackupController::class, 'create'])->name('platform.hq_central.backups.create');
-        Route::post('platform/hq-central/backups', [\App\Http\Controllers\Admin\HQBackupController::class, 'store'])->name('platform.hq_central.backups.store');
-        Route::get('platform/hq-central/backups/{job}', [\App\Http\Controllers\Admin\HQBackupController::class, 'show'])->name('platform.hq_central.backups.show');
-        Route::post('platform/hq-central/backups/{job}/retry', [\App\Http\Controllers\Admin\HQBackupController::class, 'retry'])->name('platform.hq_central.backups.retry');
+        Route::get('platform/hq-central/backups/jobs', [\App\Http\Controllers\Admin\HQBackupController::class, 'jobs'])->name('platform.hq_central.backups.jobs');
+        Route::get('platform/hq-central/backups/snapshots', [\App\Http\Controllers\Admin\HQBackupController::class, 'snapshots'])->name('platform.hq_central.backups.snapshots');
+        Route::get('platform/hq-central/backups/restores', [\App\Http\Controllers\Admin\HQBackupController::class, 'restores'])->name('platform.hq_central.backups.restores');
+        Route::get('platform/hq-central/backups/storage', [\App\Http\Controllers\Admin\HQBackupController::class, 'storage'])->name('platform.hq_central.backups.storage');
+        Route::get('platform/hq-central/backups/dr-plans', [\App\Http\Controllers\Admin\HQBackupController::class, 'drPlans'])->name('platform.hq_central.backups.dr_plans');
 
-        // HQ Audit & Alerts
+        // HQ Workflows
+        // Tenant Management
+        Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');
+        Route::post('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'store'])->name('platform.hq_central.tenants.store');
+        Route::put('platform/hq-central/tenants/{tenant}', [\App\Http\Controllers\Admin\HQTenantController::class, 'update'])->name('platform.hq_central.tenants.update');
+        Route::delete('platform/hq-central/tenants/{tenant}', [\App\Http\Controllers\Admin\HQTenantController::class, 'destroy'])->name('platform.hq_central.tenants.destroy');
+        Route::post('platform/hq-central/tenants/{tenant}/suspend', [\App\Http\Controllers\Admin\HQTenantController::class, 'suspend'])->name('platform.hq_central.tenants.suspend');
+        Route::post('platform/hq-central/tenants/{tenant}/reactivate', [\App\Http\Controllers\Admin\HQTenantController::class, 'reactivate'])->name('platform.hq_central.tenants.reactivate');
+
+        // Tenant Usage
+        Route::get('platform/hq-central/tenants/{tenant}/usage', [\App\Http\Controllers\Admin\HQUsageController::class, 'show'])->name('platform.hq_central.tenants.usage');
+
+        // HQ Audit Logs
         Route::get('platform/hq-central/audit', [\App\Http\Controllers\Admin\HQAuditController::class, 'index'])->name('platform.hq_central.audit.index');
         Route::get('platform/hq-central/audit/{auditLog}', [\App\Http\Controllers\Admin\HQAuditController::class, 'show'])->name('platform.hq_central.audit.show');
         
+        // HQ Workflows
+        Route::get('platform/hq-central/workflows', [\App\Http\Controllers\Admin\HQWorkflowController::class, 'index'])->name('platform.hq_central.workflows.index');
+        Route::get('platform/hq-central/workflows/create', [\App\Http\Controllers\Admin\HQWorkflowController::class, 'create'])->name('platform.hq_central.workflows.create');
+        Route::post('platform/hq-central/workflows', [\App\Http\Controllers\Admin\HQWorkflowController::class, 'store'])->name('platform.hq_central.workflows.store');
+        Route::get('platform/hq-central/workflows/history', [\App\Http\Controllers\Admin\HQWorkflowController::class, 'history'])->name('platform.hq_central.workflows.history');
+        Route::get('platform/hq-central/workflows/{workflow}', [\App\Http\Controllers\Admin\HQWorkflowController::class, 'show'])->name('platform.hq_central.workflows.show');
+
+        // HQ Fleet & Deployments
+        Route::get('platform/hq-central/fleet', [\App\Http\Controllers\Admin\HQFleetController::class, 'overview'])->name('platform.hq_central.fleet.overview');
+        Route::get('platform/hq-central/fleet/deployments', [\App\Http\Controllers\Admin\HQFleetController::class, 'deployments'])->name('platform.hq_central.fleet.deployments');
+        Route::get('platform/hq-central/fleet/deployments/{deployment}', [\App\Http\Controllers\Admin\HQFleetController::class, 'deploymentShow'])->name('platform.hq_central.fleet.deployments.show');
+        Route::get('platform/hq-central/fleet/channels', [\App\Http\Controllers\Admin\HQFleetController::class, 'channels'])->name('platform.hq_central.fleet.channels');
+        Route::get('platform/hq-central/fleet/groups', [\App\Http\Controllers\Admin\HQFleetController::class, 'groups'])->name('platform.hq_central.fleet.groups');
+        Route::get('platform/hq-central/fleet/maintenance', [\App\Http\Controllers\Admin\HQFleetController::class, 'maintenance'])->name('platform.hq_central.fleet.maintenance');        
         Route::get('platform/hq-central/alerts', [\App\Http\Controllers\Admin\HQAlertController::class, 'index'])->name('platform.hq_central.alerts.index');
         Route::get('platform/hq-central/alerts/{alert}', [\App\Http\Controllers\Admin\HQAlertController::class, 'show'])->name('platform.hq_central.alerts.show');
         Route::post('platform/hq-central/alerts/{alert}/acknowledge', [\App\Http\Controllers\Admin\HQAlertController::class, 'acknowledge'])->name('platform.hq_central.alerts.acknowledge');
         Route::post('platform/hq-central/alerts/{alert}/resolve', [\App\Http\Controllers\Admin\HQAlertController::class, 'resolve'])->name('platform.hq_central.alerts.resolve');
         
-        Route::get('platform/hq-central/commands/{command}', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'show'])->name('hq.commands.show');
+        Route::get('platform/hq-central/commands/{command}', [\App\Http\Controllers\Admin\HQRemoteCommandController::class, 'show'])->name('platform.hq_central.commands.show');
         
+        // HQ Billing & Subscriptions
+        Route::get('platform/hq-central/billing/plans', [\App\Http\Controllers\Admin\HQBillingController::class, 'plans'])->name('platform.hq_central.billing.plans');
+        Route::get('platform/hq-central/billing/subscriptions', [\App\Http\Controllers\Admin\HQBillingController::class, 'subscriptions'])->name('platform.hq_central.billing.subscriptions');
+        Route::get('platform/hq-central/billing/invoices', [\App\Http\Controllers\Admin\HQBillingController::class, 'invoices'])->name('platform.hq_central.billing.invoices');
+        Route::get('platform/hq-central/billing/payments', [\App\Http\Controllers\Admin\HQBillingController::class, 'payments'])->name('platform.hq_central.billing.payments');
+
         Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');
         Route::post('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'store'])->name('platform.hq_central.tenants.store');
         Route::put('platform/hq-central/tenants/{tenant}', [\App\Http\Controllers\Admin\HQTenantController::class, 'update'])->name('platform.hq_central.tenants.update');

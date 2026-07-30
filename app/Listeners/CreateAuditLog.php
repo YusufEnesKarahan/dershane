@@ -105,5 +105,56 @@ class CreateAuditLog
                 ]
             );
         }
+        
+        // Billing Events
+        elseif ($event instanceof \App\Events\HQ\Billing\SubscriptionCreated) {
+            HQAuditService::logSystemAction(
+                action: 'subscription.created',
+                category: 'billing',
+                severity: 'info',
+                tenantId: $event->subscription->tenant_id,
+                metadata: ['subscription_id' => $event->subscription->id]
+            );
+        }
+        
+        elseif ($event instanceof \App\Events\HQ\Billing\SubscriptionUpgraded) {
+            HQAuditService::logSystemAction(
+                action: 'subscription.upgraded',
+                category: 'billing',
+                severity: 'info',
+                tenantId: $event->subscription->tenant_id,
+                metadata: ['subscription_id' => $event->subscription->id]
+            );
+        }
+        
+        elseif ($event instanceof \App\Events\HQ\Billing\SubscriptionCancelled) {
+            HQAuditService::logSystemAction(
+                action: 'subscription.cancelled',
+                category: 'billing',
+                severity: 'warning',
+                tenantId: $event->subscription->tenant_id,
+                metadata: ['subscription_id' => $event->subscription->id]
+            );
+        }
+        
+        elseif ($event instanceof \App\Events\HQ\Billing\SubscriptionExpired) {
+            HQAuditService::logSystemAction(
+                action: 'subscription.expired',
+                category: 'billing',
+                severity: 'warning',
+                tenantId: $event->subscription->tenant_id,
+                metadata: ['subscription_id' => $event->subscription->id]
+            );
+        }
+        
+        elseif ($event instanceof \App\Events\HQ\Billing\InvoicePaid) {
+            HQAuditService::logSystemAction(
+                action: 'invoice.paid',
+                category: 'billing',
+                severity: 'info',
+                tenantId: $event->invoice->tenant_id,
+                metadata: ['invoice_id' => $event->invoice->id]
+            );
+        }
     }
 }

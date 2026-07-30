@@ -22,6 +22,7 @@ class HQBackupJob extends Model
         'storage_location',
         'error_message',
         'metadata',
+        'uuid',
     ];
 
     protected $casts = [
@@ -53,5 +54,10 @@ class HQBackupJob extends Model
     public function logs()
     {
         return $this->hasMany(HQBackupLog::class, 'backup_job_id');
+    }
+
+    public function snapshots()
+    {
+        return $this->hasMany(HQBackupSnapshot::class, 'hq_backup_job_id');
     }
 }

@@ -17,6 +17,8 @@ class HQTenant extends Model
         'name',
         'slug',
         'status',
+        'hq_release_channel_id',
+        'hq_instance_group_id',
     ];
 
     protected static function boot()
@@ -38,5 +40,25 @@ class HQTenant extends Model
     public function licenses()
     {
         return $this->hasMany(HQLicense::class, 'tenant_id');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(HQSubscription::class, 'tenant_id');
+    }
+
+    public function releaseChannel()
+    {
+        return $this->belongsTo(HQReleaseChannel::class, 'hq_release_channel_id');
+    }
+
+    public function instanceGroup()
+    {
+        return $this->belongsTo(HQInstanceGroup::class, 'hq_instance_group_id');
+    }
+
+    public function maintenanceWindows()
+    {
+        return $this->morphMany(HQMaintenanceWindow::class, 'targetable');
     }
 }
