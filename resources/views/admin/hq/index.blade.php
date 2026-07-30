@@ -208,6 +208,32 @@
             </div>
         </div>
 
+        <!-- IAM Security Overview -->
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
+            <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">
+                <h3 class="text-xs font-black text-neutral-500 uppercase tracking-wider">Identity & Access</h3>
+                <a href="{{ route('admin.platform.hq_central.identity.overview') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">Manage</a>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-2xl font-black text-neutral-900 dark:text-white">{{ $metrics['iam']['users'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Users</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-indigo-600">{{ $metrics['iam']['sessions'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Active Sessions</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-red-600">{{ $metrics['iam']['failed_logins'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">Failed Logins (24h)</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-green-600">{{ $metrics['iam']['mfa_users'] ?? 0 }}</p>
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase">MFA Enabled</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Security & Activity Overview -->
         <div class="bg-white dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm lg:col-span-1">
             <div class="flex justify-between items-center mb-4 border-b border-neutral-100 dark:border-neutral-800 pb-2">

@@ -125,6 +125,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('platform/hq-central/backups/storage', [\App\Http\Controllers\Admin\HQBackupController::class, 'storage'])->name('platform.hq_central.backups.storage');
         Route::get('platform/hq-central/backups/dr-plans', [\App\Http\Controllers\Admin\HQBackupController::class, 'drPlans'])->name('platform.hq_central.backups.dr_plans');
 
+        // HQ Identity & Access Management (IAM)
+        Route::get('platform/hq-central/identity', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'overview'])->name('platform.hq_central.identity.overview');
+        Route::get('platform/hq-central/identity/users', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'users'])->name('platform.hq_central.identity.users');
+        Route::get('platform/hq-central/identity/roles', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'roles'])->name('platform.hq_central.identity.roles');
+        Route::get('platform/hq-central/identity/permissions', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'permissions'])->name('platform.hq_central.identity.permissions');
+        Route::get('platform/hq-central/identity/api-keys', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'apiKeys'])->name('platform.hq_central.identity.api_keys');
+        Route::get('platform/hq-central/identity/service-accounts', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'serviceAccounts'])->name('platform.hq_central.identity.service_accounts');
+        Route::get('platform/hq-central/identity/sessions', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'sessions'])->name('platform.hq_central.identity.sessions');
+        Route::get('platform/hq-central/identity/security-logs', [\App\Http\Controllers\Admin\HQ\HQIdentityController::class, 'securityLogs'])->name('platform.hq_central.identity.security_logs');
+
         // HQ Workflows
         // Tenant Management
         Route::get('platform/hq-central/tenants', [\App\Http\Controllers\Admin\HQTenantController::class, 'index'])->name('platform.hq_central.tenants.index');

@@ -206,6 +206,15 @@ class HQMonitoringService
             'usage' => $globalUsage,
             'workflows' => $workflowStats,
             'backups' => app(\App\Domain\HQ\Services\Backup\BackupHealthService::class)->getMetrics(),
+            'iam' => [
+                'users' => \App\Models\User::count(),
+                'roles' => \App\Models\HQRole::count(),
+                'sessions' => \App\Models\HQSecuritySession::where('is_active', true)->count(),
+                'api_keys' => \App\Models\HQApiKey::where('is_revoked', false)->count(),
+                'mfa_users' => \App\Models\HQMfaSetting::where('is_enabled', true)->count(),
+                'failed_logins' => \App\Models\HQLoginAttempt::where('is_successful', false)
+                    ->where('attempted_at', '>=', now()->subDay())->count(),
+            ],
             // Backwards compatibility for old dashboard view if needed
             'total_systems' => $totalSystems,
             'online_systems' => $onlineSystems,

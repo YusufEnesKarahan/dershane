@@ -70,4 +70,12 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     Route::post('deployment/report', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'report']);
     Route::get('deployment/status', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'status']);
     Route::get('release-channel', [\App\Http\Controllers\Api\HQDeploymentApiController::class, 'releaseChannels']);
+
+    // IAM & Auth
+    Route::post('auth/api-key/create', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'createApiKey']);
+    Route::post('auth/api-key/revoke', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'revokeApiKey']);
+    Route::get('auth/sessions', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'getSessions']);
+    Route::post('auth/logout', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'logout']);
+    Route::get('auth/permissions', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'getPermissions']);
+    Route::post('auth/service-account', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'createServiceAccount']);
 });
