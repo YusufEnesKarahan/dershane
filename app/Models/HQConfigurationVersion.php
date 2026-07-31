@@ -13,15 +13,15 @@ class HQConfigurationVersion extends Model
     protected $table = 'hq_configuration_versions';
 
     protected $fillable = [
-        'profile_id',
-        'version',
+        'uuid',
+        'configuration_id',
+        'version_tag',
+        'value',
         'created_by',
-        'notes',
-        'configuration_snapshot',
     ];
 
     protected $casts = [
-        'configuration_snapshot' => 'array',
+        'value' => 'json',
     ];
 
     protected static function boot()
@@ -34,13 +34,8 @@ class HQConfigurationVersion extends Model
         });
     }
 
-    public function profile()
+    public function configuration()
     {
-        return $this->belongsTo(HQConfigurationProfile::class, 'profile_id');
-    }
-
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(HQConfiguration::class, 'configuration_id');
     }
 }

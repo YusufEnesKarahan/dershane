@@ -59,16 +59,21 @@ class CreateAuditLog
         }
         
         elseif ($event instanceof ConfigurationChanged) {
+            $versionId = is_object($event->version) ? $event->version->id : null;
+            $profileId = is_object($event->version) ? ($event->version->hq_configuration_profile_id ?? null) : null;
+            $tenantId = isset($event->configuration) ? $event->configuration->tenant_id : (is_object($event->version) ? ($event->version->profile->tenant_id ?? null) : null);
+
             HQAuditService::logSystemAction(
-                action: $event->action,
+                action: $event->action ?? 'updated',
                 category: 'configuration',
-                severity: str_contains($event->action, 'rollback') ? 'warning' : 'info',
-                description: $event->description,
-                systemInstanceId: $event->version->profile->system_instance_id ?? null,
-                tenantId: $event->version->profile->tenant_id ?? null,
+                severity: str_contains($event->action ?? '', 'rollback') ? 'warning' : 'info',
+                description: $event->description ?? '',
+                systemInstanceId: is_object($event->version) ? ($event->version->profile->system_instance_id ?? null) : null,
+                tenantId: $tenantId,
                 metadata: [
-                    'version_id' => $event->version->id,
-                    'profile_id' => $event->version->hq_configuration_profile_id,
+                    'version_id' => $versionId,
+                    'profile_id' => $profileId,
+                    'configuration_id' => isset($event->configuration) ? $event->configuration->id : null,
                 ]
             );
         }

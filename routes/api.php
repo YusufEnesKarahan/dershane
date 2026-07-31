@@ -51,7 +51,11 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     Route::post('alerts/report', [\App\Http\Controllers\Api\HQAlertApiController::class, 'report']);
     
     // Billing
-    Route::get('subscription/status', [\App\Http\Controllers\Api\HQBillingApiController::class, 'subscriptionStatus']);
+    Route::get('billing/plans', [\App\Http\Controllers\Api\HQBillingApiController::class, 'getPlans']);
+    Route::post('billing/subscribe', [\App\Http\Controllers\Api\HQBillingApiController::class, 'subscribe']);
+    Route::post('billing/upgrade', [\App\Http\Controllers\Api\HQBillingApiController::class, 'upgrade']);
+    Route::post('billing/cancel', [\App\Http\Controllers\Api\HQBillingApiController::class, 'cancel']);
+    Route::get('billing/usage', [\App\Http\Controllers\Api\HQBillingApiController::class, 'getUsage']);
 
     // Usage & Quota
     Route::post('usage/report', [\App\Http\Controllers\Api\HQUsageApiController::class, 'report']);
@@ -78,4 +82,31 @@ Route::prefix('hq')->middleware([\App\Http\Middleware\VerifyHQApiSignature::clas
     Route::post('auth/logout', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'logout']);
     Route::get('auth/permissions', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'getPermissions']);
     Route::post('auth/service-account', [\App\Http\Controllers\Api\HQ\HQAuthApiController::class, 'createServiceAccount']);
+
+    // Observability & Security Intelligence
+    Route::post('observability/logs', [\App\Http\Controllers\Api\HQObservabilityApiController::class, 'storeLog']);
+    Route::post('observability/metrics', [\App\Http\Controllers\Api\HQObservabilityApiController::class, 'storeMetric']);
+    Route::post('observability/traces', [\App\Http\Controllers\Api\HQObservabilityApiController::class, 'storeTrace']);
+    Route::get('observability/health', [\App\Http\Controllers\Api\HQObservabilityApiController::class, 'checkHealth']);
+
+    // Governance, Risk & Compliance (GRC)
+    Route::get('governance/policies', [\App\Http\Controllers\Api\HQ\HQGovernanceApiController::class, 'policies']);
+    Route::get('governance/compliance', [\App\Http\Controllers\Api\HQ\HQGovernanceApiController::class, 'compliance']);
+    Route::get('governance/risk', [\App\Http\Controllers\Api\HQ\HQGovernanceApiController::class, 'risk']);
+    Route::get('governance/sla', [\App\Http\Controllers\Api\HQ\HQGovernanceApiController::class, 'sla']);
+    Route::get('governance/frameworks', [\App\Http\Controllers\Api\HQ\HQGovernanceApiController::class, 'frameworks']);
+
+    // Configuration Platform
+    Route::get('configuration', [\App\Http\Controllers\Api\HQ\HQConfigurationPlatformApiController::class, 'getConfigurations']);
+    Route::get('configuration/versions', [\App\Http\Controllers\Api\HQ\HQConfigurationPlatformApiController::class, 'getVersions']);
+    Route::post('configuration/rollback', [\App\Http\Controllers\Api\HQ\HQConfigurationPlatformApiController::class, 'rollbackConfiguration']);
+    Route::get('feature-flags', [\App\Http\Controllers\Api\HQ\HQConfigurationPlatformApiController::class, 'getFeatureFlags']);
+    Route::get('secrets', [\App\Http\Controllers\Api\HQ\HQConfigurationPlatformApiController::class, 'getSecrets']);
+    Route::get('environment-profiles', [\App\Http\Controllers\Api\HQ\HQConfigurationPlatformApiController::class, 'getEnvironmentProfiles']);
+
+    // Marketplace & Extension Platform
+    Route::get('marketplace/extensions', [\App\Http\Controllers\Api\HQ\HQMarketplaceApiController::class, 'extensions']);
+    Route::post('marketplace/install', [\App\Http\Controllers\Api\HQ\HQMarketplaceApiController::class, 'install']);
+    Route::post('marketplace/update', [\App\Http\Controllers\Api\HQ\HQMarketplaceApiController::class, 'update']);
+    Route::post('marketplace/remove', [\App\Http\Controllers\Api\HQ\HQMarketplaceApiController::class, 'remove']);
 });

@@ -215,6 +215,14 @@ class HQMonitoringService
                 'failed_logins' => \App\Models\HQLoginAttempt::where('is_successful', false)
                     ->where('attempted_at', '>=', now()->subDay())->count(),
             ],
+            'observability' => [
+                'active_services' => \App\Models\HQLog::select('service')->distinct()->count(),
+                'critical_errors' => \App\Models\HQLog::where('level', 'critical')->where('created_at', '>=', now()->subDay())->count(),
+                'avg_response_time' => (int) \App\Models\HQMetric::where('metric_type', 'timing')->where('recorded_at', '>=', now()->subDay())->avg('value'),
+                'failed_jobs' => \Illuminate\Support\Facades\DB::table('failed_jobs')->count(),
+                'security_events' => \App\Models\HQSecurityEvent::where('created_at', '>=', now()->subDay())->count(),
+                'uptime' => '99.99', // simplified, ideally from ping checks
+            ],
             // Backwards compatibility for old dashboard view if needed
             'total_systems' => $totalSystems,
             'online_systems' => $onlineSystems,

@@ -64,11 +64,18 @@ class EvaluateAlertRules implements ShouldQueue
             ];
         } elseif ($event instanceof ConfigurationChanged) {
             $eventType = 'configuration.changed';
+            $tenantId = isset($event->configuration) ? $event->configuration->tenant_id : ($event->profile->tenant_id ?? null);
+            $profileName = isset($event->configuration) ? 'Global/Tenant Configuration' : ($event->profile->name ?? 'Unknown Profile');
+            $profileId = isset($event->configuration) ? null : ($event->profile->id ?? null);
+
             $context = [
                 'type' => 'configuration',
-                'tenant_id' => $event->profile->tenant_id,
-                'message' => "Configuration profile {$event->profile->name} changed.",
-                'metadata' => ['profile_id' => $event->profile->id],
+                'tenant_id' => $tenantId,
+                'message' => "Configuration profile {$profileName} changed.",
+                'metadata' => [
+                    'profile_id' => $profileId,
+                    'configuration_id' => isset($event->configuration) ? $event->configuration->id : null,
+                ],
             ];
         } elseif ($event instanceof SystemOfflineDetected) {
             $eventType = 'system.offline';

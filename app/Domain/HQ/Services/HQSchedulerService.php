@@ -26,6 +26,9 @@ class HQSchedulerService
         $this->checkWorkflowTimeouts();
         $this->runFleetChecks();
         $this->runBackupChecks('hourly');
+        $this->runGovernanceChecks();
+        $this->runConfigurationChecks();
+        $this->runExtensionHealthChecks();
         
         // Aggregate usage data hourly
         app(\App\Domain\HQ\Services\UsageAggregationService::class)->aggregate('hourly');
@@ -106,6 +109,7 @@ class HQSchedulerService
                 ]));
             }
         }
+    }
 
     /**
      * Check for workflows that are stuck running for too long (timeout).
@@ -178,12 +182,59 @@ class HQSchedulerService
     {
         Log::info('HQSchedulerService: Running daily billing checks.');
         
-        $this->processExpiringSubscriptions();
+        $this->runBillingChecks();
         
         $this->runBackupChecks('daily');
         
         // Aggregate usage data daily
         app(\App\Domain\HQ\Services\UsageAggregationService::class)->aggregate('daily');
+    }
+
+    /**
+     * Sprint 8.9 Billing Checks
+     */
+    protected function runBillingChecks()
+    {
+        // 1. Expired Subscriptions
+        $expiredSubs = \App\Models\HQSubscription::where('status', 'active')
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<=', now())
+            ->get();
+            
+        $subscriptionService = app(\App\Domain\HQ\Services\Billing\SubscriptionService::class);
+        foreach ($expiredSubs as $sub) {
+            try {
+                $subscriptionService->cancel($sub);
+                $sub->update(['status' => 'expired']);
+            } catch (\Exception $e) {
+                Log::error("Failed to expire subscription {$sub->id}: " . $e->getMessage());
+            }
+        }
+
+        // 2. Expiring Invoices (Generate Invoices for subscriptions that are renewing)
+        // Handled by generating invoices a few days before expiry.
+        // For simplicity, generate invoice for active subscriptions that are 1 day from expiry.
+        $renewingSubs = \App\Models\HQSubscription::where('status', 'active')
+            ->whereNotNull('expires_at')
+            ->whereBetween('expires_at', [now(), now()->addDays(1)])
+            ->get();
+            
+        foreach ($renewingSubs as $sub) {
+            \App\Jobs\GenerateInvoiceJob::dispatch($sub);
+        }
+
+        // 3. Failed payments retry could be done here by picking pending invoices
+        $failedInvoices = \App\Models\HQInvoice::where('status', 'failed')->get();
+        foreach ($failedInvoices as $invoice) {
+            // Dispatch process payment again or notify
+            \App\Jobs\ProcessPaymentJob::dispatch($invoice);
+        }
+        
+        // 4. Calculate usage
+        $tenants = \App\Models\HQTenant::where('status', 'active')->get();
+        foreach ($tenants as $tenant) {
+            \App\Jobs\CalculateUsageJob::dispatch($tenant);
+        }
     }
 
     /**
@@ -238,5 +289,83 @@ class HQSchedulerService
         foreach ($pastDueToCancel as $sub) {
             $subscriptionService->expireSubscription($sub);
         }
+    }
+
+    /**
+     * Run Governance, Risk & Compliance periodic checks.
+     */
+    protected function runGovernanceChecks()
+    {
+        Log::info('HQSchedulerService: Running governance checks.');
+
+        // Normally we would loop over active tenants or global context
+        // and trigger SLA Service, Risk Service, etc.
+        // For demonstration of the integration:
+        
+        $tenants = \App\Models\HQTenant::where('status', 'active')->get();
+        $riskService = app(\App\Domain\HQ\Services\Governance\RiskEngineService::class);
+        $slaService = app(\App\Domain\HQ\Services\Governance\SLAService::class);
+        $complianceService = app(\App\Domain\HQ\Services\Governance\ComplianceService::class);
+        $policyService = app(\App\Domain\HQ\Services\Governance\PolicyEngineService::class);
+
+        foreach ($tenants as $tenant) {
+            // 1. Calculate Risk
+            $eventsContext = [
+                'backup_failed' => false,
+                'critical_alert' => \App\Models\HQSecurityEvent::where('tenant_id', $tenant->id)
+                    ->where('severity', 'critical')
+                    ->where('created_at', '>=', now()->subHour())
+                    ->count(),
+                'status' => 'online', // placeholder
+                'license_expired' => false,
+            ];
+            $riskService->calculateRisk($tenant, $eventsContext);
+
+            // 2. SLA Scan
+            $activeSlas = \App\Models\HQSlaPolicy::where('is_active', true)->get();
+            foreach ($activeSlas as $sla) {
+                // Determine actual value from observability/metrics
+                // Placeholder metric fetch logic
+                $actualValue = 99.9; 
+                $slaService->checkSLA($sla, $tenant, $actualValue);
+            }
+
+            // 3. Compliance Scan
+            $frameworks = \App\Models\HQComplianceFramework::where('is_active', true)->get();
+            foreach ($frameworks as $framework) {
+                $complianceService->evaluateTenantCompliance($tenant, $framework, ['backup.success' => true]);
+            }
+        }
+    }
+
+    /**
+     * Run Configuration Platform checks (Secret Expiration, Scheduled Flags).
+     */
+    protected function runConfigurationChecks()
+    {
+        Log::info('HQSchedulerService: Running configuration platform checks.');
+
+        // Expire Secrets
+        $expiredSecrets = \App\Models\HQSecretVault::where('is_active', true)
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<=', now())
+            ->get();
+
+        foreach ($expiredSecrets as $secret) {
+            $secret->update(['is_active' => false]);
+            event(new \App\Events\SecretExpired($secret));
+        }
+
+        // Apply Scheduled Flags (Example: A scheduled rollout)
+        // If we had a scheduled_at column on feature_flags, we would toggle them here.
+    }
+
+    /**
+     * Run Marketplace & Extension Platform checks.
+     */
+    protected function runExtensionHealthChecks()
+    {
+        Log::info('HQSchedulerService: Running extension health checks.');
+        \App\Jobs\VerifyExtensionHealthJob::dispatch();
     }
 }

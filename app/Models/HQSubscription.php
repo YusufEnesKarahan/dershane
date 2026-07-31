@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class HQSubscription extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'hq_subscriptions';
 
@@ -18,24 +19,19 @@ class HQSubscription extends Model
         'plan_id',
         'status',
         'starts_at',
-        'ends_at',
-        'trial_ends_at',
+        'expires_at',
         'cancelled_at',
-        'metadata',
     ];
 
     protected $casts = [
         'starts_at' => 'datetime',
-        'ends_at' => 'datetime',
-        'trial_ends_at' => 'datetime',
+        'expires_at' => 'datetime',
         'cancelled_at' => 'datetime',
-        'metadata' => 'array',
     ];
 
     protected static function boot()
     {
         parent::boot();
-
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
@@ -50,21 +46,16 @@ class HQSubscription extends Model
 
     public function plan()
     {
-        return $this->belongsTo(HQSubscriptionPlan::class, 'plan_id');
+        return $this->belongsTo(HQPlan::class, 'plan_id');
+    }
+
+    public function items()
+    {
+        return $this->hasMany(HQSubscriptionItem::class, 'subscription_id');
     }
 
     public function invoices()
     {
         return $this->hasMany(HQInvoice::class, 'subscription_id');
-    }
-
-    public function history()
-    {
-        return $this->hasMany(HQSubscriptionHistory::class, 'subscription_id');
-    }
-    
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
     }
 }
