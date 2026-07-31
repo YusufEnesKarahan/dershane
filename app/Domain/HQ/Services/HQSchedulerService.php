@@ -29,6 +29,9 @@ class HQSchedulerService
         $this->runGovernanceChecks();
         $this->runConfigurationChecks();
         $this->runExtensionHealthChecks();
+        $this->runPortalMaintenance();
+        $this->runIdentityChecks();
+        $this->runOnboardingChecks();
         
         // Aggregate usage data hourly
         app(\App\Domain\HQ\Services\UsageAggregationService::class)->aggregate('hourly');
@@ -367,5 +370,107 @@ class HQSchedulerService
     {
         Log::info('HQSchedulerService: Running extension health checks.');
         \App\Jobs\VerifyExtensionHealthJob::dispatch();
+    }
+
+    /**
+     * Run Customer Portal maintenance checks.
+     */
+    protected function runPortalMaintenance()
+    {
+        Log::info('HQSchedulerService: Running portal maintenance checks.');
+
+        // 1. Expire API Keys
+        $expiredKeys = \App\Models\PortalApiKey::where('status', 'active')
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<=', now())
+            ->get();
+            
+        foreach ($expiredKeys as $key) {
+            $key->update(['status' => 'expired']);
+            event(new \App\Events\PortalApiKeyRevoked($key));
+        }
+
+        // 2. Alert on Unread Critical Notifications
+        $criticalUnread = \App\Models\PortalNotification::whereNull('read_at')
+            ->where('type', 'critical')
+            ->where('created_at', '<=', now()->subHours(24))
+            ->get();
+            
+        foreach ($criticalUnread as $notification) {
+            // Ideally trigger an email or SMS, here we log it
+            Log::warning("Unread critical notification for tenant {$notification->tenant_id}: {$notification->title}");
+        }
+
+        // 3. Stale Support Tickets
+        $staleTickets = \App\Models\PortalSupportTicket::where('status', 'open')
+            ->where('updated_at', '<=', now()->subDays(7))
+            ->get();
+            
+        foreach ($staleTickets as $ticket) {
+            // Auto close stale tickets or send reminder
+            app(\App\Domain\Portal\Services\SupportTicketService::class)->changeStatus($ticket, 'closed');
+        }
+    }
+
+    /**
+     * Run Identity & Authentication checks.
+     */
+    protected function runIdentityChecks()
+    {
+        Log::info('HQSchedulerService: Running identity checks.');
+
+        // 1. Clean up expired sessions
+        \App\Jobs\CleanupExpiredSessionsJob::dispatch();
+
+        // 2. Clear expired locks
+        $expiredLocks = \App\Models\HQUserSecurity::whereNotNull('locked_until')
+            ->where('locked_until', '<=', now())
+            ->get();
+            
+        foreach ($expiredLocks as $security) {
+            $security->update([
+                'locked_until' => null,
+                'failed_attempts' => 0,
+            ]);
+            Log::info("HQSchedulerService: Cleared lock for user {$security->user_id}");
+        }
+    }
+
+    /**
+     * Run Onboarding & Provisioning checks.
+     */
+    protected function runOnboardingChecks()
+    {
+        Log::info('HQSchedulerService: Running onboarding checks.');
+
+        // 1. Stuck onboarding flows (in_progress for > 24 hours)
+        $stuckFlows = \App\Models\HQOnboardingFlow::where('status', 'in_progress')
+            ->where('updated_at', '<=', now()->subHours(24))
+            ->get();
+        
+        foreach ($stuckFlows as $flow) {
+            $flow->update(['status' => 'failed']);
+            Log::warning("HQSchedulerService: Onboarding flow {$flow->uuid} marked as failed due to timeout.");
+        }
+
+        // 2. Expired invitations
+        $expiredInvitations = \App\Models\HQTenantInvitation::whereNull('accepted_at')
+            ->where('expires_at', '<=', now())
+            ->get();
+            
+        foreach ($expiredInvitations as $invitation) {
+            $invitation->delete(); // soft delete
+            Log::info("HQSchedulerService: Expired invitation {$invitation->uuid} for email {$invitation->email}.");
+        }
+
+        // 3. Stuck provisioning tasks (processing for > 2 hours)
+        $stuckTasks = \App\Models\HQProvisioningTask::where('status', 'processing')
+            ->where('updated_at', '<=', now()->subHours(2))
+            ->get();
+            
+        foreach ($stuckTasks as $task) {
+            $task->update(['status' => 'failed', 'payload' => array_merge($task->payload ?? [], ['error' => 'Task timeout'])]);
+            event(new \App\Events\ProvisioningFailed($task->tenant, $task, 'Task timeout'));
+        }
     }
 }

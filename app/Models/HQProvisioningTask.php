@@ -7,24 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class HQLoginAttempt extends Model
+class HQProvisioningTask extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'hq_login_attempts';
+    protected $table = 'hq_provisioning_tasks';
 
     protected $fillable = [
         'uuid',
-        'user_id',
         'tenant_id',
-        'ip',
-        'success',
-        'metadata',
+        'task_type',
+        'status',
+        'payload',
+        'completed_at',
     ];
 
     protected $casts = [
-        'success' => 'boolean',
-        'metadata' => 'array',
+        'payload' => 'array',
+        'completed_at' => 'datetime',
     ];
 
     public $timestamps = true;
@@ -37,11 +37,6 @@ class HQLoginAttempt extends Model
                 $model->uuid = (string) Str::uuid();
             }
         });
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function tenant()

@@ -7,24 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class HQLoginAttempt extends Model
+class HQTenantInvitation extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'hq_login_attempts';
+    protected $table = 'hq_tenant_invitations';
 
     protected $fillable = [
         'uuid',
-        'user_id',
         'tenant_id',
-        'ip',
-        'success',
-        'metadata',
+        'email',
+        'role_id',
+        'token_hash',
+        'expires_at',
+        'accepted_at',
     ];
 
     protected $casts = [
-        'success' => 'boolean',
-        'metadata' => 'array',
+        'expires_at' => 'datetime',
+        'accepted_at' => 'datetime',
     ];
 
     public $timestamps = true;
@@ -39,13 +40,13 @@ class HQLoginAttempt extends Model
         });
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
     public function tenant()
     {
         return $this->belongsTo(HQTenant::class, 'tenant_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 }

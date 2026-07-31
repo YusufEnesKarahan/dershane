@@ -5,26 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
-class HQLoginAttempt extends Model
+class HQUserSession extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'hq_login_attempts';
+    protected $table = 'hq_user_sessions';
 
     protected $fillable = [
         'uuid',
         'user_id',
         'tenant_id',
+        'token_hash',
+        'device',
         'ip',
-        'success',
-        'metadata',
+        'last_activity_at',
+        'expires_at',
     ];
 
     protected $casts = [
-        'success' => 'boolean',
-        'metadata' => 'array',
+        'last_activity_at' => 'datetime',
+        'expires_at' => 'datetime',
     ];
 
     public $timestamps = true;
@@ -34,18 +35,18 @@ class HQLoginAttempt extends Model
         parent::boot();
         static::creating(function ($model) {
             if (empty($model->uuid)) {
-                $model->uuid = (string) Str::uuid();
+                $model->uuid = (string) \Illuminate\Support\Str::uuid();
             }
         });
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function tenant()
     {
-        return $this->belongsTo(HQTenant::class, 'tenant_id');
+        return $this->belongsTo(HQTenant::class);
     }
 }
