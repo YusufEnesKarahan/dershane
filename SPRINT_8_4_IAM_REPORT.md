@@ -8,16 +8,16 @@ In Sprint 8.4, the HQ Central Platform was enhanced with a comprehensive Enterpr
 
 ### 1. Database and Storage Architecture
 - A specialized migration `2026_07_30_085445_create_hq_iam_tables.php` was created to hold 10 core tables:
-  - `hq_roles`, `hq_permissions`, `hq_role_permissions`, `hq_user_roles`
-  - `hq_access_policies`
+  - `roles`, `permissions`, `hq_role_permissions`, `hq_user_roles`
+  - `access_policies`
   - `hq_api_keys`, `hq_service_accounts`
   - `hq_mfa_settings`, `hq_login_attempts`, `hq_security_sessions`
 - **Zero SQLite Enforcement:** Adhered strictly to the MySQL constraint; all queries and relations are built efficiently for production RDS databases.
 
 ### 2. Core Service Layers & Identity
-A new Service layer (`App\Domain\HQ\Services\IAM`) was constructed to handle specialized authentication methods.
-- **HQPermissionService (RBAC):** Enables cross-tenant and system-level Role-Based Access Control logic with caching and Super Admin overrides.
-- **HQAccessPolicyService (ABAC):** An advanced rules engine that processes Contextual Access Policies based on Time, IP range (`Request::ip()`), and Resource scopes.
+A new Service layer (`App\Core\Services\IAM`) was constructed to handle specialized authentication methods.
+- **PermissionService (RBAC):** Enables cross-tenant and system-level Role-Based Access Control logic with caching and Super Admin overrides.
+- **AccessPolicyService (ABAC):** An advanced rules engine that processes Contextual Access Policies based on Time, IP range (`Request::ip()`), and Resource scopes.
 - **HQApiKeyService:** Manages headless access securely, ensuring hashed tokens (`token_hash`) and preventing usage of revoked keys.
 - **HQServiceAccountService:** Facilitates machine-to-machine operations securely.
 - **SessionManagementService:** Tracks active device footprints, IP usage, User Agents, and allows force-termination of rogue sessions.

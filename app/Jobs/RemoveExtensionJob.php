@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Domain\HQ\Services\Extension\ExtensionInstallationService;
+use App\Core\Services\Extension\ExtensionInstallationService;
 use App\Models\HQExtensionInstallation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\User;
-use App\Models\HQTenant;
+use App\Models\Institution;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -15,7 +15,7 @@ class SessionRevoked
     public $tenant;
     public $sessionId;
 
-    public function __construct(User $user, ?HQTenant $tenant, $sessionId)
+    public function __construct(User $user, ?Institution $tenant, $sessionId)
     {
         $this->user = $user;
         $this->tenant = $tenant;

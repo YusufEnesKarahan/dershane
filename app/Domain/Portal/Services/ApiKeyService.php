@@ -2,7 +2,7 @@
 
 namespace App\Domain\Portal\Services;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\PortalApiKey;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
@@ -12,7 +12,7 @@ use App\Events\PortalApiKeyRevoked;
 
 class ApiKeyService
 {
-    public function createKey(HQTenant $tenant, string $name, $userId = null): array
+    public function createKey(Institution $tenant, string $name, $userId = null): array
     {
         $plainTextKey = 'pk_' . Str::random(40);
         
@@ -24,7 +24,7 @@ class ApiKeyService
             // We do not store the plain key. We only show it once.
         ]);
 
-        app(\App\Domain\HQ\Services\HQAuditService::class)->logSystemAction(
+        app(\App\Core\Services\AuditService::class)->logSystemAction(
             action: 'portal_api_key_created',
             category: 'portal',
             severity: 'info',
@@ -44,7 +44,7 @@ class ApiKeyService
     {
         $apiKey->update(['status' => 'revoked']);
 
-        app(\App\Domain\HQ\Services\HQAuditService::class)->logSystemAction(
+        app(\App\Core\Services\AuditService::class)->logSystemAction(
             action: 'portal_api_key_revoked',
             category: 'portal',
             severity: 'warning',

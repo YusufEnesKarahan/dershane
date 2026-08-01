@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\HQComplianceFramework;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -17,7 +17,7 @@ class ComplianceFailed
     public $score;
     public $details;
 
-    public function __construct(HQTenant $tenant, HQComplianceFramework $framework, float $score, array $details)
+    public function __construct(Institution $tenant, HQComplianceFramework $framework, float $score, array $details)
     {
         $this->tenant = $tenant;
         $this->framework = $framework;

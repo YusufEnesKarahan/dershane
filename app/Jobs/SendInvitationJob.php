@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\HQTenantInvitation;
+use App\Models\InstitutionInvitation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -24,7 +24,7 @@ class SendInvitationJob implements ShouldQueue
 
     public function handle(): void
     {
-        $invitation = HQTenantInvitation::find($this->invitationId);
+        $invitation = InstitutionInvitation::find($this->invitationId);
         if (!$invitation) return;
 
         Log::info("SendInvitationJob: Sending invitation to {$invitation->email} for tenant {$invitation->tenant_id}");

@@ -7,8 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\HQSubscription;
-use App\Domain\HQ\Services\Billing\InvoiceService;
+use App\Models\InstitutionPlan;
+use App\Core\Services\Billing\InvoiceService;
 
 class GenerateInvoiceJob implements ShouldQueue
 {
@@ -18,7 +18,7 @@ class GenerateInvoiceJob implements ShouldQueue
 
     public $tries = 3;
 
-    public function __construct(HQSubscription $subscription)
+    public function __construct(InstitutionPlan $subscription)
     {
         $this->subscription = $subscription;
     }

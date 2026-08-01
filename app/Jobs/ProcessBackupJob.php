@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\HQBackupJob;
-use App\Domain\HQ\Services\Backup\BackupOrchestrationService;
+use App\Core\Services\Backup\BackupOrchestrationService;
 
 class ProcessBackupJob implements ShouldQueue
 {

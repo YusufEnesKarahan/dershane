@@ -7,8 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\HQInvoice;
-use App\Domain\HQ\Services\Billing\PaymentProviders\PaymentProviderInterface;
+use App\Models\Invoice;
+use App\Core\Services\Billing\PaymentProviders\PaymentProviderInterface;
 use App\Events\PaymentReceived;
 use App\Events\PaymentFailed;
 use App\Models\HQPaymentEvent;
@@ -22,7 +22,7 @@ class ProcessPaymentJob implements ShouldQueue
 
     public $tries = 3;
 
-    public function __construct(HQInvoice $invoice, string $providerName = 'mock')
+    public function __construct(Invoice $invoice, string $providerName = 'mock')
     {
         $this->invoice = $invoice;
         $this->providerName = $providerName;
@@ -41,10 +41,10 @@ class ProcessPaymentJob implements ShouldQueue
         ]);
 
         if ($response['status'] === 'success') {
-            app(\App\Domain\HQ\Services\Billing\InvoiceService::class)->markAsPaid($this->invoice);
+            app(\App\Core\Services\Billing\InvoiceService::class)->markAsPaid($this->invoice);
             event(new PaymentReceived($this->invoice));
         } else {
-            app(\App\Domain\HQ\Services\Billing\InvoiceService::class)->markAsFailed($this->invoice);
+            app(\App\Core\Services\Billing\InvoiceService::class)->markAsFailed($this->invoice);
             event(new PaymentFailed($this->invoice, $response['message']));
             
             // Depending on business logic, we could downgrade or suspend here

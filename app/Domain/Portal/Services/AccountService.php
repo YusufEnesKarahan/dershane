@@ -2,12 +2,12 @@
 
 namespace App\Domain\Portal\Services;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use Illuminate\Support\Facades\DB;
 
 class AccountService
 {
-    public function updateProfile(HQTenant $tenant, array $data)
+    public function updateProfile(Institution $tenant, array $data)
     {
         return DB::transaction(function () use ($tenant, $data) {
             $tenant->update([
@@ -15,7 +15,7 @@ class AccountService
                 // other updatable fields like contact_email
             ]);
             
-            app(\App\Domain\HQ\Services\HQAuditService::class)->logSystemAction(
+            app(\App\Core\Services\AuditService::class)->logSystemAction(
                 action: 'portal_profile_updated',
                 category: 'portal',
                 severity: 'info',

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\HQInvoice;
+use App\Models\Invoice;
 
 class PaymentFailed
 {
@@ -22,7 +22,7 @@ class PaymentFailed
     /**
      * Create a new event instance.
      */
-    public function __construct(HQInvoice $invoice, string $reason = '')
+    public function __construct(Invoice $invoice, string $reason = '')
     {
         $this->invoice = $invoice;
         $this->reason = $reason;

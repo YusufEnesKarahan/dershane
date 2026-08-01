@@ -2,14 +2,14 @@
 
 namespace App\Domain\Identity\Services;
 
-use App\Domain\HQ\Services\HQAuditService;
+use App\Core\Services\AuditService;
 use Illuminate\Support\Facades\Log;
 
 class IdentityAuditService
 {
     protected $auditService;
 
-    public function __construct(HQAuditService $auditService)
+    public function __construct(AuditService $auditService)
     {
         $this->auditService = $auditService;
     }

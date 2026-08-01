@@ -3,7 +3,7 @@
 namespace App\Domain\Identity\Services;
 
 use App\Models\User;
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\HQUserSecurity;
 use App\Events\MFACreated;
 
@@ -16,7 +16,7 @@ class MFAService
         $this->auditService = $auditService;
     }
 
-    public function enableMFA(User $user, ?HQTenant $tenant)
+    public function enableMFA(User $user, ?Institution $tenant)
     {
         $security = HQUserSecurity::firstOrCreate([
             'user_id' => $user->id,
@@ -31,7 +31,7 @@ class MFAService
         return true;
     }
 
-    public function disableMFA(User $user, ?HQTenant $tenant)
+    public function disableMFA(User $user, ?Institution $tenant)
     {
         $security = HQUserSecurity::where('user_id', $user->id)
             ->where('tenant_id', $tenant ? $tenant->id : null)
@@ -45,7 +45,7 @@ class MFAService
         return true;
     }
 
-    public function verifyMFA(User $user, ?HQTenant $tenant, string $code): bool
+    public function verifyMFA(User $user, ?Institution $tenant, string $code): bool
     {
         // Placeholder for actual MFA verification (e.g., using Google Authenticator TOTP)
         // For the sake of this sprint, we'll assume a dummy verification

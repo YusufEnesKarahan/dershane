@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\HQProvisioningTask;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,7 +14,7 @@ class ProvisioningCompleted
     public $tenant;
     public $task;
 
-    public function __construct(HQTenant $tenant, HQProvisioningTask $task)
+    public function __construct(Institution $tenant, HQProvisioningTask $task)
     {
         $this->tenant = $tenant;
         $this->task = $task;

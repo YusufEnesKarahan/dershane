@@ -7,8 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\HQTenant;
-use App\Domain\HQ\Services\Billing\UsageMeteringService;
+use App\Models\Institution;
+use App\Core\Services\Billing\UsageMeteringService;
 
 class CalculateUsageJob implements ShouldQueue
 {
@@ -16,7 +16,7 @@ class CalculateUsageJob implements ShouldQueue
 
     public $tenant;
 
-    public function __construct(HQTenant $tenant)
+    public function __construct(Institution $tenant)
     {
         $this->tenant = $tenant;
     }

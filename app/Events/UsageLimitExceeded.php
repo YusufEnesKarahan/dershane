@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 
 class UsageLimitExceeded
 {
@@ -22,7 +22,7 @@ class UsageLimitExceeded
     /**
      * Create a new event instance.
      */
-    public function __construct(HQTenant $tenant, string $metricName)
+    public function __construct(Institution $tenant, string $metricName)
     {
         $this->tenant = $tenant;
         $this->metricName = $metricName;

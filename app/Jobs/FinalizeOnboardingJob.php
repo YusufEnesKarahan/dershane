@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\HQOnboardingFlow;
+use App\Models\InstitutionRegistration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,7 +23,7 @@ class FinalizeOnboardingJob implements ShouldQueue
 
     public function handle(): void
     {
-        $flow = HQOnboardingFlow::find($this->flowId);
+        $flow = InstitutionRegistration::find($this->flowId);
         if (!$flow) return;
 
         Log::info("FinalizeOnboardingJob: Finalizing onboarding for tenant {$flow->tenant_id}");

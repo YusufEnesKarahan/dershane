@@ -2,13 +2,13 @@
 
 namespace App\Domain\Portal\Services;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\PortalSupportTicket;
 use App\Events\SupportTicketCreated;
 
 class SupportTicketService
 {
-    public function createTicket(HQTenant $tenant, array $data, $userId = null): PortalSupportTicket
+    public function createTicket(Institution $tenant, array $data, $userId = null): PortalSupportTicket
     {
         $ticket = PortalSupportTicket::create([
             'tenant_id' => $tenant->id,
@@ -18,7 +18,7 @@ class SupportTicketService
             'priority' => $data['priority'] ?? 'medium',
         ]);
 
-        app(\App\Domain\HQ\Services\HQAuditService::class)->logSystemAction(
+        app(\App\Core\Services\AuditService::class)->logSystemAction(
             action: 'portal_support_ticket_created',
             category: 'portal',
             severity: 'info',

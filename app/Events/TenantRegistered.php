@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -13,7 +13,7 @@ class TenantRegistered
     public $tenant;
     public $planId;
 
-    public function __construct(HQTenant $tenant, $planId = null)
+    public function __construct(Institution $tenant, $planId = null)
     {
         $this->tenant = $tenant;
         $this->planId = $planId;

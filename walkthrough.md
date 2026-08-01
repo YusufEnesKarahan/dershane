@@ -101,7 +101,7 @@ Open **System / Queue Dashboard** to inspect pending, failed, and completed jobs
 
 ### Key Changes
 1. **Database Tracking**: Created `hq_scheduler_logs` and `HQSchedulerLog` model to chronologically track all attempted jobs, their precise execution duration (`duration_ms`), and terminal states (success vs error).
-2. **Robust Service Layer**: Introduced `HQSchedulerService` enforcing standardized execution loops featuring try/catch boundaries, automatic timestamping, and database logging via the isolated `executeTask` method.
+2. **Robust Service Layer**: Introduced `SchedulerService` enforcing standardized execution loops featuring try/catch boundaries, automatic timestamping, and database logging via the isolated `executeTask` method.
 3. **Discrete Commands**: Crafted three dedicated Artisan commands (`hq:telemetry`, `hq:heartbeat`, `hq:sync`) hooked directly into Laravel's native Console Kernel via `routes/console.php`. Each verifies the `config('hq.scheduler.enabled')` flag prior to any processing.
 4. **Administration Interface**: Delivered `HQSchedulerController` mapped to `/admin/platform/scheduler` presenting system administrators with live diagnostic cards showing enabled status, the timestamps of the last automated telemetry and heartbeat runs, alongside a historical grid of task logs. 
 5. **Dashboard Widgets**: Fortified the Executive Dashboard adding a dedicated "HQ Automation Status" panel rendering real-time enabled/disabled state flags and tracking recent failing jobs.
@@ -130,8 +130,8 @@ Open **System / Queue Dashboard** to inspect pending, failed, and completed jobs
 **Goal**: Elevate the codebase to function as the HQ Central Backend, enabling it to accept, manage, and monitor incoming connections from remote SaaS ERP instances. 
 
 ### Key Changes
-1. **Central Schema Expansion**: Deployed dedicated central tables (`hq_tenants`, `hq_system_instances`, `hq_api_connections`, `hq_telemetry_records`, `hq_central_commands`, and `hq_central_sync_logs`) to track multiple SaaS architectures.
-2. **Domain Boundaries**: Segregated central logic inside `App\Domain\HQ\Services`, creating bespoke registry (`SystemRegistryService`), command dispatching (`HQCommandService`), and telemetry processing (`HQTelemetryService`) services without polluting local ERP behaviors.
+1. **Central Schema Expansion**: Deployed dedicated central tables (`institutions`, `hq_system_instances`, `hq_api_connections`, `hq_telemetry_records`, `hq_central_commands`, and `hq_central_sync_logs`) to track multiple SaaS architectures.
+2. **Domain Boundaries**: Segregated central logic inside `App\Core\Services`, creating bespoke registry (`SystemRegistryService`), command dispatching (`HQCommandService`), and telemetry processing (`HQTelemetryService`) services without polluting local ERP behaviors.
 3. **API Foundation**: Constructed `/api/hq/*` routes governed by `VerifyHQApiSignature` middleware. This rigidly demands HMAC SHA-256 integrity, Bearer validation, and request-replay denial across every remote heartbeat and sync.
 4. **Administrative Centralization**: Created `/admin/platform/hq-central` routed to `HQCentralController` offering Super Admins overarching visibility over connected tenants, offline durations, and the overarching API health map.
 
@@ -145,7 +145,7 @@ Open **System / Queue Dashboard** to inspect pending, failed, and completed jobs
 
 ### Key Changes
 1. **Authorization & Access**: Created `HQPolicy` and explicitly registered gates (`hq.viewDashboard`, `hq.manageTenant`, `hq.sendCommand`) in `AppServiceProvider` restricting all central panel access to the Super Admin role exclusively.
-2. **Controller Decomposition**: Segmented dashboard responsibilities to prevent monolithic code. `HQCentralController` powers the high-level dashboard, `HQSystemController` manages instance lists and deep-dive inspections, and `HQTenantController` handles CRUD operations for the overarching tenant organizations.
+2. **Controller Decomposition**: Segmented dashboard responsibilities to prevent monolithic code. `HQCentralController` powers the high-level dashboard, `HQSystemController` manages instance lists and deep-dive inspections, and `InstitutionController` handles CRUD operations for the overarching tenant organizations.
 3. **Advanced Telemetry Aggregation**: Elevated `HQMonitoringService` to parse JSON telemetry payloads continuously, extracting dynamic averages (Memory & Storage Usage Percentages), tracking communication latency, and detecting stale instances (offline marking logic for >15 minutes elapsed).
 4. **Premium UI/UX Implementation**: Developed dark-mode compatible interfaces under `/resources/views/admin/hq/*`:
    - Configured an overarching metric dashboard with 5 distinct grid areas (System Overview, Tenant Overview, Communication Health, Command Queue, Telemetry Insights).

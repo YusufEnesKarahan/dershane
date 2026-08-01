@@ -10,9 +10,12 @@ use App\Domain\Parent\Services\ParentPortalService;
 use App\Domain\Teacher\Services\TeacherPortalService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PortalScopeAuthorizationTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_parent_cannot_load_an_unlinked_student_dashboard(): void
     {
         $repository = $this->createMock(ParentRepositoryInterface::class);

@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\HQTenantInvitation;
+use App\Models\InstitutionInvitation;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,7 +12,7 @@ class InvitationSent
 
     public $invitation;
 
-    public function __construct(HQTenantInvitation $invitation)
+    public function __construct(InstitutionInvitation $invitation)
     {
         $this->invitation = $invitation;
     }

@@ -3,14 +3,14 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Domain\Platform\Services\HQSchedulerService;
+use App\Domain\Platform\Services\SchedulerService;
 
 class HQHeartbeatCommand extends Command
 {
     protected $signature = 'hq:heartbeat';
     protected $description = 'Send heartbeat ping to HQ';
 
-    public function handle(HQSchedulerService $schedulerService)
+    public function handle(SchedulerService $schedulerService)
     {
         if (!config('hq.scheduler.enabled')) {
             $this->info('HQ Scheduler is currently disabled. Skipping hq:heartbeat.');

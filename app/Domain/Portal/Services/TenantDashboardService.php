@@ -2,11 +2,11 @@
 
 namespace App\Domain\Portal\Services;
 
-use App\Models\HQTenant;
-use App\Models\HQSubscription;
+use App\Models\Institution;
+use App\Models\InstitutionPlan;
 use App\Models\HQUsageRecord;
 use App\Models\PortalActivityLog;
-use App\Domain\HQ\Services\Billing\EntitlementService;
+use App\Core\Services\Billing\EntitlementService;
 
 class TenantDashboardService
 {
@@ -17,7 +17,7 @@ class TenantDashboardService
         $this->entitlementService = $entitlementService;
     }
 
-    public function getDashboardData(HQTenant $tenant): array
+    public function getDashboardData(Institution $tenant): array
     {
         $activeSubscription = $tenant->subscriptions()->where('status', 'active')->with('plan')->first();
         
@@ -47,7 +47,7 @@ class TenantDashboardService
         ];
     }
 
-    protected function getEntitlementsSummary(HQTenant $tenant): array
+    protected function getEntitlementsSummary(Institution $tenant): array
     {
         // Sample of checking key entitlements
         $features = [

@@ -2,8 +2,8 @@
 
 namespace App\Domain\Onboarding\Services;
 
-use App\Models\HQOnboardingFlow;
-use App\Models\HQTenant;
+use App\Models\InstitutionRegistration;
+use App\Models\Institution;
 use App\Models\HQPlan;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -17,9 +17,9 @@ class OnboardingService
         $this->provisioningService = $provisioningService;
     }
 
-    public function startOnboarding(array $data): HQOnboardingFlow
+    public function startOnboarding(array $data): InstitutionRegistration
     {
-        $flow = HQOnboardingFlow::create([
+        $flow = InstitutionRegistration::create([
             'current_step' => 'tenant_creation',
             'status' => 'in_progress',
             'metadata' => [
@@ -30,7 +30,7 @@ class OnboardingService
         return $flow;
     }
 
-    public function advanceStep(HQOnboardingFlow $flow, string $step, array $payload = [])
+    public function advanceStep(InstitutionRegistration $flow, string $step, array $payload = [])
     {
         Log::info("OnboardingService: Advancing flow {$flow->uuid} to step {$step}");
         
@@ -49,34 +49,34 @@ class OnboardingService
             case 'plan_selection':
                 if (!$flow->tenant_id) throw new Exception("Tenant not created yet.");
                 $plan = HQPlan::find($payload['plan_id']);
-                $this->provisioningService->setupBilling(HQTenant::find($flow->tenant_id), $plan);
+                $this->provisioningService->setupBilling(Institution::find($flow->tenant_id), $plan);
                 break;
                 
             case 'admin_creation':
                 if (!$flow->tenant_id) throw new Exception("Tenant not created yet.");
-                $this->provisioningService->createAdminUser(HQTenant::find($flow->tenant_id), $payload);
+                $this->provisioningService->createAdminUser(Institution::find($flow->tenant_id), $payload);
                 break;
 
             case 'default_config':
                 if (!$flow->tenant_id) throw new Exception("Tenant not created yet.");
-                $this->provisioningService->createDefaultConfig(HQTenant::find($flow->tenant_id));
+                $this->provisioningService->createDefaultConfig(Institution::find($flow->tenant_id));
                 break;
 
             case 'iam_setup':
                 if (!$flow->tenant_id) throw new Exception("Tenant not created yet.");
-                $this->provisioningService->setupIAM(HQTenant::find($flow->tenant_id));
+                $this->provisioningService->setupIAM(Institution::find($flow->tenant_id));
                 break;
 
             case 'portal_activation':
                 if (!$flow->tenant_id) throw new Exception("Tenant not created yet.");
-                $this->provisioningService->activatePortal(HQTenant::find($flow->tenant_id));
+                $this->provisioningService->activatePortal(Institution::find($flow->tenant_id));
                 break;
         }
 
         return $flow;
     }
 
-    public function completeOnboarding(HQOnboardingFlow $flow)
+    public function completeOnboarding(InstitutionRegistration $flow)
     {
         \App\Jobs\FinalizeOnboardingJob::dispatch($flow->id);
     }

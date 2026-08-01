@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\HQDeployment;
-use App\Domain\HQ\Services\Fleet\RolloutService;
+use App\Core\Services\Fleet\RolloutService;
 
 class VerifyHealthJob implements ShouldQueue
 {

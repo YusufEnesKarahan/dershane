@@ -2,25 +2,25 @@
 
 namespace App\Domain\Onboarding\Services;
 
-use App\Models\HQTenant;
-use App\Models\HQTenantInvitation;
+use App\Models\Institution;
+use App\Models\InstitutionInvitation;
 use App\Models\Role;
 use Illuminate\Support\Str;
-use App\Domain\HQ\Services\HQAuditService;
+use App\Core\Services\AuditService;
 use Exception;
 
 class InvitationService
 {
     protected $auditService;
 
-    public function __construct(HQAuditService $auditService)
+    public function __construct(AuditService $auditService)
     {
         $this->auditService = $auditService;
     }
 
-    public function inviteUser(HQTenant $tenant, string $email, ?Role $role): HQTenantInvitation
+    public function inviteUser(Institution $tenant, string $email, ?Role $role): InstitutionInvitation
     {
-        $invitation = HQTenantInvitation::create([
+        $invitation = InstitutionInvitation::create([
             'tenant_id' => $tenant->id,
             'email' => $email,
             'role_id' => $role ? $role->id : null,
@@ -37,7 +37,7 @@ class InvitationService
 
     public function acceptInvitation(string $tokenHash, \App\Models\User $user)
     {
-        $invitation = HQTenantInvitation::where('token_hash', $tokenHash)
+        $invitation = InstitutionInvitation::where('token_hash', $tokenHash)
             ->whereNull('accepted_at')
             ->where('expires_at', '>', now())
             ->first();

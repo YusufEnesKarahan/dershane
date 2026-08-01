@@ -25,6 +25,6 @@ class PortalNotification extends Model
 
     public function tenant()
     {
-        return $this->belongsTo(HQTenant::class);
+        return $this->belongsTo(Institution::class);
     }
 }

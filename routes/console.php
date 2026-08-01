@@ -56,13 +56,13 @@ Schedule::command('hq:license-check')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
 
-Schedule::call(fn () => app(\App\Domain\HQ\Services\HQSchedulerService::class)->runHourlyChecks())
+Schedule::call(fn () => app(\App\Core\Services\SchedulerService::class)->runHourlyChecks())
     ->hourly()
     ->name('hq:hourly-checks')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/hq_scheduler.log'));
 
-Schedule::call(fn () => app(\App\Domain\HQ\Services\HQSchedulerService::class)->runDailyBillingChecks())
+Schedule::call(fn () => app(\App\Core\Services\SchedulerService::class)->runDailyBillingChecks())
     ->dailyAt('00:05')
     ->name('hq:daily-billing-checks')
     ->withoutOverlapping()

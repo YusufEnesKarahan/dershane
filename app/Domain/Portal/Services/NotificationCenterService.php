@@ -2,20 +2,20 @@
 
 namespace App\Domain\Portal\Services;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\PortalNotification;
 use App\Events\NotificationRead;
 
 class NotificationCenterService
 {
-    public function getNotifications(HQTenant $tenant)
+    public function getNotifications(Institution $tenant)
     {
         return PortalNotification::where('tenant_id', $tenant->id)
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
-    public function getUnreadNotifications(HQTenant $tenant)
+    public function getUnreadNotifications(Institution $tenant)
     {
         return PortalNotification::where('tenant_id', $tenant->id)
             ->whereNull('read_at')
@@ -33,7 +33,7 @@ class NotificationCenterService
         return $notification;
     }
 
-    public function sendNotification(HQTenant $tenant, string $title, string $message, string $type = 'info')
+    public function sendNotification(Institution $tenant, string $title, string $message, string $type = 'info')
     {
         // This can be triggered synchronously or via SendPortalNotificationJob
         return PortalNotification::create([

@@ -3,12 +3,12 @@
 namespace App\Domain\System\Commands\Handlers;
 
 use App\Domain\System\Commands\RemoteCommandHandlerInterface;
-use App\Domain\Platform\Services\HQSchedulerService;
+use App\Domain\Platform\Services\SchedulerService;
 
 class TelemetryHandler implements RemoteCommandHandlerInterface
 {
     public function __construct(
-        protected HQSchedulerService $schedulerService
+        protected SchedulerService $schedulerService
     ) {}
 
     public function handle(array $payload): array

@@ -5,7 +5,7 @@ namespace App\Domain\Platform\Services;
 use App\Models\HQSchedulerLog;
 use Exception;
 
-class HQSchedulerService
+class SchedulerService
 {
     public function __construct(
         protected HQTelemetryService $telemetryService,
@@ -46,8 +46,8 @@ class HQSchedulerService
     public function processBackupHealthChecks(): array
     {
         // This is usually run via HQ cron to clean up jobs or retry them.
-        // For simplicity and since HQSchedulerService runs mostly on ERP, if this is HQ side:
-        $backupService = app(\App\Domain\HQ\Services\HQBackupService::class);
+        // For simplicity and since SchedulerService runs mostly on ERP, if this is HQ side:
+        $backupService = app(\App\Core\Services\HQBackupService::class);
         $backupService->cleanupExpiredBackups();
 
         // Find failed jobs to retry, or health checks.

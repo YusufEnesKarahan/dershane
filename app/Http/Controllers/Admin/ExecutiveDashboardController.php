@@ -89,7 +89,7 @@ class ExecutiveDashboardController extends Controller
             'pending_count' => \App\Models\HQUpdate::where('status', 'available')->count(),
         ];
         
-        $metrics['hq_central_status'] = app(\App\Domain\HQ\Services\HQMonitoringService::class)->getDashboardMetrics();
+        $metrics['hq_central_status'] = app(\App\Core\Services\HQMonitoringService::class)->getDashboardMetrics();
         
         return view('admin.reporting.dashboard', compact('metrics'));
     }

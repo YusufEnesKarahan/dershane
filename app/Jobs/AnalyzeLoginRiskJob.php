@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
-use App\Models\HQTenant;
+use App\Models\Institution;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +19,7 @@ class AnalyzeLoginRiskJob implements ShouldQueue
     protected $tenant;
     protected $ip;
 
-    public function __construct(User $user, ?HQTenant $tenant, string $ip)
+    public function __construct(User $user, ?Institution $tenant, string $ip)
     {
         $this->user = $user;
         $this->tenant = $tenant;

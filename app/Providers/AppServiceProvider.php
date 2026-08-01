@@ -38,8 +38,6 @@ class AppServiceProvider extends ServiceProvider
             $registry->register(new \App\Domain\Media\Conversions\WebpConversionStrategy());
             return $registry;
         });
-
-        $this->app->singleton(\App\Domain\License\Services\LicenseVerificationService::class);
     }
 
     /**
@@ -60,61 +58,10 @@ class AppServiceProvider extends ServiceProvider
 
         foreach ([\App\Events\Notifications\StudentRegistered::class, \App\Events\Notifications\PaymentOverdue::class, \App\Events\Notifications\ExamResultPublished::class, \App\Events\Notifications\HomeworkAssigned::class, \App\Events\Notifications\CrmFollowupDue::class] as $event) Event::listen($event, \App\Listeners\Notifications\CreateDomainNotification::class);
         foreach ([\App\Events\System\PaymentOverdueEvent::class, \App\Events\System\StudentAbsenceDetectedEvent::class, \App\Events\System\ReportGeneratedEvent::class] as $event) Event::listen($event, \App\Listeners\System\DispatchAutomationJob::class);
-        
-        // HQ Audit Events
-        $auditEvents = [
-            \App\Events\LicenseChanged::class,
-            \App\Events\RemoteCommandExecuted::class,
-            \App\Events\UpdateCompleted::class,
-            \App\Events\ConfigurationChanged::class,
-            \App\Events\BackupCompleted::class,
-            \Illuminate\Auth\Events\Failed::class,
-        ];
-        foreach ($auditEvents as $event) {
-            Event::listen($event, \App\Listeners\CreateAuditLog::class);
-        }
-
-        // HQ Alert Events
-        $alertEvents = [
-            \App\Events\LicenseChanged::class,
-            \App\Events\RemoteCommandExecuted::class,
-            \App\Events\UpdateCompleted::class,
-            \App\Events\ConfigurationChanged::class,
-            \App\Events\BackupCompleted::class,
-            \App\Events\SystemOfflineDetected::class,
-            \App\Events\SecurityThreatDetected::class,
-            \App\Events\BackupFailedDetected::class,
-        ];
-        foreach ($alertEvents as $event) {
-            Event::listen($event, \App\Listeners\EvaluateAlertRules::class);
-        }
-
-        // HQ Billing Events
-        $billingEvents = [
-            \App\Events\HQ\Billing\SubscriptionCreated::class,
-            \App\Events\HQ\Billing\SubscriptionUpgraded::class,
-            \App\Events\HQ\Billing\SubscriptionCancelled::class,
-            \App\Events\HQ\Billing\SubscriptionExpired::class,
-        ];
-        foreach ($billingEvents as $event) {
-            Event::listen($event, \App\Listeners\HQ\Billing\SyncTenantLicense::class);
-        }
 
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
-
-        // HQ Policies
-        Gate::define('hq.viewDashboard', [\App\Policies\HQPolicy::class, 'viewDashboard']);
-        Gate::define('hq.manageTenant', [\App\Policies\HQPolicy::class, 'manageTenant']);
-        Gate::define('hq.sendCommand', [\App\Policies\HQPolicy::class, 'sendCommand']);
-        Gate::define('hq.manageLicense', [\App\Policies\HQPolicy::class, 'manageLicense']);
-        Gate::define('hq.viewAuditLogs', [\App\Policies\HQPolicy::class, 'viewAuditLogs']);
-        Gate::define('hq.viewAlerts', [\App\Policies\HQPolicy::class, 'viewAlerts']);
-        Gate::define('hq.manageAlerts', [\App\Policies\HQPolicy::class, 'manageAlerts']);
-        Gate::define('hq.viewBilling', [\App\Policies\HQPolicy::class, 'viewBilling']);
-        Gate::define('hq.manageBilling', [\App\Policies\HQPolicy::class, 'manageBilling']);
-        Gate::define('hq.managePlans', [\App\Policies\HQPolicy::class, 'managePlans']);
 
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {
@@ -184,9 +131,5 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Asset::observe(\App\Observers\AssetObserver::class);
         \App\Models\InventoryItem::observe(\App\Observers\InventoryObserver::class);
         \App\Models\Document::observe(\App\Observers\DocumentObserver::class);
-
-        if (! \Illuminate\Support\Facades\Cache::has('hq_license_status')) {
-            \Illuminate\Support\Facades\Cache::put('hq_license_status', 'active', 600);
-        }
     }
 }

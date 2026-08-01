@@ -17,8 +17,8 @@ class VerifyExtensionHealthJob implements ShouldQueue
     {
         $installations = HQExtensionInstallation::with(['extension', 'version'])->whereIn('status', ['activated', 'failed'])->get();
         
-        $dependencyService = app(\App\Domain\HQ\Services\Extension\ExtensionDependencyService::class);
-        $installationService = app(\App\Domain\HQ\Services\Extension\ExtensionInstallationService::class);
+        $dependencyService = app(\App\Core\Services\Extension\ExtensionDependencyService::class);
+        $installationService = app(\App\Core\Services\Extension\ExtensionInstallationService::class);
 
         foreach ($installations as $installation) {
             $healthOk = true; 
@@ -44,7 +44,7 @@ class VerifyExtensionHealthJob implements ShouldQueue
                 
                 \Log::warning("Extension installation {$installation->id} failed health check and was disabled.");
                 
-                app(\App\Domain\HQ\Services\HQAlertService::class)->createAlert(
+                app(\App\Core\Services\HQAlertService::class)->createAlert(
                     severity: 'warning',
                     title: 'extension.health.failed',
                     message: "Extension {$installation->extension->slug} failed health check and was disabled.",

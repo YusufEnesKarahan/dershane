@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Domain\Platform\Services\HQSchedulerService;
+use App\Domain\Platform\Services\SchedulerService;
 use App\Domain\License\Services\LicenseVerificationService;
 
 class HQLicenseCheckCommand extends Command
@@ -11,7 +11,7 @@ class HQLicenseCheckCommand extends Command
     protected $signature = 'hq:license-check';
     protected $description = 'Validate license with HQ and refresh local cache';
 
-    public function handle(HQSchedulerService $schedulerService, LicenseVerificationService $licenseService)
+    public function handle(SchedulerService $schedulerService, LicenseVerificationService $licenseService)
     {
         if (!config('hq.scheduler.enabled')) {
             $this->info('HQ Scheduler is currently disabled. Skipping hq:license-check.');

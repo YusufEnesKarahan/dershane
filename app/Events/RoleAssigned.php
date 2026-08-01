@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\User;
-use App\Models\HQRole;
+use App\Models\Role;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -14,7 +14,7 @@ class RoleAssigned
     public $user;
     public $role;
 
-    public function __construct(User $user, HQRole $role)
+    public function __construct(User $user, Role $role)
     {
         $this->user = $user;
         $this->role = $role;

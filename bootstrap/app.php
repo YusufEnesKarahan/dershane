@@ -17,15 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
             'edition' => \App\Http\Middleware\EditionMiddleware::class,
-            'hq.license' => \App\Http\Middleware\HqLicenseMiddleware::class,
-            'feature' => \App\Http\Middleware\RequireFeature::class,
         ]);
 
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\InstallationMiddleware::class,
-            \App\Http\Middleware\HqLicenseMiddleware::class,
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
-            \App\Http\Middleware\LicenseMiddleware::class,
         ]);
 
         $middleware->appendToGroup('api', [

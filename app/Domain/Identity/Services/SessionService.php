@@ -3,7 +3,7 @@
 namespace App\Domain\Identity\Services;
 
 use App\Models\User;
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\HQUserSession;
 use App\Events\SessionRevoked;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ class SessionService
         $this->auditService = $auditService;
     }
 
-    public function createSession(User $user, ?HQTenant $tenant, string $token, string $ip, ?string $device): HQUserSession
+    public function createSession(User $user, ?Institution $tenant, string $token, string $ip, ?string $device): HQUserSession
     {
         $session = HQUserSession::create([
             'user_id' => $user->id,
@@ -35,7 +35,7 @@ class SessionService
         return $session;
     }
 
-    public function getActiveSessions(User $user, ?HQTenant $tenant)
+    public function getActiveSessions(User $user, ?Institution $tenant)
     {
         return HQUserSession::where('user_id', $user->id)
             ->where('tenant_id', $tenant ? $tenant->id : null)

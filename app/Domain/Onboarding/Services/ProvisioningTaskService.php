@@ -2,12 +2,12 @@
 
 namespace App\Domain\Onboarding\Services;
 
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\HQProvisioningTask;
 
 class ProvisioningTaskService
 {
-    public function createTask(HQTenant $tenant, string $taskType, array $payload = []): HQProvisioningTask
+    public function createTask(Institution $tenant, string $taskType, array $payload = []): HQProvisioningTask
     {
         $task = HQProvisioningTask::create([
             'tenant_id' => $tenant->id,

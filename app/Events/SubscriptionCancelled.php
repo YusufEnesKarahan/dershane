@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\HQSubscription;
+use App\Models\InstitutionPlan;
 
 class SubscriptionCancelled
 {
@@ -21,7 +21,7 @@ class SubscriptionCancelled
     /**
      * Create a new event instance.
      */
-    public function __construct(HQSubscription $subscription)
+    public function __construct(InstitutionPlan $subscription)
     {
         $this->subscription = $subscription;
     }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Domain\HQ\Services\Backup\RetentionService;
+use App\Core\Services\Backup\RetentionService;
 
 class PruneBackupsJob implements ShouldQueue
 {

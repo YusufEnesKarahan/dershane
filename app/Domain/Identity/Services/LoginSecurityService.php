@@ -3,7 +3,7 @@
 namespace App\Domain\Identity\Services;
 
 use App\Models\User;
-use App\Models\HQTenant;
+use App\Models\Institution;
 use App\Models\HQUserSecurity;
 use App\Models\HQLoginAttempt;
 use App\Events\LoginSuccessful;
@@ -22,7 +22,7 @@ class LoginSecurityService
         $this->auditService = $auditService;
     }
 
-    public function checkLogin(User $user, ?HQTenant $tenant, string $password, string $ip, ?string $device): bool
+    public function checkLogin(User $user, ?Institution $tenant, string $password, string $ip, ?string $device): bool
     {
         $security = HQUserSecurity::firstOrCreate([
             'user_id' => $user->id,
@@ -43,7 +43,7 @@ class LoginSecurityService
         return false;
     }
 
-    protected function handleSuccessfulLogin(User $user, ?HQTenant $tenant, HQUserSecurity $security, string $ip, ?string $device)
+    protected function handleSuccessfulLogin(User $user, ?Institution $tenant, HQUserSecurity $security, string $ip, ?string $device)
     {
         $security->update([
             'failed_attempts' => 0,
@@ -60,7 +60,7 @@ class LoginSecurityService
         \App\Jobs\AnalyzeLoginRiskJob::dispatch($user, $tenant, $ip);
     }
 
-    protected function handleFailedLogin(User $user, ?HQTenant $tenant, HQUserSecurity $security, string $ip, ?string $device)
+    protected function handleFailedLogin(User $user, ?Institution $tenant, HQUserSecurity $security, string $ip, ?string $device)
     {
         $security->increment('failed_attempts');
 
@@ -77,7 +77,7 @@ class LoginSecurityService
         $this->auditService->logSecurityEvent($tenant, $user, 'login.failed', ['ip' => $ip, 'device' => $device, 'attempts' => $security->failed_attempts]);
     }
 
-    protected function logAttempt(?User $user, ?HQTenant $tenant, string $ip, bool $success, array $metadata = [])
+    protected function logAttempt(?User $user, ?Institution $tenant, string $ip, bool $success, array $metadata = [])
     {
         HQLoginAttempt::create([
             'user_id' => $user ? $user->id : null,
