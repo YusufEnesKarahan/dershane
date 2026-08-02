@@ -16,19 +16,7 @@ class LicenseLimitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        $this->branch = Branch::factory()->create([
-            'name' => 'Main Branch',
-            'slug' => 'main-branch',
-        ]);
-        $this->user = User::factory()->create([
-            'branch_id' => $this->branch->id,
-        ]);
-        
-        // Mock the Super Admin role check or assign it if possible
-        // Assuming there's a Role model and Spatie permissions, or we can just bypass
-        // but for now let's just make sure they can pass EnsureActiveBranch
-        session(['active_branch_id' => $this->branch->id]);
+        $this->setupSaaSTenant();
     }
 
     public function test_cannot_add_student_if_limit_reached()
@@ -59,7 +47,7 @@ class LicenseLimitTest extends TestCase
             return response()->json(['success' => true]);
         })->middleware('limits:student');
 
-        $response = $this->actingAs($this->user)->postJson('/test-student', []);
+        $response = $this->actingAs($this->tenantUser)->postJson('/test-student', []);
 
         // Assert
         $response->assertStatus(402);
@@ -86,7 +74,7 @@ class LicenseLimitTest extends TestCase
         })->middleware('limits:student');
 
         // Act
-        $response = $this->actingAs($this->user)->postJson('/test-student', []);
+        $response = $this->actingAs($this->tenantUser)->postJson('/test-student', []);
 
         // Assert
         $response->assertStatus(200);

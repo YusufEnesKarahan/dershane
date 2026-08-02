@@ -16,19 +16,7 @@ class OnboardingFlowTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        $this->branch = Branch::factory()->create([
-            'name' => 'Main Branch',
-            'slug' => 'main-branch',
-        ]);
-        $this->user = User::factory()->create([
-            'branch_id' => $this->branch->id,
-        ]);
-        
-        $role = \App\Models\Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
-        $this->user->roles()->attach($role);
-        
-        session(['active_branch_id' => $this->branch->id]);
+        $this->setupSaaSTenant();
     }
 
     public function test_redirects_to_onboarding_if_not_configured()
@@ -37,7 +25,7 @@ class OnboardingFlowTest extends TestCase
         SystemIdentity::truncate();
         AcademicTerm::truncate();
 
-        $response = $this->actingAs($this->user)->get('/admin/reporting/dashboard');
+        $response = $this->actingAs($this->superAdmin)->get('/admin/reporting/dashboard');
 
         // Should redirect to onboarding
         $response->assertRedirect(route('admin.onboarding.index'));
@@ -47,7 +35,7 @@ class OnboardingFlowTest extends TestCase
     {
         SystemIdentity::truncate();
 
-        $response = $this->actingAs($this->user)->post(route('admin.onboarding.identity'), [
+        $response = $this->actingAs($this->superAdmin)->post(route('admin.onboarding.identity'), [
             'company_name' => 'Test Company',
             'brand_name' => 'Test Brand',
         ]);
@@ -68,7 +56,7 @@ class OnboardingFlowTest extends TestCase
             'brand_name' => 'Test',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('admin.onboarding.term'), [
+        $response = $this->actingAs($this->superAdmin)->post(route('admin.onboarding.term'), [
             'name' => 'Fall 2026',
             'start_date' => '2026-09-01',
             'end_date' => '2027-06-01',
@@ -97,7 +85,7 @@ class OnboardingFlowTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($this->user)->get('/admin/reporting/dashboard');
+        $response = $this->actingAs($this->superAdmin)->get('/admin/reporting/dashboard');
         
         $response->assertStatus(200);
     }

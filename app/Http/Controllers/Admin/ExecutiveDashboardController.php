@@ -21,22 +21,27 @@ class ExecutiveDashboardController extends Controller
     public function index()
     {
         $metrics = $this->dashboardService->getMetrics();
-        $metrics['active_users'] = \App\Models\User::count();
-        $metrics['active_features'] = $this->featureFlagService->getAllFlags()->where('enabled', true)->count();
-        $metrics['license_status'] = $this->licenseService->checkLicense()['status'] ?? 'Yok';
         
-        $metrics['update_status'] = [
-            'current_version' => $this->updateService->currentVersion(),
-            'latest_version' => $this->updateService->getLatest()?->version ?? $this->updateService->currentVersion(),
-            'is_available' => $this->updateService->isUpdateAvailable(),
-        ];
-        
-        $metrics['hq_status'] = [
-            'connected' => false,
-            'system_uuid' => $this->hqIntegrationService->getInstanceInformation()->uuid,
-            'license' => $this->hqIntegrationService->getLicenseStatus()['status'] ?? 'Unknown',
-            'version' => $this->hqIntegrationService->getSystemVersion(),
-        ];
+        $metaMetrics = \Illuminate\Support\Facades\Cache::remember('executive_dashboard_meta', 300, function () {
+            return [
+                'active_users' => \App\Models\User::count(),
+                'active_features' => $this->featureFlagService->getAllFlags()->where('enabled', true)->count(),
+                'license_status' => $this->licenseService->checkLicense()['status'] ?? 'Yok',
+                'update_status' => [
+                    'current_version' => $this->updateService->currentVersion(),
+                    'latest_version' => $this->updateService->getLatest()?->version ?? $this->updateService->currentVersion(),
+                    'is_available' => $this->updateService->isUpdateAvailable(),
+                ],
+                'hq_status' => [
+                    'connected' => false,
+                    'system_uuid' => $this->hqIntegrationService->getInstanceInformation()->uuid,
+                    'license' => $this->hqIntegrationService->getLicenseStatus()['status'] ?? 'Unknown',
+                    'version' => $this->hqIntegrationService->getSystemVersion(),
+                ],
+            ];
+        });
+
+        $metrics = array_merge($metrics, $metaMetrics);
 
         return view('admin.reporting.dashboard', compact('metrics'));
     }
