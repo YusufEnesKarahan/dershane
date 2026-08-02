@@ -51,12 +51,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full {{ $student->status === 'Active' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-500' : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-500' }}">
-                                    @if($student->status === 'Active')
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-                                    @endif
+                                <x-admin.badge variant="{{ $student->status === 'Active' ? 'success' : 'warning' }}" dot="true">
                                     {{ $student->status === 'Active' ? 'Aktif Öğrenci' : $student->status }}
-                                </span>
+                                </x-admin.badge>
                             </td>
                             <td class="px-6 py-4 text-sm space-x-3 text-right">
                                 <a href="{{ route('admin.students.edit', $student->id) }}" class="text-primary hover:text-primary-dark font-medium transition-colors">Düzenle</a>

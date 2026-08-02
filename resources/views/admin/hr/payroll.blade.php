@@ -46,20 +46,11 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         @if($pay->status === 'Paid')
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
-                                                Ödendi
-                                            </span>
+                                            <x-admin.badge variant="success" dot="true">Ödendi</x-admin.badge>
                                         @elseif($pay->status === 'Approved')
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-400">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span>
-                                                Onaylandı
-                                            </span>
+                                            <x-admin.badge variant="info" dot="true">Onaylandı</x-admin.badge>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-400">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
-                                                Taslak
-                                            </span>
+                                            <x-admin.badge variant="warning" dot="true">Taslak</x-admin.badge>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-right">
@@ -67,12 +58,12 @@
                                             @if($pay->status === 'Draft')
                                                 <form method="POST" action="{{ route('admin.payroll.approve', $pay->id) }}" class="inline-block">
                                                     @csrf
-                                                    <button type="submit" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-500/10 dark:hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 text-[10px] font-bold rounded-lg transition-colors border border-blue-200 dark:border-blue-500/30">Onayla</button>
+                                                    <x-admin.button type="submit" variant="primary" size="sm">Onayla</x-admin.button>
                                                 </form>
                                             @elseif($pay->status === 'Approved')
                                                 <form method="POST" action="{{ route('admin.payroll.pay', $pay->id) }}" class="inline-block">
                                                     @csrf
-                                                    <button type="submit" class="px-3 py-1.5 bg-green-50 hover:bg-green-100 dark:bg-green-500/10 dark:hover:bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold rounded-lg transition-colors border border-green-200 dark:border-green-500/30">Ödeme Yap</button>
+                                                    <x-admin.button type="submit" variant="success" size="sm">Ödeme Yap</x-admin.button>
                                                 </form>
                                             @else
                                                 <span class="text-[10px] font-medium text-neutral-400 flex items-center justify-end gap-1"><svg class="w-3 h-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> Ödendi ({{ $pay->payment_date }})</span>

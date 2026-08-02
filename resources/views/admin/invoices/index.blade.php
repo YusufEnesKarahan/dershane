@@ -86,9 +86,9 @@
                                     <div class="text-[10px] text-green-600 font-bold">Ödenen: ₺{{ number_format($inv->paid_amount, 2) }}</div>
                                 </td>
                                 <td class="px-4 py-3 text-xs">
-                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ $inv->status === 'Paid' ? 'bg-green-100 text-green-800' : ($inv->status === 'Partial' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800') }}">
+                                    <x-admin.badge variant="{{ $inv->status === 'Paid' ? 'success' : ($inv->status === 'Partial' ? 'warning' : 'danger') }}">
                                         {{ $inv->status === 'Paid' ? 'Ödendi' : ($inv->status === 'Partial' ? 'Kısmi Ödeme' : 'Bekliyor') }}
-                                    </span>
+                                    </x-admin.badge>
                                 </td>
                                 <td class="px-4 py-3 text-xs">
                                     <a href="{{ route('admin.invoices.show', $inv->id) }}" class="px-3 py-1 bg-primary/10 text-primary text-[11px] font-bold rounded-lg hover:bg-primary/20 transition">

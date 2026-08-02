@@ -27,7 +27,7 @@ class EmployeeController extends Controller
     {
         $employees = $this->hrService->allEmployees();
         $departments = Department::select('id', 'name')->get();
-        $positions = Position::select('id', 'title')->get();
+        $positions = Position::select('id', 'name')->get();
         $users = User::select('id', 'first_name', 'last_name')->get();
         return view('admin.hr.employees', compact('employees', 'departments', 'positions', 'users'));
     }
@@ -35,6 +35,7 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'employee_no' => 'required|string|unique:employees,employee_no|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'hire_date' => 'required|date',

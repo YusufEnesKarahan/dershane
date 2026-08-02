@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Domain\Reporting\Services\ExecutiveDashboardService;
 use App\Domain\Reporting\Actions\GenerateDashboardSnapshot;
+use App\Domain\Platform\Services\SaaSOperationsService;
 use Illuminate\Http\Request;
 
 class ExecutiveDashboardController extends Controller
@@ -15,7 +16,8 @@ class ExecutiveDashboardController extends Controller
         protected \App\Domain\Platform\Services\LicenseService $licenseService,
         protected \App\Domain\Platform\Services\FeatureFlagService $featureFlagService,
         protected \App\Domain\Platform\Services\UpdateService $updateService,
-        protected \App\Domain\Platform\Services\HQIntegrationService $hqIntegrationService
+        protected \App\Domain\Platform\Services\HQIntegrationService $hqIntegrationService,
+        protected SaaSOperationsService $saasService
     ) {}
 
     public function index()
@@ -43,7 +45,12 @@ class ExecutiveDashboardController extends Controller
 
         $metrics = array_merge($metrics, $metaMetrics);
 
-        return view('admin.reporting.dashboard', compact('metrics'));
+        $saasMetrics = [];
+        if (auth()->user() && auth()->user()->hasRole('Super Admin')) {
+            $saasMetrics = $this->saasService->getDashboardMetrics();
+        }
+
+        return view('admin.reporting.dashboard', compact('metrics', 'saasMetrics'));
     }
 
     public function analytics()

@@ -32,47 +32,93 @@ class LicenseLimitService
     }
 
     /**
-     * Get a specific limit from the license metadata.
-     * If the limit is not explicitly set, returns PHP_INT_MAX (no limit).
+     * Get a specific limit from the active license.
+     * Checks Plan limits first, falls back to legacy metadata.
      */
     public function getLimit(string $key, int $default = PHP_INT_MAX): int
     {
-        if (!$this->activeLicense || !isset($this->activeLicense->metadata[$key])) {
+        if (!$this->activeLicense) {
             return $default;
         }
 
-        return (int) $this->activeLicense->metadata[$key];
+        // 1. Plan bazlı limit
+        if ($this->activeLicense->planModel && isset($this->activeLicense->planModel->limits[$key])) {
+            return (int) $this->activeLicense->planModel->limits[$key];
+        }
+
+        // 2. Legacy metadata limiti
+        if (isset($this->activeLicense->metadata[$key])) {
+            return (int) $this->activeLicense->metadata[$key];
+        }
+
+        return $default;
     }
 
     /**
      * Check if a new student can be added.
      */
-    public function canAddStudent(): bool
+    public function canCreateStudent(): bool
     {
-        $limit = $this->getLimit('max_students');
+        $limit = $this->getLimit('students');
+        if ($limit === PHP_INT_MAX) {
+            // Fallback for legacy
+            $limit = $this->getLimit('max_students', PHP_INT_MAX);
+        }
+
         if ($limit === PHP_INT_MAX) {
             return true;
         }
 
-        // We count all students across all branches because the license applies to the whole installation.
-        // But since Student has a Global Scope (BranchScope), we need to bypass it to get the true total count.
         $currentCount = Student::withoutGlobalScopes()->count();
-        
         return $currentCount < $limit;
+    }
+
+    /**
+     * Legacy support
+     */
+    public function canAddStudent(): bool
+    {
+        return $this->canCreateStudent();
     }
 
     /**
      * Check if a new branch can be added.
      */
-    public function canAddBranch(): bool
+    public function canCreateBranch(): bool
     {
-        $limit = $this->getLimit('max_branches');
+        $limit = $this->getLimit('branches');
+        if ($limit === PHP_INT_MAX) {
+            $limit = $this->getLimit('max_branches', PHP_INT_MAX);
+        }
+
         if ($limit === PHP_INT_MAX) {
             return true;
         }
 
         $currentCount = Branch::count();
+        return $currentCount < $limit;
+    }
+
+    /**
+     * Legacy support
+     */
+    public function canAddBranch(): bool
+    {
+        return $this->canCreateBranch();
+    }
+
+    /**
+     * Check if a new user can be added.
+     */
+    public function canCreateUser(): bool
+    {
+        $limit = $this->getLimit('users');
         
+        if ($limit === PHP_INT_MAX) {
+            return true;
+        }
+
+        $currentCount = \App\Models\User::count();
         return $currentCount < $limit;
     }
 }

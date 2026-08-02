@@ -171,3 +171,17 @@ Open **System / Queue Dashboard** to inspect pending, failed, and completed jobs
 ### Validation
 - Designed `tests/Feature/HQLicenseTest.php` confirming authorization blocks against standard roles, state management logic, automatic expiration triggers, and database feature creations. Tests are green and fast.
 - Full architectural logic documented within `SPRINT_7_1_HQ_LICENSE_REPORT.md`.
+
+## Sprint 7.6: System Monitoring & Operational Controls
+**Goal**: Strengthen the Super Admin SaaS control surface with system health visibility, tenant usage diagnostics, and a shared platform audit trail.
+
+### Key Changes
+1. **System Health Service**: Added `SystemHealthService` to centralize Laravel/PHP/runtime checks, cache and queue state, storage and database reachability, and the latest successful cron timestamp from `HQSchedulerLog`.
+2. **Tenant Intelligence**: Extended `SaaSOperationsService` with richer tenant usage statistics, last login/user activity details, estimated data size, and normalized activity feed assembly.
+3. **Audit Logging**: Added `PlatformAuditLog` plus creation hooks for tenant suspension/activation, license plan changes, payment completion, and settings updates/resets.
+4. **UI & Routes**: Introduced a dedicated Super Admin `Sistem Sağlığı` page and expanded `admin.saas.tenants.show` with usage statistics, system status, activity stream, and subscription history.
+5. **Scheduler Persistence**: Added `HQSchedulerLog` storage so cron success timestamps can be queried without relying on log file parsing.
+
+### Validation
+- Added `tests/Feature/SystemHealthTest.php` covering Super Admin access, normal user denial, tenant statistic rendering, and audit log creation.
+- Test execution is expected through `php artisan test` after the migrations are applied.

@@ -189,27 +189,35 @@ class CriticalFlowsTest extends TestCase
             'gender' => 'Male'
         ]);
 
-        $invoice = Invoice::create([
+        $invoiceId = DB::table('invoices')->insertGetId([
             'invoice_number' => 'INV-100',
             'student_id' => $studentId,
             'total_amount' => 1000,
             'paid_amount' => 1000,
             'status' => 'Paid',
             'issue_date' => now(),
-            'due_date' => now()
+            'due_date' => now(),
+            'branch_id' => $this->branch->id
         ]);
 
-        $payment = Payment::create([
-            'invoice_id' => $invoice->id,
+        $paymentMethodId = DB::table('payment_methods')->insertGetId([
+            'name' => 'Cash',
+            'code' => 'CASH',
+            'is_active' => true,
+        ]);
+
+        $paymentId = DB::table('payments')->insertGetId([
+            'invoice_id' => $invoiceId,
             'student_id' => $studentId,
             'payment_number' => 'PAY-100',
             'amount' => 1000,
-            'payment_method' => 'Cash',
-            'payment_date' => now()
+            'payment_method_id' => $paymentMethodId,
+            'payment_date' => now(),
+            'branch_id' => $this->branch->id
         ]);
 
         $response = $this->actingAs($this->superAdmin)->post(route('admin.refunds.store'), [
-            'payment_id' => $payment->id,
+            'payment_id' => $paymentId,
             'amount' => 500,
             'reason' => 'Overpaid',
             'refund_date' => now()->toDateString()
@@ -219,7 +227,7 @@ class CriticalFlowsTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseHas('refunds', [
-            'payment_id' => $payment->id,
+            'payment_id' => $paymentId,
             'amount' => 500
         ]);
     }

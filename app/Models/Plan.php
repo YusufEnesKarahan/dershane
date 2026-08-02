@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Plan extends Model
+{
+    protected $fillable = [
+        'uuid',
+        'name',
+        'slug',
+        'description',
+        'price',
+        'billing_period',
+        'billing_cycle',
+        'trial_days',
+        'max_students',
+        'max_users',
+        'max_teachers',
+        'is_active',
+        'features',
+        'limits',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'price' => 'decimal:2',
+            'trial_days' => 'integer',
+            'max_students' => 'integer',
+            'max_users' => 'integer',
+            'max_teachers' => 'integer',
+            'features' => 'array',
+            'limits' => 'array',
+        ];
+    }
+
+    public function licenses()
+    {
+        return $this->hasMany(License::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function getBillingCycleAttribute($value): string
+    {
+        return $value ?: ($this->billing_period ?: 'monthly');
+    }
+
+    public function getTenantCountAttribute(): int
+    {
+        return $this->subscriptions()->whereNotNull('branch_id')->count();
+    }
+}

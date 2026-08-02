@@ -54,6 +54,10 @@ class StudentController extends Controller
             'branch_id' => 'required|exists:branches,id',
         ]);
 
+        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->branch_id) {
+            abort(403, 'Unauthorized branch assignment.');
+        }
+
         $dto = new CreateStudentDTO(
             $request->student_number,
             $request->first_name,
@@ -104,7 +108,12 @@ class StudentController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'branch_id' => 'sometimes|exists:branches,id',
         ]);
+
+        if ($request->has('branch_id') && !auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->branch_id) {
+            abort(403, 'Unauthorized branch assignment.');
+        }
 
         $dto = UpdateStudentDTO::fromRequest($request->all());
         $this->repository->update($student, (array) $dto);
@@ -135,6 +144,10 @@ class StudentController extends Controller
         $request->validate([
             'to_branch_id' => 'required|exists:branches,id',
         ]);
+
+        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->to_branch_id) {
+            abort(403, 'Unauthorized branch transfer.');
+        }
 
         $action->execute(
             $student,

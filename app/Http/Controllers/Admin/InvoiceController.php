@@ -33,6 +33,9 @@ class InvoiceController extends Controller
     {
         $this->authorize('create', Invoice::class);
 
+        // Prevent IDOR by ensuring student belongs to active branch via Eloquent scope
+        Student::findOrFail($request->student_id);
+
         $request->validate([
             'student_id' => 'required|exists:students,id',
             'invoice_number' => 'required|string|unique:invoices,invoice_number',

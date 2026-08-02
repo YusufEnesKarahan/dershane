@@ -26,6 +26,33 @@
         </div>
 
         <!-- Ana Metrikler Grid -->
+        @if(!empty($saasMetrics))
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white border-l-4 border-indigo-500 pl-3">SaaS Operasyonları (Super Admin)</h2>
+                <a href="{{ route('admin.saas.tenants.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">Tüm Tenantları Yönet &rarr;</a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-indigo-500 block mb-1">Toplam Tenant</span>
+                    <span class="text-2xl font-black text-indigo-700 dark:text-indigo-300">{{ $saasMetrics['total_tenants'] }}</span>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-100 dark:border-green-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-green-500 block mb-1">Lisans Durumu</span>
+                    <span class="text-lg font-black text-green-700 dark:text-green-300">{{ ucfirst($saasMetrics['license_status']) }}</span>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-blue-500 block mb-1">Toplam Kullanıcı</span>
+                    <span class="text-2xl font-black text-blue-700 dark:text-blue-300">{{ number_format($saasMetrics['total_users']) }}</span>
+                </div>
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-purple-500 block mb-1">Toplam Öğrenci</span>
+                    <span class="text-2xl font-black text-purple-700 dark:text-purple-300">{{ number_format($saasMetrics['total_students']) }}</span>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             <!-- Öğrenci & Öğretmen KPI -->

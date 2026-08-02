@@ -12,14 +12,14 @@ class PaymentController extends Controller
 {
     public function store(Request $request, RecordPayment $action)
     {
+        $invoice = Invoice::findOrFail($request->invoice_id);
+
         $request->validate([
             'invoice_id' => 'required|exists:invoices,id',
             'payment_method_id' => 'required|exists:payment_methods,id',
             'amount' => 'required|numeric|min:0.01',
             'payment_number' => 'required|string|unique:payments,payment_number',
         ]);
-
-        $invoice = Invoice::findOrFail($request->invoice_id);
 
         $dto = new RecordPaymentDTO(
             $request->payment_number,

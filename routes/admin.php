@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
 use App\Http\Controllers\Admin\PlatformSettingController;
+use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
@@ -68,6 +69,8 @@ use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\NotificationAnalyticsController;
 use App\Http\Controllers\Admin\SystemJobController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\SaaSTenantController;
+use App\Http\Controllers\Admin\SaaSHealthController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -269,6 +272,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('settings/export', [PlatformSettingController::class, 'export'])->name('settings.export');
         Route::post('settings/import', [PlatformSettingController::class, 'import'])->name('settings.import');
         Route::post('settings/reset', [PlatformSettingController::class, 'reset'])->name('settings.reset');
+        
+        // License & Subscription Management
+        Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
+        Route::post('licenses/activate', [LicenseController::class, 'activate'])->name('licenses.activate');
+        Route::post('licenses/change-plan', [LicenseController::class, 'changePlan'])->name('licenses.change-plan');
+        Route::post('licenses/pay', [LicenseController::class, 'pay'])->name('licenses.pay');
+    });
+
+    // SaaS Operations (Super Admin Only)
+    Route::middleware(['role:Super Admin'])->prefix('saas')->name('saas.')->group(function () {
+        Route::get('tenants', [SaaSTenantController::class, 'index'])->name('tenants.index');
+        Route::get('tenants/{tenant}', [SaaSTenantController::class, 'show'])->name('tenants.show');
+        Route::post('tenants/{tenant}/suspend', [SaaSTenantController::class, 'suspend'])->name('tenants.suspend');
+        Route::post('tenants/{tenant}/activate', [SaaSTenantController::class, 'activate'])->name('tenants.activate');
+        Route::get('system-health', [SaaSHealthController::class, 'index'])->name('system-health.index');
     });
 
     // Reporting & BI

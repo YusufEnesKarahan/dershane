@@ -23,6 +23,8 @@ class RefundController extends Controller
 
     public function store(Request $request)
     {
+        Payment::findOrFail($request->payment_id);
+
         $validated = $request->validate([
             'payment_id' => 'required|exists:payments,id',
             'amount' => 'required|numeric|min:0.01',
@@ -43,6 +45,8 @@ class RefundController extends Controller
 
     public function update(Request $request, Refund $refund)
     {
+        Payment::findOrFail($request->payment_id);
+
         $validated = $request->validate([
             'payment_id' => 'required|exists:payments,id',
             'amount' => 'required|numeric|min:0.01',

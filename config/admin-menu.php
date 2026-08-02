@@ -227,10 +227,28 @@ return [
             ],
         ],
         [
+            'title' => 'SaaS Yönetimi',
+            'icon' => 'server',
+            'permission' => 'hq.viewAuditLogs',
+            'sort' => 5,
+            'children' => [
+                [
+                    'title' => 'Tenant Yönetimi',
+                    'route' => 'admin.saas.tenants.index',
+                    'permission' => 'hq.viewAuditLogs',
+                ],
+                [
+                    'title' => 'Sistem Sağlığı',
+                    'route' => 'admin.saas.system-health.index',
+                    'permission' => 'hq.viewAuditLogs',
+                ],
+            ],
+        ],
+        [
             'title' => 'CRM',
             'icon' => 'phone',
             'permission' => 'crm.view',
-            'sort' => 5,
+            'sort' => 6,
             'children' => [
                 [
                     'title' => 'CRM Dashboard',

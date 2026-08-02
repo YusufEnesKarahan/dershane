@@ -41,34 +41,7 @@ graph TD
 
 ---
 
-## 📁 Folder Structure
-
-```directory
-app/
-├── Core/             # Base configurations & kernel components
-├── Domain/           # Domain boundaries & entities
-│   ├── Auth/         # Custom authentication flows
-│   ├── CRM/          # Leads and client tracking
-│   ├── ERP/          # Classrooms, attendance, schedules
-│   └── RBAC/         # User roles and permissions
-├── DTOs/             # Unified Data Transfer Objects
-├── Actions/          # Atomic business rules
-├── Repositories/     # Database queries abstraction
-├── ViewModels/       # View state adapters
-└── Http/             # Slim entry controllers & API routes
-```
-
----
-
-## 🛠️ Tech Stack & Dependencies
-*   **Core:** PHP 8.4, Laravel 12
-*   **Frontend:** Blade templates, AlpineJS, TailwindCSS, Vite
-*   **Database:** SQLite (development), MySQL / PostgreSQL (production)
-*   **Standards:** PSR-12, PHPStan (Static Analysis), Laravel Pint (Linter)
-
----
-
-## ⚙️ Installation & Configuration
+## ⚙️ Kurulum (Installation)
 
 1. Clone the repository and install packages:
    ```bash
@@ -80,22 +53,70 @@ app/
    cp .env.example .env
    php artisan key:generate
    ```
-3. Initialize the database and run seeds:
-   ```bash
-   php artisan migrate --seed
-   ```
-4. Start the server:
-   ```bash
-   php artisan serve
-   ```
 
----
+## 🗄️ Migration & Seeder
 
-## 🧪 Testing
-Run PHPUnit tests and static analysis:
+Run the migrations to create the database schema:
+```bash
+php artisan migrate
+```
+
+To populate the database with default roles, permissions, and demo data, run the seeder:
+```bash
+php artisan db:seed
+```
+*(Or use `php artisan migrate --seed` to do both at once).*
+
+## 🧪 Test
+
+Run PHPUnit tests to ensure all functionality and critical flows are working correctly:
+```bash
+php artisan test
+```
+To run static analysis:
 ```bash
 ./vendor/bin/phpstan analyse
-composer test
+```
+
+## 🚀 Production Deployment
+
+For production environments, ensure you cache the configurations and routes:
+```bash
+php artisan optimize
+```
+Also, ensure frontend assets are compiled for production:
+```bash
+npm run build
+```
+
+## 🔄 Queue
+
+The application uses Laravel queues for background tasks (e.g., sending notifications, processing reports). Start the queue worker using Supervisor or manually:
+```bash
+php artisan queue:work
+```
+
+## ⚡ Cache
+
+We heavily rely on caching for dashboard metrics and RBAC rules. You can clear the cache using:
+```bash
+php artisan cache:clear
+# or for full optimization clearing:
+php artisan optimize:clear
+```
+
+## 📁 Storage
+
+Ensure the storage symbolic link is created so public files (like profile pictures and documents) are accessible:
+```bash
+php artisan storage:link
+```
+
+## 🕒 Cron (Task Scheduling)
+
+For scheduled tasks (like license checks, report generation), add the following Cron entry to your server:
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
 ---

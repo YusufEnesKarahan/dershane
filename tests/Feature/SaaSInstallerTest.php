@@ -102,8 +102,8 @@ class SaaSInstallerTest extends TestCase
         $this->assertEquals('Test Branch', $user->branch->name);
         $this->assertTrue($user->hasRole('Super Admin'));
 
-        // Verify Active License was created
-        $this->assertTrue(License::where('status', 'active')->exists());
+        // Verify Trial License was created
+        $this->assertTrue(License::where('status', 'trial')->where('plan', 'starter')->exists());
 
         // Verify Lock File exists
         $this->assertTrue(file_exists($this->lockFile));

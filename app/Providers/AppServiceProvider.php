@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Event;
 
+use App\Domain\Billing\Gateways\PaymentGatewayInterface;
+use App\Domain\Billing\Gateways\FakePaymentGateway;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -15,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(PaymentGatewayInterface::class, FakePaymentGateway::class);
         $this->app->bind(
             \App\Core\Contracts\ActivityLoggerInterface::class,
             \App\Core\Services\Logging\DatabaseActivityLogger::class

@@ -85,11 +85,11 @@
                             <x-admin.table.td>{{ $user->branch->name ?? 'Tüm Şubeler' }}</x-admin.table.td>
                             <x-admin.table.td>
                                 @if($user->status->value === 'ACTIVE')
-                                    <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 rounded-full">Aktif</span>
+                                    <x-admin.badge variant="success">Aktif</x-admin.badge>
                                 @elseif($user->status->value === 'PASSIVE')
-                                    <span class="px-2 py-1 text-xs font-medium bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-400 rounded-full">Pasif</span>
+                                    <x-admin.badge variant="neutral">Pasif</x-admin.badge>
                                 @else
-                                    <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 rounded-full">Askıda</span>
+                                    <x-admin.badge variant="danger">Askıda</x-admin.badge>
                                 @endif
                             </x-admin.table.td>
                             <x-admin.table.td>

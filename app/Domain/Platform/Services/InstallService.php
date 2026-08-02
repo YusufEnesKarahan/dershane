@@ -10,6 +10,7 @@ use App\Models\Branch;
 use App\Models\Role;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use App\Domain\Platform\Services\SubscriptionService;
 
 class InstallService
 {
@@ -132,6 +133,7 @@ class InstallService
         try {
             Artisan::call('migrate', ['--force' => true]);
             Artisan::call('db:seed', ['--class' => 'RolesAndPermissionsSeeder', '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'PlanSeeder', '--force' => true]);
             return true;
         } catch (\Throwable $e) {
             logger()->error('Installation Migration/Seeding Failed: ' . $e->getMessage());
@@ -169,17 +171,23 @@ class InstallService
 
                 $user->roles()->sync([$superAdminRole->id]);
 
-                // 3. Create Default Active License
-                License::create([
+                // Get Starter plan
+                $plan = \App\Models\Plan::where('slug', 'starter')->first();
+
+                // Create initial license skeleton
+                $license = License::create([
                     'license_key' => 'LIC-' . strtoupper(Str::random(16)),
-                    'status' => 'active',
-                    'plan' => 'enterprise',
-                    'expires_at' => now()->addYear(),
+                    'status' => 'demo', // will be overwritten by SubscriptionService
                     'metadata' => [
                         'owner' => $adminData['email'],
                         'branch' => $branchName,
                     ]
                 ]);
+
+                if ($plan) {
+                    $subscriptionService = app(SubscriptionService::class);
+                    $subscriptionService->startTrial($license, $plan, 14);
+                }
 
                 // 4. Save installation lock file
                 $this->createLockFile();

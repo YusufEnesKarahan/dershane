@@ -35,6 +35,10 @@ class TeacherController extends Controller
             'specialties' => 'required|string',
         ]);
 
+        if ($request->has('branch_id') && $request->branch_id && !auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->branch_id) {
+            abort(403, 'Unauthorized branch assignment.');
+        }
+
         $dto = new CreateTeacherDTO(
             (int) $request->user_id,
             $request->branch_id ? (int) $request->branch_id : null,

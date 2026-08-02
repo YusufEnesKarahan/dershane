@@ -12,6 +12,7 @@ use App\Domain\Platform\Actions\ImportSettingsAction;
 use App\Domain\Platform\Services\MailConfigurationService;
 use App\Domain\Platform\Services\StorageConfigurationService;
 use App\Domain\Platform\Services\ThemeService;
+use App\Models\PlatformAuditLog;
 use Illuminate\Http\Request;
 
 class PlatformSettingController extends Controller
@@ -43,6 +44,10 @@ class PlatformSettingController extends Controller
         $dto = UpdateSettingDTO::fromRequest($request->all());
         
         $action->execute($dto);
+        PlatformAuditLog::record(auth()->user(), 'system.settings.updated', PlatformSetting::class, [
+            'description' => 'Platform ayarları güncellendi.',
+            'settings_count' => count($dto->settings),
+        ]);
 
         // Recompile dynamic colors variables to theme_custom.css stylesheet
         $this->themeService->compileThemeCss();
@@ -115,6 +120,9 @@ class PlatformSettingController extends Controller
         $this->authorize('update', PlatformSetting::class);
 
         $action->execute();
+        PlatformAuditLog::record(auth()->user(), 'system.settings.reset', PlatformSetting::class, [
+            'description' => 'Platform ayarları sıfırlandı.',
+        ]);
 
         return redirect()->route('admin.settings.index')->with('success', 'All settings reset to default values.');
     }
