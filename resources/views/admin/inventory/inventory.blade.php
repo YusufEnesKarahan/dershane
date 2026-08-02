@@ -4,32 +4,24 @@
     <div class="space-y-6">
         
         <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex justify-between items-center">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex justify-between items-center">
             <div>
                 <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Stok & Sarf Malzemeleri</h1>
                 <p class="text-xs text-neutral-500 mt-1">Dershane içi kırtasiye, temizlik ve eğitim materyalleri stoklarını ve hareketlerini yönetin.</p>
             </div>
             
             <div class="flex gap-2">
-                <button onclick="toggleModal('warehouse-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-bold rounded-xl transition">
-                    Depo Tanımla
-                </button>
-                <button onclick="toggleModal('category-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-bold rounded-xl transition">
-                    Stok Kategorisi
-                </button>
-                <button onclick="toggleModal('transaction-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-bold rounded-xl transition">
-                    Stok Hareketi Gir
-                </button>
-                <button onclick="toggleModal('item-modal')" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-xs font-bold text-white rounded-xl transition shadow-lg shadow-teal-950">
-                    Yeni Stok Kartı
-                </button>
+                <x-admin.button type="button" onclick="toggleModal('warehouse-modal')" variant="secondary" size="sm">Depo Tanımla</x-admin.button>
+                <x-admin.button type="button" onclick="toggleModal('category-modal')" variant="secondary" size="sm">Stok Kategorisi</x-admin.button>
+                <x-admin.button type="button" onclick="toggleModal('transaction-modal')" variant="secondary" size="sm">Stok Hareketi Gir</x-admin.button>
+                <x-admin.button type="button" onclick="toggleModal('item-modal')" variant="primary" size="sm">Yeni Stok Kartı</x-admin.button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Stok Kartları Tablosu -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Stok Durum Listesi</h3>
                 
                 <x-admin.table.layout>
@@ -68,7 +60,7 @@
             </div>
 
             <!-- Son Stok Hareketleri -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Son Stok Hareketleri</h3>
                 
                 <div class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
@@ -96,7 +88,7 @@
 
         <!-- Stok Kartı Modal -->
         <div id="item-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Stok Tanım Kartı</h3>
                     <button onclick="toggleModal('item-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -156,8 +148,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('item-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('item-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>
@@ -165,7 +157,7 @@
 
         <!-- Stok Hareketi Modal -->
         <div id="transaction-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Stok Hareketi Gir</h3>
                     <button onclick="toggleModal('transaction-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -203,8 +195,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('transaction-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('transaction-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>
@@ -212,7 +204,7 @@
 
         <!-- Stok Kategorisi Modal -->
         <div id="category-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Stok Kategorisi Tanımla</h3>
                     <button onclick="toggleModal('category-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -237,8 +229,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('category-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('category-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>
@@ -246,7 +238,7 @@
 
         <!-- Depo Modal -->
         <div id="warehouse-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Depo Tanımla</h3>
                     <button onclick="toggleModal('warehouse-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -266,8 +258,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('warehouse-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('warehouse-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>

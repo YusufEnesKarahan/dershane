@@ -19,6 +19,9 @@
 
         <!-- Main Content Wrapper -->
         <div class="flex flex-col flex-1 w-full min-w-0 transition-all duration-300 ease-in-out">
+            <!-- Flash Messages -->
+            <x-admin.flash-messages />
+            
             <!-- Topbar -->
             <x-admin.topbar.layout />
 

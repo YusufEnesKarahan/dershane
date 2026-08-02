@@ -1,50 +1,43 @@
 @extends('layouts.admin')
 @section('title', 'Doküman Kategorileri')
 @section('content')
-    <div class="space-y-6">
-        
-        <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex justify-between items-center">
-            <div>
-                <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Doküman Kategorileri</h1>
-                <p class="text-xs text-neutral-500 mt-1">Dijital arşivi sınıflandırmak için evrak türleri ve renk tanımlarını yönetin.</p>
-            </div>
-            
-            <button onclick="toggleModal('category-modal')" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-xs font-bold text-white rounded-xl transition shadow-lg shadow-teal-950">
+    <x-admin.crud.index-layout title="Doküman Kategorileri" description="Dijital arşivi sınıflandırmak için evrak türleri ve renk tanımlarını yönetin.">
+        <x-slot name="actions">
+            <x-admin.button type="button" onclick="toggleModal('category-modal')" variant="primary" icon="M12 4v16m8-8H4">
                 Yeni Kategori Ekle
-            </button>
-        </div>
+            </x-admin.button>
+        </x-slot>
 
         <!-- Kategori Listesi -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Renk / Kategori Adı</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Slug</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Belge Sayısı</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Durum</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">İşlem</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Renk / Kategori Adı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Slug</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Belge Sayısı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Durum</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İşlem</th>
                 </x-slot>
                 <x-slot name="body">
                     @forelse($categories as $cat)
-                        <tr>
-                            <td class="px-4 py-3 text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40">
+                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                                 <span class="w-3 h-3 rounded-full" style="background-color: {{ $cat->color }}"></span>
                                 {{ $cat->name }}
                             </td>
-                            <td class="px-4 py-3 text-xs font-mono text-neutral-400">{{ $cat->slug }}</td>
-                            <td class="px-4 py-3 text-xs font-bold font-mono">{{ $cat->documents_count }} Belge</td>
-                            <td class="px-4 py-3 text-xs">
-                                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold {{ $cat->is_active ? 'bg-green-100 text-green-700' : 'bg-neutral-200 text-neutral-700' }}">
+                            <td class="px-6 py-4 text-sm font-mono text-neutral-500">{{ $cat->slug }}</td>
+                            <td class="px-6 py-4 text-sm font-bold font-mono">{{ $cat->documents_count }} Belge</td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $cat->is_active ? 'bg-emerald-100 text-emerald-800 border-emerald-200/50 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/20' : 'bg-neutral-100 text-neutral-800 border-neutral-200/50 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700' }}">
                                     {{ $cat->is_active ? 'Aktif' : 'Pasif' }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-xs space-x-2">
-                                <button onclick="editCategory({{ json_encode($cat) }})" class="text-teal-600 hover:underline font-bold">Düzenle</button>
+                            <td class="px-6 py-4 text-sm space-x-2">
+                                <x-admin.button type="button" onclick="editCategory({{ json_encode($cat) }})" variant="secondary" size="sm">Düzenle</x-admin.button>
                                 <form method="POST" action="{{ route('admin.document-categories.destroy', $cat->id) }}" class="inline-block" onsubmit="return confirm('Kategoriyi silmek istediğinize emin misiniz?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline font-bold">Sil</button>
+                                    <x-admin.button type="submit" variant="danger" size="sm">Sil</x-admin.button>
                                 </form>
                             </td>
                         </tr>
@@ -59,35 +52,41 @@
 
         <!-- Kategori Modal -->
         <div id="category-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-sm space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 id="modal-title" class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Doküman Kategorisi</h3>
-                    <button onclick="toggleModal('category-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
+                    <h3 id="modal-title" class="text-lg font-bold text-neutral-900 dark:text-white">Yeni Doküman Kategorisi</h3>
+                    <button onclick="toggleModal('category-modal')" class="text-neutral-400 hover:text-neutral-600 transition-colors">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
                 
-                <form id="category-form" method="POST" action="{{ route('admin.document-categories.store') }}" class="space-y-3 text-xs">
+                <form id="category-form" method="POST" action="{{ route('admin.document-categories.store') }}" class="space-y-4">
                     @csrf
                     <input type="hidden" id="form-method" name="_method" value="POST">
                     
-                    <div class="space-y-1">
-                        <label class="font-bold text-neutral-600 dark:text-neutral-400">Kategori Adı</label>
-                        <input type="text" name="name" id="cat-name" required placeholder="Örn: Öğrenci Sözleşmeleri" class="w-full p-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl">
-                    </div>
+                    <x-admin.form.field-group label="Kategori Adı" id="cat-name" required>
+                        <input type="text" name="name" id="cat-name" required placeholder="Örn: Öğrenci Sözleşmeleri" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                    </x-admin.form.field-group>
 
-                    <div class="space-y-1">
-                        <label class="font-bold text-neutral-600 dark:text-neutral-400">Renk Kodu</label>
-                        <input type="color" name="color" id="cat-color" value="#0d9488" class="w-full h-10 p-1 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl">
-                    </div>
+                    <x-admin.form.field-group label="Renk Kodu" id="cat-color">
+                        <input type="color" name="color" id="cat-color" value="#0d9488" class="w-full h-10 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-2 py-1 cursor-pointer">
+                    </x-admin.form.field-group>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('category-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('category-modal')" variant="secondary">
+                            Vazgeç
+                        </x-admin.button>
+                        <x-admin.button type="submit" variant="primary">
+                            Kaydet
+                        </x-admin.button>
                     </div>
                 </form>
             </div>
         </div>
 
-    </div>
+    </x-admin.crud.index-layout>
 
     <script>
         function toggleModal(id) {

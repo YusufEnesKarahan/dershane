@@ -11,18 +11,18 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Sol Panel: Tahsilat Alma Formu -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Tahsilat Kaydı İşle</h3>
                 
                 <x-admin.form.layout :action="route('admin.payments.store')" method="POST">
                     <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
                     
                     <x-admin.form.field-group label="Makbuz No (Benzersiz)" id="payment_number">
-                        <input type="text" name="payment_number" required value="PAY-{{ date('Y') }}-{{ rand(100,999) }}" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <input type="text" name="payment_number" required value="PAY-{{ date('Y') }}-{{ rand(100,999) }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Ödeme Yöntemi" id="payment_method_id">
-                        <select name="payment_method_id" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <select name="payment_method_id" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                             @foreach($paymentMethods as $pm)
                                 <option value="{{ $pm->id }}">{{ $pm->name }}</option>
                             @endforeach
@@ -30,24 +30,24 @@
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Tahsilat Tutarı (₺)" id="amount">
-                        <input type="number" step="0.01" name="amount" required value="{{ max(0, $invoice->total_amount - $invoice->paid_amount) }}" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 font-bold text-green-600">
+                        <input type="number" step="0.01" name="amount" required value="{{ max(0, $invoice->total_amount - $invoice->paid_amount) }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 font-bold text-green-600">
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Notlar / Açıklama" id="notes">
-                        <textarea name="notes" rows="2" placeholder="Nakit ödeme alındı..." class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"></textarea>
+                        <textarea name="notes" rows="2" placeholder="Nakit ödeme alındı..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5"></textarea>
                     </x-admin.form.field-group>
 
                     <div class="pt-4">
-                        <button type="submit" class="w-full py-2.5 bg-green-600 text-white text-xs font-semibold rounded-xl hover:bg-green-700 transition shadow-sm">
+                        <x-admin.button type="submit" variant="primary" class="w-full">
                             Tahsilatı Kaydet & Borcu Düş
-                        </button>
+                        </x-admin.button>
                     </div>
 
                 </x-admin.form.layout>
             </div>
 
             <!-- Sağ Panel: Fatura Detayı ve Yapılan Ödemeler -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-6">
+            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-6">
                 
                 <div>
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Fatura Hizmet Kalemleri</h3>

@@ -72,6 +72,23 @@ use App\Http\Controllers\Admin\AnnouncementController;
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
+    // Onboarding Routes
+    Route::get('/onboarding', [\App\Http\Controllers\Admin\OnboardingController::class, 'index'])->name('onboarding.index');
+    Route::post('/onboarding/identity', [\App\Http\Controllers\Admin\OnboardingController::class, 'storeIdentity'])->name('onboarding.identity');
+    Route::post('/onboarding/term', [\App\Http\Controllers\Admin\OnboardingController::class, 'storeTerm'])->name('onboarding.term');
+
+    // Branch Switch
+    Route::post('/branch/switch', function (\Illuminate\Http\Request $request) {
+        $request->validate(['branch_id' => 'required|exists:branches,id']);
+        // Verify user belongs to this branch if not Super Admin
+        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->branch_id) {
+            abort(403);
+        }
+        $branch = \App\Models\Branch::find($request->branch_id);
+        session(['active_branch_id' => $branch->id, 'active_branch_name' => $branch->name]);
+        return back();
+    })->name('branch.switch');
+
     // Profiles & Preferences (no specific permission required besides 'auth')
     Route::get('profile', [UserProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile', [UserProfileController::class, 'update'])->name('profile.update');
@@ -157,6 +174,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::middleware(['permission:students.view'])->group(function () {
         Route::get('students/analytics', [StudentController::class, 'analytics'])->name('students.analytics');
         Route::post('students/{student}/transfer', [StudentController::class, 'transfer'])->name('students.transfer');
+        Route::post('students/{student}/status', [StudentController::class, 'updateStatus'])->name('students.status.update');
         Route::post('students/enrollment', [StudentEnrollmentController::class, 'store'])->name('students.enrollment.store');
         Route::resource('students', StudentController::class)->except(['show']);
         Route::resource('announcements', AnnouncementController::class)->only(['index', 'store']);
@@ -191,6 +209,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
         Route::resource('invoices', InvoiceController::class)->only(['index', 'store', 'show']);
         Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
+        
+        // P0 Sprint 6.2 - Core Finance Lifecycle
+        Route::resource('discounts', \App\Http\Controllers\Admin\DiscountController::class);
+        Route::resource('scholarships', \App\Http\Controllers\Admin\ScholarshipController::class);
+        Route::resource('refunds', \App\Http\Controllers\Admin\RefundController::class);
+        Route::resource('payment-plans', \App\Http\Controllers\Admin\PaymentPlanController::class);
     });
 
     // Education - Teachers

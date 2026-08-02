@@ -4,7 +4,7 @@
     <div class="space-y-6">
         
         <!-- Üst Banner -->
-        <div class="bg-gradient-to-r from-teal-900 to-slate-900 p-8 rounded-3xl text-white shadow-premium flex flex-col md:flex-row md:items-center md:justify-between gap-6 border border-teal-950">
+        <div class="bg-gradient-to-r from-teal-900 to-slate-900 p-8 rounded-3xl text-white shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-6 border border-teal-950">
             <div>
                 <span class="px-2.5 py-1 text-[10px] uppercase font-bold tracking-widest bg-teal-500/20 text-teal-300 rounded-full border border-teal-500/30 font-mono">Inventory Suite</span>
                 <h1 class="text-2xl font-black mt-2">Envanter & Demirbaş Yönetimi</h1>
@@ -24,7 +24,7 @@
         <!-- KPI Kartları -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Toplam Demirbaş</span>
                     <div class="p-2 bg-teal-50 dark:bg-teal-950 text-teal-600 rounded-lg">
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Bakımda / Zimmette</span>
                     <div class="p-2 bg-amber-50 dark:bg-amber-950 text-amber-600 rounded-lg">
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Stok Adedi / Kritik</span>
                     <div class="p-2 bg-emerald-50 dark:bg-emerald-950 text-emerald-600 rounded-lg">
@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Aylık Alım / Bakım</span>
                     <div class="p-2 bg-blue-50 dark:bg-blue-950 text-blue-600 rounded-lg">
@@ -81,7 +81,7 @@
         <!-- Dağılımlar -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Depo / Şube Bazlı Demirbaş Dağılımı</h3>
                 
                 <div class="space-y-4">
@@ -102,7 +102,7 @@
             </div>
 
             <!-- Hızlı Kısayollar -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Envanter Operasyonları</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">

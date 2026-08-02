@@ -24,7 +24,7 @@
                     <!-- Sol Panel: İçerik / SEO Formları -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Sekme 1: İçerik Editörü -->
-                        <div x-show="activeTab === 'content'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div x-show="activeTab === 'content'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <x-admin.form.field-group label="Sayfa Başlığı" id="title" :error="$errors->first('title')">
                                 <input type="text" name="title" id="title" required x-model="titleText" @input="updateSlug" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
                             </x-admin.form.field-group>
@@ -52,7 +52,7 @@
                         </div>
 
                         <!-- Sekme 2: SEO Paneli -->
-                        <div x-show="activeTab === 'seo'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div x-show="activeTab === 'seo'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <div x-data="{ metaTitle: '', metaDesc: '' }">
                                 <x-admin.form.field-group label="Meta Title" id="meta_title" :error="$errors->first('seo.meta_title')">
                                     <input type="text" name="seo[meta_title]" x-model="metaTitle" maxlength="60" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
@@ -80,7 +80,7 @@
 
                     <!-- Sağ Panel: Şablon & Yayın Eylemleri -->
                     <div class="space-y-6">
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <x-admin.form.field-group label="Sayfa Şablonu" id="template" :error="$errors->first('template')">
                                 <select name="template" id="template" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
                                     @foreach($templates as $key => $lbl)
@@ -107,9 +107,9 @@
                                 <span>Ana Sayfa Olarak Ayarla</span>
                             </label>
 
-                            <button type="submit" class="w-full px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition shadow-sm">
+                            <x-admin.button type="submit" variant="primary" class="w-full">
                                 Sayfayı Kaydet
-                            </button>
+                            </x-admin.button>
                             <a href="{{ route('admin.pages.index') }}" class="w-full block text-center px-4 py-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-xl text-neutral-600 dark:text-neutral-300 transition">
                                 Vazgeç
                             </a>

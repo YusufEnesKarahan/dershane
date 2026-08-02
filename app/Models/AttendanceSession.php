@@ -2,9 +2,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 
 class AttendanceSession extends Model
 {
+    use TenantScoped;
     protected $fillable = [
         'class_schedule_id', 'classroom_id', 'course_id', 'teacher_id',
         'session_date', 'start_time', 'end_time', 'status', 'created_by'
@@ -30,3 +32,4 @@ class AttendanceSession extends Model
         return $this->hasMany(Attendance::class);
     }
 }
+

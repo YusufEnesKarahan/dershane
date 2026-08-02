@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantScoped;
 
     protected $fillable = [
         'invoice_number', 'student_id', 'issue_date', 'due_date',
@@ -34,3 +35,4 @@ class Invoice extends Model
         return $this->hasOne(StudentDebt::class);
     }
 }
+

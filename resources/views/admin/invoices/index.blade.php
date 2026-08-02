@@ -11,17 +11,17 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Sol Panel: Yeni Fatura Kes -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Öğrenci Faturası Oluştur</h3>
                 
                 <x-admin.form.layout :action="route('admin.invoices.store')" method="POST">
                     
                     <x-admin.form.field-group label="Fatura No (Benzersiz)" id="invoice_number">
-                        <input type="text" name="invoice_number" required value="INV-{{ date('Y') }}-001" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <input type="text" name="invoice_number" required value="INV-{{ date('Y') }}-001" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Öğrenci" id="student_id">
-                        <select name="student_id" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <select name="student_id" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                             @foreach($students as $s)
                                 <option value="{{ $s->id }}">{{ $s->full_name }} ({{ $s->student_number }})</option>
                             @endforeach
@@ -29,34 +29,34 @@
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Fatura Hizmet Kalemi" id="description">
-                        <input type="text" name="description" required value="2026-2027 Eğitim Dönem Kayıt Ücreti" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <input type="text" name="description" required value="2026-2027 Eğitim Dönem Kayıt Ücreti" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                     </x-admin.form.field-group>
 
                     <div class="grid grid-cols-2 gap-3">
                         <x-admin.form.field-group label="Düzenlenme Tarihi" id="issue_date">
-                            <input type="date" name="issue_date" required value="{{ date('Y-m-d') }}" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <input type="date" name="issue_date" required value="{{ date('Y-m-d') }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                         </x-admin.form.field-group>
 
                         <x-admin.form.field-group label="Son Ödeme Tarihi" id="due_date">
-                            <input type="date" name="due_date" required value="{{ date('Y-m-d', strtotime('+30 days')) }}" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <input type="date" name="due_date" required value="{{ date('Y-m-d', strtotime('+30 days')) }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                         </x-admin.form.field-group>
                     </div>
 
                     <x-admin.form.field-group label="Toplam Tutar (₺)" id="amount">
-                        <input type="number" step="0.01" name="amount" required value="25000.00" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 font-bold text-primary">
+                        <input type="number" step="0.01" name="amount" required value="25000.00" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 font-bold text-primary">
                     </x-admin.form.field-group>
 
                     <div class="pt-4">
-                        <button type="submit" class="w-full py-2.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-dark transition shadow-sm">
+                        <x-admin.button type="submit" variant="primary" class="w-full">
                             Faturayı Kes & Borç Hesabı Aç
-                        </button>
+                        </x-admin.button>
                     </div>
 
                 </x-admin.form.layout>
             </div>
 
             <!-- Sağ Panel: Kesilen Faturalar -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-4">
+            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Kesilen Faturalar</h3>
                 
                 <x-admin.table.layout>

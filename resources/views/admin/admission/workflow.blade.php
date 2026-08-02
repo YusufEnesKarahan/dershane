@@ -1,13 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'Kayıt Workflow Pipeline')
 @section('content')
-    <div class="space-y-6">
-        
-        <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Kayıt Workflow Pipeline (Aşamalar)</h1>
-            <p class="text-xs text-neutral-500 mt-1">Başvuruların ön kayıttan kesin kayda kadarki tüm süreç aşamalarını takip edin.</p>
-        </div>
+    <x-admin.crud.index-layout title="Kayıt Workflow Pipeline" description="Başvuruların ön kayıttan kesin kayda kadarki tüm süreç aşamalarını Kanban görünümünde takip edin ve yönetin.">
+        <x-slot name="actions">
+            <x-admin.button href="{{ route('admin.admission.dashboard') }}" variant="secondary" icon="M10 19l-7-7m0 0l7-7m-7 7h18">
+                Özet Panoya Dön
+            </x-admin.button>
+        </x-slot>
 
         @php
             $stages = [
@@ -20,42 +19,60 @@
             ];
         @endphp
 
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 overflow-x-auto pb-4">
+        <div class="flex overflow-x-auto gap-4 pb-6 snap-x">
             @foreach($stages as $stageKey => $stageTitle)
-                <div class="bg-neutral-50 dark:bg-neutral-800/40 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 space-y-4 min-w-[220px]">
+                <div class="snap-start shrink-0 w-[280px] bg-neutral-50/50 dark:bg-neutral-800/20 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 flex flex-col max-h-[calc(100vh-200px)]">
                     
                     @php
                         $stageAdmissions = $admissions->filter(fn($a) => $a->status === $stageKey);
                     @endphp
 
-                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
-                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200">{{ $stageTitle }}</span>
-                        <span class="px-2 py-0.5 text-[10px] font-bold bg-neutral-200 dark:bg-neutral-800 rounded text-neutral-600 dark:text-neutral-400 font-mono">{{ $stageAdmissions->count() }}</span>
+                    <!-- Kolon Başlığı -->
+                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-4 sticky top-0 bg-neutral-50/90 dark:bg-neutral-900/90 backdrop-blur z-10">
+                        <span class="text-xs font-black text-neutral-800 dark:text-neutral-200 truncate pr-2">{{ $stageTitle }}</span>
+                        <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-black bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-full text-neutral-600 dark:text-neutral-400 shadow-sm">{{ $stageAdmissions->count() }}</span>
                     </div>
 
-                    <div class="space-y-3">
+                    <!-- Kartlar -->
+                    <div class="space-y-3 overflow-y-auto flex-1 pr-1 custom-scrollbar">
                         @forelse($stageAdmissions as $adm)
-                            <div class="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-2">
-                                <div class="text-xs font-bold text-neutral-900 dark:text-white">
-                                    <a href="{{ route('admin.admission.show', $adm->id) }}" class="hover:text-primary transition">
+                            <div class="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800 shadow-sm hover:shadow-md transition-all group relative">
+                                
+                                <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <a href="{{ route('admin.admission.show', $adm->id) }}" class="p-1 text-primary hover:bg-primary/10 rounded-md transition-colors tooltip-trigger" data-tooltip="Detaya Git">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                    </a>
+                                </div>
+
+                                <div class="text-sm font-bold text-neutral-900 dark:text-white pr-6">
+                                    <a href="{{ route('admin.admission.show', $adm->id) }}" class="hover:text-primary transition-colors">
                                         {{ $adm->first_name }} {{ $adm->last_name }}
                                     </a>
                                 </div>
-                                <div class="text-[10px] text-neutral-400 font-mono">{{ $adm->admission_no }}</div>
-                                <div class="text-[10px] text-neutral-600 font-semibold">₺{{ number_format($adm->total_amount, 2) }}</div>
+                                <div class="text-[10px] text-neutral-400 font-mono mt-0.5">{{ $adm->admission_no }}</div>
                                 
-                                <form method="POST" action="{{ route('admin.admission.status.update', $adm->id) }}" class="pt-2 border-t border-neutral-50 dark:border-neutral-800/60 mt-2">
+                                <div class="mt-3 flex items-center justify-between">
+                                    <div class="inline-flex items-center gap-1 text-[10px] font-bold text-neutral-500 bg-neutral-50 dark:bg-neutral-800 px-2 py-1 rounded-md">
+                                        <svg class="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        ₺{{ number_format($adm->total_amount, 2) }}
+                                    </div>
+                                </div>
+                                
+                                <form method="POST" action="{{ route('admin.admission.status.update', $adm->id) }}" class="pt-3 border-t border-neutral-50 dark:border-neutral-800/60 mt-3">
                                     @csrf
-                                    <select name="status" onchange="this.form.submit()" class="text-[10px] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 rounded px-1.5 py-0.5 w-full">
+                                    <select name="status" onchange="this.form.submit()" class="w-full text-[10px] font-medium bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-neutral-600 dark:text-neutral-300 transition-colors">
                                         <option value="">Aşama Değiştir</option>
                                         @foreach($stages as $k => $v)
-                                            <option value="{{ $k }}">{{ $v }}</option>
+                                            <option value="{{ $k }}" {{ $adm->status === $k ? 'selected' : '' }}>{{ $v }}</option>
                                         @endforeach
                                     </select>
                                 </form>
                             </div>
                         @empty
-                            <div class="text-center text-[10px] text-neutral-400 py-6">Bu aşamada başvuru yok.</div>
+                            <div class="flex flex-col items-center justify-center py-8 text-center bg-white/50 dark:bg-neutral-900/50 rounded-xl border border-dashed border-neutral-200 dark:border-neutral-700">
+                                <svg class="w-6 h-6 text-neutral-300 dark:text-neutral-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                                <span class="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">Bu aşamada başvuru yok</span>
+                            </div>
                         @endforelse
                     </div>
 
@@ -63,5 +80,5 @@
             @endforeach
         </div>
 
-    </div>
+    </x-admin.crud.index-layout>
 @endsection

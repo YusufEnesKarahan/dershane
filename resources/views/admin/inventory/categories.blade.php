@@ -4,7 +4,7 @@
     <div class="space-y-6">
         
         <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Demirbaş Kategorileri & Lokasyonlar</h1>
             <p class="text-xs text-neutral-500 mt-1">Demirbaşları sınıflandırmak için kategoriler oluşturun ve bulundukları fiziksel lokasyonları/şubeleri tanımlayın.</p>
         </div>
@@ -12,10 +12,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             <!-- Sol Panel: Kategoriler -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Kategoriler</h3>
-                    <button onclick="toggleModal('category-modal')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-xs font-bold text-white rounded-lg transition">Yeni Kategori</button>
+                    <x-admin.button type="button" onclick="toggleModal('category-modal')" variant="primary" size="sm">Yeni Kategori</x-admin.button>
                 </div>
 
                 <div class="space-y-3">
@@ -34,10 +34,10 @@
             </div>
 
             <!-- Sağ Panel: Lokasyonlar -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Fiziksel Lokasyonlar / Depolar</h3>
-                    <button onclick="toggleModal('location-modal')" class="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-bold rounded-lg transition">Yeni Lokasyon</button>
+                    <x-admin.button type="button" onclick="toggleModal('location-modal')" variant="secondary" size="sm">Yeni Lokasyon</x-admin.button>
                 </div>
 
                 <div class="space-y-3">
@@ -59,7 +59,7 @@
 
         <!-- Kategori Modal -->
         <div id="category-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Demirbaş Kategorisi</h3>
                     <button onclick="toggleModal('category-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -84,8 +84,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('category-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('category-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>
@@ -93,7 +93,7 @@
 
         <!-- Lokasyon Modal -->
         <div id="location-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Lokasyon / Depo Tanımı</h3>
                     <button onclick="toggleModal('location-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -123,8 +123,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('location-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('location-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>

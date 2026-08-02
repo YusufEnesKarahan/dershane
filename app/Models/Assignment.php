@@ -2,11 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Assignment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantScoped;
 
     protected $fillable = [
         'title', 'code', 'description', 'assignment_type', 'classroom_id',
@@ -38,3 +39,4 @@ class Assignment extends Model
         return $this->hasMany(AssignmentFile::class);
     }
 }
+

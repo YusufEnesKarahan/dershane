@@ -1,71 +1,100 @@
 @extends('layouts.admin')
 @section('title', 'Personel Yönetimi')
 @section('content')
-    <div class="space-y-6">
-        
-        <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex justify-between items-center">
-            <div>
-                <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Personel Ana Kayıtları</h1>
-                <p class="text-xs text-neutral-500 mt-1">Kurum personel listesini, özlük detaylarını, maaş ve departman bilgilerini yönetin.</p>
-            </div>
-            
-            <button onclick="toggleModal('employee-modal')" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-xs font-bold text-white rounded-xl transition shadow-lg shadow-violet-950">
+    <x-admin.crud.index-layout title="Personel Ana Kayıtları" description="Kurum personel listesini, özlük detaylarını, maaş ve departman bilgilerini yönetin.">
+        <x-slot name="actions">
+            <button onclick="toggleModal('employee-modal')" class="inline-flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-xl transition-colors shadow-lg shadow-violet-900/20 border border-violet-500/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                 Yeni Personel Ekle
             </button>
-        </div>
+        </x-slot>
 
         <!-- Personel Tablosu -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <x-admin.table.layout>
-                <x-slot name="head">
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Personel No</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Ad Soyad</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Departman / Pozisyon</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Maaş / Sözleşme</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Durum</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">İşlem</th>
-                </x-slot>
-                <x-slot name="body">
-                    @forelse($employees as $emp)
-                        <tr>
-                            <td class="px-4 py-3 text-xs font-bold font-mono text-neutral-900 dark:text-white">{{ $emp->employee_no }}</td>
-                            <td class="px-4 py-3 text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                                {{ $emp->first_name }} {{ $emp->last_name }}
-                                <div class="text-[10px] font-normal text-neutral-400 mt-0.5">{{ $emp->email }} | {{ $emp->phone }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-xs">
-                                <span class="font-bold text-neutral-700 dark:text-neutral-300">{{ $emp->department->name ?? 'Yok' }}</span>
-                                <div class="text-[10px] text-neutral-400 mt-0.5">{{ $emp->position->name ?? 'Yok' }} ({{ $emp->position->level ?? '-' }})</div>
-                            </td>
-                            <td class="px-4 py-3 text-xs font-mono">
-                                ₺{{ number_format($emp->salary, 2) }}
-                                <div class="text-[10px] font-sans text-neutral-400 mt-0.5">{{ $emp->contract_type }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-xs">
-                                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold {{ $emp->employment_status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                    {{ $emp->employment_status }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-xs space-x-2">
-                                <button onclick="editEmployee({{ json_encode($emp) }})" class="text-violet-600 hover:underline font-bold">Düzenle</button>
-                                @if($emp->employment_status === 'Active')
-                                    <form method="POST" action="{{ route('admin.employees.destroy', $emp->id) }}" class="inline-block" onsubmit="return confirm('Sözleşmeyi feshetmek istediğinize emin misiniz?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline font-bold">Feshet</button>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-xs text-neutral-400">Kayıtlı personel bulunmamaktadır.</td>
-                        </tr>
-                    @endforelse
-                </x-slot>
-            </x-admin.table.layout>
+        <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden flex flex-col h-full">
+            <div class="p-0 flex-1">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
+                        <thead class="bg-neutral-50/80 dark:bg-neutral-900/80 backdrop-blur-sm">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Personel No</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Ad Soyad</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Departman / Pozisyon</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Maaş / Sözleşme</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Durum</th>
+                                <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30 w-32">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/50 bg-white dark:bg-neutral-900">
+                            @forelse($employees as $emp)
+                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors border-b border-neutral-100 dark:border-neutral-800/50 last:border-0 group">
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-300 font-mono">
+                                            {{ $emp->employee_no }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $emp->first_name }} {{ $emp->last_name }}</div>
+                                        <div class="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-2">
+                                            <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> {{ $emp->email }}</span>
+                                            <span>&bull;</span>
+                                            <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg> {{ $emp->phone }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-bold text-neutral-900 dark:text-white">{{ $emp->department->name ?? 'Yok' }}</span>
+                                        <div class="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">{{ $emp->position->name ?? 'Yok' }} ({{ $emp->position->level ?? '-' }})</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-bold text-neutral-900 dark:text-white font-mono">₺{{ number_format($emp->salary, 2) }}</span>
+                                        <div class="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">{{ $emp->contract_type }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @if($emp->employment_status === 'Active')
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                                                Aktif Çalışan
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span>
+                                                Ayrıldı / Fesih
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button onclick="editEmployee({{ json_encode($emp) }})" class="p-2 text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-500/10 rounded-lg transition-colors" title="Düzenle">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                            </button>
+                                            @if($emp->employment_status === 'Active')
+                                                <form method="POST" action="{{ route('admin.employees.destroy', $emp->id) }}" class="inline-block" onsubmit="return confirm('Sözleşmeyi feshetmek istediğinize emin misiniz?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" title="Sözleşmeyi Feshet">
+                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6">
+                                        <x-admin.empty-state
+                                            icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                            title="Personel Bulunamadı"
+                                            description="Sistemde henüz kayıtlı bir personel bulunmuyor. Yeni bir personel ekleyerek başlayabilirsiniz."
+                                        />
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+    </x-admin.crud.index-layout>
 
         <!-- Yeni Personel Modal -->
         <div id="employee-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">

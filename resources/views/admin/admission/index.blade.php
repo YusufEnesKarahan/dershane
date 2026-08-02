@@ -10,19 +10,26 @@
                 
                 <!-- Lead'den Dönüştür -->
                 @if(count($leads) > 0)
-                    <div class="bg-gradient-to-br from-indigo-900 to-slate-900 p-6 rounded-2xl text-white shadow-premium space-y-4">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-300">CRM Lead Kaydından Dönüştür</h3>
+                    <div class="bg-gradient-to-br from-indigo-900 to-slate-900 p-6 rounded-2xl text-white shadow-sm space-y-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+                        
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                            CRM Lead Kaydından Dönüştür
+                        </h3>
+                        
                         <form method="POST" action="" id="convertLeadForm">
                             @csrf
-                            <div class="space-y-3">
-                                <select id="leadSelect" required class="w-full text-xs bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                            <div class="space-y-4 relative z-10">
+                                <select id="leadSelect" required class="w-full text-sm bg-slate-800/80 border border-slate-700/50 rounded-xl px-3 py-2.5 text-white shadow-inner focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none cursor-pointer">
                                     <option value="">Aday Öğrenci Seçin</option>
                                     @foreach($leads as $ld)
                                         <option value="{{ $ld->id }}">{{ $ld->first_name }} {{ $ld->last_name }} ({{ $ld->phone }})</option>
                                     @endforeach
                                 </select>
 
-                                <button type="button" onclick="submitConvert()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-xs font-bold rounded-xl transition shadow-md">
+                                <button type="button" onclick="submitConvert()" class="w-full py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors shadow-md flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                                     Ön Kayıta Dönüştür
                                 </button>
                             </div>
@@ -40,46 +47,49 @@
                 @endif
 
                 <!-- Manuel Ön Kayıt Formu -->
-                <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
-                    <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Manuel Ön Kayıt Oluştur</h3>
+                <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-6">
+                    <h3 class="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
+                        <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
+                        Manuel Ön Kayıt Oluştur
+                    </h3>
                     
-                    <form method="POST" action="{{ route('admin.admission.store') }}" class="space-y-4">
+                    <form method="POST" action="{{ route('admin.admission.store') }}" class="space-y-6">
                         @csrf
                         
                         <div class="grid grid-cols-2 gap-4">
-                            <x-admin.form.field-group label="Adı" id="first_name">
-                                <input type="text" name="first_name" required placeholder="Ali" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <x-admin.form.field-group label="Adı" id="first_name" required>
+                                <input type="text" name="first_name" id="first_name" required placeholder="Ali" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
                             </x-admin.form.field-group>
                             
-                            <x-admin.form.field-group label="Soyadı" id="last_name">
-                                <input type="text" name="last_name" required placeholder="Kaya" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <x-admin.form.field-group label="Soyadı" id="last_name" required>
+                                <input type="text" name="last_name" id="last_name" required placeholder="Kaya" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
                             </x-admin.form.field-group>
                         </div>
 
-                        <x-admin.form.field-group label="Telefon No" id="phone">
-                            <input type="text" name="phone" required placeholder="0555 555 5555" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <x-admin.form.field-group label="Telefon No" id="phone" required>
+                            <input type="text" name="phone" id="phone" required placeholder="0555 555 5555" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
                         </x-admin.form.field-group>
 
                         <x-admin.form.field-group label="T.C. Kimlik No" id="tc_no">
-                            <input type="text" name="tc_no" placeholder="11 haneli TC No" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <input type="text" name="tc_no" id="tc_no" placeholder="11 haneli TC No" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
                         </x-admin.form.field-group>
 
                         <x-admin.form.field-group label="Program / Alan" id="program">
-                            <input type="text" name="program" placeholder="Örn: YKS Eşit Ağırlık" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <input type="text" name="program" id="program" placeholder="Örn: YKS Eşit Ağırlık" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
                         </x-admin.form.field-group>
 
                         <div class="grid grid-cols-2 gap-4">
                             <x-admin.form.field-group label="Toplam Ücret (₺)" id="total_amount">
-                                <input type="number" step="0.01" name="total_amount" placeholder="45000" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                                <input type="number" step="0.01" name="total_amount" id="total_amount" placeholder="45000" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors font-mono">
                             </x-admin.form.field-group>
 
                             <x-admin.form.field-group label="Kapora/Peşinat (₺)" id="deposit_amount">
-                                <input type="number" step="0.01" name="deposit_amount" placeholder="5000" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                                <input type="number" step="0.01" name="deposit_amount" id="deposit_amount" placeholder="5000" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors font-mono">
                             </x-admin.form.field-group>
                         </div>
 
                         <x-admin.form.field-group label="Hedef Şube" id="branch_id">
-                            <select name="branch_id" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                            <select name="branch_id" id="branch_id" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
                                 <option value="">Şube Seçin</option>
                                 @foreach($branches as $br)
                                     <option value="{{ $br->id }}">{{ $br->name }}</option>
@@ -87,57 +97,80 @@
                             </select>
                         </x-admin.form.field-group>
 
-                        <button type="submit" class="w-full py-2.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-dark transition shadow-sm">
-                            Ön Kaydı Başlat
-                        </button>
+                        <div class="pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                            <x-admin.button type="submit" variant="primary" icon="M13 5l7 7-7 7M5 5l7 7-7 7" class="w-full justify-center mt-4">
+                                Ön Kaydı Başlat
+                            </x-admin.button>
+                        </div>
                     </form>
                 </div>
 
             </div>
 
             <!-- Sağ Panel: Ön Kayıt Listesi -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
-                <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Başvuru Listesi</h3>
-                
-                <x-admin.table.layout>
-                    <x-slot name="head">
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Ön Kayıt / Öğrenci</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Program / Şube</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Ücret / Peşinat</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Durum</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">İşlem</th>
-                    </x-slot>
-                    <x-slot name="body">
-                        @forelse($admissions as $adm)
-                            <tr>
-                                <td class="px-4 py-3 text-xs">
-                                    <span class="font-bold text-neutral-900 dark:text-white">{{ $adm->first_name }} {{ $adm->last_name }}</span>
-                                    <div class="text-[10px] text-neutral-400 font-mono mt-0.5">{{ $adm->admission_no }}</div>
-                                </td>
-                                <td class="px-4 py-3 text-xs text-neutral-600 dark:text-neutral-300">
-                                    <span>{{ $adm->program ?? 'Genel' }}</span>
-                                    <div class="text-[10px] text-neutral-400 mt-0.5">{{ $adm->branch->name ?? 'Merkez' }}</div>
-                                </td>
-                                <td class="px-4 py-3 text-xs font-mono">
-                                    <span class="font-bold text-neutral-800 dark:text-neutral-200">₺{{ number_format($adm->total_amount, 2) }}</span>
-                                    <div class="text-[10px] text-emerald-600">Peşinat: ₺{{ number_format($adm->deposit_amount, 2) }}</div>
-                                </td>
-                                <td class="px-4 py-3 text-xs">
-                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-slate-100 text-slate-700">
-                                        {{ $adm->status }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3 text-xs">
-                                    <a href="{{ route('admin.admission.show', $adm->id) }}" class="text-primary hover:underline font-bold">Yönet & Evraklar</a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="px-4 py-6 text-center text-xs text-neutral-400">Henüz kaydedilmiş ön kayıt bulunmamaktadır.</td>
-                            </tr>
-                        @endforelse
-                    </x-slot>
-                </x-admin.table.layout>
+            <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-6">
+                    <h3 class="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        Başvuru Listesi
+                    </h3>
+                    
+                    <x-admin.table.layout>
+                        <x-slot name="head">
+                            <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Ön Kayıt / Öğrenci</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Program / Şube</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Ücret / Peşinat</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Durum</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider w-24">İşlem</th>
+                        </x-slot>
+                        <x-slot name="body">
+                            @forelse($admissions as $adm)
+                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $adm->first_name }} {{ $adm->last_name }}</div>
+                                        <div class="inline-flex items-center gap-1 mt-1">
+                                            <span class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-[10px] font-mono font-medium border border-neutral-200 dark:border-neutral-700">
+                                                {{ $adm->admission_no }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ $adm->program ?? 'Genel Program' }}</div>
+                                        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-100 dark:border-neutral-700/50 text-[11px] font-medium text-neutral-500 mt-1">
+                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                            {{ $adm->branch->name ?? 'Merkez' }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-bold text-neutral-900 dark:text-white font-mono">₺{{ number_format($adm->total_amount, 2) }}</div>
+                                        <div class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 mt-0.5">Peşinat: ₺{{ number_format($adm->deposit_amount, 2) }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span>
+                                            {{ $adm->status }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="{{ route('admin.admission.show', $adm->id) }}" class="inline-flex items-center justify-center p-2 text-primary hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors group-hover:bg-white dark:group-hover:bg-neutral-800 border border-transparent group-hover:border-primary/10" title="Yönet & Evraklar">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-0 py-0">
+                                        <x-admin.empty-state
+                                            icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                            title="Kayıt Bulunamadı"
+                                            description="Sistemde henüz kaydedilmiş bir ön kayıt bulunmamaktadır. Sol taraftaki formu kullanarak manuel bir başvuru oluşturabilir veya CRM'den dönüştürebilirsiniz."
+                                        />
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </x-slot>
+                    </x-admin.table.layout>
+                </div>
             </div>
 
         </div>

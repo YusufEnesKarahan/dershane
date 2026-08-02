@@ -14,13 +14,13 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Sol Panel: Yeni Bildirim Gönder -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Anlık Bildirim Gönder</h3>
                 
                 <x-admin.form.layout :action="route('admin.notifications.store')" method="POST">
                     
                     <x-admin.form.field-group label="Alıcı Kullanıcı" id="user_id">
-                        <select name="user_id" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <select name="user_id" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                             @foreach($users as $u)
                                 <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
                             @endforeach
@@ -28,31 +28,31 @@
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Bildirim Türü" id="type">
-                        <select name="type" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <select name="type" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                             <option value="system">Sistem</option><option value="student">Öğrenci</option><option value="finance">Finans</option><option value="crm">CRM</option>
                         </select>
                     </x-admin.form.field-group>
-                    <x-admin.form.field-group label="Gönderim Kanalı" id="channel"><select name="channel" required class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"><option value="panel">Panel içi</option><option value="email">E-posta</option><option value="sms">SMS</option></select></x-admin.form.field-group>
+                    <x-admin.form.field-group label="Gönderim Kanalı" id="channel"><select name="channel" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5"><option value="panel">Panel içi</option><option value="email">E-posta</option><option value="sms">SMS</option></select></x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Bildirim Başlığı" id="title">
-                        <input type="text" name="title" required placeholder="Örn: Sınav Sonuçları Açıklandı" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <input type="text" name="title" required placeholder="Örn: Sınav Sonuçları Açıklandı" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Mesaj İçeriği" id="message">
-                        <textarea name="message" required rows="4" placeholder="Gönderilecek bildirim mesajı detayı..." class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"></textarea>
+                        <textarea name="message" required rows="4" placeholder="Gönderilecek bildirim mesajı detayı..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5"></textarea>
                     </x-admin.form.field-group>
 
                     <div class="pt-4">
-                        <button type="submit" class="w-full py-2.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-dark transition shadow-sm">
+                        <x-admin.button type="submit" variant="primary" class="w-full">
                             Bildirimi Sıraya Al & Gönder
-                        </button>
+                        </x-admin.button>
                     </div>
 
                 </x-admin.form.layout>
             </div>
 
             <!-- Sağ Panel: Son Gönderilen Bildirimler -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm space-y-4">
+            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Son Gönderilen Bildirimler</h3>
                 
                 <x-admin.table.layout>

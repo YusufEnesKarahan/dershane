@@ -33,7 +33,7 @@
                     <!-- Sol Panel: İçerik / SEO / Revizyon Formları -->
                     <div class="lg:col-span-2 space-y-6">
                         <!-- Sekme 1: İçerik Editörü -->
-                        <div x-show="activeTab === 'content'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div x-show="activeTab === 'content'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <x-admin.form.field-group label="Sayfa Başlığı" id="title" :error="$errors->first('title')">
                                 <input type="text" name="title" id="title" required x-model="titleText" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
                             </x-admin.form.field-group>
@@ -63,7 +63,7 @@
                         <!-- Sekme 2: SEO Paneli & Analiz -->
                         <div x-show="activeTab === 'seo'" class="space-y-6">
                             <!-- SEO Score widget -->
-                            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+                            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                                 <div class="flex items-center justify-between mb-4">
                                     <h4 class="text-sm font-bold text-neutral-900 dark:text-white">SEO Skor Analizi</h4>
                                     <span class="px-3 py-1 text-xs font-bold rounded-full 
@@ -88,7 +88,7 @@
                                 @endif
                             </div>
 
-                            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                                 <div x-data="{ metaTitle: @js($page->meta_title ?? ''), metaDesc: @js($page->meta_description ?? '') }">
                                     <x-admin.form.field-group label="Meta Title" id="meta_title" :error="$errors->first('seo.meta_title')">
                                         <input type="text" name="seo[meta_title]" x-model="metaTitle" value="{{ $page->meta_title }}" maxlength="60" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
@@ -115,7 +115,7 @@
                         </div>
 
                         <!-- Sekme 3: Revizyon Geçmişi (page_revisions Database entries) -->
-                        <div x-show="activeTab === 'revisions'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div x-show="activeTab === 'revisions'" class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Kaydedilmiş Revizyon Geçmişi</h3>
                             <div class="space-y-2">
                                 @forelse($page->revisions as $rev)
@@ -135,7 +135,7 @@
 
                     <!-- Sağ Panel: Şablon & Yayın Eylemleri -->
                     <div class="space-y-6">
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <!-- Yayın workflow durum butonları -->
                             <div class="border-b border-neutral-100 dark:border-neutral-800 pb-3">
                                 <label class="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Yayın Durumu</label>
@@ -175,9 +175,9 @@
                                 <span>Ana Sayfa Olarak Ayarla</span>
                             </label>
 
-                            <button type="submit" class="w-full px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition shadow-sm">
+                            <x-admin.button type="submit" variant="primary" class="w-full">
                                 Değişiklikleri Güncelle
-                            </button>
+                            </x-admin.button>
                             <a href="{{ route('admin.pages.index') }}" class="w-full block text-center px-4 py-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-xl text-neutral-600 dark:text-neutral-300 transition">
                                 Vazgeç
                             </a>

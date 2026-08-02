@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-gradient-to-r from-indigo-900 to-slate-900 p-8 rounded-3xl text-white shadow-premium flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div class="bg-gradient-to-r from-indigo-900 to-slate-900 p-8 rounded-3xl text-white shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
             <h1 class="text-2xl font-black mt-2">Özellik Yönetimi (Feature Flags)</h1>
             <p class="text-xs text-slate-300 mt-1">SaaS modüllerini ve platform özelliklerini açıp kapatın.</p>
@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
         
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">

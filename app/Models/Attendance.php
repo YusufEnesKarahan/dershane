@@ -2,9 +2,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 
 class Attendance extends Model
 {
+    use TenantScoped;
     protected $fillable = [
         'attendance_session_id', 'student_id', 'attendance_status_id',
         'qr_code_scanned', 'check_in_time', 'remarks'
@@ -30,3 +32,4 @@ class Attendance extends Model
         return $this->hasOne(AttendanceExcuse::class);
     }
 }
+

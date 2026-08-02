@@ -11,13 +11,13 @@
                 <p class="text-xs text-rose-100 mt-1">Aday öğrenci havuzu, danışman performansları ve satış hunisi (funnel) verilerini tek ekrandan yönetin.</p>
             </div>
             
-            <div class="flex items-center gap-2">
-                <a href="{{ route('admin.crm.pipeline') }}" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-xs font-bold rounded-xl transition shadow-lg shadow-rose-950 flex items-center gap-1.5 border border-rose-500">
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <x-admin.button href="{{ route('admin.crm.pipeline') }}" variant="primary" icon="M14 5l7 7m0 0l-7 7m7-7H3">
                     Satış Pipeline (Kanban)
-                </a>
-                <a href="{{ route('admin.leads.index') }}" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl transition border border-slate-700">
+                </x-admin.button>
+                <x-admin.button href="{{ route('admin.leads.index') }}" variant="secondary" icon="M4 6h16M4 10h16M4 14h16M4 18h16">
                     Aday Öğrenci Listesi
-                </a>
+                </x-admin.button>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             <!-- Bugünkü Aramalar -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Bugünkü Takip</span>
                     <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
@@ -39,7 +39,7 @@
             </div>
 
             <!-- Bekleyen Lead -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Bekleyen Aday</span>
                     <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
@@ -53,7 +53,7 @@
             </div>
 
             <!-- Kayıt Olan Öğrenci -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Kayıt Olanlar</span>
                     <div class="p-2 bg-green-50 text-green-600 rounded-lg">
@@ -67,7 +67,7 @@
             </div>
 
             <!-- Dönüşüm Oranı -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-neutral-400 uppercase">Dönüşüm Oranı</span>
                     <div class="p-2 bg-rose-50 text-rose-600 rounded-lg">
@@ -83,23 +83,23 @@
         </div>
 
         <!-- Danışman Performansı Listesi -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
             <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Eğitim Danışmanları & Satış Performansı</h3>
             
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Danışman Adı</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Atanan Toplam Lead</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Kayda Dönüşen</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Dönüşüm Başarı Oranı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Danışman Adı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Atanan Toplam Lead</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Kayda Dönüşen</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Dönüşüm Başarı Oranı</th>
                 </x-slot>
                 <x-slot name="body">
                     @forelse($analytics['advisor_performance'] as $advisor)
-                        <tr>
-                            <td class="px-4 py-3 text-xs font-bold text-neutral-900 dark:text-white">{{ $advisor->name }}</td>
-                            <td class="px-4 py-3 text-xs text-neutral-600 font-mono">{{ $advisor->total_assigned }} Aday</td>
-                            <td class="px-4 py-3 text-xs text-green-600 font-bold font-mono">{{ $advisor->total_registered }} Kayıt</td>
-                            <td class="px-4 py-3 text-xs font-bold">
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40">
+                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white">{{ $advisor->name }}</td>
+                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400 font-mono">{{ $advisor->total_assigned }} Aday</td>
+                            <td class="px-6 py-4 text-sm text-emerald-600 dark:text-emerald-500 font-bold font-mono">{{ $advisor->total_registered }} Kayıt</td>
+                            <td class="px-6 py-4 text-sm font-bold">
                                 @php
                                     $advRate = $advisor->total_assigned > 0 ? round(($advisor->total_registered / $advisor->total_assigned) * 100, 1) : 0;
                                 @endphp

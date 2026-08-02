@@ -12,9 +12,9 @@
     }">
         <x-admin.crud.index-layout title="{{ isset($blog) ? 'Makaleyi Düzenle' : 'Yeni Makale Oluştur' }}" description="Markdown içerik editörü ve canlı SEO skoru denetleyicisi ile makalenizi hazırlayın.">
             <x-slot name="actions">
-                <a href="{{ route('admin.blogs.index') }}" class="px-4 py-2 bg-neutral-100 text-neutral-700 text-xs font-semibold rounded-xl hover:bg-neutral-200 transition">
+                <x-admin.button href="{{ route('admin.blogs.index') }}" variant="secondary" icon="M10 19l-7-7m0 0l7-7m-7 7h18">
                     Listeye Geri Dön
-                </a>
+                </x-admin.button>
             </x-slot>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -25,14 +25,14 @@
                             @method('PUT')
                         @endif
 
-                        <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-6">
+                        <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-6">
                             
                             <x-admin.form.field-group label="Başlık" id="title">
-                                <input type="text" name="title" required value="{{ $blog->title ?? '' }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                <input type="text" name="title" required value="{{ $blog->title ?? '' }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                             </x-admin.form.field-group>
 
                             <x-admin.form.field-group label="İçerik (Markdown)" id="content">
-                                <textarea name="content" x-model="content" required class="w-full h-80 text-sm font-mono bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">{{ $blog->content ?? '' }}</textarea>
+                                <textarea name="content" x-model="content" required class="w-full h-80 text-sm font-mono bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none leading-relaxed">{{ $blog->content ?? '' }}</textarea>
                                 <div class="flex items-center justify-between text-[10px] text-neutral-400 mt-1">
                                     <span x-text="wordCount + ' kelime'"></span>
                                     <span x-text="charCount + ' karakter'"></span>
@@ -40,12 +40,12 @@
                             </x-admin.form.field-group>
 
                             <x-admin.form.field-group label="Özet" id="excerpt">
-                                <textarea name="excerpt" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200 h-20">{{ $blog->excerpt ?? '' }}</textarea>
+                                <textarea name="excerpt" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors h-24 resize-none">{{ $blog->excerpt ?? '' }}</textarea>
                             </x-admin.form.field-group>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <x-admin.form.field-group label="Kategori" id="category_id">
-                                    <select name="category_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                    <select name="category_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                                         <option value="">Seçiniz</option>
                                         @foreach($categories as $cat)
                                             <option value="{{ $cat->id }}" {{ (isset($blog) && $blog->category_id === $cat->id) ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -54,7 +54,7 @@
                                 </x-admin.form.field-group>
 
                                 <x-admin.form.field-group label="Yayın Durumu" id="status">
-                                    <select name="status" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                    <select name="status" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                                         <option value="Draft" {{ (isset($blog) && $blog->status === 'Draft') ? 'selected' : '' }}>Draft (Taslak)</option>
                                         <option value="Review" {{ (isset($blog) && $blog->status === 'Review') ? 'selected' : '' }}>Review (İncelemede)</option>
                                         <option value="Published" {{ (isset($blog) && $blog->status === 'Published') ? 'selected' : '' }}>Published (Yayınlandı)</option>
@@ -72,7 +72,7 @@
                                     <h4 class="text-xs font-bold text-neutral-800 dark:text-white">İlişkili Makaleler & Etiketler</h4>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <x-admin.form.field-group label="Etiketler" id="tags">
-                                            <select name="tags[]" multiple class="w-full h-24 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2">
+                                            <select name="tags[]" multiple class="w-full h-28 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                                                 @foreach($tags as $t)
                                                     <option value="{{ $t->id }}" {{ (isset($blog) && $blog->tags->contains($t->id)) ? 'selected' : '' }}>{{ $t->name }}</option>
                                                 @endforeach
@@ -80,7 +80,7 @@
                                         </x-admin.form.field-group>
 
                                         <x-admin.form.field-group label="Benzer Makaleler" id="related_posts">
-                                            <select name="related_posts[]" multiple class="w-full h-24 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-2">
+                                            <select name="related_posts[]" multiple class="w-full h-28 text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                                                 @foreach($blogs as $otherBlog)
                                                     <option value="{{ $otherBlog->id }}" {{ (isset($blog) && $blog->relatedPosts->contains($otherBlog->id)) ? 'selected' : '' }}>{{ $otherBlog->title }}</option>
                                                 @endforeach
@@ -90,16 +90,16 @@
                                 </div>
                             @endif
 
-                            <div class="pt-6 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
-                                <button type="submit" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition shadow-sm">
+                            <div class="pt-6 border-t border-neutral-100 dark:border-neutral-800 flex items-center gap-3">
+                                <x-admin.button type="submit" variant="primary" icon="M5 13l4 4L19 7">
                                     Kaydet
-                                </button>
+                                </x-admin.button>
                                 @if(isset($blog) && $blog->status !== 'Published')
                                     <form action="{{ route('admin.blogs.publish', $blog->id) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-xl transition">
+                                        <x-admin.button type="submit" variant="success" icon="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
                                             Yayınla
-                                        </button>
+                                        </x-admin.button>
                                     </form>
                                 @endif
                             </div>
@@ -111,7 +111,7 @@
                 <!-- Sağ Panel: SEO Skoru & Revizyon Listesi -->
                 <div class="space-y-6">
                     <!-- SEO Content Analyzer Widget -->
-                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                         <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider">İçerik Analiz Raporu</h4>
                         @if(isset($analysis))
                             <div class="flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl">
@@ -135,7 +135,7 @@
 
                     <!-- Revizyon Geçmişi (Revisions Timeline) -->
                     @if(isset($blog))
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Revizyon Tarihçesi</h4>
                             <div class="space-y-3">
                                 @forelse($blog->revisions as $rev)

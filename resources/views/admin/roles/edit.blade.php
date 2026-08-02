@@ -27,13 +27,13 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Sol Taraf: Temel Bilgiler & Yetki Matrisi -->
                     <div class="lg:col-span-2 space-y-6">
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                             <x-admin.form.field-group label="Rol Adı" id="name" :error="$errors->first('name')">
-                                <input type="text" name="name" id="name" value="{{ $role->name }}" required {{ $role->isSystemRole() ? 'readonly' : '' }} class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                                <input type="text" name="name" id="name" value="{{ $role->name }}" required {{ $role->isSystemRole() ? 'readonly' : '' }} class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
                             </x-admin.form.field-group>
 
                             <x-admin.form.field-group label="Açıklama" id="description" :error="$errors->first('description')">
-                                <textarea name="description" id="description" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200 h-24">{{ $role->description }}</textarea>
+                                <textarea name="description" id="description" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200 h-24">{{ $role->description }}</textarea>
                             </x-admin.form.field-group>
 
                             <x-admin.form.field-group label="Renk" id="color" :error="$errors->first('color')">
@@ -42,7 +42,7 @@
                         </div>
 
                         <!-- Yetki Matrisi Accordion -->
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4" x-data="{ activeGroup: null }">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4" x-data="{ activeGroup: null }">
                             <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
                                 <h3 class="text-md font-semibold text-neutral-900 dark:text-white">Yetki Matrisi</h3>
                                 <!-- Presets -->
@@ -85,17 +85,17 @@
 
                     <!-- Sağ Taraf: Eylemler, Menü Önizleme & Effective Permissions -->
                     <div class="space-y-6">
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
-                            <button type="submit" class="w-full px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition shadow-sm">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
+                            <x-admin.button type="submit" variant="primary" class="w-full">
                                 Değişiklikleri Güncelle
-                            </button>
+                            </x-admin.button>
                             <a href="{{ route('admin.roles.index') }}" class="w-full block text-center px-4 py-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-xl text-neutral-600 dark:text-neutral-300 transition">
                                 Vazgeç
                             </a>
                         </div>
 
                         <!-- Effective Permissions Summary -->
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-3">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-3">
                             <h4 class="text-sm font-bold text-neutral-900 dark:text-white">Etkin Yetkiler</h4>
                             <p class="text-xs text-neutral-500">Bu rolün sahip olduğu toplam yetki sayısı:</p>
                             <div class="text-3xl font-extrabold text-primary">{{ $role->permissions->count() }}</div>
@@ -109,7 +109,7 @@
                         </div>
 
                         <!-- Sidebar Menu Preview -->
-                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-3">
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-3">
                             <h4 class="text-sm font-bold text-neutral-900 dark:text-white">Sidebar Önizleme</h4>
                             <p class="text-xs text-neutral-500">Bu role atanan kullanıcının görebileceği olası menüler:</p>
                             <div class="bg-neutral-50 dark:bg-neutral-800/40 p-3 rounded-xl border border-neutral-100 dark:border-neutral-800 space-y-2">

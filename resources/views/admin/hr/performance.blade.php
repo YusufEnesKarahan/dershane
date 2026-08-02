@@ -1,58 +1,94 @@
 @extends('layouts.admin')
 @section('title', 'Performans Değerlendirmeleri')
 @section('content')
-    <div class="space-y-6">
-        
-        <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex justify-between items-center">
-            <div>
-                <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Personel Performans Değerlendirmeleri</h1>
-                <p class="text-xs text-neutral-500 mt-1">Personellerin dönemlik hedeflerini, güçlü/zayıf yönlerini ve performans puanlamalarını yönetin.</p>
-            </div>
-            
-            <button onclick="toggleModal('review-modal')" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-xs font-bold text-white rounded-xl transition shadow-lg shadow-violet-950">
+    <x-admin.crud.index-layout title="Personel Performans Değerlendirmeleri" description="Personellerin dönemlik hedeflerini, güçlü/zayıf yönlerini ve performans puanlamalarını yönetin.">
+        <x-slot name="actions">
+            <button onclick="toggleModal('review-modal')" class="inline-flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-xl transition-colors shadow-lg shadow-violet-900/20 border border-violet-500/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                 Değerlendirme Ekle
             </button>
-        </div>
+        </x-slot>
 
         <!-- Değerlendirme Kayıtları Tablosu -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <x-admin.table.layout>
-                <x-slot name="head">
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Dönem</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Personel</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Puan</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Değerlendiren</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Detaylar</th>
-                </x-slot>
-                <x-slot name="body">
-                    @forelse($reviews as $rev)
-                        <tr>
-                            <td class="px-4 py-3 text-xs font-bold font-mono text-neutral-900 dark:text-white">{{ $rev->period }}</td>
-                            <td class="px-4 py-3 text-xs font-bold">
-                                {{ $rev->employee->first_name }} {{ $rev->employee->last_name }}
-                                <div class="text-[10px] font-normal text-neutral-400 mt-0.5">{{ $rev->employee->department->name ?? 'Yok' }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-xs font-mono font-bold">
-                                <span class="px-2 py-0.5 rounded {{ $rev->score >= 80 ? 'bg-green-100 text-green-700' : ($rev->score >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">
-                                    {{ $rev->score }} / 100
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-xs">{{ $rev->reviewer->name ?? 'Belirlenmedi' }}</td>
-                            <td class="px-4 py-3 text-xs space-y-1">
-                                <div class="text-neutral-700 dark:text-neutral-300 font-bold">Güçlü Yönler: <span class="font-normal text-neutral-500">{{ $rev->strengths }}</span></div>
-                                <div class="text-neutral-700 dark:text-neutral-300 font-bold">Gelişmeli: <span class="font-normal text-neutral-500">{{ $rev->weaknesses }}</span></div>
-                                <p class="text-[10px] text-neutral-400 italic">Yorum: {{ $rev->comments }}</p>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-xs text-neutral-400">Performans değerlendirmesi bulunmamaktadır.</td>
-                        </tr>
-                    @endforelse
-                </x-slot>
-            </x-admin.table.layout>
+        <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden flex flex-col h-full">
+            <div class="p-0 flex-1">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
+                        <thead class="bg-neutral-50/80 dark:bg-neutral-900/80 backdrop-blur-sm">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Dönem</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Personel</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Puan</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Değerlendiren</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Detaylar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/50 bg-white dark:bg-neutral-900">
+                            @forelse($reviews as $rev)
+                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors border-b border-neutral-100 dark:border-neutral-800/50 last:border-0 group">
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 font-mono">{{ $rev->period }}</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $rev->employee->first_name }} {{ $rev->employee->last_name }}</div>
+                                        <div class="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg> {{ $rev->employee->department->name ?? 'Yok' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono">
+                                        @if($rev->score >= 80)
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400 text-sm font-bold border border-green-200/50 dark:border-green-500/20">
+                                                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                                {{ $rev->score }} <span class="text-xs font-normal opacity-70">/ 100</span>
+                                            </span>
+                                        @elseif($rev->score >= 50)
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm font-bold border border-amber-200/50 dark:border-amber-500/20">
+                                                <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+                                                {{ $rev->score }} <span class="text-xs font-normal opacity-70">/ 100</span>
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-sm font-bold border border-red-200/50 dark:border-red-500/20">
+                                                <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                                                {{ $rev->score }} <span class="text-xs font-normal opacity-70">/ 100</span>
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm text-neutral-700 dark:text-neutral-300">{{ $rev->reviewer->name ?? 'Belirlenmedi' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="space-y-1.5 max-w-sm">
+                                            <div class="flex items-start gap-1.5">
+                                                <svg class="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                                <div class="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-1" title="{{ $rev->strengths }}"><span class="font-bold text-neutral-800 dark:text-neutral-200">Güçlü Yönler:</span> {{ $rev->strengths }}</div>
+                                            </div>
+                                            <div class="flex items-start gap-1.5">
+                                                <svg class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                                <div class="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-1" title="{{ $rev->weaknesses }}"><span class="font-bold text-neutral-800 dark:text-neutral-200">Gelişmeli:</span> {{ $rev->weaknesses }}</div>
+                                            </div>
+                                            @if($rev->comments)
+                                                <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/50">
+                                                    <p class="text-[11px] text-neutral-500 dark:text-neutral-500 italic line-clamp-1" title="{{ $rev->comments }}">"{{ $rev->comments }}"</p>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5">
+                                        <x-admin.empty-state
+                                            icon="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                            title="Performans Değerlendirmesi Bulunamadı"
+                                            description="Sistemde henüz personel performans değerlendirmesi kaydedilmemiş."
+                                        />
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+    </x-admin.crud.index-layout>
 
         <!-- Performans Modal -->
         <div id="review-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">

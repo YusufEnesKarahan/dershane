@@ -4,13 +4,13 @@
     <div class="space-y-6">
         
         <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Aktif & Geçmiş Zimmet Handovers</h1>
             <p class="text-xs text-neutral-500 mt-1">Personellere teslim edilen demirbaşların takibini yapın, iade süreçlerini yönetin.</p>
         </div>
 
         <!-- Zimmetler Tablosu -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <x-admin.table.layout>
                 <x-slot name="head">
                     <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Demirbaş</th>
@@ -57,7 +57,7 @@
 
         <!-- İade Modal -->
         <div id="return-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Demirbaş İade Al</h3>
                     <button onclick="toggleModal('return-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -82,8 +82,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('return-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">İade İşlemini Tamamla</button>
+                        <x-admin.button type="button" onclick="toggleModal('return-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">İade İşlemini Tamamla</x-admin.button>
                     </div>
                 </form>
             </div>

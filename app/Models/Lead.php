@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 
 class Lead extends Model
 {
+    use TenantScoped;
     protected $table = 'crm_leads';
 
     protected $fillable = [
@@ -73,3 +75,4 @@ class Lead extends Model
         return $this->belongsToMany(LeadTag::class, 'lead_tag_items', 'lead_id', 'lead_tag_id');
     }
 }
+

@@ -2,11 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Teacher extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantScoped;
 
     protected $fillable = [
         'user_id', 'branch_id', 'title', 'bio', 'specialties', 'education', 'experience_years', 'emergency_contact', 'status'
@@ -77,3 +78,4 @@ class Teacher extends Model
         return $this->hasMany(TeacherActivityLog::class);
     }
 }
+

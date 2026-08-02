@@ -98,8 +98,8 @@ class InstallService
             ],
             'cache_writable' => [
                 'name' => 'Cache Directory Writable',
-                'current' => is_writable(bootstrap_path('cache')) ? 'Writable' : 'Not Writable',
-                'satisfied' => is_writable(bootstrap_path('cache')),
+                'current' => is_writable(app()->bootstrapPath('cache')) ? 'Writable' : 'Not Writable',
+                'satisfied' => is_writable(app()->bootstrapPath('cache')),
             ],
             'db_reachable' => [
                 'name' => 'Database Connection',
@@ -158,12 +158,14 @@ class InstallService
                     throw new \Exception('Super Admin role not found. Please run migrations & seeders first.');
                 }
 
-                $user = User::create([
-                    'name' => $adminData['name'],
-                    'email' => $adminData['email'],
-                    'password' => bcrypt($adminData['password']),
-                    'branch_id' => $branch->id,
-                ]);
+                $user = User::updateOrCreate(
+                    ['email' => $adminData['email']],
+                    [
+                        'name' => $adminData['name'],
+                        'password' => bcrypt($adminData['password']),
+                        'branch_id' => $branch->id,
+                    ]
+                );
 
                 $user->roles()->sync([$superAdminRole->id]);
 

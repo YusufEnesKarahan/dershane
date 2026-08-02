@@ -112,6 +112,22 @@ class StudentController extends Controller
         return redirect()->route('admin.students.edit', $student->id)->with('success', 'Öğrenci profili güncellendi.');
     }
 
+    public function updateStatus(Request $request, Student $student)
+    {
+        $this->authorize('update', Student::class);
+
+        $request->validate([
+            'status' => 'required|string|in:Active,Graduated,Dropped,Suspended',
+        ]);
+
+        $student->update(['status' => $request->status]);
+
+        // If there's a StudentStatusHistory model, we could log it here:
+        // \App\Models\StudentStatusHistory::create([...]);
+
+        return redirect()->back()->with('success', 'Öğrenci durumu başarıyla güncellendi.');
+    }
+
     public function transfer(Request $request, Student $student, TransferStudentAction $action)
     {
         $this->authorize('update', Student::class);

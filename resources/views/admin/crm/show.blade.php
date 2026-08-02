@@ -7,7 +7,7 @@
         <div class="space-y-6">
             
             <!-- Lead Bilgi Kartı -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4">
                     <div>
                         <h2 class="text-base font-bold text-neutral-900 dark:text-white">{{ $lead->first_name }} {{ $lead->last_name }}</h2>
@@ -37,30 +37,30 @@
                 </div>
 
                 <!-- Dönüştür veya Kapat Hızlı Aksiyonları -->
-                <div class="pt-4 border-t border-neutral-100 dark:border-neutral-800 flex gap-2">
+                <div class="pt-4 border-t border-neutral-100 dark:border-neutral-800 flex flex-col gap-2">
                     @if($lead->status->code !== 'REGISTERED')
-                        <form method="POST" action="{{ route('admin.crm.pipeline.convert', $lead->id) }}" class="flex-1">
+                        <form method="POST" action="{{ route('admin.crm.pipeline.convert', $lead->id) }}">
                             @csrf
-                            <button type="submit" class="w-full py-2 bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold rounded-lg transition">Kayıt Al (Dönüştür)</button>
+                            <x-admin.button type="submit" variant="success" class="w-full justify-center">Kayıt Al (Dönüştür)</x-admin.button>
                         </form>
                     @endif
                     @if($lead->status->code !== 'LOST')
-                        <form method="POST" action="{{ route('admin.crm.pipeline.close', $lead->id) }}" class="flex-1">
+                        <form method="POST" action="{{ route('admin.crm.pipeline.close', $lead->id) }}">
                             @csrf
-                            <button type="submit" class="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold rounded-lg transition">Kaybedildi İşaretle</button>
+                            <button type="submit" class="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl transition shadow-sm">Kaybedildi İşaretle</button>
                         </form>
                     @endif
                 </div>
             </div>
 
             <!-- Danışman & Şube Atama Güncelleme -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Danışman & Şube Ataması</h3>
                 
                 <form method="POST" action="{{ route('admin.leads.assign', $lead->id) }}" class="space-y-4">
                     @csrf
                     <x-admin.form.field-group label="Eğitim Danışmanı" id="advisor_id">
-                        <select name="advisor_id" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <select name="advisor_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                             <option value="">Seçiniz</option>
                             @foreach($advisors as $adv)
                                 <option value="{{ $adv->id }}" {{ $lead->advisor_id === $adv->id ? 'selected' : '' }}>{{ $adv->name }}</option>
@@ -69,7 +69,7 @@
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Şube" id="branch_id">
-                        <select name="branch_id" class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2">
+                        <select name="branch_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                             <option value="">Seçiniz</option>
                             @foreach($branches as $br)
                                 <option value="{{ $br->id }}" {{ $lead->branch_id === $br->id ? 'selected' : '' }}>{{ $br->name }}</option>
@@ -77,9 +77,9 @@
                         </select>
                     </x-admin.form.field-group>
 
-                    <button type="submit" class="w-full py-2 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-dark transition shadow-sm">
+                    <x-admin.button type="submit" variant="primary" class="w-full justify-center">
                         Atama Değişikliklerini Kaydet
-                    </button>
+                    </x-admin.button>
                 </form>
             </div>
 
@@ -89,23 +89,23 @@
         <div class="lg:col-span-2 space-y-6">
             
             <!-- Görüşme Notu Ekleme Formu -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Görüşme Notu Ekle</h3>
                 
                 <form method="POST" action="{{ route('admin.leads.note.store', $lead->id) }}" class="space-y-4">
                     @csrf
-                    <textarea name="note_text" required rows="3" placeholder="Görüşme detayları, veli beklentileri ve fiyat teklifleri..." class="w-full text-sm bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"></textarea>
+                    <textarea name="note_text" required rows="3" placeholder="Görüşme detayları, veli beklentileri ve fiyat teklifleri..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none"></textarea>
                     
                     <div class="flex justify-end">
-                        <button type="submit" class="px-4 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-dark transition shadow-sm">
+                        <x-admin.button type="submit" variant="primary">
                             Notu Kaydet
-                        </button>
+                        </x-admin.button>
                     </div>
                 </form>
             </div>
 
             <!-- Görüşme Notları & Timeline -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-6">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-6">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Aktivite Geçmişi & Timeline</h3>
                 
                 <div class="flow-root">

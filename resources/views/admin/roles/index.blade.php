@@ -16,9 +16,9 @@
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Rol adı veya açıklama ara..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
             </div>
             <div>
-                <button type="submit" class="w-full px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-lg transition">
+                <x-admin.button type="submit" variant="secondary" class="w-full">
                     Filtrele
-                </button>
+                </x-admin.button>
             </div>
         </form>
 
@@ -26,13 +26,13 @@
         <form method="POST" action="{{ route('admin.roles.bulk') }}">
             @csrf
             <div class="flex items-center gap-2 mb-4 bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-100 dark:border-neutral-800">
-                <select name="bulk_action" required class="text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-1.5 text-neutral-800 dark:text-neutral-200">
+                <select name="bulk_action" required class="text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
                     <option value="">Seçilenlere Uygula...</option>
                     <option value="delete">Sil</option>
                 </select>
-                <button type="submit" class="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-medium rounded-lg transition">
+                <x-admin.button type="submit" variant="secondary" size="sm">
                     Uygula
-                </button>
+                </x-admin.button>
             </div>
 
             <!-- Tablo -->
@@ -83,7 +83,7 @@
                                     @endpermission
                                     @permission('roles.delete')
                                         @if(!$role->isSystemRole())
-                                            <button type="button" onclick="if(confirm('Silmek istediğinize emin misiniz?')) { document.getElementById('delete-role-{{ $role->id }}').submit(); }" class="text-red-500 hover:text-red-700 ml-2">Sil</button>
+                                            <x-admin.delete-modal action="{{ route('admin.roles.destroy', $role) }}" title="Rolü Sil" message="Bu rolü silmek istediğinize emin misiniz?" />
                                         @endif
                                     @endpermission
                                 </div>
@@ -91,7 +91,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-8 text-center text-neutral-400">Rol bulunamadı.</td>
+                            <td colspan="8" class="p-4">
+                                <x-admin.empty-state title="Rol Bulunamadı" description="Arama kriterlerinize uygun veya sistemde kayıtlı rol bulunamadı." />
+                            </td>
                         </tr>
                     @endforelse
                 </x-slot>
@@ -101,15 +103,5 @@
             </x-admin.table.layout>
         </form>
 
-        @foreach($roles as $role)
-            @if(!$role->isSystemRole())
-                @permission('roles.delete')
-                    <form id="delete-role-{{ $role->id }}" method="POST" action="{{ route('admin.roles.destroy', $role) }}" class="hidden">
-                        @csrf
-                        @method('DELETE')
-                    </form>
-                @endpermission
-            @endif
-        @endforeach
     </x-admin.crud.index-layout>
 @endsection

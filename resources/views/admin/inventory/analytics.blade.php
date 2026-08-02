@@ -4,7 +4,7 @@
     <div class="space-y-6">
         
         <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Detaylı Stok & Demirbaş Analitiği</h1>
             <p class="text-xs text-neutral-500 mt-1">Kritik stok seviyesindeki ürünler, satın alma trendleri ve en çok kullanılan malzemelerin takibi.</p>
         </div>
@@ -12,7 +12,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Kritik Stok Listesi -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white text-red-500 flex items-center gap-1.5">
                     <span>⚠️ Kritik Stok Uyarıları</span>
                 </h3>
@@ -33,7 +33,7 @@
             </div>
 
             <!-- En Çok Kullanılan Ürünler -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">📈 En Çok Sarf Edilen Malzemeler</h3>
                 
                 <div class="space-y-3">
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Satın Alma Sipariş Trendleri -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
             <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Satın Alma Sipariş Hacmi</h3>
             
             <div class="space-y-4">

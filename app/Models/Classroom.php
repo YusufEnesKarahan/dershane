@@ -2,11 +2,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Classroom extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, TenantScoped;
 
     protected $fillable = [
         'code', 'name', 'branch_id', 'classroom_type_id', 'capacity', 'color_code', 'is_active'
@@ -27,3 +28,4 @@ class Classroom extends Model
         return $this->hasMany(ClassSchedule::class);
     }
 }
+

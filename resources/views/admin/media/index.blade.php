@@ -23,17 +23,17 @@
     }">
         <x-admin.crud.index-layout title="Medya Kütüphanesi (DAM)" description="Resim, belge ve dijital varlıklarınızı organize edin, biçimlendirin.">
             <x-slot name="actions">
-                <button type="button" @click="showNewFolder = true" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-xl transition">
+                <x-admin.button type="button" @click="showNewFolder = true" variant="secondary" size="sm">
                     + Yeni Klasör
-                </button>
-                <button type="button" @click="showUpload = !showUpload" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition shadow-sm">
-                    Varis Yükle
-                </button>
+                </x-admin.button>
+                <x-admin.button type="button" @click="showUpload = !showUpload" variant="primary" size="sm">
+                    Varlık Yükle
+                </x-admin.button>
             </x-slot>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <!-- Sol Panel: Klasör Ağacı -->
-                <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+                <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                     <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-4">Klasörler</h3>
                     
                     <div class="space-y-2">
@@ -91,7 +91,7 @@
                     </div>
 
                     <!-- Media Grid -->
-                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                         @if($mediaList->isEmpty())
                             <div class="text-center py-12">
                                 <p class="text-sm text-neutral-400">Bu klasörde henüz yüklenmiş bir dosya bulunmamaktadır.</p>
@@ -121,7 +121,7 @@
             </div>
 
             <!-- Detail Metadata Preview overlay Drawer -->
-            <div x-show="activeMedia" class="fixed inset-y-0 right-0 z-50 w-96 bg-white dark:bg-neutral-900 border-l border-neutral-100 dark:border-neutral-800 p-6 shadow-premium flex flex-col justify-between" style="display: none;">
+            <div x-show="activeMedia" class="fixed inset-y-0 right-0 z-50 w-96 bg-white dark:bg-neutral-900 border-l border-neutral-100 dark:border-neutral-800 p-6 shadow-md flex flex-col justify-between" style="display: none;">
                 <div class="space-y-6 overflow-y-auto">
                     <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
                         <h4 class="text-sm font-bold text-neutral-950 dark:text-white" x-text="activeMedia ? activeMedia.title : ''">Detaylar</h4>
@@ -156,17 +156,17 @@
 
             <!-- New Folder Modal dialog -->
             <div x-show="showNewFolder" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" style="display: none;">
-                <div class="bg-white dark:bg-neutral-900 rounded-2xl p-6 border border-neutral-100 dark:border-neutral-800 max-w-sm w-full shadow-premium">
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl p-6 border border-neutral-100 dark:border-neutral-800 max-w-sm w-full shadow-md">
                     <h4 class="text-sm font-bold text-neutral-950 dark:text-white mb-4">Klasör Oluştur</h4>
                     <form method="POST" action="{{ route('admin.media-folders.store') }}" class="space-y-4">
                         @csrf
                         <input type="hidden" name="parent_id" :value="activeFolderId">
                         <x-admin.form.field-group label="Klasör Adı" id="folder_name">
-                            <input type="text" name="name" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                            <input type="text" name="name" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
                         </x-admin.form.field-group>
                         <div class="flex items-center gap-2 pt-2">
-                            <button type="submit" class="flex-1 px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition">Oluştur</button>
-                            <button type="button" @click="showNewFolder = false" class="flex-1 px-4 py-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-xl text-neutral-600 dark:text-neutral-300 transition">İptal</button>
+                            <x-admin.button type="submit" variant="primary" class="flex-1">Oluştur</x-admin.button>
+                            <x-admin.button type="button" @click="showNewFolder = false" variant="secondary" class="flex-1">İptal</x-admin.button>
                         </div>
                     </form>
                 </div>
@@ -174,7 +174,7 @@
 
             <!-- Interactive Crop/Rotate UI Modal -->
             <div x-show="showCropModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" style="display: none;">
-                <div class="bg-white dark:bg-neutral-900 rounded-2xl p-6 border border-neutral-100 dark:border-neutral-800 max-w-2xl w-full shadow-premium flex flex-col">
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl p-6 border border-neutral-100 dark:border-neutral-800 max-w-2xl w-full shadow-md flex flex-col">
                     <h4 class="text-sm font-bold text-neutral-950 dark:text-white mb-4">Medya Manipülasyon Paneli</h4>
                     
                     <div class="aspect-video w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden flex items-center justify-center relative p-4 mb-4">
@@ -190,8 +190,8 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <button type="button" @click="showCropModal = false; alert('Manipülasyonlar kaydedildi (GD).'); window.location.reload();" class="flex-1 px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-primary-dark transition">Kaydet</button>
-                        <button type="button" @click="showCropModal = false" class="flex-1 px-4 py-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-xl text-neutral-600 dark:text-neutral-300 transition">İptal</button>
+                        <x-admin.button type="button" @click="showCropModal = false; alert('Manipülasyonlar kaydedildi (GD).'); window.location.reload();" variant="primary" class="flex-1">Kaydet</x-admin.button>
+                        <x-admin.button type="button" @click="showCropModal = false" variant="secondary" class="flex-1">İptal</x-admin.button>
                     </div>
                 </div>
             </div>

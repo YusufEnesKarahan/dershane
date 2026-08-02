@@ -12,7 +12,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Sol Panel: Sayfa Ağaç Yapısı (Tree View) -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-4">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
                 <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Sayfa Ağacı</h3>
                 <div class="space-y-2">
                     @forelse($tree as $item)
@@ -54,9 +54,9 @@
                         </select>
                     </div>
                     <div>
-                        <button type="submit" class="w-full px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-sm font-medium rounded-lg transition">
+                        <x-admin.button type="submit" variant="secondary" class="w-full">
                             Filtrele
-                        </button>
+                        </x-admin.button>
                     </div>
                 </form>
 
@@ -70,9 +70,9 @@
                             <option value="archive">Arşivle</option>
                             <option value="delete">Sil</option>
                         </select>
-                        <button type="submit" class="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-medium rounded-lg transition">
+                        <x-admin.button type="submit" variant="secondary" size="sm">
                             Uygula
-                        </button>
+                        </x-admin.button>
                     </div>
 
                     <!-- Tablo -->
@@ -131,7 +131,7 @@
                                             @endpermission
                                             @permission('pages.delete')
                                                 @if(!$page->isSystemPage() && !$page->isHomepage())
-                                                    <button type="button" onclick="if(confirm('Sayfayı silmek istediğinize emin misiniz?')) { document.getElementById('delete-page-{{ $page->id }}').submit(); }" class="text-red-500 hover:text-red-700 ml-2">Sil</button>
+                                                    <x-admin.delete-modal action="{{ route('admin.pages.destroy', $page) }}" title="Sayfayı Sil" message="Bu sayfayı silmek istediğinize emin misiniz?" />
                                                 @endif
                                             @endpermission
                                         </div>
@@ -139,7 +139,9 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-6 py-8 text-center text-neutral-400">Sayfa bulunamadı.</td>
+                                    <td colspan="7" class="p-4">
+                                        <x-admin.empty-state title="Sayfa Bulunamadı" description="Arama kriterlerinize uygun veya sistemde kayıtlı sayfa bulunamadı." />
+                                    </td>
                                 </tr>
                             @endforelse
                         </x-slot>
@@ -155,14 +157,6 @@
                             @csrf
                         </form>
                     @endpermission
-                    @if(!$page->isSystemPage() && !$page->isHomepage())
-                        @permission('pages.delete')
-                            <form id="delete-page-{{ $page->id }}" method="POST" action="{{ route('admin.pages.destroy', $page) }}" class="hidden">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        @endpermission
-                    @endif
                 @endforeach
             </div>
         </div>

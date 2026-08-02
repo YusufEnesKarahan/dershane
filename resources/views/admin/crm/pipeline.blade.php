@@ -4,7 +4,7 @@
     <div class="space-y-6">
         
         <!-- Üst Başlık -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex items-center justify-between">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center justify-between">
             <div>
                 <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Satış Pipeline Board</h1>
                 <p class="text-xs text-neutral-500 mt-1">Aday öğrencilerin aşama süreçlerini takip edin ve durumlarını güncelleyin.</p>
@@ -25,7 +25,7 @@
                     <!-- Leads Kartları -->
                     <div class="space-y-3">
                         @forelse($column['leads'] as $lead)
-                            <div class="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm space-y-2">
+                            <div class="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-2">
                                 <div class="text-xs font-bold text-neutral-900 dark:text-white">
                                     <a href="{{ route('admin.leads.show', $lead->id) }}" class="hover:text-primary transition">
                                         {{ $lead->first_name }} {{ $lead->last_name }}
@@ -44,7 +44,7 @@
                                     @csrf
                                     <input type="hidden" name="lead_id" value="{{ $lead->id }}">
                                     <div class="flex gap-1">
-                                        <select name="lead_status_id" onchange="this.form.submit()" class="text-[10px] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 rounded px-1.5 py-0.5 w-full">
+                                        <select name="lead_status_id" onchange="this.form.submit()" class="text-[10px] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded px-1.5 py-1 w-full text-neutral-900 dark:text-white transition-colors focus:ring-1 focus:ring-primary focus:border-primary">
                                             <option value="">Aşama Değiştir</option>
                                             @foreach($board as $col)
                                                 <option value="{{ $col['status']->id }}">{{ $col['status']->name }}</option>

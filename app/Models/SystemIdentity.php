@@ -21,6 +21,8 @@ class SystemIdentity extends Model
         'product_version',
         'license_key',
         'branch_count',
+        'company_name',
+        'brand_name',
     ];
 
     protected $casts = [

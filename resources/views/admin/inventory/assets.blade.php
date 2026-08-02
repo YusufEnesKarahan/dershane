@@ -4,24 +4,20 @@
     <div class="space-y-6">
         
         <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex justify-between items-center">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex justify-between items-center">
             <div>
                 <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Demirbaş Varlıkları</h1>
                 <p class="text-xs text-neutral-500 mt-1">Dershane bünyesindeki tüm elektronik, mobilya ve diğer demirbaş cihazların listesini yönetin.</p>
             </div>
             
             <div class="flex gap-2">
-                <button onclick="toggleModal('assign-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-xs font-bold rounded-xl transition">
-                    Zimmet Ata
-                </button>
-                <button onclick="toggleModal('asset-modal')" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-xs font-bold text-white rounded-xl transition shadow-lg shadow-teal-950">
-                    Yeni Demirbaş Ekle
-                </button>
+                <x-admin.button type="button" onclick="toggleModal('assign-modal')" variant="secondary" size="sm">Zimmet Ata</x-admin.button>
+                <x-admin.button type="button" onclick="toggleModal('asset-modal')" variant="primary" size="sm">Yeni Demirbaş Ekle</x-admin.button>
             </div>
         </div>
 
         <!-- Demirbaşlar Tablosu -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <x-admin.table.layout>
                 <x-slot name="head">
                     <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Kod / Demirbaş</th>
@@ -70,7 +66,7 @@
 
         <!-- Yeni Demirbaş Modal -->
         <div id="asset-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-lg w-full shadow-premium space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-lg w-full shadow-md space-y-4 max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center">
                     <h3 id="modal-title" class="text-sm font-bold text-neutral-900 dark:text-white">Yeni Demirbaş Kaydı</h3>
                     <button onclick="toggleModal('asset-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -155,8 +151,8 @@
                     </div>
 
                     <div class="md:col-span-2 flex justify-end gap-2 pt-4">
-                        <button type="button" onclick="toggleModal('asset-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Kaydet</button>
+                        <x-admin.button type="button" onclick="toggleModal('asset-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Kaydet</x-admin.button>
                     </div>
                 </form>
             </div>
@@ -164,7 +160,7 @@
 
         <!-- Zimmet Ata Modal -->
         <div id="assign-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-premium space-y-4">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-md space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Demirbaş Zimmet Ata</h3>
                     <button onclick="toggleModal('assign-modal')" class="text-neutral-400 hover:text-neutral-600">&times;</button>
@@ -209,8 +205,8 @@
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" onclick="toggleModal('assign-modal')" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 font-bold rounded-xl transition">Vazgeç</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition">Zimmetle</button>
+                        <x-admin.button type="button" onclick="toggleModal('assign-modal')" variant="secondary">Vazgeç</x-admin.button>
+                        <x-admin.button type="submit" variant="primary">Zimmetle</x-admin.button>
                     </div>
                 </form>
             </div>

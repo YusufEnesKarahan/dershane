@@ -1,55 +1,87 @@
 @extends('layouts.admin')
 @section('title', 'Personel Devamsızlık & Giriş-Çıkış')
 @section('content')
-    <div class="space-y-6">
-        
-        <!-- Header -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm flex justify-between items-center">
-            <div>
-                <h1 class="text-lg font-bold text-neutral-900 dark:text-white">Personel Giriş - Çıkış Takibi</h1>
-                <p class="text-xs text-neutral-500 mt-1">Personellerin günlük devamsızlık durumlarını, mesai başlama saatlerini ve fazla mesailerini kayıt altına alın.</p>
-            </div>
-            
-            <button onclick="toggleModal('attendance-modal')" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-xs font-bold text-white rounded-xl transition shadow-lg shadow-violet-950">
+    <x-admin.crud.index-layout title="Personel Giriş - Çıkış Takibi" description="Personellerin günlük devamsızlık durumlarını, mesai başlama saatlerini ve fazla mesailerini kayıt altına alın.">
+        <x-slot name="actions">
+            <button onclick="toggleModal('attendance-modal')" class="inline-flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-xl transition-colors shadow-lg shadow-violet-900/20 border border-violet-500/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                 Giriş Çıkış Kaydı Ekle
             </button>
-        </div>
+        </x-slot>
 
         <!-- Devam Giriş-Çıkış Kayıtları -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-premium-sm">
-            <x-admin.table.layout>
-                <x-slot name="head">
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Tarih</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Personel</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Giriş / Çıkış</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Çalışma Süresi</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Geç Kalma</th>
-                    <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Fazla Mesai</th>
-                </x-slot>
-                <x-slot name="body">
-                    @forelse($attendances as $att)
-                        <tr>
-                            <td class="px-4 py-3 text-xs font-bold font-mono text-neutral-900 dark:text-white">{{ $att->date }}</td>
-                            <td class="px-4 py-3 text-xs font-bold">
-                                {{ $att->employee->first_name }} {{ $att->employee->last_name }}
-                                <div class="text-[10px] font-normal text-neutral-400 mt-0.5">{{ $att->employee->department->name ?? 'Yok' }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-xs font-mono">
-                                <span>Giriş: {{ $att->check_in }}</span>
-                                <div class="mt-0.5 text-neutral-500">Çıkış: {{ $att->check_out ?? 'Girilmemiş' }}</div>
-                            </td>
-                            <td class="px-4 py-3 text-xs font-mono font-bold">{{ $att->worked_minutes }} Dk ({{ round($att->worked_minutes/60, 1) }} Saat)</td>
-                            <td class="px-4 py-3 text-xs font-mono text-amber-500">{{ $att->late_minutes > 0 ? $att->late_minutes . ' Dk' : 'Zamanında' }}</td>
-                            <td class="px-4 py-3 text-xs font-mono text-green-500">{{ $att->overtime_minutes > 0 ? $att->overtime_minutes . ' Dk' : '-' }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-xs text-neutral-400">Giriş çıkış kaydı bulunmamaktadır.</td>
-                        </tr>
-                    @endforelse
-                </x-slot>
-            </x-admin.table.layout>
+        <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden flex flex-col h-full">
+            <div class="p-0 flex-1">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
+                        <thead class="bg-neutral-50/80 dark:bg-neutral-900/80 backdrop-blur-sm">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Tarih</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Personel</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Giriş / Çıkış</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Çalışma Süresi</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Geç Kalma</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Fazla Mesai</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/50 bg-white dark:bg-neutral-900">
+                            @forelse($attendances as $att)
+                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors border-b border-neutral-100 dark:border-neutral-800/50 last:border-0 group">
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-bold text-neutral-700 dark:text-neutral-300 font-mono">
+                                            {{ \Carbon\Carbon::parse($att->date)->format('d.m.Y') }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $att->employee->first_name }} {{ $att->employee->last_name }}</div>
+                                        <div class="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg> {{ $att->employee->department->name ?? 'Yok' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono">
+                                        <div class="text-sm font-medium text-neutral-900 dark:text-white mb-0.5">Giriş: <span class="font-bold">{{ substr($att->check_in, 0, 5) }}</span></div>
+                                        <div class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Çıkış: <span>{{ $att->check_out ? substr($att->check_out, 0, 5) : 'Girilmemiş' }}</span></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-bold text-neutral-900 dark:text-white font-mono">{{ round($att->worked_minutes/60, 1) }} Saat</span>
+                                        <div class="text-[10px] text-neutral-400 mt-0.5">{{ $att->worked_minutes }} Dk</div>
+                                    </td>
+                                    <td class="px-6 py-4 font-mono">
+                                        @if($att->late_minutes > 0)
+                                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200/50 dark:border-amber-500/20">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                {{ $att->late_minutes }} Dk
+                                            </span>
+                                        @else
+                                            <span class="text-neutral-400 text-xs flex items-center gap-1"><svg class="w-3.5 h-3.5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> Zamanında</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 font-mono">
+                                        @if($att->overtime_minutes > 0)
+                                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-bold border border-green-200/50 dark:border-green-500/20">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                                {{ $att->overtime_minutes }} Dk
+                                            </span>
+                                        @else
+                                            <span class="text-neutral-400 text-xs">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6">
+                                        <x-admin.empty-state
+                                            icon="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            title="Giriş Çıkış Kaydı Bulunamadı"
+                                            description="Sistemde henüz bir mesai veya devamsızlık kaydı bulunmuyor."
+                                        />
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+    </x-admin.crud.index-layout>
 
         <!-- Giriş Çıkış Ekleme Modal -->
         <div id="attendance-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">

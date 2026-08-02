@@ -4,26 +4,26 @@
     <x-admin.crud.index-layout title="İletişim & Bildirim Analitiği" description="SMS ve E-Posta gönderim başarı oranlarını, toplam bildirim ve duyuru loglarını inceleyin.">
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                 <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Toplam Bildirim</h4>
                 <div class="text-2xl font-bold">{{ $summary['total_notifications'] }} Mesaj</div>
             </div>
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                 <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Yayınlanan Duyuru</h4>
                 <div class="text-2xl font-bold text-primary">%{{ $summary['read_rate'] }}</div>
             </div>
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                 <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Kanal Sayısı</h4>
                 <div class="text-2xl font-bold text-green-600">{{ count($summary['channel_distribution']) }} Kanal</div>
             </div>
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
                 <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">İletim Başarı Oranı</h4>
                 <div class="text-2xl font-bold text-amber-600">%{{ $summary['delivery_rate'] }}</div>
             </div>
         </div>
 
         <!-- İletim Logları Tablosu -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 shadow-premium-sm">
+        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-4">Bildirim İletim Logları</h3>
             <x-admin.table.layout>
                 <x-slot name="head">

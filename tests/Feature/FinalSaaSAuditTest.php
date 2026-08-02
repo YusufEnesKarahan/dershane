@@ -15,6 +15,24 @@ class FinalSaaSAuditTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        
+        $this->branch = \App\Models\Branch::factory()->create([
+            'name' => 'Test Branch',
+            'slug' => 'test-branch'
+        ]);
+
+        \App\Models\SystemIdentity::create([
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'company_name' => 'Test',
+            'brand_name' => 'Test',
+        ]);
+
+        \App\Models\AcademicTerm::create([
+            'name' => 'Test Term',
+            'start_date' => now()->subDay(),
+            'end_date' => now()->addYear(),
+            'is_active' => true,
+        ]);
         // Seed basic roles
         $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
     }

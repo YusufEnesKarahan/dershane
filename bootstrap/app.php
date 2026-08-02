@@ -17,11 +17,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
             'edition' => \App\Http\Middleware\EditionMiddleware::class,
+            'limits' => \App\Http\Middleware\EnforceLicenseLimits::class,
         ]);
 
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\InstallationMiddleware::class,
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
+            \App\Http\Middleware\EnsureActiveBranch::class,
+            \App\Http\Middleware\CheckOnboardingStatus::class,
         ]);
 
         $middleware->appendToGroup('api', [

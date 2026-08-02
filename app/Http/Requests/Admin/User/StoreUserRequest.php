@@ -18,7 +18,7 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', 'string', 'min:8'],
             'phone' => ['nullable', 'string', 'max:20'],
             'status' => ['required', 'string', 'in:ACTIVE,PASSIVE,SUSPENDED'],
-            'branch_id' => ['nullable', 'exists:branches,id'],
+            'branch_id' => ['nullable', new \App\Rules\UserCanAccessBranch],
             'roles' => ['required', 'array'],
             'roles.*' => ['exists:roles,id'],
         ];

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 
 class Payment extends Model
 {
+    use TenantScoped;
     protected $fillable = [
         'payment_number', 'invoice_id', 'student_id', 'payment_method_id',
         'amount', 'payment_date', 'notes', 'status'
@@ -31,3 +33,4 @@ class Payment extends Model
         return $this->hasOne(Refund::class);
     }
 }
+
