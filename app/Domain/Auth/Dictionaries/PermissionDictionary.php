@@ -138,6 +138,13 @@ class PermissionDictionary
     public const FINANCE_VIEW = 'finance.view';
     public const FINANCE_MANAGE = 'finance.manage';
 
+    public const NOTIFICATIONS_READ = 'notifications.read';
+    // Parent & Student Portal (Sprint 8.6)
+    public const PARENT_VIEW_CHILD = 'parent.view_child';
+    public const PARENT_VIEW_ATTENDANCE = 'parent.view_attendance';
+    public const STUDENT_VIEW_PROFILE = 'student.view_profile';
+    public const STUDENT_VIEW_SCHEDULE = 'student.view_schedule';
+
     public const HQ_BACKUP_MANAGE = 'hq.manageBackup';
     public const HQ_AUDIT_VIEW = 'hq.viewAuditLogs';
 

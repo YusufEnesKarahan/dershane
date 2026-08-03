@@ -4,39 +4,75 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
-use App\Models\AnnouncementGroup;
-use App\DTOs\Communication\SendAnnouncementDTO;
-use App\Domain\Communication\Actions\SendAnnouncement;
-use App\Core\Repositories\Interfaces\AnnouncementRepositoryInterface;
+use App\Models\Role;
+use App\Domain\Notification\Services\AnnouncementService;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AnnouncementController extends Controller
 {
-    public function __construct(protected AnnouncementRepositoryInterface $repository) {}
+    use AuthorizesRequests;
+
+    public function __construct(private AnnouncementService $announcementService)
+    {
+    }
 
     public function index(Request $request)
     {
-        $announcements = $this->repository->paginate(15, $request->all());
-        $groups = AnnouncementGroup::all();
+        $this->authorize('viewAny', Announcement::class);
 
-        return view('admin.announcements.index', compact('announcements', 'groups'));
+        $query = Announcement::where('branch_id', auth()->user()->branch_id)
+            ->latest();
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $announcements = $query->paginate(15);
+        $roles = Role::whereNotIn('name', ['Super Admin'])->get();
+
+        return view('admin.announcements.index', compact('announcements', 'roles'));
     }
 
-    public function store(Request $request, SendAnnouncement $action)
+    public function store(Request $request)
     {
-        $request->validate([
+        $this->authorize('create', Announcement::class);
+
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'type' => 'required|string|in:announcement,system,absence,payment',
+            'target_role' => 'nullable|string|exists:roles,name',
         ]);
 
-        $dto = new SendAnnouncementDTO(
-            $request->title,
-            $request->content,
-            $request->announcement_group_id ? (int) $request->announcement_group_id : null
-        );
+        $validated['branch_id'] = auth()->user()->branch_id;
+        $validated['created_by'] = auth()->id();
 
-        $action->execute($dto);
+        $announcement = $this->announcementService->create($validated);
 
-        return redirect()->back()->with('success', 'Duyuru başarıyla yayınlandı.');
+        if ($request->has('publish')) {
+            $this->announcementService->publish($announcement);
+            return redirect()->route('admin.announcements.index')->with('success', 'Duyuru başarıyla oluşturuldu ve yayınlandı.');
+        }
+
+        return redirect()->route('admin.announcements.index')->with('success', 'Duyuru taslak olarak kaydedildi.');
+    }
+
+    public function publish(Announcement $announcement)
+    {
+        $this->authorize('update', $announcement);
+        
+        $this->announcementService->publish($announcement);
+        
+        return back()->with('success', 'Duyuru başarıyla yayınlandı.');
+    }
+
+    public function destroy(Announcement $announcement)
+    {
+        $this->authorize('delete', $announcement);
+        
+        $announcement->delete();
+        
+        return back()->with('success', 'Duyuru başarıyla silindi.');
     }
 }

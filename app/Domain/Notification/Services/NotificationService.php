@@ -2,38 +2,58 @@
 
 namespace App\Domain\Notification\Services;
 
-use App\Core\Repositories\Interfaces\NotificationRepositoryInterface;
-use App\DTOs\Notification\CreateNotificationDTO;
-use App\Models\Notification;
-use App\Models\NotificationPreference;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Student;
+use App\Models\StudentGuardian;
+use App\Models\Teacher;
+use App\Domain\Notification\Enums\NotificationType;
+use App\Domain\Notification\Enums\NotificationChannel;
+use App\Notifications\GeneralNotification;
+use Illuminate\Support\Facades\Notification;
 
 class NotificationService
 {
-    public function __construct(private readonly NotificationRepositoryInterface $notifications, private readonly NotificationChannelService $channels) {}
-
-    public function create(CreateNotificationDTO $dto): Notification
+    public function send(User|iterable $users, string $title, string $content, NotificationType $type = NotificationType::SYSTEM, array $channels = [NotificationChannel::DATABASE])
     {
-        return DB::transaction(function () use ($dto): Notification {
-            $notification = $this->notifications->create([
-                'user_id' => $dto->userId, 'type' => $dto->type, 'title' => $dto->title,
-                'message' => $dto->message, 'content' => $dto->message, 'data' => $dto->data,
-                'channel' => $dto->channel, 'priority' => $dto->priority, 'status' => 'Unread',
-            ]);
-            return $notification;
-        });
+        $channels = array_map(fn($channel) => $channel->value, $channels);
+        Notification::send($users, new GeneralNotification($title, $content, $type->value, $channels));
     }
 
-    public function send(Notification $notification, ?string $channel = null): Notification
+    public function sendToParent(StudentGuardian $guardian, string $title, string $content, NotificationType $type = NotificationType::SYSTEM)
     {
-        $channels = $channel ? [$channel] : [$notification->channel];
-        $preference = NotificationPreference::firstOrCreate(['user_id' => $notification->user_id]);
-        foreach ($channels as $selected) {
-            if (($selected === 'panel' && !$preference->panel_enabled) || ($selected === 'email' && !$preference->email_enabled) || ($selected === 'sms' && !$preference->sms_enabled)) continue;
-            $this->channels->send($notification->loadMissing('user'), $selected);
+        if ($guardian->user) {
+            $this->send($guardian->user, $title, $content, $type);
         }
-        return $notification->refresh();
     }
 
-    public function markRead(Notification $notification): Notification { return $this->notifications->markRead($notification); }
+    public function sendToStudent(Student $student, string $title, string $content, NotificationType $type = NotificationType::SYSTEM)
+    {
+        if ($student->user) {
+            $this->send($student->user, $title, $content, $type);
+        }
+    }
+
+    public function sendToTeacher(Teacher $teacher, string $title, string $content, NotificationType $type = NotificationType::SYSTEM)
+    {
+        if ($teacher->user) {
+            $this->send($teacher->user, $title, $content, $type);
+        }
+    }
+
+    public function markAsRead(User $user, string $notificationId = null)
+    {
+        if ($notificationId) {
+            $notification = $user->unreadNotifications()->where('id', $notificationId)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        } else {
+            $user->unreadNotifications()->update(['read_at' => now(), 'status' => 'Read']);
+        }
+    }
+
+    public function getUnread(User $user)
+    {
+        return $user->unreadNotifications;
+    }
 }

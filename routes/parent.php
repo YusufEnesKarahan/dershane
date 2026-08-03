@@ -1,15 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Parent\ParentDashboardController;
-use App\Http\Controllers\Parent\ParentNotificationController;
+use App\Http\Controllers\Portal\ParentPortalController;
 
-Route::middleware(['auth', 'role:Parent|Super Admin'])->prefix('parent')->name('parent.')->group(function () {
-    Route::get('dashboard', [ParentDashboardController::class, 'index'])
-        ->middleware('permission:students.view')
+Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\EnsureActiveBranch::class])->prefix('parent')->name('parent.')->group(function () {
+    Route::get('dashboard', [ParentPortalController::class, 'dashboard'])
+        ->middleware('permission:parent.view_child')
         ->name('dashboard');
-        
-    Route::get('notifications', [ParentNotificationController::class, 'index'])
-        ->middleware('permission:notifications.view')
-        ->name('notifications');
+
+    // Notifications
+    Route::get('notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id?}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
 });

@@ -11,7 +11,7 @@ class Student extends Model
 
     protected $fillable = [
         'student_number', 'identity_number', 'first_name', 'last_name',
-        'birth_date', 'gender', 'photo', 'branch_id', 'classroom_id', 'status'
+        'birth_date', 'gender', 'photo', 'branch_id', 'classroom_id', 'status', 'user_id'
     ];
 
     public function getFullNameAttribute(): string
@@ -22,6 +22,11 @@ class Student extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function classrooms()

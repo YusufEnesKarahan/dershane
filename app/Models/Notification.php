@@ -30,4 +30,11 @@ class Notification extends Model
     {
         return $this->read_at !== null || $this->status === 'Read';
     }
+
+    public function markAsRead()
+    {
+        if (is_null($this->read_at)) {
+            $this->forceFill(['read_at' => $this->freshTimestamp(), 'status' => 'Read'])->save();
+        }
+    }
 }

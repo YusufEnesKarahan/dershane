@@ -177,16 +177,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('system/automation-logs', [SystemJobController::class, 'automation'])->name('system.jobs.automation');
     });
 
-    // Education - Students & Announcements
+    // Education - Students
     Route::middleware(['permission:students.view'])->group(function () {
         Route::resource('students', StudentController::class);
-        Route::resource('announcements', AnnouncementController::class)->only(['index', 'store']);
         
         // Exams
         Route::get('exams/analytics', [ExamResultController::class, 'analytics'])->name('exams.analytics');
         Route::get('exams/{exam}/results', [ExamResultController::class, 'index'])->name('exams.results.index');
         Route::post('exams/{exam}/results', [ExamResultController::class, 'store'])->name('exams.results.store');
         Route::resource('exams', ExamController::class)->only(['index', 'store']);
+    });
+
+    // Education - Announcements
+    Route::middleware(['permission:announcements.view'])->group(function () {
+        Route::post('announcements/{announcement}/publish', [AnnouncementController::class, 'publish'])->name('announcements.publish');
+        Route::resource('announcements', AnnouncementController::class)->only(['index', 'store', 'destroy']);
     });
 
     // Education - Attendance

@@ -27,13 +27,13 @@ class RolesAndPermissionsSeeder extends Seeder
                 'classrooms.*', 'branches.*', 'crm.*', 'leads.*', 'contacts.*',
                 'hr.*', 'payroll.*', 'assets.*', 'inventory.*', 'purchase.*',
                 'admission.*', 'enrollment.*', 'documents.*', 'settings.*', 'system.*',
-                'finance.*'
+                'finance.*', 'announcements.*', 'notifications.*'
             ],
             'Teacher' => [
                 'dashboard.view',
                 'students.view', 'courses.view', 'classrooms.view',
                 'attendance.view', 'attendance.create', 'attendance.update', 'attendance.report',
-                'homeworks.view', 'homeworks.manage'
+                'homeworks.view', 'homeworks.manage', 'announcements.view'
             ],
             'Secretary' => [
                 'dashboard.view',
@@ -47,13 +47,15 @@ class RolesAndPermissionsSeeder extends Seeder
             ],
             'Parent' => [
                 'dashboard.view',
-                'students.view', 'notifications.view', 'attendance.view',
-                'homeworks.view', 'registrations.view'
+                'students.view', 'notifications.view', 'notifications.read', 'attendance.view',
+                'homeworks.view', 'registrations.view',
+                'parent.view_child', 'parent.view_attendance'
             ],
             'Student' => [
                 'dashboard.view',
-                'students.view', 'notifications.view', 'attendance.view',
-                'homeworks.view'
+                'students.view', 'notifications.view', 'notifications.read', 'attendance.view',
+                'homeworks.view',
+                'student.view_profile', 'student.view_schedule'
             ]
         ];
 

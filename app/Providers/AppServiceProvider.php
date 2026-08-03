@@ -42,6 +42,11 @@ class AppServiceProvider extends ServiceProvider
             $registry->register(new \App\Domain\Media\Conversions\WebpConversionStrategy());
             return $registry;
         });
+
+        $this->app->bind(
+            \Illuminate\Notifications\Channels\DatabaseChannel::class,
+            \App\Channels\CustomDatabaseChannel::class
+        );
     }
 
     /**

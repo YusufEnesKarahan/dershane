@@ -41,6 +41,12 @@ class User extends Authenticatable
     public function teacher() {
         return $this->hasOne(Teacher::class);
     }
+    public function student() {
+        return $this->hasOne(Student::class);
+    }
+    public function guardian() {
+        return $this->hasOne(StudentGuardian::class);
+    }
     public function branch() {
         return $this->belongsTo(Branch::class);
     }
@@ -48,6 +54,11 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->hasMany(Notification::class)->whereNull('read_at')->where('status', '!=', 'Read');
     }
 
     public function notificationPreference()
