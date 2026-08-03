@@ -17,26 +17,26 @@ class ClassroomPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('classes.view') || $user->isAdministrator();
+        return $user->hasPermission('classrooms.view') || $user->hasPermission('classrooms.manage') || $user->isAdministrator();
     }
 
     public function view(User $user, Classroom $classroom): bool
     {
-        return ($user->hasPermission('classes.view') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
+        return ($user->hasPermission('classrooms.view') || $user->hasPermission('classrooms.manage') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermission('classes.create') || $user->isAdministrator();
+        return $user->hasPermission('classrooms.manage') || $user->isAdministrator();
     }
 
     public function update(User $user, Classroom $classroom): bool
     {
-        return ($user->hasPermission('classes.update') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
+        return ($user->hasPermission('classrooms.manage') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
     }
 
     public function delete(User $user, Classroom $classroom): bool
     {
-        return ($user->hasPermission('classes.delete') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
+        return ($user->hasPermission('classrooms.manage') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
     }
 }

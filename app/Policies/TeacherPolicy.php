@@ -22,6 +22,10 @@ class TeacherPolicy
 
     public function view(User $user, Teacher $teacher): bool
     {
+        if ($user->id === $teacher->user_id) {
+            return true;
+        }
+
         return ($user->hasPermission('teachers.view') || $user->isAdministrator()) && $this->isSameTenant($user, $teacher);
     }
 

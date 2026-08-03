@@ -191,10 +191,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Education - Attendance
     Route::middleware(['permission:attendance.view'])->group(function () {
-        Route::get('attendances/analytics', [AttendanceSessionController::class, 'analytics'])->name('attendances.analytics');
-        Route::get('attendances/sessions/{session}/take', [AttendanceSessionController::class, 'take'])->name('attendances.sessions.take');
-        Route::post('attendances/sessions/{session}/take', [AttendanceSessionController::class, 'storeBulk'])->name('attendances.sessions.store-bulk');
-        Route::resource('attendances/sessions', AttendanceSessionController::class)->only(['index', 'store'])->names('attendances.sessions');
+        Route::get('attendance/report', [AttendanceController::class, 'report'])->name('attendance.report');
+        Route::get('attendance/{attendance}/take', [AttendanceController::class, 'take'])->name('attendance.take');
+        Route::post('attendance/{attendance}/take', [AttendanceController::class, 'storeBulk'])->name('attendance.storeBulk');
+        Route::resource('attendance', AttendanceController::class)->only(['index', 'store', 'show']);
     });
 
     // Education - Homework & Assignments
@@ -225,7 +225,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('teachers/{teacher}/performance', [TeacherPerformanceController::class, 'show'])->name('teachers.performance');
         Route::post('teachers/performance', [TeacherPerformanceController::class, 'store'])->name('teachers.performance.store');
         Route::get('teachers/{teacher}/analytics', [TeacherController::class, 'analytics'])->name('teachers.analytics');
-        Route::resource('teachers', TeacherController::class)->only(['index', 'store', 'edit', 'update']);
+        Route::resource('teachers', TeacherController::class)->except(['show']);
         Route::resource('teachers-schedules', TeacherScheduleController::class)->only(['index', 'store'])->names([
             'index' => 'teachers.schedules.index',
             'store' => 'teachers.schedules.store',
@@ -239,6 +239,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
             'store' => 'teachers.contracts.store',
         ]);
     });
+    
+    // Teacher show route without teachers.view middleware so they can view themselves
+    Route::get('teachers/{teacher}', [TeacherController::class, 'show'])->name('teachers.show');
 
     // Education - Courses
     Route::middleware(['permission:courses.view'])->group(function () {
@@ -260,7 +263,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('classrooms/schedules', [ClassScheduleController::class, 'store'])->name('classrooms.schedules.store');
         Route::get('classrooms/holidays', [HolidayController::class, 'index'])->name('classrooms.holidays.index');
         Route::post('classrooms/holidays', [HolidayController::class, 'store'])->name('classrooms.holidays.store');
-        Route::resource('classrooms', ClassroomController::class)->except(['show']);
+        
+        // Students in Classroom
+        Route::get('classrooms/{classroom}/students', [ClassroomController::class, 'students'])->name('classrooms.students');
+        Route::post('classrooms/{classroom}/students/attach', [ClassroomController::class, 'attachStudents'])->name('classrooms.students.attach');
+        Route::post('classrooms/{classroom}/students/detach', [ClassroomController::class, 'detachStudents'])->name('classrooms.students.detach');
+        
+        Route::resource('classrooms', ClassroomController::class);
     });
 
     // System Settings
@@ -367,7 +376,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('leaves/{id}/reject', [LeaveController::class, 'reject'])->name('leaves.reject');
         Route::resource('leaves', LeaveController::class)->only(['index', 'store']);
 
-        Route::resource('attendance', EmployeeAttendanceController::class)->only(['index', 'store']);
+        Route::resource('hr/attendance', EmployeeAttendanceController::class)->names('hr.attendance')->only(['index', 'store']);
 
         Route::post('expenses/{id}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve');
         Route::post('expenses/{id}/reject', [ExpenseController::class, 'reject'])->name('expenses.reject');

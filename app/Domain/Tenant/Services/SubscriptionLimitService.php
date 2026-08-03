@@ -57,4 +57,26 @@ class SubscriptionLimitService
 
         return $currentTeacherCount < $plan->max_teachers;
     }
+
+    /**
+     * Check if the tenant has reached the maximum allowed classrooms limit.
+     */
+    public function checkClassroomLimit(int $branchId): bool
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return true; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        if ($plan->max_classrooms === null || $plan->max_classrooms <= 0) {
+            return true;
+        }
+
+        $currentClassroomCount = \App\Models\Classroom::where('branch_id', $branchId)->count();
+
+        return $currentClassroomCount < $plan->max_classrooms;
+    }
 }

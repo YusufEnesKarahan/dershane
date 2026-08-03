@@ -10,7 +10,7 @@ class Classroom extends Model
     use SoftDeletes, TenantScoped;
 
     protected $fillable = [
-        'code', 'name', 'branch_id', 'classroom_type_id', 'capacity', 'color_code', 'is_active'
+        'code', 'name', 'branch_id', 'teacher_id', 'classroom_type_id', 'capacity', 'color_code', 'is_active'
     ];
 
     public function branch()
@@ -27,5 +27,14 @@ class Classroom extends Model
     {
         return $this->hasMany(ClassSchedule::class);
     }
-}
 
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'classroom_student');
+    }
+}

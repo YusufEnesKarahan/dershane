@@ -24,9 +24,9 @@ class Student extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function classroom()
+    public function classrooms()
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsToMany(Classroom::class, 'classroom_student');
     }
 
     public function guardians()

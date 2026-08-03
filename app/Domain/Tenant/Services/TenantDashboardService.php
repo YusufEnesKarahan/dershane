@@ -45,13 +45,13 @@ class TenantDashboardService
     private function getStatistics(int $branchId): array
     {
         // Total active students
-        $totalStudents = Student::where('status', 'active')->count();
+        $totalStudents = Student::where('branch_id', $branchId)->where('status', 'active')->count();
 
         // Total active teachers
-        $totalTeachers = Teacher::where('status', 'active')->count();
+        $totalTeachers = Teacher::where('branch_id', $branchId)->where('status', 'active')->count();
 
         // Total active classrooms
-        $totalClassrooms = Classroom::where('status', 'active')->count();
+        $totalClassrooms = Classroom::where('branch_id', $branchId)->where('status', 'active')->count();
 
         // Today's attendance
         $today = Carbon::today();

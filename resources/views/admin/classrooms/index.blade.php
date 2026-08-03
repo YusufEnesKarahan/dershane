@@ -1,111 +1,188 @@
 @extends('layouts.admin')
-@section('title', 'Sınıflar & Derslikler')
-@section('content')
-    <x-admin.crud.index-layout title="Derslik Yönetimi" description="Kurum bünyesindeki fiziki derslikleri, kapasiteleri ve sınıf tiplerini yönetin.">
-        <x-slot name="actions">
-            <x-admin.button href="{{ route('admin.classrooms.analytics') }}" variant="secondary" icon="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                Analitik
-            </x-admin.button>
-            <x-admin.button href="{{ route('admin.classrooms.holidays.index') }}" variant="secondary" icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                Tatil Günleri
-            </x-admin.button>
-            <x-admin.button href="{{ route('admin.classrooms.academic-calendar.index') }}" variant="secondary" icon="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
-                Akademik Takvim
-            </x-admin.button>
-            <x-admin.button href="{{ route('admin.classrooms.schedules.index') }}" variant="secondary" icon="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
-                Haftalık Program
-            </x-admin.button>
-            <x-admin.button href="{{ route('admin.classrooms.create') }}" variant="primary" icon="M12 4v16m8-8H4">
-                Yeni Derslik Ekle
-            </x-admin.button>
-        </x-slot>
 
-        <x-admin.table.layout>
-            <x-slot name="head">
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30 w-24">Kod</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Derslik Adı</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Şube</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Derslik Tipi</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Kapasite</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Renk Kodu</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30 w-24">Durum</th>
-                <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30 w-24">İşlemler</th>
-            </x-slot>
-            <x-slot name="body">
-                @forelse($classrooms as $classroom)
-                    <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors border-b border-neutral-100 dark:border-neutral-800/50 last:border-0 group">
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs font-mono font-bold">
-                                {{ $classroom->code }}
-                            </span>
+@section('title', 'Sınıflar')
+
+@section('content')
+<div class="p-6 h-full flex flex-col">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Sınıflar</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Sistemdeki sınıfları görüntüleyin ve yönetin.</p>
+        </div>
+        <div class="flex space-x-3">
+            @can('create', App\Models\Classroom::class)
+            <a href="{{ route('admin.classrooms.create') }}" class="btn-primary flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Yeni Sınıf Ekle
+            </a>
+            @endcan
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div class="mb-4">
+            <x-alert type="success" dismissible="true">
+                {{ session('success') }}
+            </x-alert>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="mb-4">
+            <x-alert type="danger" dismissible="true">
+                {{ session('error') }}
+            </x-alert>
+        </div>
+    @endif
+
+    <!-- Table Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex-1 flex flex-col overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                <thead class="bg-slate-50 dark:bg-slate-800/50">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-10">
+                            #
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Sınıf
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Sorumlu Öğretmen
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Öğrenci / Kapasite
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Durum
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            İşlemler
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-800">
+                    @forelse($classrooms as $classroom)
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+                            {{ $classroom->id }}
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $classroom->name }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                                <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                                {{ $classroom->branch ? $classroom->branch->name : 'Tüm Şubeler' }}
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 text-white" style="background-color: {{ $classroom->color_code ?? '#4F46E5' }}">
+                                    {{ substr($classroom->name, 0, 2) }}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-slate-900 dark:text-white">
+                                        {{ $classroom->name }}
+                                    </div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400">
+                                        Kod: {{ $classroom->code ?? '-' }} | Tür: {{ $classroom->type->name ?? '-' }}
+                                    </div>
+                                </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:text-indigo-400 text-xs font-medium">
-                                <svg class="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-                                {{ $classroom->type ? $classroom->type->name : 'Standart Derslik' }}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-300">
+                            {{ $classroom->teacher ? $classroom->teacher->user->name : 'Atanmamış' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-slate-200 rounded-full h-2.5 dark:bg-slate-700">
+                                    @php
+                                        $percentage = $classroom->capacity > 0 ? min(100, round(($classroom->students_count / $classroom->capacity) * 100)) : 0;
+                                        $colorClass = $percentage >= 90 ? 'bg-rose-500' : ($percentage >= 75 ? 'bg-amber-500' : 'bg-primary-500');
+                                    @endphp
+                                    <div class="{{ $colorClass }} h-2.5 rounded-full" style="width: {{ $percentage }}%"></div>
+                                </div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400">
+                                    {{ $classroom->students_count }} / {{ $classroom->capacity }}
+                                </span>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                                {{ $classroom->capacity }} Öğrenci
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-mono font-medium text-neutral-700 dark:text-neutral-300 shadow-sm">
-                                <span class="w-3.5 h-3.5 rounded-full border border-neutral-200 dark:border-neutral-700 shadow-inner" style="background-color: {{ $classroom->color_code }}"></span>
-                                {{ $classroom->color_code }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @if($classroom->is_active)
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/30">
                                     Aktif
                                 </span>
                             @else
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-1.5"></span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
                                     Pasif
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('admin.classrooms.edit', $classroom->id) }}" class="p-2 text-neutral-400 hover:text-primary hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors" title="Düzenle">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex items-center justify-end space-x-3">
+                                @can('update', $classroom)
+                                <a href="{{ route('admin.classrooms.students', $classroom->id) }}" class="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400" title="Öğrenci Yönetimi">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
                                 </a>
-                                <button type="button" onclick="openDeleteModal('{{ route('admin.classrooms.destroy', $classroom->id) }}')" class="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Sil">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                </button>
+                                @endcan
+
+                                @can('view', $classroom)
+                                <a href="{{ route('admin.classrooms.show', $classroom->id) }}" class="text-slate-400 hover:text-primary-600 dark:hover:text-primary-400" title="Görüntüle">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </a>
+                                @endcan
+
+                                @can('update', $classroom)
+                                <a href="{{ route('admin.classrooms.edit', $classroom->id) }}" class="text-slate-400 hover:text-amber-600 dark:hover:text-amber-400" title="Düzenle">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </a>
+                                @endcan
+
+                                @can('delete', $classroom)
+                                <form action="{{ route('admin.classrooms.destroy', $classroom->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu sınıfı silmek istediğinize emin misiniz? Öğrencilerin atamaları kaldırılacaktır.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-slate-400 hover:text-rose-600 dark:hover:text-rose-400" title="Sil">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>
-                @empty
+                    @empty
                     <tr>
-                        <td colspan="8" class="px-0 py-0">
-                            <x-admin.empty-state
-                                icon="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                                title="Derslik Bulunamadı"
-                                description="Sistemde kayıtlı herhangi bir derslik veya sınıf bulunmuyor. Yeni bir derslik ekleyerek başlayabilirsiniz."
-                                action-url="{{ route('admin.classrooms.create') }}"
-                                action-text="İlk Dersliği Ekle"
-                            />
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                            <svg class="mx-auto h-12 w-12 text-slate-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            <p class="text-base font-medium text-slate-900 dark:text-white mb-1">Sınıf Bulunamadı</p>
+                            <p class="text-sm">Henüz sistemde hiç sınıf oluşturulmamış.</p>
+                            @can('create', App\Models\Classroom::class)
+                            <div class="mt-6">
+                                <a href="{{ route('admin.classrooms.create') }}" class="btn-primary inline-flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    İlk Sınıfı Ekle
+                                </a>
+                            </div>
+                            @endcan
                         </td>
                     </tr>
-                @endforelse
-            </x-slot>
-        </x-admin.table.layout>
-    </x-admin.crud.index-layout>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <x-admin.delete-modal />
+        @if($classrooms->hasPages())
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+            {{ $classrooms->links() }}
+        </div>
+        @endif
+    </div>
+</div>
 @endsection

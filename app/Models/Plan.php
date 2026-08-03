@@ -19,6 +19,7 @@ class Plan extends Model
         'max_students',
         'max_users',
         'max_teachers',
+        'max_classrooms',
         'is_active',
         'features',
         'limits',
@@ -33,6 +34,7 @@ class Plan extends Model
             'max_students' => 'integer',
             'max_users' => 'integer',
             'max_teachers' => 'integer',
+            'max_classrooms' => 'integer',
             'features' => 'array',
             'limits' => 'array',
         ];

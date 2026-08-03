@@ -32,7 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'Teacher' => [
                 'dashboard.view',
                 'students.view', 'courses.view', 'classrooms.view',
-                'attendance.view', 'attendance.manage',
+                'attendance.view', 'attendance.create', 'attendance.update', 'attendance.report',
                 'homeworks.view', 'homeworks.manage'
             ],
             'Secretary' => [

@@ -1,117 +1,207 @@
 @extends('layouts.admin')
-@section('title', 'Eğitmen & Öğretmen Yönetimi')
+
+@section('title', 'Öğretmenler')
+
 @section('content')
-    <x-admin.crud.index-layout title="Öğretmen / Personel Yönetimi" description="Kurum eğitmenlerini, şube ve uzmanlık alanlarını yönetin, portal profillerini ve performans değerlendirmelerini takip edin.">
-        
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- Sol Panel: Yeni Öğretmen Kaydet -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex flex-col">
-                <h3 class="text-sm font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                    Yeni Eğitmen Tanımla
-                </h3>
-                
-                <x-admin.form.layout :action="route('admin.teachers.store')" method="POST">
-                    
-                    <x-admin.form.field-group label="Kullanıcı Seçimi" id="user_id">
-                        <select name="user_id" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 focus:ring-violet-500 focus:border-violet-500 dark:text-white transition-colors">
-                            @foreach($users as $u)
-                                <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
-                            @endforeach
-                        </select>
-                    </x-admin.form.field-group>
-
-                    <x-admin.form.field-group label="Branş / Şube" id="branch_id">
-                        <select name="branch_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 focus:ring-violet-500 focus:border-violet-500 dark:text-white transition-colors">
-                            <option value="">Merkez / HQ</option>
-                            @foreach($branches as $b)
-                                <option value="{{ $b->id }}">{{ $b->name }}</option>
-                            @endforeach
-                        </select>
-                    </x-admin.form.field-group>
-
-                    <x-admin.form.field-group label="Ünvan" id="title">
-                        <input type="text" name="title" required placeholder="Örn: Matematik Zümre Başkanı" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 focus:ring-violet-500 focus:border-violet-500 dark:text-white transition-colors">
-                    </x-admin.form.field-group>
-
-                    <x-admin.form.field-group label="Uzmanlık Alanları" id="specialties">
-                        <input type="text" name="specialties" required placeholder="Örn: TYT Geometri, AYT Analitik" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 focus:ring-violet-500 focus:border-violet-500 dark:text-white transition-colors">
-                    </x-admin.form.field-group>
-
-                    <x-admin.form.field-group label="Mezuniyet / Eğitim" id="education">
-                        <input type="text" name="education" placeholder="Örn: Boğaziçi Üniversitesi Matematik Öğretmenliği" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 focus:ring-violet-500 focus:border-violet-500 dark:text-white transition-colors">
-                    </x-admin.form.field-group>
-
-                    <x-admin.form.field-group label="Deneyim Yılı" id="experience_years">
-                        <input type="number" name="experience_years" min="0" value="5" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 focus:ring-violet-500 focus:border-violet-500 dark:text-white transition-colors">
-                    </x-admin.form.field-group>
-
-                    <div class="pt-4 mt-auto">
-                        <button type="submit" class="w-full py-2.5 bg-violet-600 text-white text-sm font-bold rounded-xl hover:bg-violet-500 transition-colors shadow-lg shadow-violet-900/20 border border-violet-500/50 flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                            Öğretmen Kaydını Tamamla
-                        </button>
-                    </div>
-
-                </x-admin.form.layout>
-            </div>
-
-            <!-- Sağ Panel: Öğretmen Listesi -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden flex flex-col h-full">
-                <div class="p-6 border-b border-neutral-100 dark:border-neutral-800/50 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                        Kurum Öğretmenleri
-                    </h3>
-                </div>
-                
-                <div class="p-0 flex-1 overflow-x-auto">
-                    <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
-                        <thead class="bg-neutral-50/80 dark:bg-neutral-900/80 backdrop-blur-sm">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Öğretmen / Ünvan</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Uzmanlık</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">Deneyim</th>
-                                <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider bg-neutral-50/50 dark:bg-neutral-800/30">İşlemler</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/50 bg-white dark:bg-neutral-900">
-                            @forelse($teachers as $t)
-                                <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
-                                    <td class="px-6 py-4">
-                                        <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $t->user->name }}</div>
-                                        <div class="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> {{ $t->title }}</div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700">{{ $t->specialties }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 font-mono">
-                                        <span class="text-sm font-bold text-neutral-900 dark:text-white">{{ $t->experience_years }}</span> <span class="text-xs text-neutral-500 dark:text-neutral-400">Yıl</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <a href="{{ route('admin.teachers.edit', $t->id) }}" class="text-xs font-semibold text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg> Düzenle</a>
-                                            <a href="{{ route('admin.teachers.performance', $t->id) }}" class="text-xs font-semibold text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg> Performans</a>
-                                            <a href="{{ route('admin.teachers.analytics', $t->id) }}" class="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg> Analiz</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4">
-                                        <x-admin.empty-state
-                                            icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                            title="Öğretmen Bulunamadı"
-                                            description="Sistemde henüz öğretmen kaydı bulunmuyor."
-                                        />
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="p-6 h-full flex flex-col">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Öğretmenler</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Sistemdeki öğretmenleri görüntüleyin ve yönetin.</p>
         </div>
-    </x-admin.crud.index-layout>
+        <div class="flex space-x-3">
+            @can('create', App\Models\Teacher::class)
+            <a href="{{ route('admin.teachers.create') }}" class="btn-primary flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Yeni Öğretmen Ekle
+            </a>
+            @endcan
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div class="mb-4">
+            <x-alert type="success" dismissible="true">
+                {{ session('success') }}
+            </x-alert>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="mb-4">
+            <x-alert type="danger" dismissible="true">
+                {{ session('error') }}
+            </x-alert>
+        </div>
+    @endif
+
+    <!-- Search & Filter Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 mb-6">
+        <form action="{{ route('admin.teachers.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <label for="search" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Ara</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" name="search" id="search" value="{{ request('search') }}"
+                        class="pl-10 form-input w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-primary-500 focus:border-primary-500"
+                        placeholder="İsim, e-posta veya telefon ile ara...">
+                </div>
+            </div>
+
+            <div class="w-full md:w-48">
+                <label for="status" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Durum</label>
+                <select name="status" id="status" class="form-select w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-primary-500 focus:border-primary-500">
+                    <option value="">Tümü</option>
+                    <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="Inactive" {{ request('status') === 'Inactive' ? 'selected' : '' }}>Pasif</option>
+                </select>
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit" class="btn-secondary w-full md:w-auto h-[42px] px-6">
+                    Filtrele
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex-1 flex flex-col overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                <thead class="bg-slate-50 dark:bg-slate-800/50">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-10">
+                            #
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Öğretmen
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            İletişim
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Branş / Uzmanlık
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Durum
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            İşlemler
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-800">
+                    @forelse($teachers as $teacher)
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+                            {{ $teacher->id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold text-sm shrink-0">
+                                    {{ collect(explode(' ', $teacher->user->name ?? 'X'))->map(fn($n) => substr($n, 0, 1))->take(2)->implode('') }}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-slate-900 dark:text-white">
+                                        {{ $teacher->user->name ?? 'Bilinmiyor' }}
+                                    </div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400">
+                                        Katılım: {{ $teacher->created_at->format('d.m.Y') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-slate-900 dark:text-white">{{ $teacher->user->email ?? '-' }}</div>
+                            <div class="text-sm text-slate-500 dark:text-slate-400">{{ $teacher->user->phone ?? '-' }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-slate-900 dark:text-white">{{ $teacher->title ?? '-' }}</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]" title="{{ $teacher->specialties }}">
+                                {{ $teacher->specialties ?? '-' }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if(($teacher->status ?? 'Active') === 'Active')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/30">
+                                    Aktif
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                                    Pasif
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex items-center justify-end space-x-3">
+                                @can('view', $teacher)
+                                <a href="{{ route('admin.teachers.show', $teacher->id) }}" class="text-slate-400 hover:text-primary-600 dark:hover:text-primary-400" title="Görüntüle">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </a>
+                                @endcan
+
+                                @can('update', $teacher)
+                                <a href="{{ route('admin.teachers.edit', $teacher->id) }}" class="text-slate-400 hover:text-amber-600 dark:hover:text-amber-400" title="Düzenle">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </a>
+                                @endcan
+
+                                @can('delete', $teacher)
+                                <form action="{{ route('admin.teachers.destroy', $teacher->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu öğretmeni silmek istediğinize emin misiniz? (Bu işlem geri alınabilir)');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-slate-400 hover:text-rose-600 dark:hover:text-rose-400" title="Sil">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                                @endcan
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                            <svg class="mx-auto h-12 w-12 text-slate-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            <p class="text-base font-medium text-slate-900 dark:text-white mb-1">Öğretmen Bulunamadı</p>
+                            <p class="text-sm">Arama kriterlerinize uyan bir öğretmen kaydı bulunamadı veya henüz öğretmen eklenmemiş.</p>
+                            @can('create', App\Models\Teacher::class)
+                            <div class="mt-6">
+                                <a href="{{ route('admin.teachers.create') }}" class="btn-primary inline-flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    İlk Öğretmeni Ekle
+                                </a>
+                            </div>
+                            @endcan
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if($teachers->hasPages())
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+            {{ $teachers->links() }}
+        </div>
+        @endif
+    </div>
+</div>
 @endsection

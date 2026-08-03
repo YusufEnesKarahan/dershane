@@ -1,111 +1,210 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
+use App\Core\Context\TenantContext;
+use App\Domain\Classroom\Services\ClassroomManagementService;
+use App\Domain\Tenant\Services\SubscriptionLimitService;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
+use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\ClassroomType;
-use App\Models\Branch;
-use App\DTOs\Classroom\CreateClassroomDTO;
-use App\DTOs\Classroom\UpdateClassroomDTO;
-use App\Domain\Classroom\Actions\CreateClassroomAction;
-use App\Core\Repositories\Interfaces\ClassroomRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClassroomController extends Controller
 {
-    public function __construct(protected ClassroomRepositoryInterface $repository) {}
+    protected ClassroomManagementService $classroomService;
+    protected SubscriptionLimitService $limitService;
 
-    public function index(Request $request)
+    public function __construct(
+        ClassroomManagementService $classroomService,
+        SubscriptionLimitService $limitService
+    ) {
+        $this->classroomService = $classroomService;
+        $this->limitService = $limitService;
+    }
+
+    public function index()
     {
         $this->authorize('viewAny', Classroom::class);
+        $branchId = TenantContext::getActiveBranchId();
 
-        $classrooms = $this->repository->paginate(15, $request->all());
-        $types = ClassroomType::all();
-        $branches = Branch::all();
+        $classrooms = Classroom::with(['teacher.user', 'type'])
+            ->withCount('students')
+            ->where('branch_id', $branchId)
+            ->paginate(15);
 
-        return view('admin.classrooms.index', compact('classrooms', 'types', 'branches'));
+        return view('admin.classrooms.index', compact('classrooms'));
     }
 
     public function create()
     {
         $this->authorize('create', Classroom::class);
+        $branchId = TenantContext::getActiveBranchId();
 
-        $types = ClassroomType::all();
-        $branches = Branch::all();
-
-        return view('admin.classrooms.edit', compact('types', 'branches'));
-    }
-
-    public function store(Request $request, CreateClassroomAction $action)
-    {
-        $this->authorize('create', Classroom::class);
-
-        $request->validate([
-            'code' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'capacity' => 'required|integer',
-        ]);
-
-        $dto = new CreateClassroomDTO(
-            $request->code,
-            $request->name,
-            $request->branch_id ? (int) $request->branch_id : null,
-            $request->classroom_type_id ? (int) $request->classroom_type_id : null,
-            (int) $request->capacity,
-            $request->color_code ?? '#4F46E5',
-            (bool) ($request->is_active ?? true)
-        );
-
-        try {
-            $classroom = $action->execute($dto);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+        if (!$this->limitService->checkClassroomLimit($branchId)) {
+            return redirect()->route('admin.classrooms.index')->with('error', 'Mevcut abonelik planınız sınıf limitine ulaştı.');
         }
 
-        return redirect()->route('admin.classrooms.index')->with('success', 'Derslik başarıyla oluşturuldu.');
+        $teachers = Teacher::with('user')->where('branch_id', $branchId)->get();
+        $types = ClassroomType::all(); // Alternatively, filter by branch if types are tenant-scoped
+
+        return view('admin.classrooms.create', compact('teachers', 'types'));
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', Classroom::class);
+        $branchId = TenantContext::getActiveBranchId();
+
+        if (!$this->limitService->checkClassroomLimit($branchId)) {
+            return redirect()->back()->with('error', 'Mevcut abonelik planınız sınıf limitine ulaştı.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'nullable|string|max:50|unique:classrooms,code,NULL,id,branch_id,' . $branchId,
+            'teacher_id' => 'nullable|exists:teachers,id',
+            'classroom_type_id' => 'nullable|exists:classroom_types,id',
+            'capacity' => 'required|integer|min:1',
+            'color_code' => 'nullable|string|max:20',
+            'is_active' => 'boolean',
+        ]);
+
+        if (!isset($validated['is_active'])) {
+            $validated['is_active'] = true; // default value for checkbox
+        }
+
+        try {
+            $classroom = $this->classroomService->createClassroom($validated, $branchId);
+            return redirect()->route('admin.classrooms.show', $classroom->id)
+                             ->with('success', 'Sınıf başarıyla oluşturuldu.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Sınıf oluşturulurken bir hata oluştu: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function show(Classroom $classroom)
+    {
+        $this->authorize('view', $classroom);
+        
+        $classroom->load(['teacher.user', 'type', 'students']);
+        
+        return view('admin.classrooms.show', compact('classroom'));
     }
 
     public function edit(Classroom $classroom)
     {
-        $this->authorize('update', Classroom::class);
-
+        $this->authorize('update', $classroom);
+        $branchId = TenantContext::getActiveBranchId();
+        
+        $teachers = Teacher::with('user')->where('branch_id', $branchId)->get();
         $types = ClassroomType::all();
-        $branches = Branch::all();
 
-        return view('admin.classrooms.edit', compact('classroom', 'types', 'branches'));
+        return view('admin.classrooms.edit', compact('classroom', 'teachers', 'types'));
     }
 
     public function update(Request $request, Classroom $classroom)
     {
-        $this->authorize('update', Classroom::class);
+        $this->authorize('update', $classroom);
+        $branchId = TenantContext::getActiveBranchId();
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'capacity' => 'required|integer',
+            'code' => 'nullable|string|max:50|unique:classrooms,code,' . $classroom->id . ',id,branch_id,' . $branchId,
+            'teacher_id' => 'nullable|exists:teachers,id',
+            'classroom_type_id' => 'nullable|exists:classroom_types,id',
+            'capacity' => 'required|integer|min:1',
+            'color_code' => 'nullable|string|max:20',
+            'is_active' => 'boolean',
         ]);
 
-        $dto = UpdateClassroomDTO::fromRequest($request->all());
-        $this->repository->update($classroom, (array) $dto);
+        if (!isset($validated['is_active'])) {
+            $validated['is_active'] = false;
+        }
 
-        return redirect()->route('admin.classrooms.index')->with('success', 'Derslik güncellendi.');
+        try {
+            $this->classroomService->updateClassroom($classroom, $validated);
+            return redirect()->route('admin.classrooms.show', $classroom->id)
+                             ->with('success', 'Sınıf başarıyla güncellendi.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Sınıf güncellenirken bir hata oluştu: ' . $e->getMessage())->withInput();
+        }
     }
 
     public function destroy(Classroom $classroom)
     {
-        $this->authorize('delete', Classroom::class);
+        $this->authorize('delete', $classroom);
 
-        $this->repository->delete($classroom);
-
-        return redirect()->route('admin.classrooms.index')->with('success', 'Derslik silindi.');
+        try {
+            $this->classroomService->deleteClassroom($classroom);
+            return redirect()->route('admin.classrooms.index')
+                             ->with('success', 'Sınıf başarıyla silindi.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Sınıf silinirken hata oluştu: ' . $e->getMessage());
+        }
     }
 
-    public function analytics()
+    /**
+     * Show view to manage students of a classroom
+     */
+    public function students(Classroom $classroom)
     {
-        $this->authorize('viewAny', Classroom::class);
+        $this->authorize('update', $classroom);
+        $branchId = TenantContext::getActiveBranchId();
+        
+        // Students currently in this classroom
+        $enrolledStudents = $classroom->students;
 
-        $totalClassrooms = Classroom::count();
-        $totalCapacity = Classroom::sum('capacity');
+        // Students in the branch but not in this classroom
+        $availableStudents = Student::where('branch_id', $branchId)
+            ->whereDoesntHave('classrooms', function ($query) use ($classroom) {
+                $query->where('classrooms.id', $classroom->id);
+            })
+            ->get();
 
-        return view('admin.classrooms.analytics', compact('totalClassrooms', 'totalCapacity'));
+        return view('admin.classrooms.students', compact('classroom', 'enrolledStudents', 'availableStudents'));
+    }
+
+    /**
+     * Attach (assign) students to classroom
+     */
+    public function attachStudents(Request $request, Classroom $classroom)
+    {
+        $this->authorize('update', $classroom);
+
+        $validated = $request->validate([
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:students,id'
+        ]);
+
+        try {
+            $this->classroomService->attachStudents($classroom, $validated['student_ids']);
+            return redirect()->back()->with('success', 'Öğrenciler başarıyla eklendi.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'İşlem başarısız: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Detach (remove) students from classroom
+     */
+    public function detachStudents(Request $request, Classroom $classroom)
+    {
+        $this->authorize('update', $classroom);
+
+        $validated = $request->validate([
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:students,id'
+        ]);
+
+        try {
+            $this->classroomService->detachStudents($classroom, $validated['student_ids']);
+            return redirect()->back()->with('success', 'Öğrenciler başarıyla çıkarıldı.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'İşlem başarısız: ' . $e->getMessage());
+        }
     }
 }

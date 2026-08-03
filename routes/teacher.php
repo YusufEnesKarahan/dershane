@@ -15,7 +15,7 @@ Route::middleware(['auth', 'role:Teacher|Super Admin'])->prefix('teacher')->name
         ->middleware('permission:attendance.view')
         ->name('attendance');
     Route::post('attendance', [TeacherAttendanceController::class, 'store'])
-        ->middleware('permission:attendance.manage')
+        ->middleware('permission:attendance.update')
         ->name('attendance.store');
 
     // Homework routes

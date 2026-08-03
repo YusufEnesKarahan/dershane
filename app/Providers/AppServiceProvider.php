@@ -79,6 +79,7 @@ class AppServiceProvider extends ServiceProvider
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
+        Gate::policy(\App\Models\AttendanceSession::class, \App\Policies\AttendanceSessionPolicy::class);
 
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {
