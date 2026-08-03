@@ -71,6 +71,7 @@ use App\Http\Controllers\Admin\SystemJobController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\SaaSTenantController;
 use App\Http\Controllers\Admin\SaaSHealthController;
+use App\Http\Controllers\Admin\SubscriptionController;
 
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -162,7 +163,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('notifications/templates', [NotificationTemplateController::class, 'store'])->name('notifications.templates.store');
         Route::get('notifications/analytics', NotificationAnalyticsController::class)->name('notifications.analytics');
         Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
-        Route::resource('notifications', NotificationController::class)->only(['index', 'store']);
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications', [NotificationController::class, 'store'])
+            ->middleware('subscription.feature:sms')
+            ->name('notifications.store');
     });
 
     // System Jobs
@@ -175,11 +179,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Education - Students & Announcements
     Route::middleware(['permission:students.view'])->group(function () {
-        Route::get('students/analytics', [StudentController::class, 'analytics'])->name('students.analytics');
-        Route::post('students/{student}/transfer', [StudentController::class, 'transfer'])->name('students.transfer');
-        Route::post('students/{student}/status', [StudentController::class, 'updateStatus'])->name('students.status.update');
-        Route::post('students/enrollment', [StudentEnrollmentController::class, 'store'])->name('students.enrollment.store');
-        Route::resource('students', StudentController::class)->except(['show']);
+        Route::resource('students', StudentController::class);
         Route::resource('announcements', AnnouncementController::class)->only(['index', 'store']);
         
         // Exams
@@ -287,6 +287,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('tenants/{tenant}/suspend', [SaaSTenantController::class, 'suspend'])->name('tenants.suspend');
         Route::post('tenants/{tenant}/activate', [SaaSTenantController::class, 'activate'])->name('tenants.activate');
         Route::get('system-health', [SaaSHealthController::class, 'index'])->name('system-health.index');
+    });
+
+    Route::middleware(['role:Super Admin'])->prefix('platform')->name('platform.')->group(function () {
+        Route::get('subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::get('subscriptions/plans', [SubscriptionController::class, 'plans'])->name('subscriptions.plans');
+        Route::get('subscriptions/plans/create', [SubscriptionController::class, 'createPlan'])->name('subscriptions.plans.create');
+        Route::post('subscriptions/plans', [SubscriptionController::class, 'storePlan'])->name('subscriptions.plans.store');
+        Route::get('subscriptions/plans/{plan}', [SubscriptionController::class, 'showPlan'])->name('subscriptions.plans.show');
+        Route::get('subscriptions/plans/{plan}/edit', [SubscriptionController::class, 'editPlan'])->name('subscriptions.plans.edit');
+        Route::put('subscriptions/plans/{plan}', [SubscriptionController::class, 'updatePlan'])->name('subscriptions.plans.update');
+        Route::post('subscriptions/assign', [SubscriptionController::class, 'assign'])->name('subscriptions.assign');
+        Route::post('subscriptions/change-plan', [SubscriptionController::class, 'changePlan'])->name('subscriptions.change-plan');
+        Route::post('subscriptions/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
     });
 
     // Reporting & BI

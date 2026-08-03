@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Core\Services\EditionManager;
 use App\Core\Services\FeatureFlagService;
+use App\Models\Branch;
+use App\Models\Plan;
 
 if (! function_exists('edition')) {
     /**
@@ -12,6 +14,27 @@ if (! function_exists('edition')) {
     function edition(): EditionManager
     {
         return app(EditionManager::class);
+    }
+}
+
+if (! function_exists('subscription_plan')) {
+    function subscription_plan(?Branch $branch = null): ?Plan
+    {
+        return \App\Support\SaaS::currentPlan($branch);
+    }
+}
+
+if (! function_exists('subscription_can')) {
+    function subscription_can(string $feature, ?Branch $branch = null): bool
+    {
+        return \App\Support\SaaS::can($feature, $branch);
+    }
+}
+
+if (! function_exists('subscription_limit')) {
+    function subscription_limit(string $key, ?Branch $branch = null): ?int
+    {
+        return \App\Support\SaaS::limit($key, $branch);
     }
 }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Plan extends Model
 {
@@ -37,6 +38,15 @@ class Plan extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function (self $plan): void {
+            if (empty($plan->uuid)) {
+                $plan->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
     public function licenses()
     {
         return $this->hasMany(License::class);
@@ -45,15 +55,5 @@ class Plan extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
-    }
-
-    public function getBillingCycleAttribute($value): string
-    {
-        return $value ?: ($this->billing_period ?: 'monthly');
-    }
-
-    public function getTenantCountAttribute(): int
-    {
-        return $this->subscriptions()->whereNotNull('branch_id')->count();
     }
 }

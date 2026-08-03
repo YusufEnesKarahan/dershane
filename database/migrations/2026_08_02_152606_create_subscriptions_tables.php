@@ -23,6 +23,7 @@ return new class extends Migration
             $table->dateTime('expires_at')->nullable();
             $table->dateTime('trial_ends_at')->nullable();
             $table->dateTime('canceled_at')->nullable();
+            $table->dateTime('cancelled_at')->nullable();
             $table->text('cancellation_reason')->nullable();
             $table->decimal('price', 10, 2)->default(0.00); // Snapshot of plan price at time of subscription
             $table->timestamps();

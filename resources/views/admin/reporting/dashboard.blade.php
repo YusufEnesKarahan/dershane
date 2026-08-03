@@ -25,6 +25,12 @@
             </div>
         </div>
 
+        @if(\App\Core\Context\TenantContext::getActiveBranchId())
+            <div class="mb-6">
+                @include('admin.partials.subscription-widget')
+            </div>
+        @endif
+
         <!-- Ana Metrikler Grid -->
         @if(!empty($saasMetrics))
         <div class="mb-6">
@@ -48,6 +54,24 @@
                 <div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-800/30 text-center">
                     <span class="text-[10px] uppercase font-bold text-purple-500 block mb-1">Toplam Öğrenci</span>
                     <span class="text-2xl font-black text-purple-700 dark:text-purple-300">{{ number_format($saasMetrics['total_students']) }}</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                <div class="bg-slate-50 dark:bg-slate-900/20 p-4 rounded-xl border border-slate-100 dark:border-slate-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Active / Trial</span>
+                    <span class="text-2xl font-black text-slate-700 dark:text-slate-300">{{ $saasMetrics['active_subscriptions'] ?? 0 }} / {{ $saasMetrics['trial_tenants'] ?? 0 }}</span>
+                </div>
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-emerald-500 block mb-1">Grace / Expired</span>
+                    <span class="text-2xl font-black text-emerald-700 dark:text-emerald-300">{{ $saasMetrics['grace_period'] ?? 0 }} / {{ $saasMetrics['expired'] ?? 0 }}</span>
+                </div>
+                <div class="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl border border-amber-100 dark:border-amber-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-amber-500 block mb-1">Suspended / Churn</span>
+                    <span class="text-2xl font-black text-amber-700 dark:text-amber-300">{{ $saasMetrics['suspended'] ?? 0 }} / %{{ $saasMetrics['churn_rate'] ?? 0 }}</span>
+                </div>
+                <div class="bg-rose-50 dark:bg-rose-900/20 p-4 rounded-xl border border-rose-100 dark:border-rose-800/30 text-center">
+                    <span class="text-[10px] uppercase font-bold text-rose-500 block mb-1">MRR / ARR</span>
+                    <span class="text-lg font-black text-rose-700 dark:text-rose-300">₺{{ number_format($saasMetrics['mrr'] ?? 0) }} / ₺{{ number_format($saasMetrics['arr'] ?? 0) }}</span>
                 </div>
             </div>
         </div>

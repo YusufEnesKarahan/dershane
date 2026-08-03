@@ -19,7 +19,19 @@ class LoginController extends Controller
 
         if ($action->execute($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->clearRateLimiter();
-            return redirect()->intended(route('admin.dashboard'));
+            
+            $user = auth()->user();
+            if ($user->hasRole('Super Admin')) {
+                return redirect()->intended(route('admin.dashboard'));
+            } elseif ($user->hasRole('tenant_admin')) {
+                return redirect()->intended(route('tenant.dashboard'));
+            } elseif ($user->hasRole('teacher')) {
+                return redirect()->intended(route('teacher.dashboard'));
+            } elseif ($user->hasRole('staff')) {
+                return redirect()->intended(route('staff.dashboard'));
+            }
+
+            return redirect()->intended(route('tenant.dashboard'));
         }
 
         $request->hitRateLimiter();

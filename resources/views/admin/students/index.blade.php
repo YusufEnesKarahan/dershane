@@ -11,53 +11,91 @@
             </x-admin.button>
         </x-slot>
 
+        <div class="mb-6 bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+            <form action="{{ route('admin.students.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="fas fa-search text-neutral-400"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="İsim, No ile ara..." class="pl-10 pr-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500 w-full md:w-64">
+                </div>
+                <select name="status" class="px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Tüm Durumlar</option>
+                    <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="Inactive" {{ request('status') === 'Inactive' ? 'selected' : '' }}>Pasif</option>
+                    <option value="Graduated" {{ request('status') === 'Graduated' ? 'selected' : '' }}>Mezun</option>
+                    <option value="Left" {{ request('status') === 'Left' ? 'selected' : '' }}>Ayrıldı</option>
+                </select>
+                <button type="submit" class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition-colors">
+                    Filtrele
+                </button>
+            </form>
+        </div>
+
         @if($students->count() > 0)
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Öğrenci No</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Ad Soyad</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Şube</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Sınıf / Derslik</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Veli İletişim</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Öğrenci Profili</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İletişim</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Sınıf</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Durum</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider text-right">İşlemler</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">İşlemler</th>
                 </x-slot>
                 <x-slot name="body">
                     @foreach($students as $student)
                         <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
-                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white">
-                                {{ $student->student_number }}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0">
+                                        {{ mb_substr($student->first_name, 0, 1) }}{{ mb_substr($student->last_name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('admin.students.show', $student->id) }}" class="text-sm font-bold text-neutral-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                            {{ $student->full_name }}
+                                        </a>
+                                        <div class="text-xs text-neutral-500 dark:text-neutral-400 font-mono mt-0.5">No: {{ $student->student_number }}</div>
+                                    </div>
+                                </div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-semibold text-neutral-900 dark:text-white">
-                                    {{ $student->full_name }}
-                                </div>
-                                @if($student->identity_number)
-                                    <div class="text-xs text-neutral-500 dark:text-neutral-400 font-mono mt-0.5">TC: {{ $student->identity_number }}</div>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
-                                {{ $student->branch ? $student->branch->name : 'Genel' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
-                                {{ $student->classroom ? $student->classroom->name : 'Atanmadı' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                @if($student->primaryGuardian)
-                                    <div class="font-medium text-neutral-700 dark:text-neutral-300">{{ $student->primaryGuardian->guardian_name }} <span class="text-neutral-400">({{ $student->primaryGuardian->relation }})</span></div>
-                                    <div class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 font-mono">{{ $student->primaryGuardian->phone }}</div>
+                                @if($student->contact && $student->contact->phone)
+                                    <div class="text-sm text-neutral-700 dark:text-neutral-300 font-mono"><i class="fas fa-phone text-xs text-neutral-400 mr-1"></i> {{ $student->contact->phone }}</div>
                                 @else
-                                    <span class="text-neutral-400 italic">Tanımsız</span>
+                                    <span class="text-xs text-neutral-400 italic">Telefon Yok</span>
+                                @endif
+                                @if($student->primaryGuardian)
+                                    <div class="text-xs text-neutral-500 mt-1"><i class="fas fa-user text-xs text-neutral-400 mr-1"></i> {{ $student->primaryGuardian->guardian_name }} ({{ $student->primaryGuardian->relation }})</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm">
-                                <x-admin.badge variant="{{ $student->status === 'Active' ? 'success' : 'warning' }}" dot="true">
-                                    {{ $student->status === 'Active' ? 'Aktif Öğrenci' : $student->status }}
-                                </x-admin.badge>
+                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
+                                {{ $student->classroom ? $student->classroom->name : 'Sınıf Atanmadı' }}
                             </td>
-                            <td class="px-6 py-4 text-sm space-x-3 text-right">
-                                <a href="{{ route('admin.students.edit', $student->id) }}" class="text-primary hover:text-primary-dark font-medium transition-colors">Düzenle</a>
-                                <x-admin.delete-modal :action="route('admin.students.destroy', $student->id)" title="Öğrenciyi Sil" message="'{{ $student->full_name }}' isimli öğrenciyi silmek istediğinize emin misiniz? Öğrenciye ait akademik, finansal ve CRM geçmişi de etkilenebilir. Bu işlem geri alınamaz." />
+                            <td class="px-6 py-4 text-sm">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold
+                                    {{ $student->status === 'Active' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' : '' }}
+                                    {{ $student->status === 'Inactive' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' : '' }}
+                                    {{ $student->status === 'Graduated' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400' : '' }}
+                                    {{ $student->status === 'Left' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400' : '' }}
+                                ">
+                                    {{ $student->status === 'Active' ? 'Aktif' : ($student->status === 'Graduated' ? 'Mezun' : ($student->status === 'Left' ? 'Ayrıldı' : 'Pasif')) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('admin.students.show', $student->id) }}" class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors tooltip" data-tip="Profili Görüntüle">
+                                        <i class="fas fa-id-card"></i>
+                                    </a>
+                                    <a href="{{ route('admin.students.edit', $student->id) }}" class="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors tooltip" data-tip="Düzenle">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.students.destroy', $student->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu öğrenciyi silmek istediğinize emin misiniz?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors tooltip" data-tip="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Domain\Platform\Services\SubscriptionLimitService;
 use App\Domain\Platform\Services\SaaSOperationsService;
 use App\Domain\Platform\Services\SystemHealthService;
 use App\Models\Branch;
@@ -13,7 +14,8 @@ class SaaSTenantController extends Controller
 {
     public function __construct(
         protected SaaSOperationsService $saasService,
-        protected SystemHealthService $systemHealthService
+        protected SystemHealthService $systemHealthService,
+        protected SubscriptionLimitService $subscriptionLimitService
     ) {}
 
     public function index(Request $request)
@@ -32,12 +34,35 @@ class SaaSTenantController extends Controller
         $license = $this->saasService->getSystemLicense();
         $systemHealth = $this->systemHealthService->getTenantHealthSummary();
         $tenantActivities = $this->saasService->getTenantActivityFeed($tenant->id);
+        $tenantSubscription = $tenant->subscription()->with('plan')->first();
+        $tenantPlan = $tenantSubscription?->plan;
+
+        $subscriptionUsage = [
+            'students' => [
+                'current' => $stats['students_count'] ?? 0,
+                'limit' => $this->subscriptionLimitService->limit('max_students', $tenant),
+            ],
+            'teachers' => [
+                'current' => $stats['teachers_count'] ?? 0,
+                'limit' => $this->subscriptionLimitService->limit('max_teachers', $tenant),
+            ],
+            'users' => [
+                'current' => $stats['users_count'] ?? 0,
+                'limit' => $this->subscriptionLimitService->limit('max_users', $tenant),
+            ],
+        ];
+
+        foreach ($subscriptionUsage as $key => $usage) {
+            $limit = $usage['limit'];
+            $current = $usage['current'];
+            $subscriptionUsage[$key]['percent'] = $limit ? min(100, (int) round(($current / max(1, $limit)) * 100)) : null;
+        }
         
         $subscriptionHistory = $license && $license->subscription
-            ? $license->subscription->logs()->latest()->take(10)->get()
+            ? $license->subscription->histories()->latest()->take(10)->get()
             : collect();
             
-        return view('admin.saas.tenants.show', compact('tenant', 'stats', 'license', 'systemHealth', 'tenantActivities', 'subscriptionHistory'));
+        return view('admin.saas.tenants.show', compact('tenant', 'stats', 'license', 'systemHealth', 'tenantActivities', 'subscriptionHistory', 'tenantSubscription', 'tenantPlan', 'subscriptionUsage'));
     }
 
     public function suspend(Branch $tenant)

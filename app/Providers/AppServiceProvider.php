@@ -62,6 +62,19 @@ class AppServiceProvider extends ServiceProvider
 
         foreach ([\App\Events\Notifications\StudentRegistered::class, \App\Events\Notifications\PaymentOverdue::class, \App\Events\Notifications\ExamResultPublished::class, \App\Events\Notifications\HomeworkAssigned::class, \App\Events\Notifications\CrmFollowupDue::class] as $event) Event::listen($event, \App\Listeners\Notifications\CreateDomainNotification::class);
         foreach ([\App\Events\System\PaymentOverdueEvent::class, \App\Events\System\StudentAbsenceDetectedEvent::class, \App\Events\System\ReportGeneratedEvent::class] as $event) Event::listen($event, \App\Listeners\System\DispatchAutomationJob::class);
+        
+        $subscriptionEvents = [
+            \App\Events\SubscriptionActivated::class,
+            \App\Events\SubscriptionRenewed::class,
+            \App\Events\SubscriptionExpired::class,
+            \App\Events\SubscriptionSuspended::class,
+            \App\Events\SubscriptionReactivated::class,
+        ];
+        foreach ($subscriptionEvents as $event) {
+            Event::listen($event, \App\Listeners\Subscription\LogSubscriptionHistory::class);
+            Event::listen($event, \App\Listeners\Subscription\SendSubscriptionNotification::class);
+            Event::listen($event, \App\Listeners\Subscription\ClearSubscriptionCaches::class);
+        }
 
         // Mapped custom policies
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);

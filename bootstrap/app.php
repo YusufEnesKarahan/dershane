@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
             'edition' => \App\Http\Middleware\EditionMiddleware::class,
             'limits' => \App\Http\Middleware\EnforceLicenseLimits::class,
+            'subscription.feature' => \App\Http\Middleware\SubscriptionFeatureMiddleware::class,
         ]);
 
         $middleware->appendToGroup('web', [

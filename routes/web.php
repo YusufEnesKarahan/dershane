@@ -23,6 +23,10 @@ Route::get('/health', [\App\Http\Controllers\HealthController::class, 'check']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/health/queue', [\App\Http\Controllers\HealthController::class, 'queue']);
     Route::middleware(['role:Super Admin'])->get('/health/details', [\App\Http\Controllers\HealthController::class, 'details']);
+
+    Route::middleware(['role:tenant_admin'])->get('/dashboard', [\App\Http\Controllers\Dashboard\TenantDashboardController::class, 'index'])->name('tenant.dashboard');
+    Route::middleware(['role:teacher'])->get('/teacher/dashboard', [\App\Http\Controllers\Dashboard\TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
+    Route::middleware(['role:staff'])->get('/staff/dashboard', [\App\Http\Controllers\Dashboard\StaffDashboardController::class, 'index'])->name('staff.dashboard');
 });
 
 // Installation Wizard Routes

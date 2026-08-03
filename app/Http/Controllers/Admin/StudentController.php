@@ -1,34 +1,35 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\Branch;
 use App\Models\Classroom;
-use App\Models\Course;
-use App\DTOs\Student\CreateStudentDTO;
-use App\DTOs\Student\UpdateStudentDTO;
-use App\DTOs\Student\GuardianDTO;
-use App\Domain\Student\Actions\CreateStudentAction;
-use App\Domain\Student\Actions\TransferStudentAction;
-use App\Domain\Student\Services\GuardianService;
-use App\Domain\Student\Services\StudentAnalyticsService;
-use App\Core\Repositories\Interfaces\StudentRepositoryInterface;
+use App\Domain\Student\Services\StudentManagementService;
+use App\Domain\Tenant\Services\SubscriptionLimitService;
+use App\Core\Context\TenantContext;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
     public function __construct(
-        protected StudentRepositoryInterface $repository,
-        protected GuardianService $guardianService,
-        protected StudentAnalyticsService $analyticsService
+        protected StudentManagementService $studentService,
+        protected SubscriptionLimitService $limitService
     ) {}
 
     public function index(Request $request)
     {
         $this->authorize('viewAny', Student::class);
 
-        $students = $this->repository->paginate(15, $request->all());
+        $branchId = TenantContext::getActiveBranchId();
+        if (!$branchId) {
+            abort(403, 'Tenant context missing.');
+        }
+
+        $filters = $request->only(['search', 'status']);
+        $students = $this->studentService->getStudents($branchId, $filters);
 
         return view('admin.students.index', compact('students'));
     }
@@ -37,143 +38,111 @@ class StudentController extends Controller
     {
         $this->authorize('create', Student::class);
 
-        $branches = Branch::select('id', 'name')->get();
+        $branchId = TenantContext::getActiveBranchId();
+        if (!$this->limitService->checkStudentLimit($branchId)) {
+            return redirect()->route('admin.students.index')->with('error', 'Mevcut abonelik planınız öğrenci limitine ulaştı. Yeni öğrenci eklemek için paketinizi yükseltin.');
+        }
+
         $classrooms = Classroom::select('id', 'name')->get();
 
-        return view('admin.students.edit', compact('branches', 'classrooms'));
+        return view('admin.students.create', compact('classrooms'));
     }
 
-    public function store(Request $request, CreateStudentAction $action)
+    public function store(Request $request)
     {
         $this->authorize('create', Student::class);
 
-        $request->validate([
+        $branchId = TenantContext::getActiveBranchId();
+        
+        if (!$this->limitService->checkStudentLimit($branchId)) {
+            return redirect()->back()->with('error', 'Mevcut abonelik planınız öğrenci limitine ulaştı.');
+        }
+
+        $validated = $request->validate([
             'student_number' => 'required|string|max:255',
+            'identity_number' => 'nullable|string|max:20',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'branch_id' => 'required|exists:branches,id',
+            'birth_date' => 'nullable|date',
+            'gender' => 'nullable|string',
+            'classroom_id' => 'nullable|exists:classrooms,id',
+            'status' => 'nullable|string',
+            'guardian_name' => 'nullable|string|max:255',
+            'guardian_relation' => 'nullable|string|max:255',
+            'guardian_phone' => 'nullable|string|max:20',
+            'guardian_email' => 'nullable|email',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email',
+            'city' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'address_text' => 'nullable|string',
         ]);
 
-        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->branch_id) {
-            abort(403, 'Unauthorized branch assignment.');
-        }
-
-        $dto = new CreateStudentDTO(
-            $request->student_number,
-            $request->first_name,
-            $request->last_name,
-            (int) $request->branch_id,
-            $request->identity_number,
-            $request->birth_date,
-            $request->gender,
-            $request->classroom_id ? (int) $request->classroom_id : null,
-            $request->status ?? 'Active'
-        );
-
         try {
-            $student = $action->execute($dto);
-
-            if ($request->guardian_name && $request->guardian_phone) {
-                $this->guardianService->addGuardian(new GuardianDTO(
-                    $student->id,
-                    $request->guardian_name,
-                    $request->guardian_relation ?? 'Vasi',
-                    $request->guardian_phone,
-                    $request->guardian_email
-                ));
-            }
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            $student = $this->studentService->createStudent($validated, $branchId, Auth::id());
+            return redirect()->route('admin.students.show', $student->id)->with('success', 'Öğrenci kaydı başarıyla oluşturuldu.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Öğrenci oluşturulurken bir hata oluştu: ' . $e->getMessage())->withInput();
         }
+    }
 
-        return redirect()->route('admin.students.edit', $student->id)->with('success', 'Öğrenci kaydı başarıyla oluşturuldu.');
+    public function show(Student $student)
+    {
+        $this->authorize('view', $student);
+
+        $data = $this->studentService->getStudentDetail($student);
+        
+        return view('admin.students.show', $data);
     }
 
     public function edit(Student $student)
     {
-        $this->authorize('update', Student::class);
+        $this->authorize('update', $student);
 
-        $student = $this->repository->findById($student->id);
-        $branches = Branch::select('id', 'name')->get();
         $classrooms = Classroom::select('id', 'name')->get();
-        $courses = Course::select('id', 'name')->get();
+        $student->load(['primaryGuardian', 'contact', 'address']);
 
-        return view('admin.students.edit', compact('student', 'branches', 'classrooms', 'courses'));
+        return view('admin.students.edit', compact('student', 'classrooms'));
     }
 
     public function update(Request $request, Student $student)
     {
-        $this->authorize('update', Student::class);
+        $this->authorize('update', $student);
 
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'branch_id' => 'sometimes|exists:branches,id',
+        $validated = $request->validate([
+            'student_number' => 'nullable|string|max:255',
+            'identity_number' => 'nullable|string|max:20',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'birth_date' => 'nullable|date',
+            'gender' => 'nullable|string',
+            'classroom_id' => 'nullable|exists:classrooms,id',
+            'status' => 'nullable|string',
+            'guardian_name' => 'nullable|string|max:255',
+            'guardian_relation' => 'nullable|string|max:255',
+            'guardian_phone' => 'nullable|string|max:20',
+            'guardian_email' => 'nullable|email',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email',
+            'city' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'address_text' => 'nullable|string',
         ]);
 
-        if ($request->has('branch_id') && !auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->branch_id) {
-            abort(403, 'Unauthorized branch assignment.');
+        try {
+            $this->studentService->updateStudent($student, $validated, Auth::id());
+            return redirect()->route('admin.students.show', $student->id)->with('success', 'Öğrenci profili başarıyla güncellendi.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Güncelleme sırasında bir hata oluştu: ' . $e->getMessage())->withInput();
         }
-
-        $dto = UpdateStudentDTO::fromRequest($request->all());
-        $this->repository->update($student, (array) $dto);
-
-        return redirect()->route('admin.students.edit', $student->id)->with('success', 'Öğrenci profili güncellendi.');
-    }
-
-    public function updateStatus(Request $request, Student $student)
-    {
-        $this->authorize('update', Student::class);
-
-        $request->validate([
-            'status' => 'required|string|in:Active,Graduated,Dropped,Suspended',
-        ]);
-
-        $student->update(['status' => $request->status]);
-
-        // If there's a StudentStatusHistory model, we could log it here:
-        // \App\Models\StudentStatusHistory::create([...]);
-
-        return redirect()->back()->with('success', 'Öğrenci durumu başarıyla güncellendi.');
-    }
-
-    public function transfer(Request $request, Student $student, TransferStudentAction $action)
-    {
-        $this->authorize('update', Student::class);
-
-        $request->validate([
-            'to_branch_id' => 'required|exists:branches,id',
-        ]);
-
-        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->branch_id != $request->to_branch_id) {
-            abort(403, 'Unauthorized branch transfer.');
-        }
-
-        $action->execute(
-            $student,
-            (int) $request->to_branch_id,
-            $request->to_classroom_id ? (int) $request->to_classroom_id : null,
-            $request->reason
-        );
-
-        return redirect()->back()->with('success', 'Öğrenci transferi başarıyla gerçekleştirildi.');
     }
 
     public function destroy(Student $student)
     {
-        $this->authorize('delete', Student::class);
+        $this->authorize('delete', $student);
 
-        $this->repository->delete($student);
+        $this->studentService->deleteStudent($student, Auth::id());
 
-        return redirect()->route('admin.students.index')->with('success', 'Öğrenci kaydı silindi.');
-    }
-
-    public function analytics()
-    {
-        $this->authorize('viewAny', Student::class);
-
-        $summary = $this->analyticsService->getSummary();
-
-        return view('admin.students.analytics', compact('summary'));
+        return redirect()->route('admin.students.index')->with('success', 'Öğrenci başarıyla silindi.');
     }
 }

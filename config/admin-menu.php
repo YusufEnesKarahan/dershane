@@ -242,6 +242,11 @@ return [
                     'route' => 'admin.saas.system-health.index',
                     'permission' => 'hq.viewAuditLogs',
                 ],
+                [
+                    'title' => 'Abonelik & Planlar',
+                    'route' => 'admin.platform.subscriptions.index',
+                    'permission' => 'hq.viewAuditLogs',
+                ],
             ],
         ],
         [

@@ -163,6 +163,59 @@
 
         <!-- Sağ Kolon -->
         <div class="space-y-6">
+            <x-card>
+                <h3 class="text-lg font-bold mb-4 border-b pb-2 dark:border-neutral-700">Tenant Aboneliği</h3>
+                @if($tenantSubscription && $tenantPlan)
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs text-gray-500 block">Aktif Paket</span>
+                            <span class="font-bold text-slate-900 dark:text-white">{{ $tenantPlan->name }}</span>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500 block">Durum</span>
+                            <x-admin.badge variant="{{ $tenantSubscription->isActive() ? 'success' : ($tenantSubscription->isTrialing() ? 'info' : 'warning') }}">
+                                {{ ucfirst($tenantSubscription->status) }}
+                            </x-admin.badge>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500 block">Bitiş Tarihi</span>
+                            <span class="font-bold">{{ $tenantSubscription->expires_at?->format('d M Y') ?? $tenantSubscription->trial_ends_at?->format('d M Y') ?? '-' }}</span>
+                        </div>
+                        <div class="space-y-3">
+                            @foreach($subscriptionUsage as $metric => $usage)
+                                <div>
+                                    <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+                                        <span>{{ __(':metric Usage', ['metric' => ucfirst($metric)]) }}</span>
+                                        <span>{{ $usage['current'] }} / {{ $usage['limit'] ?? '∞' }}</span>
+                                    </div>
+                                    <div class="h-2 rounded-full bg-slate-100 dark:bg-neutral-800 overflow-hidden">
+                                        <div class="h-2 rounded-full bg-indigo-600" style="width: {{ $usage['percent'] ?? 0 }}%"></div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500 block mb-2">Aktif Özellikler</span>
+                            <div class="flex flex-wrap gap-2">
+                                @forelse(($tenantPlan->features ?? []) as $feature)
+                                    <span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-200 px-3 py-1 text-xs font-semibold">{{ $feature }}</span>
+                                @empty
+                                    <span class="text-sm text-gray-500">Özellik bulunamadı.</span>
+                                @endforelse
+                            </div>
+                        </div>
+                        <a href="{{ route('admin.platform.subscriptions.plans') }}" class="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                            Paketi Güncelle
+                        </a>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-500">Bu tenant için aktif abonelik bulunamadı.</p>
+                    <a href="{{ route('admin.platform.subscriptions.plans') }}" class="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 mt-4">
+                        Abonelik Ata
+                    </a>
+                @endif
+            </x-card>
+
             <!-- Lisans Durumu -->
             <x-card>
                 <h3 class="text-lg font-bold mb-4 border-b pb-2 dark:border-neutral-700">Lisans Bilgileri</h3>
@@ -222,22 +275,35 @@
                 @endif
             </x-card>
 
-            @if($subscriptionHistory->count() > 0)
             <x-card>
                 <h3 class="text-lg font-bold mb-4 border-b pb-2 dark:border-neutral-700">Subscription Geçmişi</h3>
-                <div class="space-y-3">
+                <div class="relative border-l border-indigo-200 dark:border-indigo-900 ml-3 space-y-4">
                     @foreach($subscriptionHistory as $log)
-                        <div class="rounded-2xl border border-neutral-100 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 p-4">
-                            <div class="flex items-center justify-between gap-3">
-                                <span class="font-bold text-sm text-slate-900 dark:text-white">{{ ucfirst($log->action) }}</span>
-                                <span class="text-xs text-gray-500">{{ $log->created_at->diffForHumans() }}</span>
+                        <div class="ml-6 relative">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-indigo-100 rounded-full -left-9 ring-8 ring-white dark:ring-neutral-900 dark:bg-indigo-900">
+                                <svg class="w-3 h-3 text-indigo-600 dark:text-indigo-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </span>
+                            <div class="rounded-2xl border border-neutral-100 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 p-4">
+                                <div class="flex items-center justify-between gap-3 mb-1">
+                                    <span class="font-bold text-sm text-slate-900 dark:text-white">{{ strtoupper(str_replace('_', ' ', $log->action)) }}</span>
+                                    <span class="text-xs font-semibold text-gray-500">{{ $log->created_at->format('d M Y, H:i') }}</span>
+                                </div>
+                                @if(!empty($log->metadata) && is_array($log->metadata))
+                                    <ul class="text-xs text-gray-500 space-y-1 mt-2 bg-white dark:bg-neutral-900 p-2 rounded-lg border border-neutral-100 dark:border-neutral-700">
+                                        @foreach($log->metadata as $key => $value)
+                                            <li><span class="font-semibold">{{ ucfirst(str_replace('_', ' ', $key)) }}:</span> {{ is_array($value) ? json_encode($value) : $value }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-xs text-gray-500 mt-1">{{ $log->notes ?? '-' }}</p>
+                                @endif
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">{{ $log->notes ?? '-' }}</p>
                         </div>
                     @endforeach
                 </div>
             </x-card>
-            @endif
         </div>
     </div>
 </div>

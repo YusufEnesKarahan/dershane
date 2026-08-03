@@ -9,6 +9,12 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('billing:check-expired')->daily();
+Schedule::command('subscription:check-expiration')->dailyAt('00:10');
+
+// New Subscription Lifecycle Automation schedules
+Schedule::command('subscription:hourly')->hourly();
+Schedule::command('subscription:daily')->dailyAt('01:00');
+Schedule::command('subscription:notify')->dailyAt('09:00');
 
 /*
 |--------------------------------------------------------------------------

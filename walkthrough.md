@@ -185,3 +185,16 @@ Open **System / Queue Dashboard** to inspect pending, failed, and completed jobs
 ### Validation
 - Added `tests/Feature/SystemHealthTest.php` covering Super Admin access, normal user denial, tenant statistic rendering, and audit log creation.
 - Test execution is expected through `php artisan test` after the migrations are applied.
+
+## Sprint 7.7: SaaS Subscription & Plan Management
+**Goal**: Build the Super Admin subscription and plan management layer without breaking the existing Billing and License flow.
+
+### Key Changes
+1. **Schema & Models**: Extended `plans`, `subscriptions`, and added `subscription_histories` to support tenant subscription lifecycles, trial windows, and plan metadata.
+2. **Service Layer**: Added `SubscriptionManagementService` and `SubscriptionLimitService` to centralize plan CRUD, assignment, upgrade/downgrade, renewal, cancellation, and tenant capacity checks.
+3. **Admin Experience**: Added `/admin/platform/subscriptions`, plan list/detail pages, and tenant subscription actions for Super Admin operations.
+4. **Auditability**: Plan creation/update and subscription lifecycle operations now write to `PlatformAuditLog`.
+5. **Dashboard KPIs**: Super Admin dashboard now includes total plans, active subscriptions, trial tenants, and monthly revenue estimate.
+
+### Validation
+- `tests/Feature/SubscriptionManagementTest.php` added for plan creation, access control, tenant assignment, upgrade/cancel flows, audit logs, and limit checks.

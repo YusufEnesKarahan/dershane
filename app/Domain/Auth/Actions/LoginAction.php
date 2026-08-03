@@ -11,9 +11,17 @@ class LoginAction
     public function execute(array $credentials, bool $remember = false): bool
     {
         if (Auth::attempt($credentials, $remember)) {
+            $user = Auth::user();
+
+            if (!$user->isActive()) {
+                Auth::logout();
+                $this->audit($user, 'failed_login_inactive');
+                return false;
+            }
+
             session()->regenerate();
-            $this->authManager->loadUserContext(Auth::user());
-            $this->audit(Auth::user(), 'login');
+            $this->authManager->loadUserContext($user);
+            $this->audit($user, 'login');
             return true;
         }
 

@@ -1,4 +1,12 @@
-# Sprint 7.6 Task List
+# Sprint 7.7 Task List
+
+- [x] Mevcut migration ve subscription yapılarını analiz et.
+- [x] Plan, subscription ve history şemalarını genişlet.
+- [x] Subscription management ve limit servislerini oluştur.
+- [x] Admin controller, routes ve UI ekranlarını ekle.
+- [x] Dashboard KPI alanlarını genişlet.
+- [x] Feature testleri yaz.
+- [ ] `php artisan test` çalıştır ve sonucu doğrula.# Sprint 7.6 Task List
 
 - [x] Add centralized system health service and health dashboard route.
 - [x] Extend tenant usage statistics with activity and size estimates.

@@ -17,6 +17,7 @@ class Subscription extends Model
         'expires_at',
         'trial_ends_at',
         'canceled_at',
+        'cancelled_at',
         'cancellation_reason',
         'price',
     ];
@@ -30,6 +31,7 @@ class Subscription extends Model
             'expires_at' => 'datetime',
             'trial_ends_at' => 'datetime',
             'canceled_at' => 'datetime',
+            'cancelled_at' => 'datetime',
             'price' => 'decimal:2',
         ];
     }

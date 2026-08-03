@@ -9,6 +9,8 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Classroom;
 use App\Models\PlatformAuditLog;
+use App\Models\Plan;
+use App\Models\Subscription;
 use App\Models\SubscriptionLog;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -193,32 +195,80 @@ class SaaSOperationsService
         return number_format($value, $index === 0 ? 0 : 1) . ' ' . $units[$index];
     }
 
-    /**
-     * Get overall metrics for the SaaS Dashboard.
-     */
     public function getDashboardMetrics(): array
     {
         $totalTenants = Branch::count();
         $license = License::first();
+        $tenantSubscriptions = Subscription::query()->tenant();
+        $allSubscriptions = $tenantSubscriptions->get();
         
         $licenseStatus = $license ? $license->status : 'none';
         $isTrial = $license && $license->status === 'trial';
         $isSuspended = $license && $license->status === 'suspended';
         
-        $expiringSoon = false;
-        if ($license && $license->expires_at) {
-            $daysLeft = Carbon::now()->diffInDays($license->expires_at, false);
-            $expiringSoon = $daysLeft > 0 && $daysLeft <= 7;
-        }
+        $expiringSoonCount = $allSubscriptions->filter(function($sub) {
+            if (!$sub->expires_at) return false;
+            $daysLeft = Carbon::now()->diffInDays($sub->expires_at, false);
+            return $daysLeft > 0 && $daysLeft <= 7;
+        })->count();
+
+        $activeSubscriptions = $allSubscriptions->where('status', 'active');
+        $graceSubscriptions = $allSubscriptions->where('status', 'grace');
+        $expiredSubscriptions = $allSubscriptions->where('status', 'expired');
+        $suspendedSubscriptions = $allSubscriptions->where('status', 'suspended');
+        $cancelledSubscriptions = $allSubscriptions->where('status', 'cancelled');
+        $trialSubscriptions = $allSubscriptions->whereIn('status', ['trial', 'trialing']);
+
+        // Revenue calculations
+        $mrr = $this->monthlyRevenueEstimate($allSubscriptions);
+        $arr = $mrr * 12;
+
+        // Churn & Renewal calculations based on History
+        // Simplified approach based on current state
+        $totalEverActive = $allSubscriptions->whereIn('status', ['active', 'grace', 'expired', 'suspended', 'cancelled'])->count();
+        $churnRate = $totalEverActive > 0 ? round((($cancelledSubscriptions->count() + $suspendedSubscriptions->count()) / $totalEverActive) * 100, 2) : 0;
+        
+        // Renewal Rate: Renewed vs (Renewed + Cancelled) in a real app, here simplified
+        $renewedCount = \App\Models\SubscriptionHistory::where('action', 'renewed')->count();
+        $cancelledCount = \App\Models\SubscriptionHistory::where('action', 'cancelled')->count();
+        $renewalRate = ($renewedCount + $cancelledCount) > 0 ? round(($renewedCount / ($renewedCount + $cancelledCount)) * 100, 2) : 100;
 
         return [
             'total_tenants' => $totalTenants,
             'license_status' => $licenseStatus,
             'is_trial' => $isTrial,
             'is_suspended' => $isSuspended,
-            'expiring_soon' => $expiringSoon,
+            'expiring_in_7_days' => $expiringSoonCount,
+            'grace_period' => $graceSubscriptions->count(),
+            'expired' => $expiredSubscriptions->count(),
+            'suspended' => $suspendedSubscriptions->count(),
             'total_users' => User::withoutGlobalScopes()->count(),
             'total_students' => Student::withoutGlobalScopes()->count(),
+            'total_plans' => Plan::count(),
+            'active_subscriptions' => $activeSubscriptions->count(),
+            'trial_tenants' => $trialSubscriptions->count(),
+            'monthly_revenue_estimate' => $mrr,
+            'mrr' => $mrr,
+            'arr' => $arr,
+            'churn_rate' => $churnRate,
+            'renewal_rate' => $renewalRate,
         ];
+    }
+
+    protected function monthlyRevenueEstimate(Collection $subscriptions): float
+    {
+        return $subscriptions->sum(function (Subscription $subscription) {
+            $plan = $subscription->plan;
+
+            if (!$plan || !in_array($subscription->status, ['active', 'trial'], true)) {
+                return 0;
+            }
+
+            $billingCycle = $plan->billing_cycle ?: $plan->billing_period;
+
+            return $billingCycle === 'yearly'
+                ? ((float) $subscription->price / 12)
+                : (float) $subscription->price;
+        });
     }
 }
