@@ -81,10 +81,25 @@ use App\Http\Controllers\Admin\SubscriptionController;
 // Admin Framework Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
-    // Onboarding Routes
-    Route::get('/onboarding', [\App\Http\Controllers\Admin\OnboardingController::class, 'index'])->name('onboarding.index');
-    Route::post('/onboarding/identity', [\App\Http\Controllers\Admin\OnboardingController::class, 'storeIdentity'])->name('onboarding.identity');
-    Route::post('/onboarding/term', [\App\Http\Controllers\Admin\OnboardingController::class, 'storeTerm'])->name('onboarding.term');
+    // Onboarding Wizard Routes (Sprint 10.2)
+    Route::prefix('onboarding')->name('onboarding.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\OnboardingController::class, 'index'])->name('index');
+        Route::get('/profile', [\App\Http\Controllers\Admin\OnboardingController::class, 'profile'])->name('profile');
+        Route::post('/profile', [\App\Http\Controllers\Admin\OnboardingController::class, 'saveProfile'])->name('saveProfile');
+        Route::get('/academic-year', [\App\Http\Controllers\Admin\OnboardingController::class, 'academicYear'])->name('academic-year');
+        Route::post('/academic-year', [\App\Http\Controllers\Admin\OnboardingController::class, 'saveAcademicYear'])->name('saveAcademicYear');
+        Route::get('/package', [\App\Http\Controllers\Admin\OnboardingController::class, 'package'])->name('package');
+        Route::post('/package', [\App\Http\Controllers\Admin\OnboardingController::class, 'selectPackage'])->name('selectPackage');
+        Route::get('/teacher', [\App\Http\Controllers\Admin\OnboardingController::class, 'teacher'])->name('teacher');
+        Route::post('/teacher', [\App\Http\Controllers\Admin\OnboardingController::class, 'createTeacher'])->name('createTeacher');
+        Route::get('/classroom', [\App\Http\Controllers\Admin\OnboardingController::class, 'classroom'])->name('classroom');
+        Route::post('/classroom', [\App\Http\Controllers\Admin\OnboardingController::class, 'createClassroom'])->name('createClassroom');
+        Route::get('/complete', [\App\Http\Controllers\Admin\OnboardingController::class, 'complete'])->name('complete');
+
+        // Legacy compatibility routes
+        Route::post('/identity', [\App\Http\Controllers\Admin\OnboardingController::class, 'saveProfile'])->name('identity');
+        Route::post('/term', [\App\Http\Controllers\Admin\OnboardingController::class, 'saveAcademicYear'])->name('term');
+    });
 
     // Branch Switch
     Route::post('/branch/switch', function (\Illuminate\Http\Request $request) {

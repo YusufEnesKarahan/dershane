@@ -212,6 +212,9 @@ class PermissionDictionary
     public const NOTIFICATION_SEND = 'notification.send';
     public const NOTIFICATION_MANAGE = 'notification.manage';
 
+    public const ONBOARDING_VIEW = 'onboarding.view';
+    public const ONBOARDING_MANAGE = 'onboarding.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

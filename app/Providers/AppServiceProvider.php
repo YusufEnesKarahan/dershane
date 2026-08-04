@@ -92,6 +92,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\PaymentPlan::class, \App\Policies\PaymentPlanPolicy::class);
         Gate::policy(\App\Models\Installment::class, \App\Policies\InstallmentPolicy::class);
         Gate::policy(\App\Models\Payment::class, \App\Policies\PaymentPolicy::class);
+        Gate::policy(\App\Domain\Onboarding\Models\OnboardingStep::class, \App\Policies\OnboardingPolicy::class);
+        Gate::policy(\App\Domain\Onboarding\Models\InstitutionSetting::class, \App\Policies\OnboardingPolicy::class);
         
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {
