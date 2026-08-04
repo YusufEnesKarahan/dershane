@@ -1,58 +1,86 @@
 <?php
+
 namespace App\Domain\Exam\Services;
 
-use App\DTOs\Exam\ExamResultDTO;
+use App\Models\Exam;
 use App\Models\ExamResult;
-use App\Models\ExamSubjectResult;
+use App\Models\ExamAnswer;
+use App\Models\ExamRanking;
+use Illuminate\Support\Facades\DB;
 
 class ExamResultService
 {
-    public function __construct(
-        protected ScoreCalculationService $scoreService,
-        protected RankingService $rankingService
-    ) {}
-
-    public function saveResult(ExamResultDTO $dto): ExamResult
+    public function submitResult(Exam $exam, array $data): ExamResult
     {
-        $net = $this->scoreService->calculateNet($dto->total_correct, $dto->total_wrong);
-        $score = $this->scoreService->calculateScore($net);
+        return DB::transaction(function () use ($exam, $data) {
+            $result = ExamResult::updateOrCreate(
+                [
+                    'branch_id' => $exam->branch_id,
+                    'exam_id' => $exam->id,
+                    'student_id' => $data['student_id']
+                ],
+                [
+                    'score' => $data['score'] ?? 0,
+                    'correct_answers' => $data['correct_answers'] ?? 0,
+                    'wrong_answers' => $data['wrong_answers'] ?? 0,
+                    'empty_answers' => $data['empty_answers'] ?? 0,
+                    'notes' => $data['notes'] ?? null,
+                ]
+            );
 
-        $result = ExamResult::updateOrCreate(
-            [
-                'exam_id' => $dto->exam_id,
-                'student_id' => $dto->student_id,
-            ],
-            [
-                'total_correct' => $dto->total_correct,
-                'total_wrong' => $dto->total_wrong,
-                'total_empty' => $dto->total_empty,
-                'total_net' => $net,
-                'score' => $score,
-                'is_absent' => $dto->is_absent,
-            ]
-        );
-
-        if (!empty($dto->subject_breakdown)) {
-            foreach ($dto->subject_breakdown as $sb) {
-                $subNet = $this->scoreService->calculateNet($sb['correct'], $sb['wrong']);
-                ExamSubjectResult::updateOrCreate(
-                    [
-                        'exam_result_id' => $result->id,
-                        'subject_name' => $sb['subject_name'],
-                    ],
-                    [
-                        'correct_count' => $sb['correct'],
-                        'wrong_count' => $sb['wrong'],
-                        'empty_count' => $sb['empty'],
-                        'net_count' => $subNet,
-                    ]
-                );
+            if (isset($data['answers']) && is_array($data['answers'])) {
+                foreach ($data['answers'] as $courseId => $answerData) {
+                    ExamAnswer::updateOrCreate(
+                        [
+                            'branch_id' => $exam->branch_id,
+                            'exam_result_id' => $result->id,
+                            'course_id' => $courseId,
+                        ],
+                        [
+                            'correct' => $answerData['correct'] ?? 0,
+                            'wrong' => $answerData['wrong'] ?? 0,
+                            'empty' => $answerData['empty'] ?? 0,
+                        ]
+                    );
+                }
             }
+            
+            $this->calculateRankings($exam);
+            
+            return $result;
+        });
+    }
+
+    public function calculateRankings(Exam $exam): void
+    {
+        $results = ExamResult::where('exam_id', $exam->id)
+            ->orderByDesc('score')
+            ->get();
+            
+        $rank = 1;
+        $totalStudents = $results->count();
+        
+        foreach ($results as $result) {
+            $percentile = $totalStudents > 1 ? (($totalStudents - $rank) / ($totalStudents - 1)) * 100 : 100;
+            
+            $result->update([
+                'rank' => $rank,
+                'percentile' => round($percentile, 2)
+            ]);
+            
+            ExamRanking::updateOrCreate(
+                [
+                    'branch_id' => $exam->branch_id,
+                    'exam_id' => $exam->id,
+                    'student_id' => $result->student_id
+                ],
+                [
+                    'score' => $result->score,
+                    'rank' => $rank
+                ]
+            );
+            
+            $rank++;
         }
-
-        // Recalculate standings
-        $this->rankingService->updateRankings($dto->exam_id);
-
-        return $result;
     }
 }

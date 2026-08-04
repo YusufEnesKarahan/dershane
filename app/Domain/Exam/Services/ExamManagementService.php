@@ -3,115 +3,89 @@
 namespace App\Domain\Exam\Services;
 
 use App\Models\Exam;
-use App\Models\ExamResult;
+use App\Models\ExamSubject;
 use Illuminate\Support\Facades\DB;
+use App\Domain\Tenant\Services\SubscriptionLimitService;
 
 class ExamManagementService
 {
+    public function __construct(
+        protected SubscriptionLimitService $limitService
+    ) {}
+
     public function createExam(array $data): Exam
     {
-        return DB::transaction(function () use ($data) {
-            return Exam::create($data);
+        // Enforce branch isolation
+        $branchId = $data['branch_id'] ?? app(\App\Core\Context\TenantContext::class)->getBranchId();
+
+        // Enforce subscription limit before creating
+        $this->limitService->checkExamLimit($branchId);
+
+        return DB::transaction(function () use ($data, $branchId) {
+            $exam = Exam::create([
+                'branch_id' => $branchId,
+                'academic_term_id' => $data['academic_term_id'] ?? null,
+                'title' => $data['title'],
+                'description' => $data['description'] ?? null,
+                'type' => $data['type'] ?? 'mock_exam',
+                'exam_date' => $data['exam_date'],
+                'duration_minutes' => $data['duration_minutes'] ?? null,
+                'total_score' => $data['total_score'] ?? 100,
+                'status' => $data['status'] ?? 'draft',
+                'created_by' => auth()->id(),
+            ]);
+
+            if (isset($data['subjects']) && is_array($data['subjects'])) {
+                foreach ($data['subjects'] as $subject) {
+                    ExamSubject::create([
+                        'branch_id' => $branchId,
+                        'exam_id' => $exam->id,
+                        'course_id' => $subject['course_id'],
+                        'question_count' => $subject['question_count'] ?? 0,
+                        'max_score' => $subject['max_score'] ?? 100,
+                    ]);
+                }
+            }
+
+            return $exam;
         });
-    }
-
-    public function canCreateExam(int $branchId, $plan): bool
-    {
-        $limit = $plan->limits['max_exams'] ?? null;
-
-        // Unlimited exams
-        if ($limit === null || $limit === 0) {
-            return true;
-        }
-
-        $currentExamCount = \App\Models\Exam::where('branch_id', $branchId)->count();
-        
-        return $currentExamCount < $limit;
     }
 
     public function updateExam(Exam $exam, array $data): Exam
     {
         return DB::transaction(function () use ($exam, $data) {
             $exam->update($data);
+            
+            if (isset($data['subjects']) && is_array($data['subjects'])) {
+                $exam->subjects()->delete();
+                
+                foreach ($data['subjects'] as $subject) {
+                    ExamSubject::create([
+                        'branch_id' => $exam->branch_id,
+                        'exam_id' => $exam->id,
+                        'course_id' => $subject['course_id'],
+                        'question_count' => $subject['question_count'] ?? 0,
+                        'max_score' => $subject['max_score'] ?? 100,
+                    ]);
+                }
+            }
+            
             return $exam;
         });
+    }
+
+    public function publishExam(Exam $exam): bool
+    {
+        return $exam->update(['status' => 'published']);
     }
 
     public function deleteExam(Exam $exam): bool
     {
         return DB::transaction(function () use ($exam) {
+            $exam->results()->delete();
+            $exam->rankings()->delete();
+            $exam->subjects()->delete();
             return $exam->delete();
         });
-    }
-
-    public function assignClassroom(Exam $exam, int $classroomId): Exam
-    {
-        return DB::transaction(function () use ($exam, $classroomId) {
-            $exam->update(['classroom_id' => $classroomId]);
-            return $exam;
-        });
-    }
-
-    public function enterResults(Exam $exam, array $resultsData): void
-    {
-        DB::transaction(function () use ($exam, $resultsData) {
-            foreach ($resultsData as $result) {
-                ExamResult::updateOrCreate(
-                    [
-                        'exam_id' => $exam->id,
-                        'student_id' => $result['student_id']
-                    ],
-                    [
-                        'branch_id' => $exam->branch_id,
-                        'score' => $result['score'],
-                        'notes' => $result['notes'] ?? null,
-                    ]
-                );
-            }
-            $this->calculateRanking($exam);
-        });
-    }
-
-    public function updateResult(ExamResult $result, array $data): ExamResult
-    {
-        return DB::transaction(function () use ($result, $data) {
-            $result->update($data);
-            $this->calculateRanking($result->exam);
-            return $result;
-        });
-    }
-
-    public function calculateRanking(Exam $exam): void
-    {
-        DB::transaction(function () use ($exam) {
-            $results = $exam->results()->orderByDesc('score')->get();
-            $rank = 1;
-            foreach ($results as $result) {
-                $result->update(['rank' => $rank]);
-                $rank++;
-            }
-        });
-    }
-
-    public function getExamStatistics(Exam $exam): array
-    {
-        $results = $exam->results();
-        $count = $results->count();
-
-        if ($count === 0) {
-            return [
-                'total_students' => 0,
-                'average_score' => 0,
-                'highest_score' => 0,
-                'lowest_score' => 0,
-            ];
-        }
-
-        return [
-            'total_students' => $count,
-            'average_score' => $results->avg('score'),
-            'highest_score' => $results->max('score'),
-            'lowest_score' => $results->min('score'),
-        ];
     }
 }

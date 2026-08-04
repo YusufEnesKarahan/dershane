@@ -22,12 +22,26 @@ class StudentPerformanceService
         $student = Student::findOrFail($studentId);
 
         // 1. Calculate Exam Average
-        $examAverage = ExamResult::where('student_id', $studentId)
+        $examResults = ExamResult::where('student_id', $studentId)
             ->whereHas('exam', function ($q) use ($academicTermId, $student) {
-                // Exam model usually doesn't have academic_term_id directly, but we check if we can.
-                // Assuming it might, or we just calculate all time for current term dates.
                 $q->where('branch_id', $student->branch_id);
-            })->avg('score') ?? 0;
+                if ($academicTermId) {
+                    $q->where('academic_term_id', $academicTermId);
+                }
+            })
+            ->orderBy('created_at', 'asc')
+            ->get();
+            
+        $examAverage = $examResults->avg('score') ?? 0;
+        
+        // Calculate Declining Trend Risk
+        $isDeclining = false;
+        if ($examResults->count() >= 3) {
+            $lastThree = $examResults->take(-3)->values();
+            if ($lastThree[0]->score > $lastThree[1]->score && $lastThree[1]->score > $lastThree[2]->score) {
+                $isDeclining = true;
+            }
+        }
 
         // 2. Calculate Homework Completion
         $totalHomeworks = \App\Models\Homework::where('branch_id', $student->branch_id)
@@ -55,7 +69,7 @@ class StudentPerformanceService
         $attendanceRate = $totalDays > 0 ? ($presentDays / $totalDays) * 100 : 100;
 
         // 4. Calculate Risk Score
-        $riskScore = $this->calculateRiskScore($attendanceRate, $examAverage, $homeworkCompletionRate, $lateSubmissionRate);
+        $riskScore = $this->calculateRiskScore($attendanceRate, $examAverage, $homeworkCompletionRate, $lateSubmissionRate, $isDeclining);
 
         // Create or update snapshot
         $snapshot = PerformanceSnapshot::create([
@@ -75,7 +89,7 @@ class StudentPerformanceService
         return $snapshot;
     }
 
-    protected function calculateRiskScore($attendance, $exam, $hwCompletion, $lateRate): string
+    protected function calculateRiskScore($attendance, $exam, $hwCompletion, $lateRate, $isDeclining = false): string
     {
         $riskPoints = 0;
 
@@ -84,6 +98,8 @@ class StudentPerformanceService
 
         if ($exam < 50) $riskPoints += 3;
         elseif ($exam < 65) $riskPoints += 1;
+        
+        if ($isDeclining) $riskPoints += 2;
 
         if ($hwCompletion < 50) $riskPoints += 2;
         elseif ($hwCompletion < 70) $riskPoints += 1;
