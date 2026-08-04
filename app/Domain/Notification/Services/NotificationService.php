@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\Notification as NotificationFacade;
 
 class NotificationService
 {
+    public function create(\App\DTOs\Notification\CreateNotificationDTO $dto)
+    {
+        $user = User::find($dto->userId);
+        if ($user) {
+            return $this->send($user, $dto->title, $dto->message, $dto->type ?? 'system', null, 'student');
+        }
+    }
+
     public function send(
         User|int $receiver,
         string $title,

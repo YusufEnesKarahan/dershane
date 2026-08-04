@@ -37,6 +37,15 @@ class Notification extends Model
         ];
     }
 
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (empty($model->content)) {
+                $model->content = $model->message ?? $model->title ?? '';
+            }
+        });
+    }
+
     public function branch()
     {
         return $this->belongsTo(Branch::class);
