@@ -1,96 +1,139 @@
 @extends('layouts.admin')
+
 @section('title', 'Sistem Bildirimleri')
+
 @section('content')
-    <x-admin.crud.index-layout title="Bildirim Gönderimi & Yönetimi" description="Öğretmen, veli ve öğrencilere SMS, E-Posta veya sistem içi anlık bildirimler gönderin.">
-        <x-slot name="actions">
-            <a href="{{ route('admin.notifications.templates') }}" class="px-4 py-2 bg-neutral-100 text-neutral-700 text-xs font-semibold rounded-xl hover:bg-neutral-200 transition">
-                Mesaj Şablonları
-            </a>
-            <a href="{{ route('admin.notifications.analytics') }}" class="px-4 py-2 bg-neutral-100 text-neutral-700 text-xs font-semibold rounded-xl hover:bg-neutral-200 transition">
-                Gönderim Analitiği
-            </a>
-        </x-slot>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Bildirim & İletişim Merkezi</h1>
+        <form action="{{ route('admin.notifications.read-all') }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-check-double"></i> Tümünü Okundu İşaretle
+            </button>
+        </form>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- Sol Panel: Yeni Bildirim Gönder -->
-            <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
-                <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Anlık Bildirim Gönder</h3>
-                
-                <x-admin.form.layout :action="route('admin.notifications.store')" method="POST">
-                    
-                    <x-admin.form.field-group label="Alıcı Kullanıcı" id="user_id">
-                        <select name="user_id" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
-                            @foreach($users as $u)
-                                <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
-                            @endforeach
-                        </select>
-                    </x-admin.form.field-group>
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-                    <x-admin.form.field-group label="Bildirim Türü" id="type">
-                        <select name="type" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
-                            <option value="system">Sistem</option><option value="student">Öğrenci</option><option value="finance">Finans</option><option value="crm">CRM</option>
-                        </select>
-                    </x-admin.form.field-group>
-                    <x-admin.form.field-group label="Gönderim Kanalı" id="channel"><select name="channel" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5"><option value="panel">Panel içi</option><option value="email">E-posta</option><option value="sms">SMS</option></select></x-admin.form.field-group>
+    <div class="row">
+        <!-- Sol Panel: Bildirim Gönder Formu -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Yeni Bildirim Gönder</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.notifications.store') }}" method="POST">
+                        @csrf
+                        <div class="form-group mb-3">
+                            <label for="receiver_id">Alıcı Kullanıcı <span class="text-danger">*</span></label>
+                            <select name="receiver_id" id="receiver_id" class="form-control" required>
+                                <option value="">Seçiniz...</option>
+                                @foreach($users as $u)
+                                    <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <x-admin.form.field-group label="Bildirim Başlığı" id="title">
-                        <input type="text" name="title" required placeholder="Örn: Sınav Sonuçları Açıklandı" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5">
-                    </x-admin.form.field-group>
+                        <div class="form-group mb-3">
+                            <label for="receiver_type">Alıcı Rolü</label>
+                            <select name="receiver_type" id="receiver_type" class="form-control">
+                                <option value="admin">Yönetici</option>
+                                <option value="teacher">Öğretmen</option>
+                                <option value="student">Öğrenci</option>
+                                <option value="parent">Veli</option>
+                            </select>
+                        </div>
 
-                    <x-admin.form.field-group label="Mesaj İçeriği" id="message">
-                        <textarea name="message" required rows="4" placeholder="Gönderilecek bildirim mesajı detayı..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5"></textarea>
-                    </x-admin.form.field-group>
+                        <div class="form-group mb-3">
+                            <label for="type">Bildirim Türü <span class="text-danger">*</span></label>
+                            <select name="type" id="type" class="form-control" required>
+                                <option value="system">Sistem</option>
+                                <option value="homework">Ödev</option>
+                                <option value="attendance">Devamsızlık</option>
+                                <option value="exam">Sınav</option>
+                                <option value="guidance">Rehberlik</option>
+                                <option value="announcement">Duyuru</option>
+                            </select>
+                        </div>
 
-                    <div class="pt-4">
-                        <x-admin.button type="submit" variant="primary" class="w-full">
-                            Bildirimi Sıraya Al & Gönder
-                        </x-admin.button>
-                    </div>
+                        <div class="form-group mb-3">
+                            <label for="title">Bildirim Başlığı <span class="text-danger">*</span></label>
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Örn: Sınav Sonucu Açıklandı" required>
+                        </div>
 
-                </x-admin.form.layout>
+                        <div class="form-group mb-3">
+                            <label for="message">Mesaj İçeriği <span class="text-danger">*</span></label>
+                            <textarea name="message" id="message" rows="4" class="form-control" placeholder="Bildirim detay metni..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block w-100">
+                            <i class="fas fa-paper-plane"></i> Bildirimi Gönder
+                        </button>
+                    </form>
+                </div>
             </div>
-
-            <!-- Sağ Panel: Son Gönderilen Bildirimler -->
-            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
-                <h3 class="text-sm font-bold text-neutral-900 dark:text-white">Son Gönderilen Bildirimler</h3>
-                
-                <x-admin.table.layout>
-                    <x-slot name="head">
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Alıcı</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Kanal / Başlık</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Tarih</th>
-                        <th class="px-4 py-2 text-left text-xs font-semibold text-neutral-500 uppercase">Durum</th>
-                    </x-slot>
-                    <x-slot name="body">
-                        @forelse($notifications as $notif)
-                            <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40">
-                                <td class="px-4 py-3 text-xs font-bold text-neutral-900">
-                                    {{ $notif->user->name }}
-                                </td>
-                                <td class="px-4 py-3 text-xs">
-                                    <span class="px-1.5 py-0.5 text-[9px] font-bold bg-neutral-100 text-neutral-700 rounded mr-1">{{ $notif->channel }}</span>
-                                    <span class="font-semibold text-neutral-800">{{ $notif->title }}</span>
-                                    <div class="text-[10px] text-neutral-400 mt-1">{{ Str::limit($notif->message, 50) }}</div>
-                                </td>
-                                <td class="px-4 py-3 text-xs text-neutral-500 font-mono">
-                                    {{ $notif->created_at->format('d.m.Y H:i') }}
-                                </td>
-                                <td class="px-4 py-3 text-xs">
-                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ $notif->isRead() ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800' }}">
-                                        {{ $notif->isRead() ? 'Okundu' : 'İletildi' }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-4 py-6 text-center text-xs text-neutral-400">Henüz gönderilmiş bildirim bulunmamaktadır.</td>
-                            </tr>
-                        @endforelse
-                    </x-slot>
-                </x-admin.table.layout>
-            </div>
-
         </div>
-    </x-admin.crud.index-layout>
+
+        <!-- Sağ Panel: Bildirim Listesi -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Bildirim Gelen Kutusu & Loglar</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Türü</th>
+                                    <th>Başlık & Mesaj</th>
+                                    <th>Alıcı</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($notifications as $notif)
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-info">{{ strtoupper($notif->type ?? 'SYSTEM') }}</span>
+                                    </td>
+                                    <td>
+                                        <strong>{{ $notif->title }}</strong>
+                                        <div class="small text-muted">{{ $notif->message ?? $notif->content }}</div>
+                                    </td>
+                                    <td>{{ $notif->receiver->name ?? $notif->user->name ?? 'Kullanıcı' }}</td>
+                                    <td class="small">{{ $notif->created_at ? $notif->created_at->format('d.m.Y H:i') : '-' }}</td>
+                                    <td>
+                                        @if($notif->isRead())
+                                            <span class="badge badge-success">Okundu</span>
+                                        @else
+                                            <form action="{{ route('admin.notifications.read', $notif) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-xs btn-outline-primary">Okundu Yap</button>
+                                            </form>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Bildirim bulunmuyor.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ $notifications->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
