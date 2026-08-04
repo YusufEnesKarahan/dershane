@@ -78,4 +78,17 @@ class HomeworkPolicy
         }
         return false;
     }
+
+    public function report(User $user, Homework $homework = null)
+    {
+        if ($user->hasRole('Admin') && $user->hasPermission('homework.report')) {
+            return true;
+        }
+
+        if ($user->hasRole('Teacher')) {
+            return $user->hasPermission('homework.report');
+        }
+
+        return false;
+    }
 }

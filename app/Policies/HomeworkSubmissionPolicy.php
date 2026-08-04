@@ -52,4 +52,13 @@ class HomeworkSubmissionPolicy
 
         return false;
     }
+
+    public function submit(User $user, HomeworkSubmission $submission = null)
+    {
+        if ($user->hasRole('Student')) {
+            return true;
+        }
+
+        return false;
+    }
 }

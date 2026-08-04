@@ -176,6 +176,8 @@ class PermissionDictionary
     public const HOMEWORK_DELETE = 'homework.delete';
     public const HOMEWORK_PUBLISH = 'homework.publish';
     public const HOMEWORK_GRADE = 'homework.grade';
+    public const HOMEWORK_SUBMIT = 'homework.submit';
+    public const HOMEWORK_REPORT = 'homework.report';
 
     public const HQ_BACKUP_MANAGE = 'hq.manageBackup';
     public const HQ_AUDIT_VIEW = 'hq.viewAuditLogs';
