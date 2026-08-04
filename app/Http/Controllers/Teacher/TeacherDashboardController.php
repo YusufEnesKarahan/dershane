@@ -14,7 +14,8 @@ class TeacherDashboardController extends Controller
     public function __construct(
         protected TeacherPortalService $portalService,
         protected TeacherScheduleService $scheduleService,
-        protected TeacherAnalyticsService $analyticsService
+        protected TeacherAnalyticsService $analyticsService,
+        protected \App\Domain\Dashboard\Services\DashboardService $dashboardService
     ) {}
 
     public function index()
@@ -32,8 +33,9 @@ class TeacherDashboardController extends Controller
         $assignedClasses = $this->portalService->getAssignedClasses($teacher->id);
         $schedules = $this->scheduleService->getSchedules($teacher->id);
         $analytics = $this->analyticsService->getAnalyticsSummary($teacher->id);
+        $dashboardData = $this->dashboardService->getTeacherDashboardData($user);
 
-        return view('teacher.dashboard', compact('teacher', 'assignedClasses', 'schedules', 'analytics'));
+        return view('teacher.dashboard', array_merge(compact('teacher', 'assignedClasses', 'schedules', 'analytics'), $dashboardData));
     }
 
     public function analytics()

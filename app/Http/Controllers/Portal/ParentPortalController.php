@@ -12,7 +12,8 @@ class ParentPortalController extends Controller
 {
     public function __construct(
         protected ParentPortalService $service,
-        protected ParentExamService $examService
+        protected ParentExamService $examService,
+        protected \App\Domain\Dashboard\Services\DashboardService $dashboardService
     ) {}
 
     public function dashboard(Request $request)
@@ -35,6 +36,8 @@ class ParentPortalController extends Controller
             ];
         }
 
-        return view('portal.parent.dashboard', compact('guardian', 'childrenData'));
+        $dashboardData = $this->dashboardService->getParentDashboardData(Auth::user());
+
+        return view('portal.parent.dashboard', array_merge(compact('guardian', 'childrenData'), $dashboardData));
     }
 }

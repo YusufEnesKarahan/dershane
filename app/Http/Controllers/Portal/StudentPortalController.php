@@ -12,7 +12,8 @@ class StudentPortalController extends Controller
 {
     public function __construct(
         protected StudentPortalService $service,
-        protected StudentExamService $examService
+        protected StudentExamService $examService,
+        protected \App\Domain\Dashboard\Services\DashboardService $dashboardService
     ) {}
 
     public function dashboard(Request $request)
@@ -27,7 +28,8 @@ class StudentPortalController extends Controller
         $attendanceStats = $this->service->getAttendanceStats($student->id);
         $recentAttendance = $this->service->getAttendance($student->id, 5);
         $examResults = $this->examService->getStudentResults($student);
+        $dashboardData = $this->dashboardService->getStudentDashboardData(Auth::user());
 
-        return view('portal.student.dashboard', compact('student', 'schedule', 'attendanceStats', 'recentAttendance', 'examResults'));
+        return view('portal.student.dashboard', array_merge(compact('student', 'schedule', 'attendanceStats', 'recentAttendance', 'examResults'), $dashboardData));
     }
 }
