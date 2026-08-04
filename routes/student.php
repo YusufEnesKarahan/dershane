@@ -12,31 +12,43 @@ Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \A
         Route::get('/dashboard', [StudentPortalController::class, 'dashboard'])->name('dashboard');
         
         // Notifications
-        Route::get('notifications', [\App\Http\Controllers\Student\StudentNotificationController::class, 'index'])->name('notifications.index');
-        Route::post('notifications/{notification}/read', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAsRead'])->name('notifications.read');
-        Route::post('notifications/read-all', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAllRead'])->name('notifications.read-all');
+        Route::middleware(['feature.access:notification'])->group(function () {
+            Route::get('notifications', [\App\Http\Controllers\Student\StudentNotificationController::class, 'index'])->name('notifications.index');
+            Route::post('notifications/{notification}/read', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAsRead'])->name('notifications.read');
+            Route::post('notifications/read-all', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAllRead'])->name('notifications.read-all');
+        });
 
         // Homeworks
-        Route::middleware('permission:homework.view')->group(function() {
+        Route::middleware(['permission:homework.view', 'feature.access:homework'])->group(function() {
             Route::get('homeworks', [StudentHomeworkController::class, 'index'])->name('homeworks.index');
             Route::get('homeworks/{homework}', [StudentHomeworkController::class, 'show'])->name('homeworks.show');
             Route::post('homeworks/{homework}/submit', [StudentHomeworkController::class, 'submit'])->name('homeworks.submit');
         });
 
         // Finance
-        Route::get('my-payments', [StudentFinanceController::class, 'index'])->name('finance.index');
+        Route::middleware(['feature.access:finance'])->group(function () {
+            Route::get('my-payments', [StudentFinanceController::class, 'index'])->name('finance.index');
+        });
         
         // Guidance & Performance
-        Route::get('my-performance', [\App\Http\Controllers\Student\StudentPerformanceController::class, 'myPerformance'])->name('performance.dashboard');
-        Route::get('my-goals', [\App\Http\Controllers\Student\StudentPerformanceController::class, 'myGoals'])->name('performance.goals');
+        Route::middleware(['feature.access:guidance'])->group(function () {
+            Route::get('my-performance', [\App\Http\Controllers\Student\StudentPerformanceController::class, 'myPerformance'])->name('performance.dashboard');
+            Route::get('my-goals', [\App\Http\Controllers\Student\StudentPerformanceController::class, 'myGoals'])->name('performance.goals');
+        });
         
         // Attendance
-        Route::get('my-attendance', [\App\Http\Controllers\Student\StudentAttendanceController::class, 'index'])->name('attendance.index');
+        Route::middleware(['feature.access:attendance'])->group(function () {
+            Route::get('my-attendance', [\App\Http\Controllers\Student\StudentAttendanceController::class, 'index'])->name('attendance.index');
+        });
         
         // Exams
-        Route::get('my-exams', [\App\Http\Controllers\Student\StudentExamController::class, 'index'])->name('exams.index');
-        Route::get('my-exams/{exam}', [\App\Http\Controllers\Student\StudentExamController::class, 'showResult'])->name('exams.show');
+        Route::middleware(['feature.access:exam'])->group(function () {
+            Route::get('my-exams', [\App\Http\Controllers\Student\StudentExamController::class, 'index'])->name('exams.index');
+            Route::get('my-exams/{exam}', [\App\Http\Controllers\Student\StudentExamController::class, 'showResult'])->name('exams.show');
+        });
 
         // Schedule
-        Route::get('my-schedule', [\App\Http\Controllers\Student\StudentScheduleController::class, 'index'])->name('schedule.index');
+        Route::middleware(['feature.access:schedule'])->group(function () {
+            Route::get('my-schedule', [\App\Http\Controllers\Student\StudentScheduleController::class, 'index'])->name('schedule.index');
+        });
     });

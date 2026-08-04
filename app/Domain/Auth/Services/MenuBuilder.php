@@ -12,7 +12,8 @@ class MenuBuilder
 
     public function build(User $user): array
     {
-        return \Illuminate\Support\Facades\Cache::rememberForever('user.menu.' . $user->id, function () use ($user) {
+        $branchId = session('active_branch_id', $user->branch_id ?? 'global');
+        return \Illuminate\Support\Facades\Cache::remember('user.menu.' . $user->id . '.' . $branchId, 3600, function () use ($user) {
             $rawMenu = config('admin-menu.menu', []);
             $menu = [];
 

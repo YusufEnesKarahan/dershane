@@ -189,31 +189,37 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
         
     // Exams
-    Route::get('exams/{exam}/analysis', [ExamController::class, 'analysis'])->name('exams.analysis');
-    Route::get('exams/{exam}/results', [\App\Http\Controllers\Admin\ExamResultController::class, 'index'])->name('exams.results');
-    Route::post('exams/{exam}/results', [\App\Http\Controllers\Admin\ExamResultController::class, 'store'])->name('exams.results.store');
-    Route::resource('exams', ExamController::class);
+    Route::middleware(['feature.access:exam'])->group(function () {
+        Route::get('exams/{exam}/analysis', [ExamController::class, 'analysis'])->name('exams.analysis');
+        Route::get('exams/{exam}/results', [\App\Http\Controllers\Admin\ExamResultController::class, 'index'])->name('exams.results');
+        Route::post('exams/{exam}/results', [\App\Http\Controllers\Admin\ExamResultController::class, 'store'])->name('exams.results.store');
+        Route::resource('exams', ExamController::class);
+    });
 
     // Finance (Sprint 9.1)
-    Route::post('finance/{plan}/discount', [FinanceController::class, 'applyDiscount'])->name('finance.discount');
-    Route::resource('finance', FinanceController::class);
-    
-    Route::post('installments/{installment}/collect', [InstallmentController::class, 'collect'])->name('installments.collect');
-    Route::get('installments', [InstallmentController::class, 'index'])->name('installments.index');
-    
-    Route::post('payments/{payment}/refund', [PaymentController::class, 'refund'])->name('payments.refund');
-    Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
+    Route::middleware(['feature.access:finance'])->group(function () {
+        Route::post('finance/{plan}/discount', [FinanceController::class, 'applyDiscount'])->name('finance.discount');
+        Route::resource('finance', FinanceController::class);
+        Route::post('installments/{installment}/collect', [InstallmentController::class, 'collect'])->name('installments.collect');
+        Route::get('installments', [InstallmentController::class, 'index'])->name('installments.index');
+        Route::post('payments/{payment}/refund', [PaymentController::class, 'refund'])->name('payments.refund');
+        Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
+    });
 
     // Schedules
-    Route::resource('schedules', LessonScheduleController::class);
+    Route::middleware(['feature.access:schedule'])->group(function () {
+        Route::resource('schedules', LessonScheduleController::class);
+    });
 
     // Homeworks
-    Route::post('homeworks/{homework}/publish', [HomeworkController::class, 'publish'])->name('homeworks.publish');
-    Route::post('homeworks/{homework}/close', [HomeworkController::class, 'close'])->name('homeworks.close');
-    Route::resource('homeworks', HomeworkController::class);
-    Route::get('homeworks/{homework}/submissions', [HomeworkSubmissionController::class, 'index'])->name('homeworks.submissions.index');
-    Route::get('homeworks/{homework}/submissions/{submission}', [HomeworkSubmissionController::class, 'show'])->name('homeworks.submissions.show');
-    Route::post('homeworks/{homework}/submissions/{submission}/grade', [HomeworkSubmissionController::class, 'grade'])->name('homeworks.submissions.grade');
+    Route::middleware(['feature.access:homework'])->group(function () {
+        Route::post('homeworks/{homework}/publish', [HomeworkController::class, 'publish'])->name('homeworks.publish');
+        Route::post('homeworks/{homework}/close', [HomeworkController::class, 'close'])->name('homeworks.close');
+        Route::resource('homeworks', HomeworkController::class);
+        Route::get('homeworks/{homework}/submissions', [HomeworkSubmissionController::class, 'index'])->name('homeworks.submissions.index');
+        Route::get('homeworks/{homework}/submissions/{submission}', [HomeworkSubmissionController::class, 'show'])->name('homeworks.submissions.show');
+        Route::post('homeworks/{homework}/submissions/{submission}/grade', [HomeworkSubmissionController::class, 'grade'])->name('homeworks.submissions.grade');
+    });
 
     // Education - Announcements
     Route::middleware(['permission:announcements.view'])->group(function () {
@@ -222,7 +228,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
 
     // Education - Attendance
-    Route::middleware(['permission:attendance.view'])->group(function () {
+    Route::middleware(['permission:attendance.view', 'feature.access:attendance'])->group(function () {
         Route::get('attendance/report', [AttendanceController::class, 'report'])->name('attendance.report');
         Route::get('attendance/{attendance}/take', [AttendanceController::class, 'take'])->name('attendance.take');
         Route::post('attendance/{attendance}/take', [AttendanceController::class, 'storeBulk'])->name('attendance.storeBulk');
@@ -230,7 +236,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
 
     // Education - Homework & Assignments
-    Route::middleware(['permission:homeworks.view'])->group(function () {
+    Route::middleware(['permission:homeworks.view', 'feature.access:homework'])->group(function () {
         Route::get('assignments/analytics', [AssignmentSubmissionController::class, 'analytics'])->name('assignments.analytics');
         Route::get('assignments/{assignment}/submissions', [AssignmentSubmissionController::class, 'index'])->name('assignments.submissions.index');
         Route::post('assignments/{assignment}/submissions', [AssignmentSubmissionController::class, 'store'])->name('assignments.submissions.store');
@@ -239,7 +245,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
 
     // Education - Finance & Invoices
-    Route::middleware(['permission:finance.view'])->group(function () {
+    Route::middleware(['permission:finance.view', 'feature.access:finance'])->group(function () {
         Route::get('invoices/dashboard', [InvoiceController::class, 'dashboard'])->name('invoices.dashboard');
         Route::post('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
         Route::resource('invoices', InvoiceController::class)->only(['index', 'store', 'show']);
@@ -465,24 +471,28 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::resource('document-categories', DocumentCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
         
         // Guidance
-        Route::resource('guidance', \App\Http\Controllers\Admin\GuidanceController::class);
-        Route::resource('meetings', \App\Http\Controllers\Admin\MeetingController::class);
-        Route::resource('goals', \App\Http\Controllers\Admin\GoalController::class);
+        Route::middleware(['feature.access:guidance'])->group(function () {
+            Route::resource('guidance', \App\Http\Controllers\Admin\GuidanceController::class);
+            Route::resource('meetings', \App\Http\Controllers\Admin\MeetingController::class);
+            Route::resource('goals', \App\Http\Controllers\Admin\GoalController::class);
+        });
     });
 
     // Attendance Management
-    Route::middleware(['permission:attendance.view'])->group(function () {
+    Route::middleware(['permission:attendance.view', 'feature.access:attendance'])->group(function () {
         Route::get('attendance/report', [\App\Http\Controllers\Admin\AttendanceController::class, 'report'])->name('attendance.report');
         Route::resource('attendance', \App\Http\Controllers\Admin\AttendanceController::class)->except(['edit', 'update', 'destroy']);
     });
 
     // Schedule Management
-    Route::middleware(['permission:schedule.view'])->group(function () {
+    Route::middleware(['permission:schedule.view', 'feature.access:schedule'])->group(function () {
         Route::resource('schedule', \App\Http\Controllers\Admin\ScheduleController::class);
     });
 
     // Notification & Communication Center
-    Route::post('notifications/{notification}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
-    Route::resource('notifications', \App\Http\Controllers\Admin\NotificationController::class);
+    Route::middleware(['feature.access:notification'])->group(function () {
+        Route::post('notifications/{notification}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+        Route::resource('notifications', \App\Http\Controllers\Admin\NotificationController::class);
+    });
 });

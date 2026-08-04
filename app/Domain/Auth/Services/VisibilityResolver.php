@@ -26,8 +26,11 @@ class VisibilityResolver
         }
 
         // 3. Feature Check
-        if ($feature && function_exists('feature')) {
-            if (!feature()->active($feature)) {
+        if ($feature) {
+            if (function_exists('feature_enabled') && !feature_enabled($feature)) {
+                return false;
+            }
+            if (function_exists('feature') && !feature()->active($feature)) {
                 return false;
             }
         }
