@@ -98,6 +98,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('Super Admin') ? true : null;
         });
 
+        Blade::if('feature_enabled', function (string $code): bool {
+            return app(\App\Domain\Package\Services\PackageService::class)->hasFeature(null, $code);
+        });
+
         Blade::directive('role', function ($role) {
             return "<?php if(auth()->check() && app(\App\Domain\Auth\Services\AuthorizationService::class)->hasRole(auth()->user(), {$role})): ?>";
         });
