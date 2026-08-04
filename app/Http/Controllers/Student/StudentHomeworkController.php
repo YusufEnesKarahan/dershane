@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Homework;
 use App\Models\HomeworkSubmission;
-use App\Domain\Academic\Services\HomeworkSubmissionService;
+use App\Domain\Homework\Services\HomeworkSubmissionService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 

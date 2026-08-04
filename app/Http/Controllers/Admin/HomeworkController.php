@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Homework;
-use App\Domain\Academic\Services\HomeworkManagementService;
+use App\Domain\Homework\Services\HomeworkManagementService;
 use App\Domain\Tenant\Services\SubscriptionLimitService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;

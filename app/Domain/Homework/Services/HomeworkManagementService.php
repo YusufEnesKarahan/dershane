@@ -1,24 +1,30 @@
 <?php
 
-namespace App\Domain\Academic\Services;
+namespace App\Domain\Homework\Services;
 
 use App\Models\Homework;
 use App\Models\Student;
 use App\Models\StudentGuardian;
-use App\Domain\Notification\Services\NotificationService;
 use App\Domain\Notification\Enums\NotificationType;
+use App\Domain\Notification\Services\NotificationService;
+use App\Domain\Tenant\Services\SubscriptionLimitService;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Exception;
 
 class HomeworkManagementService
 {
-    public function __construct(protected NotificationService $notificationService)
-    {
-    }
+    public function __construct(
+        protected NotificationService $notificationService,
+        protected SubscriptionLimitService $limitService
+    ) {}
 
     public function createHomework(array $data): Homework
     {
+        $branchId = $data['branch_id'] ?? app(\App\Core\Context\TenantContext::class)->getActiveBranchId();
+        
+        $this->limitService->checkHomeworkLimit($branchId);
+
         return DB::transaction(function () use ($data) {
             $homework = Homework::create($data);
             
