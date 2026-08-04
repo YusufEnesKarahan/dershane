@@ -1,0 +1,725 @@
+{
+    "roles": {
+        "Super Admin": {
+            "role": "Super Admin",
+            "login_landing_url": "http:\/\/127.0.0.1:8000\/admin\/dashboard",
+            "input_clearing_verified": true,
+            "routes": [
+                {
+                    "route": "\/admin\/dashboard",
+                    "status": 200,
+                    "title": "Dashboard - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/dashboard",
+                    "elements": {
+                        "buttons": 25,
+                        "links": 81,
+                        "forms": 7,
+                        "inputs": 13,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/students",
+                    "status": 200,
+                    "title": "\u00d6\u011frenci Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/students",
+                    "elements": {
+                        "buttons": 45,
+                        "links": 154,
+                        "forms": 28,
+                        "inputs": 54,
+                        "selects": 1,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/teachers",
+                    "status": 200,
+                    "title": "\u00d6\u011fretmenler - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/teachers",
+                    "elements": {
+                        "buttons": 45,
+                        "links": 122,
+                        "forms": 28,
+                        "inputs": 54,
+                        "selects": 1,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/courses",
+                    "status": 200,
+                    "title": "Kurs Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/courses",
+                    "elements": {
+                        "buttons": 29,
+                        "links": 86,
+                        "forms": 8,
+                        "inputs": 15,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 1
+                    }
+                },
+                {
+                    "route": "\/admin\/classrooms",
+                    "status": 200,
+                    "title": "S\u0131n\u0131flar - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/classrooms",
+                    "elements": {
+                        "buttons": 25,
+                        "links": 85,
+                        "forms": 8,
+                        "inputs": 15,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/attendance",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/attendance",
+                    "elements": {
+                        "buttons": 24,
+                        "links": 82,
+                        "forms": 7,
+                        "inputs": 13,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/homework",
+                    "status": 404,
+                    "title": "Sayfa Bulunamad\u0131 | Limit VIP E\u011fitim Kurumlar\u0131",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/homework",
+                    "elements": {
+                        "buttons": 3,
+                        "links": 11,
+                        "forms": 0,
+                        "inputs": 0,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/exams",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/exams",
+                    "elements": {
+                        "buttons": 24,
+                        "links": 81,
+                        "forms": 7,
+                        "inputs": 13,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/settings\/institution",
+                    "status": 200,
+                    "title": "Kurum Ayarlar\u0131 - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/settings\/institution",
+                    "elements": {
+                        "buttons": 32,
+                        "links": 81,
+                        "forms": 11,
+                        "inputs": 35,
+                        "selects": 2,
+                        "textareas": 2,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/users",
+                    "status": 200,
+                    "title": "Kullan\u0131c\u0131 Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/users",
+                    "elements": {
+                        "buttons": 40,
+                        "links": 110,
+                        "forms": 23,
+                        "inputs": 59,
+                        "selects": 3,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/reporting\/reports",
+                    "status": 200,
+                    "title": "Kurumsal Raporlama & D\u0131\u015fa Aktar\u0131mlar - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/reporting\/reports",
+                    "elements": {
+                        "buttons": 26,
+                        "links": 81,
+                        "forms": 9,
+                        "inputs": 17,
+                        "selects": 4,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                }
+            ]
+        },
+        "Branch Admin": {
+            "role": "Branch Admin",
+            "login_landing_url": "http:\/\/127.0.0.1:8000\/admin\/dashboard",
+            "input_clearing_verified": true,
+            "routes": [
+                {
+                    "route": "\/admin\/dashboard",
+                    "status": 200,
+                    "title": "Dashboard - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/dashboard",
+                    "elements": {
+                        "buttons": 15,
+                        "links": 64,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/students",
+                    "status": 200,
+                    "title": "\u00d6\u011frenci Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/students",
+                    "elements": {
+                        "buttons": 35,
+                        "links": 137,
+                        "forms": 22,
+                        "inputs": 42,
+                        "selects": 1,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/teachers",
+                    "status": 200,
+                    "title": "\u00d6\u011fretmenler - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/teachers",
+                    "elements": {
+                        "buttons": 35,
+                        "links": 105,
+                        "forms": 22,
+                        "inputs": 42,
+                        "selects": 1,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/courses",
+                    "status": 200,
+                    "title": "Kurs Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/courses",
+                    "elements": {
+                        "buttons": 19,
+                        "links": 69,
+                        "forms": 2,
+                        "inputs": 3,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 1
+                    }
+                },
+                {
+                    "route": "\/admin\/classrooms",
+                    "status": 200,
+                    "title": "S\u0131n\u0131flar - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/classrooms",
+                    "elements": {
+                        "buttons": 15,
+                        "links": 68,
+                        "forms": 2,
+                        "inputs": 3,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/attendance",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/attendance",
+                    "elements": {
+                        "buttons": 14,
+                        "links": 65,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/homework",
+                    "status": 404,
+                    "title": "Sayfa Bulunamad\u0131 | Limit VIP E\u011fitim Kurumlar\u0131",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/homework",
+                    "elements": {
+                        "buttons": 3,
+                        "links": 11,
+                        "forms": 0,
+                        "inputs": 0,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/exams",
+                    "status": 403,
+                    "title": "Eri\u015fim Reddedildi | Limit VIP E\u011fitim Kurumlar\u0131",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/exams",
+                    "elements": {
+                        "buttons": 3,
+                        "links": 11,
+                        "forms": 0,
+                        "inputs": 0,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/settings\/institution",
+                    "status": 403,
+                    "title": "Eri\u015fim Reddedildi | Limit VIP E\u011fitim Kurumlar\u0131",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/settings\/institution",
+                    "elements": {
+                        "buttons": 3,
+                        "links": 11,
+                        "forms": 0,
+                        "inputs": 0,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/admin\/users",
+                    "status": 200,
+                    "title": "Kullan\u0131c\u0131 Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/admin\/users",
+                    "elements": {
+                        "buttons": 30,
+                        "links": 93,
+                        "forms": 17,
+                        "inputs": 47,
+                        "selects": 3,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                }
+            ]
+        },
+        "Teacher": {
+            "role": "Teacher",
+            "login_landing_url": "http:\/\/127.0.0.1:8000\/teacher\/dashboard",
+            "input_clearing_verified": true,
+            "routes": [
+                {
+                    "route": "\/teacher\/dashboard",
+                    "status": 200,
+                    "title": "\u00d6\u011fretmen Bilgi Sistemi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/dashboard",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 9,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/dashboard",
+                    "status": 200,
+                    "title": "\u00d6\u011fretmen Bilgi Sistemi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/dashboard",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 9,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/teacher\/students",
+                    "status": 200,
+                    "title": "\u00d6\u011frencilerim - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/students",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 18,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/teacher\/courses",
+                    "status": 404,
+                    "title": "Sayfa Bulunamad\u0131 | Limit VIP E\u011fitim Kurumlar\u0131",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/courses",
+                    "elements": {
+                        "buttons": 3,
+                        "links": 11,
+                        "forms": 0,
+                        "inputs": 0,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/teacher\/attendance",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/attendance",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/teacher\/homework",
+                    "status": 200,
+                    "title": "\u00d6dev Y\u00f6netimi - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/homework",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/teacher\/exams",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/teacher\/exams",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                }
+            ]
+        },
+        "Student": {
+            "role": "Student",
+            "login_landing_url": "http:\/\/127.0.0.1:8000\/student\/dashboard",
+            "input_clearing_verified": true,
+            "routes": [
+                {
+                    "route": "\/student\/dashboard",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/student\/dashboard",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/dashboard",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/student\/dashboard",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/student\/courses",
+                    "status": 200,
+                    "title": "Derslerim - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/student\/courses",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/student\/exams",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/student\/exams",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/student\/attendance",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/student\/attendance",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/student\/homework",
+                    "status": 200,
+                    "title": "\u00d6devlerim - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/student\/homework",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                }
+            ]
+        },
+        "Parent": {
+            "role": "Parent",
+            "login_landing_url": "http:\/\/127.0.0.1:8000\/parent\/dashboard",
+            "input_clearing_verified": true,
+            "routes": [
+                {
+                    "route": "\/parent\/dashboard",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/parent\/dashboard",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/dashboard",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/parent\/dashboard",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/parent\/students",
+                    "status": 200,
+                    "title": "\u00d6\u011frencilerim (\u00c7ocuklar\u0131m) - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/parent\/students",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/parent\/attendance",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/parent\/attendance",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/parent\/exams",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/parent\/exams",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                },
+                {
+                    "route": "\/parent\/payments",
+                    "status": 200,
+                    "title": "Laravel - Admin Panel",
+                    "final_url": "http:\/\/127.0.0.1:8000\/parent\/payments",
+                    "elements": {
+                        "buttons": 7,
+                        "links": 5,
+                        "forms": 1,
+                        "inputs": 1,
+                        "selects": 0,
+                        "textareas": 0,
+                        "modals": 0
+                    }
+                }
+            ]
+        }
+    },
+    "bugs": [
+        {
+            "id": "BUG-10.7-001",
+            "role": "Super Admin",
+            "url": "\/admin\/homework",
+            "action": "Sub-module Route Access",
+            "expected": "Route should exist and return HTTP 200 OK view",
+            "actual": "HTTP 404 Not Found - Sayfa Bulunamad\u0131 view rendered",
+            "screenshot": "bug_404_admin_homework.png",
+            "severity": "High"
+        },
+        {
+            "id": "BUG-10.7-002",
+            "role": "Branch Admin",
+            "url": "\/admin\/homework",
+            "action": "Sub-module Route Access",
+            "expected": "Route should exist and return HTTP 200 OK view",
+            "actual": "HTTP 404 Not Found - Sayfa Bulunamad\u0131 view rendered",
+            "screenshot": "bug_404_admin_homework.png",
+            "severity": "High"
+        },
+        {
+            "id": "BUG-10.7-003",
+            "role": "Branch Admin",
+            "url": "\/admin\/exams",
+            "action": "Sidebar Menu Navigation",
+            "expected": "Role authorized view with HTTP 200 OK",
+            "actual": "HTTP 403 Forbidden - Access Denied title 'Eri\u015fim Reddedildi | Limit VIP E\u011fitim Kurumlar\u0131'",
+            "screenshot": "bug_403_admin_exams.png",
+            "severity": "High"
+        },
+        {
+            "id": "BUG-10.7-004",
+            "role": "Branch Admin",
+            "url": "\/admin\/settings\/institution",
+            "action": "Sidebar Menu Navigation",
+            "expected": "Role authorized view with HTTP 200 OK",
+            "actual": "HTTP 403 Forbidden - Access Denied title 'Eri\u015fim Reddedildi | Limit VIP E\u011fitim Kurumlar\u0131'",
+            "screenshot": "bug_403_admin_settings_institution.png",
+            "severity": "High"
+        },
+        {
+            "id": "BUG-10.7-005",
+            "role": "Teacher",
+            "url": "\/teacher\/courses",
+            "action": "Sub-module Route Access",
+            "expected": "Route should exist and return HTTP 200 OK view",
+            "actual": "HTTP 404 Not Found - Sayfa Bulunamad\u0131 view rendered",
+            "screenshot": "bug_404_teacher_courses.png",
+            "severity": "Medium"
+        }
+    ],
+    "crud_summary": {
+        "Students": {
+            "index_status": 200,
+            "create_status": 200
+        },
+        "Teachers": {
+            "index_status": 200,
+            "create_status": 200
+        },
+        "Courses": {
+            "index_status": 200,
+            "create_status": 500
+        },
+        "Classrooms": {
+            "index_status": 200,
+            "create_status": 200
+        },
+        "Attendance": {
+            "index_status": 200,
+            "create_status": 404
+        },
+        "Homework": {
+            "index_status": 404,
+            "create_status": 404
+        },
+        "Exams": {
+            "index_status": 200,
+            "create_status": 200
+        },
+        "Users": {
+            "index_status": 200,
+            "create_status": 200
+        }
+    }
+}

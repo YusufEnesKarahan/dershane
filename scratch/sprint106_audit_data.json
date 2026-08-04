@@ -4,35 +4,35 @@
             "role": "Super Admin",
             "email": "superadmin@test.com",
             "login_page_status": 200,
-            "authenticated_redirect_status": 403,
+            "authenticated_redirect_status": 302,
             "result": "PASS"
         },
         {
             "role": "Branch Admin 1",
             "email": "admin1@test.com",
             "login_page_status": 302,
-            "authenticated_redirect_status": 403,
+            "authenticated_redirect_status": 302,
             "result": "HTTP 302"
         },
         {
             "role": "Teacher",
             "email": "teacher1@test.com",
             "login_page_status": 302,
-            "authenticated_redirect_status": 403,
+            "authenticated_redirect_status": 302,
             "result": "HTTP 302"
         },
         {
             "role": "Student",
             "email": "student1@test.com",
             "login_page_status": 302,
-            "authenticated_redirect_status": 403,
+            "authenticated_redirect_status": 302,
             "result": "HTTP 302"
         },
         {
             "role": "Parent",
             "email": "parent1@test.com",
             "login_page_status": 302,
-            "authenticated_redirect_status": 403,
+            "authenticated_redirect_status": 302,
             "result": "HTTP 302"
         }
     ],
@@ -72,44 +72,44 @@
         {
             "action": "Students Index",
             "url": "\/admin\/students",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 500,
+            "result": "HTTP 500"
         },
         {
             "action": "Student Create Form",
             "url": "\/admin\/students\/create",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Teachers Index",
             "url": "\/admin\/teachers",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Teacher Create Form",
             "url": "\/admin\/teachers\/create",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Classrooms Index",
             "url": "\/admin\/classrooms",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Courses Index",
             "url": "\/admin\/courses",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 500,
+            "result": "HTTP 500"
         },
         {
             "action": "Attendance Index",
             "url": "\/admin\/attendance",
-            "status": 403,
-            "result": "HTTP 403"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Homework Index",
@@ -126,8 +126,8 @@
         {
             "action": "Institution Settings",
             "url": "\/admin\/settings\/institution",
-            "status": 200,
-            "result": "PASS"
+            "status": 403,
+            "result": "HTTP 403"
         },
         {
             "action": "User Management Index",

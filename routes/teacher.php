@@ -9,6 +9,7 @@ use App\Http\Controllers\Teacher\TeacherHomeworkController;
 Route::middleware(['auth', 'role:Teacher|Super Admin', \App\Http\Middleware\EnsureActiveBranch::class])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
     Route::get('classes', [TeacherClassController::class, 'index'])->name('classes');
+    Route::get('students', [TeacherClassController::class, 'students'])->name('students');
     
     // Attendance routes
     Route::middleware(['permission:attendance.view', 'feature.access:attendance'])->group(function () {
@@ -19,6 +20,7 @@ Route::middleware(['auth', 'role:Teacher|Super Admin', \App\Http\Middleware\Ensu
 
     // Homework routes
     Route::middleware(['permission:homework.view', 'feature.access:homework'])->group(function () {
+        Route::get('homework', [TeacherHomeworkController::class, 'index'])->name('homework');
         Route::get('homeworks', [TeacherHomeworkController::class, 'index'])->name('homeworks.index');
         Route::get('homeworks/{homework}', [TeacherHomeworkController::class, 'show'])->name('homeworks.show');
         Route::post('homeworks/{homework}/submissions/{submission}/grade', [TeacherHomeworkController::class, 'grade'])->name('homeworks.submissions.grade');

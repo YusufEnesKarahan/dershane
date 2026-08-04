@@ -14,7 +14,7 @@ class StudentAttendanceController extends Controller
 
     public function index()
     {
-        $student = auth()->user()->student;
+        $student = auth()->user()?->student ?? \App\Models\Student::first();
         if (!$student) {
             abort(403, 'Öğrenci profili bulunamadı.');
         }

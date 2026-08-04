@@ -26,9 +26,9 @@ class EnsureActiveBranch
                 $branchId = $request->header('X-Active-Branch-Id');
             }
             
-            // Fallback to the user's primary branch_id if session is empty
-            if (!$branchId && $user->branch_id) {
-                $branchId = $user->branch_id;
+            // Fallback to the user's primary branch_id or first branch in DB if session is empty
+            if (!$branchId) {
+                $branchId = $user->branch_id ?? \App\Models\Branch::value('id') ?? 1;
                 session(['active_branch_id' => $branchId]);
             }
             

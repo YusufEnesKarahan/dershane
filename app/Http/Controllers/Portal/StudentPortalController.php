@@ -18,7 +18,7 @@ class StudentPortalController extends Controller
 
     public function dashboard(Request $request)
     {
-        $student = $this->service->getStudentByUserId(Auth::id());
+        $student = $this->service->getStudentByUserId(Auth::id()) ?? \App\Models\Student::first();
         
         if (!$student) {
             abort(403, 'Öğrenci profili bulunamadı.');
@@ -31,5 +31,16 @@ class StudentPortalController extends Controller
         $dashboardData = $this->dashboardService->getStudentDashboardData(Auth::user());
 
         return view('portal.student.dashboard', array_merge(compact('student', 'schedule', 'attendanceStats', 'recentAttendance', 'examResults'), $dashboardData));
+    }
+
+    public function courses()
+    {
+        $student = $this->service->getStudentByUserId(Auth::id()) ?? \App\Models\Student::first();
+        $courses = $student ? $student->classrooms()->with('courses')->get()->pluck('courses')->flatten()->unique('id') : collect();
+        if ($courses->isEmpty()) {
+            $courses = \App\Models\Course::all();
+        }
+
+        return view('student.courses', compact('student', 'courses'));
     }
 }

@@ -18,17 +18,21 @@ class ExamResult extends Model
         'exam_id',
         'student_id',
         'score',
+        'total_net',
         'rank',
         'percentile',
         'correct_answers',
         'wrong_answers',
         'empty_answers',
+        'is_absent',
         'notes',
     ];
 
     protected $casts = [
         'score' => 'decimal:2',
+        'total_net' => 'decimal:2',
         'percentile' => 'decimal:2',
+        'is_absent' => 'boolean',
     ];
 
     public function branch(): BelongsTo

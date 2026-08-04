@@ -16,11 +16,19 @@ class AttendanceController extends Controller
         protected AttendanceReportService $reportService
     ) {}
 
+    protected function getActiveBranchId(): ?int
+    {
+        return \App\Core\Context\TenantContext::getActiveBranchId()
+            ?? session('active_branch_id')
+            ?? auth()->user()?->branch_id
+            ?? \App\Models\Branch::value('id');
+    }
+
     public function index(Request $request)
     {
         $this->authorize('viewAny', AttendanceSession::class);
         $date = $request->get('date', today()->toDateString());
-        $sessions = $this->reportService->getDailyAttendance(auth()->user()->branch_id, $date);
+        $sessions = $this->reportService->getDailyAttendance($this->getActiveBranchId(), $date);
         
         return view('admin.attendance.index', compact('sessions', 'date'));
     }
@@ -48,7 +56,7 @@ class AttendanceController extends Controller
             'end_time' => 'nullable'
         ]);
 
-        $validated['branch_id'] = auth()->user()->branch_id;
+        $validated['branch_id'] = $this->getActiveBranchId();
         
         $session = $this->managementService->createSession($validated);
 
@@ -71,7 +79,7 @@ class AttendanceController extends Controller
         $month = $request->get('month', today()->month);
         $year = $request->get('year', today()->year);
         
-        $report = $this->reportService->monthlyAttendanceReport(auth()->user()->branch_id, $year, $month);
+        $report = $this->reportService->monthlyAttendanceReport($this->getActiveBranchId(), $year, $month);
         
         return view('admin.attendance.report', compact('report', 'month', 'year'));
     }

@@ -21,17 +21,17 @@ class LoginController extends Controller
             $request->clearRateLimiter();
             
             $user = auth()->user();
-            if ($user->hasRole('Super Admin')) {
+            if ($user->hasRole(['Super Admin', 'Admin', 'Branch Admin'])) {
                 return redirect()->intended(route('admin.dashboard'));
-            } elseif ($user->hasRole('tenant_admin')) {
-                return redirect()->intended(route('tenant.dashboard'));
-            } elseif ($user->hasRole('teacher')) {
+            } elseif ($user->hasRole('Teacher')) {
                 return redirect()->intended(route('teacher.dashboard'));
-            } elseif ($user->hasRole('staff')) {
-                return redirect()->intended(route('staff.dashboard'));
+            } elseif ($user->hasRole('Student')) {
+                return redirect()->intended(route('student.dashboard'));
+            } elseif ($user->hasRole('Parent')) {
+                return redirect()->intended(route('parent.dashboard'));
             }
 
-            return redirect()->intended(route('tenant.dashboard'));
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         $request->hitRateLimiter();

@@ -1,4 +1,4 @@
-@props(['action', 'title' => 'Silme Onayı', 'message' => 'Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.'])
+@props(['action' => '#', 'title' => 'Silme Onayı', 'message' => 'Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.'])
 
 <div x-data="{ open: false }" class="inline-block">
     <div @click="open = true">

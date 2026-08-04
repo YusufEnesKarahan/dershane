@@ -25,9 +25,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/health/queue', [\App\Http\Controllers\HealthController::class, 'queue']);
     Route::middleware(['role:Super Admin'])->get('/health/details', [\App\Http\Controllers\HealthController::class, 'details']);
 
-    Route::middleware(['role:tenant_admin'])->get('/dashboard', [\App\Http\Controllers\Dashboard\TenantDashboardController::class, 'index'])->name('tenant.dashboard');
-    Route::middleware(['role:teacher'])->get('/teacher/dashboard', [\App\Http\Controllers\Dashboard\TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
-    Route::middleware(['role:staff'])->get('/staff/dashboard', [\App\Http\Controllers\Dashboard\StaffDashboardController::class, 'index'])->name('staff.dashboard');
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+        if ($user->hasRole(['Super Admin', 'Admin', 'Branch Admin'])) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->hasRole('Teacher')) {
+            return redirect()->route('teacher.dashboard');
+        } elseif ($user->hasRole('Student')) {
+            return redirect()->route('student.dashboard');
+        } elseif ($user->hasRole('Parent')) {
+            return redirect()->route('parent.dashboard');
+        }
+        abort(403);
+    })->name('tenant.dashboard');
 });
 
 // Installation Wizard Routes

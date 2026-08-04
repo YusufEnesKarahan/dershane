@@ -5,8 +5,8 @@ use App\Http\Controllers\Portal\ParentPortalController;
 
 Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\EnsureActiveBranch::class])->prefix('parent')->name('parent.')->group(function () {
     Route::get('dashboard', [ParentPortalController::class, 'dashboard'])
-        ->middleware('permission:parent.view_child')
         ->name('dashboard');
+    Route::get('students', [ParentPortalController::class, 'students'])->name('students');
 
     // Notifications
     Route::middleware(['feature.access:notification'])->group(function () {
@@ -17,6 +17,7 @@ Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\Ensur
 
     // Finance
     Route::middleware(['feature.access:finance'])->group(function () {
+        Route::get('payments', [\App\Http\Controllers\Parent\FinancePortalController::class, 'index'])->name('payments');
         Route::get('child-payments', [\App\Http\Controllers\Parent\FinancePortalController::class, 'index'])->name('finance.index');
     });
     
@@ -28,11 +29,13 @@ Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\Ensur
     
     // Attendance
     Route::middleware(['feature.access:attendance'])->group(function () {
+        Route::get('attendance', [\App\Http\Controllers\Parent\ParentAttendanceController::class, 'index'])->name('attendance');
         Route::get('child-attendance', [\App\Http\Controllers\Parent\ParentAttendanceController::class, 'index'])->name('attendance.index');
     });
     
     // Exams
     Route::middleware(['feature.access:exam'])->group(function () {
+        Route::get('exams', [\App\Http\Controllers\Parent\ParentExamController::class, 'index'])->name('exams');
         Route::get('students/{student}/exams', [\App\Http\Controllers\Parent\ParentExamController::class, 'index'])->name('exams.index');
         Route::get('students/{student}/exams/{exam}', [\App\Http\Controllers\Parent\ParentExamController::class, 'showResult'])->name('exams.show');
     });

@@ -79,7 +79,7 @@ use App\Http\Controllers\Admin\SaaSHealthController;
 use App\Http\Controllers\Admin\SubscriptionController;
 
 // Admin Framework Routes
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin'])->prefix('admin')->name('admin.')->group(function () {
     
     // Onboarding Wizard Routes (Sprint 10.2)
     Route::prefix('onboarding')->name('onboarding.')->group(function () {
@@ -523,7 +523,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
 
     // Institution Configuration Management (Sprint 10.4)
-    Route::prefix('settings/institution')->name('settings.institution.')->group(function () {
+    Route::middleware(['role:Super Admin|Admin|Tenant Admin|tenant_admin|admin'])->prefix('settings/institution')->name('settings.institution.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'index'])->name('index');
         Route::post('/general', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateGeneral'])->name('updateGeneral');
         Route::post('/branding', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateBranding'])->name('updateBranding');
