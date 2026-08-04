@@ -325,6 +325,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('licenses/activate', [LicenseController::class, 'activate'])->name('licenses.activate');
         Route::post('licenses/change-plan', [LicenseController::class, 'changePlan'])->name('licenses.change-plan');
         Route::post('licenses/pay', [LicenseController::class, 'pay'])->name('licenses.pay');
+
+        // V1/V2/V3 Package & Feature Licensing System
+        Route::get('packages', [\App\Http\Controllers\Admin\PackageController::class, 'index'])->name('packages.index');
+        Route::get('packages/create', [\App\Http\Controllers\Admin\PackageController::class, 'create'])->name('packages.create');
+        Route::post('packages', [\App\Http\Controllers\Admin\PackageController::class, 'store'])->name('packages.store');
+        Route::get('packages/{package}/edit', [\App\Http\Controllers\Admin\PackageController::class, 'edit'])->name('packages.edit');
+        Route::put('packages/{package}', [\App\Http\Controllers\Admin\PackageController::class, 'update'])->name('packages.update');
+        Route::post('packages/{package}/toggle-status', [\App\Http\Controllers\Admin\PackageController::class, 'toggleStatus'])->name('packages.toggle-status');
+        Route::get('branch-package', [\App\Http\Controllers\Admin\PackageController::class, 'branchPackage'])->name('branch-package.index');
+        Route::post('branch-package/assign', [\App\Http\Controllers\Admin\PackageController::class, 'assignBranchPackage'])->name('branch-package.assign');
     });
 
     // SaaS Operations (Super Admin Only)
