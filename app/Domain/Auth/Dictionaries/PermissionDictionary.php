@@ -170,6 +170,11 @@ class PermissionDictionary
     public const SCHEDULES_DELETE = 'schedules.delete';
     public const SCHEDULES_MANAGE = 'schedules.manage';
 
+    public const SCHEDULE_VIEW = 'schedule.view';
+    public const SCHEDULE_CREATE = 'schedule.create';
+    public const SCHEDULE_UPDATE = 'schedule.update';
+    public const SCHEDULE_DELETE = 'schedule.delete';
+
     public const HOMEWORK_VIEW = 'homework.view';
     public const HOMEWORK_CREATE = 'homework.create';
     public const HOMEWORK_UPDATE = 'homework.update';
