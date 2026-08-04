@@ -3,24 +3,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
-use App\Models\ExamType;
+use App\Models\Course;
 use App\Domain\Exam\Services\ExamManagementService;
-use App\Domain\Tenant\Services\SubscriptionLimitService;
+use App\Domain\Exam\Services\ExamAnalysisService;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
     public function __construct(
         protected ExamManagementService $service,
-        protected SubscriptionLimitService $limitService
+        protected ExamAnalysisService $analysisService
     ) {}
 
     public function index(Request $request)
     {
         $this->authorize('viewAny', Exam::class);
-        $exams = Exam::with(['type', 'classroom'])->latest()->paginate(15);
+        $exams = Exam::latest()->paginate(15);
         $totalExams = Exam::count();
-        // Since we are simulating upcoming exams for dashboard:
         $upcomingExams = Exam::where('exam_date', '>=', now())->count();
         
         return view('admin.exams.index', compact('exams', 'totalExams', 'upcomingExams'));
@@ -29,55 +28,52 @@ class ExamController extends Controller
     public function create()
     {
         $this->authorize('create', Exam::class);
-        $examTypes = ExamType::all();
-        $classrooms = \App\Models\Classroom::all();
+        $courses = Course::all();
         
-        return view('admin.exams.create', compact('examTypes', 'classrooms'));
+        return view('admin.exams.create', compact('courses'));
     }
 
     public function store(Request $request)
     {
         $this->authorize('create', Exam::class);
 
-        if (!$this->limitService->checkExamLimit(auth()->user()->branch_id)) {
-            return redirect()->back()->with('error', 'Sınav oluşturma limitine ulaştınız. Lütfen paketinizi yükseltin.');
-        }
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'exam_type_id' => 'required|exists:exam_types,id',
-            'classroom_id' => 'nullable|exists:classrooms,id',
+            'type' => 'required|string|in:mock_exam,practice_exam,final_exam,quiz',
+            'academic_term_id' => 'nullable|exists:academic_terms,id',
             'exam_date' => 'required|date',
-            'duration_minutes' => 'required|integer|min:1',
-            'total_score' => 'required|integer|min:1',
+            'duration_minutes' => 'nullable|integer|min:1',
+            'total_score' => 'required|numeric|min:1',
+            'subjects' => 'nullable|array',
+            'subjects.*.course_id' => 'required|exists:courses,id',
+            'subjects.*.question_count' => 'required|integer|min:1',
+            'subjects.*.max_score' => 'required|numeric|min:1',
         ]);
 
-        $validated['branch_id'] = auth()->user()->branch_id;
-        $validated['created_by'] = auth()->id();
-        $validated['status'] = 'published';
-
-        $exam = $this->service->createExam($validated);
-
-        return redirect()->route('admin.exams.index')->with('success', 'Sınav başarıyla oluşturuldu.');
+        try {
+            $exam = $this->service->createExam($validated);
+            return redirect()->route('admin.exams.index')->with('success', 'Sınav başarıyla oluşturuldu.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
     }
 
     public function show(Exam $exam)
     {
         $this->authorize('view', $exam);
-        $exam->load(['type', 'classroom', 'results.student']);
-        $stats = $this->service->getExamStatistics($exam);
+        $exam->load(['subjects.course', 'results.student']);
         
-        return view('admin.exams.show', compact('exam', 'stats'));
+        return view('admin.exams.show', compact('exam'));
     }
 
     public function edit(Exam $exam)
     {
         $this->authorize('update', $exam);
-        $examTypes = ExamType::all();
-        $classrooms = \App\Models\Classroom::all();
+        $exam->load('subjects');
+        $courses = Course::all();
         
-        return view('admin.exams.edit', compact('exam', 'examTypes', 'classrooms'));
+        return view('admin.exams.edit', compact('exam', 'courses'));
     }
 
     public function update(Request $request, Exam $exam)
@@ -87,12 +83,16 @@ class ExamController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'exam_type_id' => 'required|exists:exam_types,id',
-            'classroom_id' => 'nullable|exists:classrooms,id',
+            'type' => 'required|string|in:mock_exam,practice_exam,final_exam,quiz',
+            'academic_term_id' => 'nullable|exists:academic_terms,id',
             'exam_date' => 'required|date',
-            'duration_minutes' => 'required|integer|min:1',
-            'total_score' => 'required|integer|min:1',
-            'status' => 'required|string|in:draft,published,completed',
+            'duration_minutes' => 'nullable|integer|min:1',
+            'total_score' => 'required|numeric|min:1',
+            'status' => 'required|string|in:draft,published,completed,cancelled',
+            'subjects' => 'nullable|array',
+            'subjects.*.course_id' => 'required|exists:courses,id',
+            'subjects.*.question_count' => 'required|integer|min:1',
+            'subjects.*.max_score' => 'required|numeric|min:1',
         ]);
 
         $this->service->updateExam($exam, $validated);
@@ -107,36 +107,12 @@ class ExamController extends Controller
         
         return redirect()->route('admin.exams.index')->with('success', 'Sınav silindi.');
     }
-
-    public function results(Exam $exam)
+    
+    public function analysis(Exam $exam)
     {
-        $this->authorize('results', $exam);
+        $this->authorize('report', $exam);
+        $analysis = $this->analysisService->getExamAnalysis($exam);
         
-        // Load students either from the assigned classroom or all students in the branch if none assigned.
-        if ($exam->classroom_id) {
-            $students = \App\Models\Student::where('classroom_id', $exam->classroom_id)->get();
-        } else {
-            $students = \App\Models\Student::all();
-        }
-
-        $existingResults = $exam->results()->get()->keyBy('student_id');
-
-        return view('admin.exams.results', compact('exam', 'students', 'existingResults'));
-    }
-
-    public function saveResults(Request $request, Exam $exam)
-    {
-        $this->authorize('results', $exam);
-
-        $validated = $request->validate([
-            'results' => 'required|array',
-            'results.*.student_id' => 'required|exists:students,id',
-            'results.*.score' => 'required|numeric|min:0',
-            'results.*.notes' => 'nullable|string',
-        ]);
-
-        $this->service->enterResults($exam, $validated['results']);
-
-        return redirect()->route('admin.exams.show', $exam)->with('success', 'Sınav sonuçları kaydedildi ve sıralama güncellendi.');
+        return view('admin.exams.analysis', compact('exam', 'analysis'));
     }
 }

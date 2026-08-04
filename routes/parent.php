@@ -21,4 +21,8 @@ Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\Ensur
     
     // Attendance
     Route::get('child-attendance', [\App\Http\Controllers\Parent\ParentAttendanceController::class, 'index'])->name('attendance.index');
+    
+    // Exams
+    Route::get('students/{student}/exams', [\App\Http\Controllers\Parent\ParentExamController::class, 'index'])->name('exams.index');
+    Route::get('students/{student}/exams/{exam}', [\App\Http\Controllers\Parent\ParentExamController::class, 'showResult'])->name('exams.show');
 });

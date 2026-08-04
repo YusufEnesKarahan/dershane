@@ -38,4 +38,10 @@ Route::middleware(['auth', 'role:Teacher|Super Admin'])->prefix('teacher')->name
     // Guidance routes
     Route::get('my-students', [\App\Http\Controllers\Teacher\TeacherGuidanceController::class, 'myStudents'])->name('guidance.students');
     Route::get('my-guidance', [\App\Http\Controllers\Teacher\TeacherGuidanceController::class, 'myGuidance'])->name('guidance.dashboard');
+    
+    // Exam routes
+    Route::get('exams', [\App\Http\Controllers\Teacher\TeacherExamController::class, 'index'])->name('exams.index');
+    Route::get('exams/{exam}', [\App\Http\Controllers\Teacher\TeacherExamController::class, 'show'])->name('exams.show');
+    Route::get('exams/{exam}/results', [\App\Http\Controllers\Teacher\TeacherExamController::class, 'results'])->name('exams.results');
+    Route::post('exams/{exam}/results', [\App\Http\Controllers\Teacher\TeacherExamController::class, 'storeResult'])->name('exams.results.store');
 });

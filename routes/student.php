@@ -31,4 +31,8 @@ Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \A
         
         // Attendance
         Route::get('my-attendance', [\App\Http\Controllers\Student\StudentAttendanceController::class, 'index'])->name('attendance.index');
+        
+        // Exams
+        Route::get('my-exams', [\App\Http\Controllers\Student\StudentExamController::class, 'index'])->name('exams.index');
+        Route::get('my-exams/{exam}', [\App\Http\Controllers\Student\StudentExamController::class, 'showResult'])->name('exams.show');
     });

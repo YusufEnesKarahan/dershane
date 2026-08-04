@@ -1,34 +1,42 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Exam;
 use App\Models\Student;
+use App\Models\ExamResult;
 use App\Domain\Exam\Services\ExamResultService;
 use Illuminate\Http\Request;
-use App\Models\ExamResult;
 
-class ExamResultController extends Controller
+class TeacherExamController extends Controller
 {
     public function __construct(
         protected ExamResultService $resultService
     ) {}
 
-    public function index(Exam $exam)
+    public function index()
     {
-        $this->authorize('view', clone $exam); // Since policy uses Exam not ExamResult for index generally
-        
-        $students = Student::all();
-        $exam->load('subjects.course', 'results.answers');
-        
-        return view('admin.exams.results', compact('exam', 'students'));
+        $exams = Exam::with('subjects.course')->latest()->paginate(15);
+        return view('teacher.exams.index', compact('exams'));
     }
 
-    public function store(Request $request, Exam $exam)
+    public function show(Exam $exam)
     {
-        $this->authorize('create', [ExamResult::class, $exam]);
+        $exam->load('subjects.course', 'results.student');
+        return view('teacher.exams.show', compact('exam'));
+    }
 
+    public function results(Exam $exam)
+    {
+        $students = Student::all(); // Alternatively, students in teacher's classrooms
+        $exam->load('subjects.course', 'results.answers');
+        
+        return view('teacher.exams.results', compact('exam', 'students'));
+    }
+
+    public function storeResult(Request $request, Exam $exam)
+    {
         $validated = $request->validate([
             'student_id' => 'required|exists:students,id',
             'score' => 'required|numeric|min:0',

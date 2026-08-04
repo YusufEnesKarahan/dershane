@@ -188,8 +188,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
         
     // Exams
-    Route::get('exams/{exam}/results', [ExamController::class, 'results'])->name('exams.results');
-    Route::post('exams/{exam}/results', [ExamController::class, 'saveResults'])->name('exams.results.store');
+    Route::get('exams/{exam}/analysis', [ExamController::class, 'analysis'])->name('exams.analysis');
+    Route::get('exams/{exam}/results', [\App\Http\Controllers\Admin\ExamResultController::class, 'index'])->name('exams.results');
+    Route::post('exams/{exam}/results', [\App\Http\Controllers\Admin\ExamResultController::class, 'store'])->name('exams.results.store');
     Route::resource('exams', ExamController::class);
 
     // Finance (Sprint 9.1)
