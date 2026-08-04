@@ -16,7 +16,7 @@ class ExamManagementService
     public function createExam(array $data): Exam
     {
         // Enforce branch isolation
-        $branchId = $data['branch_id'] ?? app(\App\Core\Context\TenantContext::class)->getBranchId();
+        $branchId = $data['branch_id'] ?? \App\Core\Context\TenantContext::getActiveBranchId();
 
         // Enforce subscription limit before creating
         $this->limitService->checkExamLimit($branchId);

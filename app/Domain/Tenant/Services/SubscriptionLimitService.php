@@ -222,4 +222,5 @@ class SubscriptionLimitService
             throw new \Exception("Günlük maksimum yoklama oturumu sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
         }
     }
+
 }
