@@ -1,55 +1,108 @@
 @extends('layouts.admin')
+
 @section('title', 'Kullanıcı Düzenle')
+
 @section('content')
-    <x-admin.crud.index-layout title="Kullanıcı Düzenle" description="{{ $user->name }} kullanıcısını düzenliyorsunuz.">
-        <div class="max-w-2xl bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
-            <x-admin.form.layout :action="route('admin.users.update', $user)" method="PUT">
-                <x-admin.form.field-group label="Tam Adı" id="name" :error="$errors->first('name')">
-                    <input type="text" name="name" id="name" value="{{ $user->name }}" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
-                </x-admin.form.field-group>
-
-                <x-admin.form.field-group label="E-Posta" id="email" :error="$errors->first('email')">
-                    <input type="email" name="email" id="email" value="{{ $user->email }}" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
-                </x-admin.form.field-group>
-
-                <x-admin.form.field-group label="Şifre (Değiştirmek istemiyorsanız boş bırakın)" id="password" :error="$errors->first('password')">
-                    <input type="password" name="password" id="password" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
-                </x-admin.form.field-group>
-
-                <x-admin.form.field-group label="Telefon" id="phone" :error="$errors->first('phone')">
-                    <input type="text" name="phone" id="phone" value="{{ $user->phone }}" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
-                </x-admin.form.field-group>
-
-                <x-admin.form.field-group label="Roller" id="roles" :error="$errors->first('roles')">
-                    <select name="roles[]" id="roles" multiple required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200 h-32">
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ $user->roles->contains($role->id) ? 'selected' : '' }}>{{ $role->name }}</option>
-                        @endforeach
-                    </select>
-                </x-admin.form.field-group>
-
-                <x-admin.form.field-group label="Şube" id="branch_id" :error="$errors->first('branch_id')">
-                    <select name="branch_id" id="branch_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
-                        <option value="">Tüm Şubeler</option>
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ $user->branch_id == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                </x-admin.form.field-group>
-
-                <x-admin.form.field-group label="Durum" id="status" :error="$errors->first('status')">
-                    <select name="status" id="status" required class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
-                        <option value="ACTIVE" {{ $user->status->value === 'ACTIVE' ? 'selected' : '' }}>Aktif</option>
-                        <option value="PASSIVE" {{ $user->status->value === 'PASSIVE' ? 'selected' : '' }}>Pasif</option>
-                        <option value="SUSPENDED" {{ $user->status->value === 'SUSPENDED' ? 'selected' : '' }}>Askıda</option>
-                    </select>
-                </x-admin.form.field-group>
-
-                <div class="flex items-center gap-3">
-                    <x-admin.button type="submit" variant="primary">Güncelle</x-admin.button>
-                    <a href="{{ route('admin.users.index') }}" class="px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 transition">Vazgeç</a>
-                </div>
-            </x-admin.form.layout>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Kullanıcı Düzenle</h1>
+            <p class="text-xs text-slate-500 mt-1">{{ $user->name }} hesabı ve yetkilerini güncelleyin.</p>
         </div>
-    </x-admin.crud.index-layout>
+        <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition-all">
+            ← Geri Dön
+        </a>
+    </div>
+
+    @if($errors->any())
+        <div class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-xs space-y-1">
+            <span class="font-bold block mb-1">Lütfen aşağıdaki hataları düzeltin:</span>
+            <ul class="list-disc list-inside space-y-0.5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+        <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+            @method('PUT')
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="sm:col-span-2 flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <img src="{{ $user->getAvatarUrl() }}" class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">{{ $user->name }}</h3>
+                        <p class="text-xs text-slate-500">{{ $user->email }} • Kayıt: {{ $user->created_at ? $user->created_at->format('d.m.Y') : '-' }}</p>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ad Soyad</label>
+                    <input type="text" name="name" required value="{{ old('name', $user->name) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">E-Posta Adresi</label>
+                    <input type="email" name="email" required value="{{ old('email', $user->email) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Telefon Numarası</label>
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Yeni Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+                    <input type="password" name="password" placeholder="••••••••" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Hesap Durumu</label>
+                    @php $currStatus = is_object($user->status) ? $user->status->value : $user->status; @endphp
+                    <select name="status" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="ACTIVE" {{ old('status', $currStatus) === 'ACTIVE' ? 'selected' : '' }}>Aktif</option>
+                        <option value="PASSIVE" {{ old('status', $currStatus) === 'PASSIVE' ? 'selected' : '' }}>Pasif</option>
+                        <option value="SUSPENDED" {{ old('status', $currStatus) === 'SUSPENDED' ? 'selected' : '' }}>Askıda</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Bağlı Şube</label>
+                    <select name="branch_id" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Tüm Şubeler (Merkez)</option>
+                        @foreach($branches as $b)
+                            <option value="{{ $b->id }}" {{ old('branch_id', $user->branch_id) == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Profil Resmi (Avatar)</label>
+                    <input type="file" name="avatar" accept="image/jpeg,image/png,image/jpg,image/webp" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Kullanıcı Rolleri</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        @php $userRoleIds = $user->roles->pluck('id')->toArray(); @endphp
+                        @foreach($roles as $role)
+                            <label class="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700">
+                                <input type="checkbox" name="roles[]" value="{{ $role->id }}" {{ in_array($role->id, old('roles', $userRoleIds)) ? 'checked' : '' }} class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                                <span>{{ $role->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition-all">İptal</a>
+                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">Değişiklikleri Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

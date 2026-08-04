@@ -218,6 +218,12 @@ class PermissionDictionary
     public const INSTITUTION_SETTINGS_VIEW = 'institution.settings.view';
     public const INSTITUTION_SETTINGS_UPDATE = 'institution.settings.update';
 
+    public const USER_VIEW = 'user.view';
+    public const USER_CREATE = 'user.create';
+    public const USER_UPDATE = 'user.update';
+    public const USER_DELETE = 'user.delete';
+    public const ROLE_MANAGE = 'role.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

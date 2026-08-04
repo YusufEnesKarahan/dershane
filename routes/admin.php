@@ -124,6 +124,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::middleware(['permission:users.view'])->group(function () {
         Route::post('users/bulk', [UserController::class, 'bulk'])->name('users.bulk');
         Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+        Route::post('users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');
         Route::resource('users', UserController::class)->except(['show']);
     });
 
