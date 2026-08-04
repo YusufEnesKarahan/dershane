@@ -104,12 +104,12 @@ class ScheduleManagementService
 
     public function getParentStudentSchedules(User $parentUser)
     {
-        $guardian = $parentUser->guardian;
+        $guardian = \App\Models\StudentGuardian::where('user_id', $parentUser->id)->first();
         if (!$guardian) {
             return collect();
         }
 
-        $student = $guardian->students()->first();
+        $student = $guardian->student;
         if (!$student) {
             return collect();
         }

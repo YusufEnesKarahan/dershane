@@ -184,6 +184,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Education - Students
     Route::middleware(['permission:students.view'])->group(function () {
+        Route::get('students/analytics', [StudentController::class, 'analytics'])->name('students.analytics');
         Route::resource('students', StudentController::class);
     });
         
@@ -477,6 +478,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Schedule Management
     Route::middleware(['permission:schedule.view'])->group(function () {
-        Route::resource('schedule', \App\Http\Controllers\Admin\ScheduleController::class)->names('admin.schedule');
+        Route::resource('schedule', \App\Http\Controllers\Admin\ScheduleController::class);
     });
 });

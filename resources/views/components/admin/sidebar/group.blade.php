@@ -10,7 +10,7 @@
     <div x-show="open && !miniSidebar" x-collapse class="pl-11 pr-4 py-1 space-y-1">
         @foreach($menu['children'] as $child)
             @if($child)
-            <a href="{{ isset($child['route']) ? route($child['route']) : '#' }}" class="block py-2 text-sm {{ request()->routeIs($child['route'] ?? '') ? 'text-primary font-medium' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200' }} transition-colors">
+            <a href="{{ (isset($child['route']) && \Illuminate\Support\Facades\Route::has($child['route'])) ? route($child['route']) : '#' }}" class="block py-2 text-sm {{ (isset($child['route']) && request()->routeIs($child['route'])) ? 'text-primary font-medium' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200' }} transition-colors">
                 {{ $child['title'] }}
             </a>
             @endif
