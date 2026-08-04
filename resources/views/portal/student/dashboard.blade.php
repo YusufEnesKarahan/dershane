@@ -114,6 +114,45 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Exam Results -->
+        <div class="bg-white shadow rounded-lg p-6 md:col-span-2">
+            <h3 class="text-2xl font-semibold mb-4">Sınav Sonuçları</h3>
+            @if(isset($examResults) && $examResults->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr>
+                                <th class="border-b py-2">Sınav Tarihi</th>
+                                <th class="border-b py-2">Sınav Adı</th>
+                                <th class="border-b py-2">Türü</th>
+                                <th class="border-b py-2">Puan</th>
+                                <th class="border-b py-2">Sıralama</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($examResults as $result)
+                            <tr>
+                                <td class="border-b py-3">{{ optional($result->exam)->exam_date ? $result->exam->exam_date->format('d.m.Y') : '-' }}</td>
+                                <td class="border-b py-3 font-medium">{{ optional($result->exam)->title }}</td>
+                                <td class="border-b py-3">{{ optional(optional($result->exam)->type)->name ?? '-' }}</td>
+                                <td class="border-b py-3 font-bold text-indigo-600">{{ $result->score }}</td>
+                                <td class="border-b py-3">
+                                    @if($result->rank)
+                                        <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-semibold">{{ $result->rank }}. Sıra</span>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <p class="text-gray-500 text-center py-4">Henüz açıklanan bir sınav sonucunuz bulunmuyor.</p>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

@@ -45,6 +45,22 @@ class ParentPortalService
     }
 
     /**
+     * Get weekly schedule for a specific child.
+     */
+    public function getStudentSchedule(int $studentId, int $academicTermId)
+    {
+        $student = Student::findOrFail($studentId);
+        $classroomId = $student->classroom_id;
+        
+        if (!$classroomId) {
+            return collect();
+        }
+
+        return app(\App\Domain\Academic\Services\LessonScheduleManagementService::class)
+            ->getClassroomSchedule($student->branch_id, $classroomId, $academicTermId);
+    }
+
+    /**
      * Get attendance records for a specific child.
      */
     public function getChildAttendance(int $studentId, int $limit = 10): Collection
@@ -72,5 +88,31 @@ class ParentPortalService
             'late' => $attendances->whereIn('attendance_status_id', ['L', 'Late', 'gec', '3'])->count(),
             'excused' => $attendances->whereIn('attendance_status_id', ['E', 'Excused', 'izinli', '4'])->count(),
         ];
+    }
+
+    public function getChildHomeworkStatus(int $studentId)
+    {
+        $student = Student::findOrFail($studentId);
+        $classroomId = $student->classroom_id;
+
+        $homeworks = \App\Models\Homework::where('classroom_id', $classroomId)
+            ->where('status', 'published')
+            ->with(['course', 'submissions' => function($q) use ($studentId) {
+                $q->where('student_id', $studentId);
+            }])
+            ->orderBy('due_date', 'desc')
+            ->get();
+
+        return $homeworks;
+    }
+
+    public function getChildFinancialSummary(int $studentId): array
+    {
+        return app(StudentPortalService::class)->getFinancialSummary($studentId);
+    }
+
+    public function getChildUpcomingInstallments(int $studentId, int $limit = 5)
+    {
+        return app(StudentPortalService::class)->getUpcomingInstallments($studentId, $limit);
     }
 }

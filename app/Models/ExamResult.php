@@ -1,14 +1,22 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 
 class ExamResult extends Model
 {
+    use TenantScoped;
+
     protected $fillable = [
-        'exam_id', 'student_id', 'total_correct', 'total_wrong', 'total_empty',
-        'total_net', 'score', 'branch_rank', 'global_rank', 'is_absent'
+        'branch_id', 'exam_id', 'student_id', 'score', 'rank', 'notes'
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     public function exam()
     {
@@ -18,15 +26,5 @@ class ExamResult extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
-    }
-
-    public function answers()
-    {
-        return $this->hasMany(ExamAnswer::class);
-    }
-
-    public function subjectResults()
-    {
-        return $this->hasMany(ExamSubjectResult::class);
     }
 }

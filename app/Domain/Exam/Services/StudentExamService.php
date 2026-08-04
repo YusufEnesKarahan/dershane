@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Domain\Exam\Services;
+
+use App\Models\ExamResult;
+use App\Models\Student;
+
+class StudentExamService
+{
+    public function getStudentResults(Student $student)
+    {
+        return ExamResult::with('exam.type')
+            ->where('student_id', $student->id)
+            ->where('branch_id', $student->branch_id)
+            ->orderByDesc('created_at')
+            ->get();
+    }
+}

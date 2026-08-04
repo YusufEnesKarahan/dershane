@@ -27,13 +27,15 @@ class RolesAndPermissionsSeeder extends Seeder
                 'classrooms.*', 'branches.*', 'crm.*', 'leads.*', 'contacts.*',
                 'hr.*', 'payroll.*', 'assets.*', 'inventory.*', 'purchase.*',
                 'admission.*', 'enrollment.*', 'documents.*', 'settings.*', 'system.*',
-                'finance.*', 'announcements.*', 'notifications.*'
+                'finance.*', 'announcements.*', 'notifications.*', 'exams.*', 'schedules.*', 'homework.*'
             ],
             'Teacher' => [
                 'dashboard.view',
                 'students.view', 'courses.view', 'classrooms.view',
                 'attendance.view', 'attendance.create', 'attendance.update', 'attendance.report',
-                'homeworks.view', 'homeworks.manage', 'announcements.view'
+                'homeworks.view', 'homeworks.manage', 'announcements.view',
+                'exams.view', 'exams.results', 'schedules.view', 'homework.view',
+                'homework.create', 'homework.update', 'homework.delete', 'homework.publish', 'homework.grade'
             ],
             'Secretary' => [
                 'dashboard.view',
@@ -49,13 +51,15 @@ class RolesAndPermissionsSeeder extends Seeder
                 'dashboard.view',
                 'students.view', 'notifications.view', 'notifications.read', 'attendance.view',
                 'homeworks.view', 'registrations.view',
-                'parent.view_child', 'parent.view_attendance'
+                'parent.view_child', 'parent.view_attendance',
+                'announcements.view', 'exams.view', 'exams.results', 'schedules.view', 'homework.view'
             ],
             'Student' => [
                 'dashboard.view',
                 'students.view', 'notifications.view', 'notifications.read', 'attendance.view',
-                'homeworks.view',
-                'student.view_profile', 'student.view_schedule'
+                'announcements.view', 'exams.view', 'exams.results', 'schedules.view', 'homework.view',
+                'student.view_profile', 'student.view_schedule',
+                'exams.view', 'exams.results', 'schedules.view'
             ]
         ];
 

@@ -2,30 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Core\Traits\TenantScoped;
 
 class PaymentTransaction extends Model
 {
+    use HasFactory, TenantScoped;
+
     protected $fillable = [
-        'subscription_payment_id',
-        'gateway',
-        'transaction_id',
-        'idempotency_key',
-        'status',
-        'payload',
-        'response',
+        'branch_id',
+        'payment_id',
+        'transaction_type',
+        'amount',
+        'description'
     ];
 
-    protected function casts(): array
+    public function branch()
     {
-        return [
-            'payload' => 'array',
-            'response' => 'array',
-        ];
+        return $this->belongsTo(Branch::class);
     }
 
     public function payment()
     {
-        return $this->belongsTo(SubscriptionPayment::class, 'subscription_payment_id');
+        return $this->belongsTo(Payment::class);
     }
 }

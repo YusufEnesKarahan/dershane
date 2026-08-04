@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Domain\Portal\Services\ParentPortalService;
+use App\Domain\Exam\Services\ParentExamService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ParentPortalController extends Controller
 {
-    public function __construct(protected ParentPortalService $service) {}
+    public function __construct(
+        protected ParentPortalService $service,
+        protected ParentExamService $examService
+    ) {}
 
     public function dashboard(Request $request)
     {
@@ -27,6 +31,7 @@ class ParentPortalController extends Controller
                 'student' => $child,
                 'attendance_stats' => $this->service->getChildAttendanceStats($child->id),
                 'recent_attendance' => $this->service->getChildAttendance($child->id, 5),
+                'exam_results' => $this->examService->getChildResults($child),
             ];
         }
 

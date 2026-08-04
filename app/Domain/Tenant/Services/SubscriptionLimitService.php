@@ -79,4 +79,96 @@ class SubscriptionLimitService
 
         return $currentClassroomCount < $plan->max_classrooms;
     }
+
+    /**
+     * Check if the tenant has reached the maximum allowed exams limit.
+     */
+    public function checkExamLimit(int $branchId): bool
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return true; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_exams'] ?? null;
+
+        if ($limit === null || $limit <= 0) {
+            return true;
+        }
+
+        $currentExamCount = \App\Models\Exam::where('branch_id', $branchId)->count();
+
+        return $currentExamCount < $limit;
+    }
+
+    /**
+     * Check if the tenant has reached the maximum allowed schedules limit.
+     */
+    public function checkScheduleLimit(int $branchId): bool
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return true; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_schedules'] ?? null;
+
+        if ($limit === null || $limit <= 0) {
+            return true;
+        }
+
+        $currentScheduleCount = \App\Models\LessonSchedule::where('branch_id', $branchId)->count();
+
+        return $currentScheduleCount < $limit;
+    }
+
+    public function checkHomeworkLimit(int $branchId): bool
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return true; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_homeworks'] ?? null;
+        
+        if ($limit === null || $limit === 'unlimited') {
+            return true;
+        }
+
+        $currentCount = \App\Models\Homework::withoutGlobalScopes()->where('branch_id', $branchId)->count();
+
+        return $currentCount < (int)$limit;
+    }
+
+    public function checkPaymentPlanLimit(int $branchId): void
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_payment_plans'] ?? null;
+        
+        if ($limit === null || $limit === 'unlimited' || (int)$limit <= 0) {
+            return;
+        }
+
+        $currentCount = \App\Models\PaymentPlan::withoutGlobalScopes()->where('branch_id', $branchId)->count();
+
+        if ($currentCount >= (int)$limit) {
+            throw new \Exception("Maksimum ödeme planı sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
+        }
+    }
 }

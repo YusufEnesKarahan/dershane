@@ -137,6 +137,12 @@ class PermissionDictionary
 
     public const FINANCE_VIEW = 'finance.view';
     public const FINANCE_MANAGE = 'finance.manage';
+    public const FINANCE_CREATE = 'finance.create';
+    public const FINANCE_UPDATE = 'finance.update';
+    public const FINANCE_DELETE = 'finance.delete';
+    public const FINANCE_COLLECT = 'finance.collect';
+    public const FINANCE_REFUND = 'finance.refund';
+    public const FINANCE_DISCOUNT = 'finance.discount';
 
     public const NOTIFICATIONS_READ = 'notifications.read';
     // Parent & Student Portal (Sprint 8.6)
@@ -144,6 +150,26 @@ class PermissionDictionary
     public const PARENT_VIEW_ATTENDANCE = 'parent.view_attendance';
     public const STUDENT_VIEW_PROFILE = 'student.view_profile';
     public const STUDENT_VIEW_SCHEDULE = 'student.view_schedule';
+
+    // Exams (Sprint 8.8)
+    public const EXAMS_VIEW = 'exams.view';
+    public const EXAMS_CREATE = 'exams.create';
+    public const EXAMS_UPDATE = 'exams.update';
+    public const EXAMS_DELETE = 'exams.delete';
+    public const EXAMS_RESULTS = 'exams.results';
+
+    public const SCHEDULES_VIEW = 'schedules.view';
+    public const SCHEDULES_CREATE = 'schedules.create';
+    public const SCHEDULES_UPDATE = 'schedules.update';
+    public const SCHEDULES_DELETE = 'schedules.delete';
+    public const SCHEDULES_MANAGE = 'schedules.manage';
+
+    public const HOMEWORK_VIEW = 'homework.view';
+    public const HOMEWORK_CREATE = 'homework.create';
+    public const HOMEWORK_UPDATE = 'homework.update';
+    public const HOMEWORK_DELETE = 'homework.delete';
+    public const HOMEWORK_PUBLISH = 'homework.publish';
+    public const HOMEWORK_GRADE = 'homework.grade';
 
     public const HQ_BACKUP_MANAGE = 'hq.manageBackup';
     public const HQ_AUDIT_VIEW = 'hq.viewAuditLogs';

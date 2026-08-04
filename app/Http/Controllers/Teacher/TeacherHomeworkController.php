@@ -3,122 +3,61 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Domain\Teacher\Services\TeacherPortalService;
-use App\Models\Assignment;
-use App\Models\AssignmentSubmission;
-use App\Models\Classroom;
-use App\Models\Course;
+use App\Models\Homework;
+use App\Models\HomeworkSubmission;
+use App\Domain\Academic\Services\HomeworkManagementService;
+use App\Domain\Academic\Services\HomeworkSubmissionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TeacherHomeworkController extends Controller
 {
-    public function __construct(protected TeacherPortalService $portalService) {}
+    use AuthorizesRequests;
 
-    public function index(Request $request)
+    public function __construct(
+        protected HomeworkManagementService $homeworkService,
+        protected HomeworkSubmissionService $submissionService
+    ) {}
+
+    public function index()
     {
-        $user = Auth::user();
-        $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Super Admin')) {
-            $teacher = \App\Models\Teacher::first();
-        }
-        if (!$teacher) {
-            return redirect()->back();
-        }
+        $teacherId = auth()->user()->teacher->id ?? null;
+        if (!$teacherId) abort(403);
 
-        $assignedClasses = $this->portalService->getAssignedClasses($teacher->id);
-        
-        $classroomIds = $assignedClasses->pluck('classroom_id')->toArray();
-        $courseIds = $assignedClasses->pluck('course_id')->toArray();
-        $classrooms = Classroom::whereIn('id', $classroomIds)->get();
-        $courses = Course::whereIn('id', $courseIds)->get();
-        $assignments = Assignment::query()
-            ->where('teacher_id', $teacher->id)
-            ->whereIn('classroom_id', $classroomIds)
-            ->orderBy('due_date', 'desc')
+        $homeworks = Homework::where('teacher_id', $teacherId)
+            ->with(['course', 'classroom'])
+            ->orderByDesc('created_at')
             ->get();
-
-        $selectedAssignmentId = $request->query('assignment_id');
-        $submissions = collect();
-        $assignment = null;
-
-        if ($selectedAssignmentId) {
-            $assignment = Assignment::find($selectedAssignmentId);
-            if ($assignment && $assignment->teacher_id !== $teacher->id) {
-                abort(403, 'Bu ödeve erişim yetkiniz yok.');
-            }
-            if (!$assignment) {
-                abort(404);
-            }
-            $submissions = AssignmentSubmission::with('student')->where('assignment_id', $assignment->id)->get();
-        }
-
-        return view('teacher.homework', compact('assignedClasses', 'assignments', 'assignment', 'submissions', 'classrooms', 'courses'));
+            
+        return view('teacher.homeworks.index', compact('homeworks'));
     }
 
-    public function store(Request $request)
+    public function show(Homework $homework)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'classroom_id' => 'required|exists:classrooms,id',
-            'course_id' => 'required|exists:courses,id',
-            'due_date' => 'required|date',
-        ]);
-
-        $user = Auth::user();
-        $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Super Admin')) {
-            $teacher = \App\Models\Teacher::first();
-        }
-        abort_unless($teacher, 403);
-        abort_unless(
-            $this->portalService->canManageClassCourse($teacher->id, (int) $request->classroom_id, (int) $request->course_id),
-            403
-        );
-
-        Assignment::create([
-            'title' => $request->title,
-            'content' => $request->content,
-            'classroom_id' => (int) $request->classroom_id,
-            'course_id' => (int) $request->course_id,
-            'teacher_id' => $teacher->id,
-            'due_date' => $request->due_date,
-            'status' => 'Published',
-        ]);
-
-        return redirect()->back()->with('success', 'Ödev başarıyla oluşturuldu ve yayınlandı.');
+        $this->authorize('view', $homework);
+        $submissions = $homework->submissions()->with('student.user')->get();
+        return view('teacher.homeworks.show', compact('homework', 'submissions'));
     }
 
-    public function evaluate(Request $request)
+    public function grade(Request $request, Homework $homework, HomeworkSubmission $submission)
     {
-        $request->validate([
-            'submission_id' => 'required|exists:assignment_submissions,id',
-            'score' => 'required|numeric|min:0|max:100',
-            'teacher_feedback' => 'nullable|string',
+        $this->authorize('grade', $submission);
+
+        $validated = $request->validate([
+            'score' => 'required|integer|min:0|max:' . $homework->max_score,
+            'feedback' => 'nullable|string'
         ]);
 
-        $user = Auth::user();
-        $teacher = $this->portalService->getTeacherByUserId($user->id);
-        if (!$teacher && $user?->hasRole('Super Admin')) {
-            $teacher = \App\Models\Teacher::first();
+        try {
+            $this->submissionService->gradeSubmission(
+                $submission, 
+                auth()->id(), 
+                $validated['score'], 
+                $validated['feedback'] ?? null
+            );
+            return redirect()->back()->with('success', 'Ödev notlandırıldı.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-        abort_unless($teacher, 403);
-
-        $submission = AssignmentSubmission::find($request->submission_id);
-        if ($submission && $submission->assignment->teacher_id !== $teacher->id) {
-            abort(403, 'Bu ödev teslimini değerlendirme yetkiniz yok.');
-        }
-        if (!$submission) {
-            abort(404);
-        }
-
-        $submission->update([
-            'score' => (float) $request->score,
-            'teacher_feedback' => $request->teacher_feedback,
-            'status' => 'Graded',
-        ]);
-
-        return redirect()->back()->with('success', 'Ödev başarıyla değerlendirildi.');
     }
 }

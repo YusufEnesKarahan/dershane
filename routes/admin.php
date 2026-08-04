@@ -22,6 +22,11 @@ use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\AdvanceController;
 use App\Http\Controllers\Admin\PerformanceController;
 use App\Http\Controllers\Admin\AnalyticsController as HRAnalyticsController;
+use App\Http\Controllers\Admin\LessonScheduleController;
+use App\Http\Controllers\Admin\HomeworkController;
+use App\Http\Controllers\Admin\HomeworkSubmissionController;
+use App\Http\Controllers\Admin\FinanceController;
+use App\Http\Controllers\Admin\InstallmentController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\AssetCategoryController;
@@ -180,13 +185,33 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Education - Students
     Route::middleware(['permission:students.view'])->group(function () {
         Route::resource('students', StudentController::class);
-        
-        // Exams
-        Route::get('exams/analytics', [ExamResultController::class, 'analytics'])->name('exams.analytics');
-        Route::get('exams/{exam}/results', [ExamResultController::class, 'index'])->name('exams.results.index');
-        Route::post('exams/{exam}/results', [ExamResultController::class, 'store'])->name('exams.results.store');
-        Route::resource('exams', ExamController::class)->only(['index', 'store']);
     });
+        
+    // Exams
+    Route::get('exams/{exam}/results', [ExamController::class, 'results'])->name('exams.results');
+    Route::post('exams/{exam}/results', [ExamController::class, 'saveResults'])->name('exams.results.store');
+    Route::resource('exams', ExamController::class);
+
+    // Finance (Sprint 9.1)
+    Route::post('finance/{plan}/discount', [FinanceController::class, 'applyDiscount'])->name('finance.discount');
+    Route::resource('finance', FinanceController::class);
+    
+    Route::post('installments/{installment}/collect', [InstallmentController::class, 'collect'])->name('installments.collect');
+    Route::get('installments', [InstallmentController::class, 'index'])->name('installments.index');
+    
+    Route::post('payments/{payment}/refund', [PaymentController::class, 'refund'])->name('payments.refund');
+    Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
+
+    // Schedules
+    Route::resource('schedules', LessonScheduleController::class);
+
+    // Homeworks
+    Route::post('homeworks/{homework}/publish', [HomeworkController::class, 'publish'])->name('homeworks.publish');
+    Route::post('homeworks/{homework}/close', [HomeworkController::class, 'close'])->name('homeworks.close');
+    Route::resource('homeworks', HomeworkController::class);
+    Route::get('homeworks/{homework}/submissions', [HomeworkSubmissionController::class, 'index'])->name('homeworks.submissions.index');
+    Route::get('homeworks/{homework}/submissions/{submission}', [HomeworkSubmissionController::class, 'show'])->name('homeworks.submissions.show');
+    Route::post('homeworks/{homework}/submissions/{submission}/grade', [HomeworkSubmissionController::class, 'grade'])->name('homeworks.submissions.grade');
 
     // Education - Announcements
     Route::middleware(['permission:announcements.view'])->group(function () {

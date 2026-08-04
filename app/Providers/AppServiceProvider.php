@@ -85,7 +85,14 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\StudentAdmission::class, \App\Policies\AdmissionPolicy::class);
         Gate::policy(\App\Models\LeaveRequest::class, \App\Policies\LeavePolicy::class);
         Gate::policy(\App\Models\AttendanceSession::class, \App\Policies\AttendanceSessionPolicy::class);
-
+        Gate::policy(\App\Models\Exam::class, \App\Policies\ExamPolicy::class);
+        Gate::policy(\App\Models\LessonSchedule::class, \App\Policies\LessonSchedulePolicy::class);
+        Gate::policy(\App\Models\Homework::class, \App\Policies\HomeworkPolicy::class);
+        Gate::policy(\App\Models\HomeworkSubmission::class, \App\Policies\HomeworkSubmissionPolicy::class);
+        Gate::policy(\App\Models\PaymentPlan::class, \App\Policies\PaymentPlanPolicy::class);
+        Gate::policy(\App\Models\Installment::class, \App\Policies\InstallmentPolicy::class);
+        Gate::policy(\App\Models\Payment::class, \App\Policies\PaymentPolicy::class);
+        
         // Implicitly grant "Administrator" role all permissions
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;

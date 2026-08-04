@@ -19,15 +19,15 @@ Route::middleware(['auth', 'role:Teacher|Super Admin'])->prefix('teacher')->name
         ->name('attendance.store');
 
     // Homework routes
-    Route::get('homework', [TeacherHomeworkController::class, 'index'])
-        ->middleware('permission:homeworks.view')
-        ->name('homework');
-    Route::post('homework', [TeacherHomeworkController::class, 'store'])
-        ->middleware('permission:homeworks.manage')
-        ->name('homework.store');
-    Route::post('homework/evaluate', [TeacherHomeworkController::class, 'evaluate'])
-        ->middleware('permission:homeworks.manage')
-        ->name('homework.evaluate');
+    Route::get('homeworks', [TeacherHomeworkController::class, 'index'])
+        ->middleware('permission:homework.view')
+        ->name('homeworks.index');
+    Route::get('homeworks/{homework}', [TeacherHomeworkController::class, 'show'])
+        ->middleware('permission:homework.view')
+        ->name('homeworks.show');
+    Route::post('homeworks/{homework}/submissions/{submission}/grade', [TeacherHomeworkController::class, 'grade'])
+        ->middleware('permission:homework.grade')
+        ->name('homeworks.submissions.grade');
 
     // Analytics routes
     Route::get('analytics', [TeacherDashboardController::class, 'analytics'])->name('analytics');

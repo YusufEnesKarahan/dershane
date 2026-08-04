@@ -35,4 +35,28 @@ class TeacherPortalService
     {
         return Student::where('classroom_id', $classroomId)->get();
     }
+
+    public function getWeeklySchedule(int $branchId, int $teacherId, int $academicTermId)
+    {
+        return \App\Models\LessonSchedule::where('branch_id', $branchId)
+            ->where('academic_term_id', $academicTermId)
+            ->where(function($query) use ($teacherId) {
+                $query->where('teacher_id', $teacherId)
+                      ->orWhereHas('additionalTeachers', function($q) use ($teacherId) {
+                          $q->where('teacher_id', $teacherId);
+                      });
+            })
+            ->with(['course', 'classroom'])
+            ->get();
+    }
+
+    public function getPendingHomeworkReviews(int $teacherId)
+    {
+        return \App\Models\HomeworkSubmission::whereHas('homework', function($q) use ($teacherId) {
+                $q->where('teacher_id', $teacherId);
+            })
+            ->whereIn('status', ['submitted', 'late'])
+            ->with(['homework', 'student.user'])
+            ->get();
+    }
 }

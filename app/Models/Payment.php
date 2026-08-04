@@ -2,20 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\Traits\TenantScoped;
 
 class Payment extends Model
 {
-    use TenantScoped;
+    use HasFactory, SoftDeletes, TenantScoped;
+
     protected $fillable = [
-        'payment_number', 'invoice_id', 'student_id', 'payment_method_id',
-        'amount', 'payment_date', 'notes', 'status'
+        'branch_id',
+        'student_id',
+        'installment_id',
+        'amount',
+        'payment_method',
+        'payment_date',
+        'reference_no',
+        'received_by',
+        'notes'
     ];
 
-    public function invoice()
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
+
+    public function branch()
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Branch::class);
     }
 
     public function student()
@@ -23,14 +37,23 @@ class Payment extends Model
         return $this->belongsTo(Student::class);
     }
 
-    public function paymentMethod()
+    public function installment()
     {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(Installment::class);
     }
 
-    public function refund()
+    public function receiver()
     {
-        return $this->hasOne(Refund::class);
+        return $this->belongsTo(User::class, 'received_by');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(PaymentTransaction::class);
+    }
+
+    public function refunds()
+    {
+        return $this->hasMany(Refund::class);
     }
 }
-

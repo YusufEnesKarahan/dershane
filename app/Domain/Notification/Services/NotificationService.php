@@ -11,8 +11,17 @@ use App\Domain\Notification\Enums\NotificationChannel;
 use App\Notifications\GeneralNotification;
 use Illuminate\Support\Facades\Notification;
 
+use App\DTOs\Notification\CreateNotificationDTO;
+
 class NotificationService
 {
+    public function create(CreateNotificationDTO $dto)
+    {
+        $user = User::find($dto->userId);
+        if ($user) {
+            $this->send($user, $dto->title, $dto->message, NotificationType::from($dto->type ?? 'system'));
+        }
+    }
     public function send(User|iterable $users, string $title, string $content, NotificationType $type = NotificationType::SYSTEM, array $channels = [NotificationChannel::DATABASE])
     {
         $channels = array_map(fn($channel) => $channel->value, $channels);

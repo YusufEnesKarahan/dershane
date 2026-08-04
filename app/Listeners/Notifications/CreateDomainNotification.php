@@ -17,11 +17,11 @@ class CreateDomainNotification implements ShouldQueue
     public function handle(object $event): void
     {
         [$title, $message, $type, $data] = match (true) {
-            $event instanceof StudentRegistered => ['Yeni öğrenci kaydı', $event->student->full_name.' adlı öğrenci kaydedildi.', 'student', ['student_id' => $event->student->id]],
-            $event instanceof PaymentOverdue => ['Ödeme gecikmesi', $event->invoice->invoice_number.' numaralı fatura gecikmede.', 'finance', ['invoice_id' => $event->invoice->id]],
-            $event instanceof ExamResultPublished => ['Yeni sınav sonucu', 'Yeni sınav sonucu kaydedildi.', 'student', ['exam_result_id' => $event->result->id]],
-            $event instanceof HomeworkAssigned => ['Yeni ödev', $event->assignment->title.' ödevi yayınlandı.', 'student', ['assignment_id' => $event->assignment->id]],
-            $event instanceof CrmFollowupDue => ['CRM takip zamanı', $event->activity->description, 'crm', ['lead_id' => $event->activity->lead_id]],
+            $event instanceof StudentRegistered => ['Yeni öğrenci kaydı', $event->student->full_name.' adlı öğrenci kaydedildi.', 'system', ['student_id' => $event->student->id]],
+            $event instanceof PaymentOverdue => ['Ödeme gecikmesi', $event->invoice->invoice_number.' numaralı fatura gecikmede.', 'payment', ['invoice_id' => $event->invoice->id]],
+            $event instanceof ExamResultPublished => ['Yeni sınav sonucu', 'Yeni sınav sonucu kaydedildi.', 'system', ['exam_result_id' => $event->result->id]],
+            $event instanceof HomeworkAssigned => ['Yeni ödev', $event->assignment->title.' ödevi yayınlandı.', 'system', ['assignment_id' => $event->assignment->id]],
+            $event instanceof CrmFollowupDue => ['CRM takip zamanı', $event->activity->description, 'system', ['lead_id' => $event->activity->lead_id]],
             default => [null, null, 'system', []],
         };
         if (!$title) return;

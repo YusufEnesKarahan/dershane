@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Portal\StudentPortalController;
+use App\Http\Controllers\Student\StudentHomeworkController;
+use App\Http\Controllers\Student\FinancePortalController as StudentFinanceController;
 
 Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \App\Http\Middleware\EnsureActiveBranch::class])
     ->prefix('student')
@@ -12,4 +14,14 @@ Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \A
         // Notifications
         Route::get('notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
         Route::post('notifications/{id?}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+        // Homeworks
+        Route::middleware('permission:homework.view')->group(function() {
+            Route::get('homeworks', [StudentHomeworkController::class, 'index'])->name('homeworks.index');
+            Route::get('homeworks/{homework}', [StudentHomeworkController::class, 'show'])->name('homeworks.show');
+            Route::post('homeworks/{homework}/submit', [StudentHomeworkController::class, 'submit'])->name('homeworks.submit');
+        });
+
+        // Finance
+        Route::get('my-payments', [StudentFinanceController::class, 'index'])->name('finance.index');
     });
