@@ -154,12 +154,15 @@ class PermissionDictionary
     public const STUDENT_VIEW_PROFILE = 'student.view_profile';
     public const STUDENT_VIEW_SCHEDULE = 'student.view_schedule';
 
-    // Exams (Sprint 8.8)
-    public const EXAMS_VIEW = 'exams.view';
-    public const EXAMS_CREATE = 'exams.create';
-    public const EXAMS_UPDATE = 'exams.update';
-    public const EXAMS_DELETE = 'exams.delete';
-    public const EXAMS_RESULTS = 'exams.results';
+    // Exams (Sprint 9.4)
+    public const EXAM_VIEW = 'exam.view';
+    public const EXAM_CREATE = 'exam.create';
+    public const EXAM_UPDATE = 'exam.update';
+    public const EXAM_DELETE = 'exam.delete';
+    public const EXAM_PUBLISH = 'exam.publish';
+    public const EXAM_RESULT_CREATE = 'exam.result.create';
+    public const EXAM_RESULT_VIEW = 'exam.result.view';
+    public const EXAM_REPORT = 'exam.report';
 
     public const SCHEDULES_VIEW = 'schedules.view';
     public const SCHEDULES_CREATE = 'schedules.create';

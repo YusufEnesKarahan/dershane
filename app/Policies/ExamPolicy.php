@@ -13,35 +13,36 @@ class ExamPolicy
 
     public function viewAny(User $user)
     {
-        return $user->hasPermission(PermissionDictionary::EXAMS_VIEW);
+        return $user->hasPermission(PermissionDictionary::EXAM_VIEW);
     }
 
     public function view(User $user, Exam $exam)
     {
-        return $user->hasPermission(PermissionDictionary::EXAMS_VIEW) && $user->branch_id === $exam->branch_id;
+        return $user->hasPermission(PermissionDictionary::EXAM_VIEW) && $user->branch_id === $exam->branch_id;
     }
 
     public function create(User $user)
     {
-        \Illuminate\Support\Facades\Log::info('Policy create method called', [
-            'user' => $user->id, 
-            'has_permission' => $user->hasPermission(PermissionDictionary::EXAMS_CREATE)
-        ]);
-        return $user->hasPermission(PermissionDictionary::EXAMS_CREATE);
+        return $user->hasPermission(PermissionDictionary::EXAM_CREATE);
     }
 
     public function update(User $user, Exam $exam)
     {
-        return $user->hasPermission(PermissionDictionary::EXAMS_UPDATE) && $user->branch_id === $exam->branch_id;
+        return $user->hasPermission(PermissionDictionary::EXAM_UPDATE) && $user->branch_id === $exam->branch_id;
     }
 
     public function delete(User $user, Exam $exam)
     {
-        return $user->hasPermission(PermissionDictionary::EXAMS_DELETE) && $user->branch_id === $exam->branch_id;
+        return $user->hasPermission(PermissionDictionary::EXAM_DELETE) && $user->branch_id === $exam->branch_id;
     }
 
-    public function results(User $user, Exam $exam)
+    public function publish(User $user, Exam $exam)
     {
-        return $user->hasPermission(PermissionDictionary::EXAMS_RESULTS) && $user->branch_id === $exam->branch_id;
+        return $user->hasPermission(PermissionDictionary::EXAM_PUBLISH) && $user->branch_id === $exam->branch_id;
+    }
+    
+    public function report(User $user, Exam $exam)
+    {
+        return $user->hasPermission(PermissionDictionary::EXAM_REPORT) && $user->branch_id === $exam->branch_id;
     }
 }
