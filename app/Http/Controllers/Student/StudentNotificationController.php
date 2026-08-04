@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Parent;
+namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
@@ -8,7 +8,7 @@ use App\Domain\Notification\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class ParentNotificationController extends Controller
+class StudentNotificationController extends Controller
 {
     use AuthorizesRequests;
 
@@ -20,7 +20,7 @@ class ParentNotificationController extends Controller
     {
         $notifications = $this->notificationService->getUserNotifications(auth()->user(), 15);
 
-        return view('parent.notifications.index', compact('notifications'));
+        return view('student.notifications.index', compact('notifications'));
     }
 
     public function markAsRead(Notification $notification)

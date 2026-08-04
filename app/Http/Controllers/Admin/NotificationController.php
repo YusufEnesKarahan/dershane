@@ -5,90 +5,81 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\User;
-use App\DTOs\Notification\CreateNotificationDTO;
-use App\Domain\Notification\Actions\CreateNotification;
-use App\Domain\Notification\Actions\MarkNotificationRead;
-use App\Domain\System\Services\QueueService;
-use App\Domain\Notification\Actions\UpdatePreference;
-use App\DTOs\Notification\NotificationPreferenceDTO;
-use App\Domain\Notification\Services\NotificationAnalyticsService;
-use App\Core\Repositories\Interfaces\NotificationRepositoryInterface;
+use App\Domain\Notification\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class NotificationController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(
-        protected NotificationRepositoryInterface $repository,
-        protected NotificationAnalyticsService $analyticsService
+        protected NotificationService $notificationService
     ) {}
 
     public function index(Request $request)
     {
         $this->authorize('viewAny', Notification::class);
 
-        $notifications = $this->repository->paginate(15, $request->all());
+        $notifications = $this->notificationService->getUserNotifications(auth()->user(), 15);
+        $allNotifications = Notification::with(['sender', 'receiver'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
         $users = User::query()->select(['id', 'name', 'email'])->orderBy('name')->get();
 
-        return view('admin.notifications.index', compact('notifications', 'users'));
+        return view('admin.notifications.index', compact('notifications', 'allNotifications', 'users'));
     }
 
-    public function dashboard()
-    {
-        $this->authorize('viewAny', Notification::class);
-        return view('admin.notifications.dashboard', ['summary' => $this->analyticsService->summary()]);
-    }
-
-    public function store(Request $request, CreateNotification $create, QueueService $queue)
+    public function create()
     {
         $this->authorize('create', Notification::class);
 
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
+        $users = User::query()->select(['id', 'name', 'email'])->orderBy('name')->get();
+
+        return view('admin.notifications.create', compact('users'));
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', Notification::class);
+
+        $validated = $request->validate([
+            'receiver_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'message' => 'required|string',
-            'type' => 'required|string',
-            'channel' => 'required|in:panel,email,sms',
-            'priority' => 'nullable|in:low,normal,high,urgent',
+            'type' => 'required|string|in:homework,attendance,exam,guidance,announcement,system',
+            'receiver_type' => 'nullable|string|in:student,teacher,parent,admin',
         ]);
 
-        $dto = new CreateNotificationDTO((int) $request->user_id, $request->title, $request->message, $request->type, $request->channel, $request->input('priority', 'normal'));
+        $receiver = User::findOrFail($validated['receiver_id']);
+        $receiverType = $validated['receiver_type'] ?? 'admin';
 
-        $notification = $create->execute($dto);
-        $queue->sendNotification($notification->id);
+        $this->notificationService->send(
+            $receiver,
+            $validated['title'],
+            $validated['message'],
+            $validated['type'],
+            auth()->id(),
+            $receiverType
+        );
 
-        return redirect()->back()->with('success', 'Bildirim başarıyla gönderildi ve iletim logu oluşturuldu.');
+        return redirect()->route('admin.notifications.index')->with('success', 'Bildirim başarıyla oluşturuldu ve gönderildi.');
     }
 
-    public function templates()
-    {
-        return view('admin.notifications.templates', ['templates' => \App\Models\NotificationTemplate::query()->latest()->get()]);
-    }
-
-    public function analytics()
-    {
-        $summary = $this->analyticsService->summary();
-        $recentLogs = \App\Models\NotificationLog::query()->with('notification.user')->latest()->take(15)->get();
-
-        return view('admin.notifications.analytics', compact('summary', 'recentLogs'));
-    }
-
-    public function markRead(Notification $notification, MarkNotificationRead $action)
+    public function markAsRead(Notification $notification)
     {
         $this->authorize('view', $notification);
-        $action->execute($notification);
+
+        $this->notificationService->markAsRead($notification->id, auth()->user());
+
         return back()->with('success', 'Bildirim okundu olarak işaretlendi.');
     }
 
-    public function preferences(Request $request)
+    public function markAllRead()
     {
-        $preference = \App\Models\NotificationPreference::firstOrCreate(['user_id' => $request->user()->id]);
-        return view('admin.notifications.preferences', compact('preference'));
-    }
+        $this->notificationService->markAllAsRead(auth()->user());
 
-    public function updatePreferences(Request $request, UpdatePreference $action)
-    {
-        $data = $request->validate(['email_enabled' => 'nullable|boolean', 'panel_enabled' => 'nullable|boolean', 'sms_enabled' => 'nullable|boolean']);
-        $action->execute(new NotificationPreferenceDTO($request->user()->id, $request->boolean('email_enabled'), $request->boolean('panel_enabled'), $request->boolean('sms_enabled')));
-        return back()->with('success', 'Bildirim tercihleri güncellendi.');
+        return back()->with('success', 'Tüm bildirimler okundu olarak işaretlendi.');
     }
 }

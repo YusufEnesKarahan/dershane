@@ -45,4 +45,10 @@ Route::middleware(['auth', 'role:Teacher|Super Admin'])->prefix('teacher')->name
     Route::get('exams/{exam}/results', [\App\Http\Controllers\Teacher\TeacherExamController::class, 'results'])->name('exams.results');
     // Schedule routes
     Route::get('schedule', [\App\Http\Controllers\Teacher\TeacherScheduleController::class, 'index'])->name('schedule.index');
+
+    // Notification routes
+    Route::get('notifications', [\App\Http\Controllers\Teacher\TeacherNotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/create', [\App\Http\Controllers\Teacher\TeacherNotificationController::class, 'create'])->name('notifications.create');
+    Route::post('notifications', [\App\Http\Controllers\Teacher\TeacherNotificationController::class, 'store'])->name('notifications.store');
+    Route::post('notifications/{notification}/read', [\App\Http\Controllers\Teacher\TeacherNotificationController::class, 'markAsRead'])->name('notifications.read');
 });

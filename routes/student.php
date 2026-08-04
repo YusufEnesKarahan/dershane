@@ -12,8 +12,9 @@ Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \A
         Route::get('/dashboard', [StudentPortalController::class, 'dashboard'])->name('dashboard');
         
         // Notifications
-        Route::get('notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
-        Route::post('notifications/{id?}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::get('notifications', [\App\Http\Controllers\Student\StudentNotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/{notification}/read', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('notifications/read-all', [\App\Http\Controllers\Student\StudentNotificationController::class, 'markAllRead'])->name('notifications.read-all');
 
         // Homeworks
         Route::middleware('permission:homework.view')->group(function() {

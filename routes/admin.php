@@ -480,4 +480,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::middleware(['permission:schedule.view'])->group(function () {
         Route::resource('schedule', \App\Http\Controllers\Admin\ScheduleController::class);
     });
+
+    // Notification & Communication Center
+    Route::post('notifications/{notification}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::resource('notifications', \App\Http\Controllers\Admin\NotificationController::class);
 });
