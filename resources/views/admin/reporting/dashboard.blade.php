@@ -25,6 +25,25 @@
             </div>
         </div>
 
+        @if(isset($onboardingStatus) && !$onboardingStatus['is_completed'])
+        <!-- Onboarding Progress Banner Card -->
+        <div class="bg-amber-50 border border-amber-200 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-amber-500 text-white rounded-2xl flex items-center justify-center font-black text-xl shrink-0 shadow-md">
+                    %{{ $onboardingStatus['percentage'] }}
+                </div>
+                <div>
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-200 text-amber-900 rounded-full">Kurulum Tamamlanmadı</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">Kurum Kurulum Sihirbazı Bekliyor</h3>
+                    <p class="text-xs text-slate-600">Sisteminizin tam kapasite çalışabilmesi için kalan {{ $onboardingStatus['remaining_steps'] }} adımı tamamlayın.</p>
+                </div>
+            </div>
+            <a href="{{ route('admin.onboarding.index') }}" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-xl transition shadow-sm shrink-0">
+                Devam Et →
+            </a>
+        </div>
+        @endif
+
         @if(\App\Core\Context\TenantContext::getActiveBranchId())
             <div class="mb-6">
                 @include('admin.partials.subscription-widget')

@@ -50,7 +50,9 @@ class ExecutiveDashboardController extends Controller
             $saasMetrics = $this->saasService->getDashboardMetrics();
         }
 
-        return view('admin.reporting.dashboard', compact('metrics', 'saasMetrics'));
+        $onboardingStatus = app(\App\Domain\Onboarding\Services\OnboardingService::class)->getProgress();
+
+        return view('admin.reporting.dashboard', compact('metrics', 'saasMetrics', 'onboardingStatus'));
     }
 
     public function analytics()
