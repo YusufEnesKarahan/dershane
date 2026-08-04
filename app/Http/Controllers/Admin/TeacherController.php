@@ -19,10 +19,19 @@ class TeacherController extends Controller
         protected SubscriptionLimitService $limitService
     ) {}
 
+    protected function getActiveBranchId(): int
+    {
+        return TenantContext::getActiveBranchId()
+            ?? session('active_branch_id')
+            ?? auth()->user()?->branch_id
+            ?? \App\Models\Branch::value('id')
+            ?? 1;
+    }
+
     public function index(Request $request)
     {
         $this->authorize('viewAny', Teacher::class);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
 
         $filters = $request->only(['search', 'status']);
         $teachers = $this->teacherService->getTeachers($branchId, $filters);
@@ -33,7 +42,7 @@ class TeacherController extends Controller
     public function create()
     {
         $this->authorize('create', Teacher::class);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
         
         if (!$this->limitService->checkTeacherLimit($branchId)) {
             return redirect()->back()->with('error', 'Mevcut abonelik planınız öğretmen limitine ulaştı.');
@@ -45,7 +54,7 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Teacher::class);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
         
         if (!$this->limitService->checkTeacherLimit($branchId)) {
             return redirect()->back()->with('error', 'Mevcut abonelik planınız öğretmen limitine ulaştı.');

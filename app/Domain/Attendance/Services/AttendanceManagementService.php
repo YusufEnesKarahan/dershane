@@ -34,7 +34,7 @@ class AttendanceManagementService
         // Prevent duplicates
         $existing = AttendanceRecord::where('branch_id', $data['branch_id'])
             ->where('student_id', $data['student_id'])
-            ->where('attendance_date', $data['attendance_date'])
+            ->whereDate('attendance_date', $data['attendance_date'])
             ->where('attendance_session_id', $data['attendance_session_id'] ?? null)
             ->first();
 

@@ -72,8 +72,8 @@
         {
             "action": "Students Index",
             "url": "\/admin\/students",
-            "status": 500,
-            "result": "HTTP 500"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Student Create Form",
@@ -102,8 +102,8 @@
         {
             "action": "Courses Index",
             "url": "\/admin\/courses",
-            "status": 500,
-            "result": "HTTP 500"
+            "status": 200,
+            "result": "PASS"
         },
         {
             "action": "Attendance Index",

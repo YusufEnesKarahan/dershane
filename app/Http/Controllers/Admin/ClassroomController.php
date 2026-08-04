@@ -26,10 +26,19 @@ class ClassroomController extends Controller
         $this->limitService = $limitService;
     }
 
+    protected function getActiveBranchId(): int
+    {
+        return TenantContext::getActiveBranchId()
+            ?? session('active_branch_id')
+            ?? auth()->user()?->branch_id
+            ?? \App\Models\Branch::value('id')
+            ?? 1;
+    }
+
     public function index()
     {
         $this->authorize('viewAny', Classroom::class);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
 
         $classrooms = Classroom::with(['teacher.user', 'type'])
             ->withCount('students')
@@ -42,7 +51,7 @@ class ClassroomController extends Controller
     public function create()
     {
         $this->authorize('create', Classroom::class);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
 
         if (!$this->limitService->checkClassroomLimit($branchId)) {
             return redirect()->route('admin.classrooms.index')->with('error', 'Mevcut abonelik planınız sınıf limitine ulaştı.');
@@ -57,14 +66,14 @@ class ClassroomController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Classroom::class);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
 
         if (!$this->limitService->checkClassroomLimit($branchId)) {
             return redirect()->back()->with('error', 'Mevcut abonelik planınız sınıf limitine ulaştı.');
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::unique('classrooms', 'name')->where('branch_id', $branchId)],
             'code' => 'nullable|string|max:50|unique:classrooms,code,NULL,id,branch_id,' . $branchId,
             'teacher_id' => 'nullable|exists:teachers,id',
             'classroom_type_id' => 'nullable|exists:classroom_types,id',
@@ -98,7 +107,7 @@ class ClassroomController extends Controller
     public function edit(Classroom $classroom)
     {
         $this->authorize('update', $classroom);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
         
         $teachers = Teacher::with('user')->where('branch_id', $branchId)->get();
         $types = ClassroomType::all();
@@ -109,10 +118,10 @@ class ClassroomController extends Controller
     public function update(Request $request, Classroom $classroom)
     {
         $this->authorize('update', $classroom);
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::unique('classrooms', 'name')->where('branch_id', $branchId)->ignore($classroom->id)],
             'code' => 'nullable|string|max:50|unique:classrooms,code,' . $classroom->id . ',id,branch_id,' . $branchId,
             'teacher_id' => 'nullable|exists:teachers,id',
             'classroom_type_id' => 'nullable|exists:classroom_types,id',

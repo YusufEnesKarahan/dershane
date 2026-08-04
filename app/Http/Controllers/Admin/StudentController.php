@@ -19,14 +19,20 @@ class StudentController extends Controller
         protected SubscriptionLimitService $limitService
     ) {}
 
+    protected function getActiveBranchId(): int
+    {
+        return TenantContext::getActiveBranchId()
+            ?? session('active_branch_id')
+            ?? auth()->user()?->branch_id
+            ?? Branch::value('id')
+            ?? 1;
+    }
+
     public function index(Request $request)
     {
         $this->authorize('viewAny', Student::class);
 
-        $branchId = TenantContext::getActiveBranchId();
-        if (!$branchId) {
-            abort(403, 'Tenant context missing.');
-        }
+        $branchId = $this->getActiveBranchId();
 
         $filters = $request->only(['search', 'status']);
         $students = $this->studentService->getStudents($branchId, $filters);
@@ -38,7 +44,7 @@ class StudentController extends Controller
     {
         $this->authorize('create', Student::class);
 
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
         if (!$this->limitService->checkStudentLimit($branchId)) {
             return redirect()->route('admin.students.index')->with('error', 'Mevcut abonelik planınız öğrenci limitine ulaştı. Yeni öğrenci eklemek için paketinizi yükseltin.');
         }
@@ -52,15 +58,15 @@ class StudentController extends Controller
     {
         $this->authorize('create', Student::class);
 
-        $branchId = TenantContext::getActiveBranchId();
+        $branchId = $this->getActiveBranchId();
         
         if (!$this->limitService->checkStudentLimit($branchId)) {
             return redirect()->back()->with('error', 'Mevcut abonelik planınız öğrenci limitine ulaştı.');
         }
 
         $validated = $request->validate([
-            'student_number' => 'required|string|max:255',
-            'identity_number' => 'nullable|string|max:20',
+            'student_number' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::unique('students', 'student_number')->where('branch_id', $branchId)],
+            'identity_number' => ['nullable', 'string', 'max:20', \Illuminate\Validation\Rule::unique('students', 'identity_number')->whereNotNull('identity_number')],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'birth_date' => 'nullable|date',
@@ -109,9 +115,11 @@ class StudentController extends Controller
     {
         $this->authorize('update', $student);
 
+        $branchId = $this->getActiveBranchId();
+
         $validated = $request->validate([
-            'student_number' => 'nullable|string|max:255',
-            'identity_number' => 'nullable|string|max:20',
+            'student_number' => ['nullable', 'string', 'max:255', \Illuminate\Validation\Rule::unique('students', 'student_number')->where('branch_id', $branchId)->ignore($student->id)],
+            'identity_number' => ['nullable', 'string', 'max:20', \Illuminate\Validation\Rule::unique('students', 'identity_number')->whereNotNull('identity_number')->ignore($student->id)],
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'birth_date' => 'nullable|date',
