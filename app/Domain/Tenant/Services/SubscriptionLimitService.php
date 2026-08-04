@@ -223,4 +223,54 @@ class SubscriptionLimitService
         }
     }
 
+    public function checkHomeworkLimit(int $branchId): void
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_homeworks'] ?? null;
+        
+        if ($limit === null || $limit === 'unlimited' || (int)$limit <= 0) {
+            return;
+        }
+
+        $currentCount = \App\Models\Homework::withoutGlobalScopes()
+            ->where('branch_id', $branchId)
+            ->count();
+
+        if ($currentCount >= (int)$limit) {
+            throw new \Exception("Maksimum ödev sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
+        }
+    }
+
+    public function checkDailySubmissionLimit(int $branchId): void
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_daily_submissions'] ?? null;
+        
+        if ($limit === null || $limit === 'unlimited' || (int)$limit <= 0) {
+            return;
+        }
+
+        $currentCount = \App\Models\HomeworkSubmission::withoutGlobalScopes()
+            ->where('branch_id', $branchId)
+            ->whereDate('submitted_at', \Carbon\Carbon::today())
+            ->count();
+
+        if ($currentCount >= (int)$limit) {
+            throw new \Exception("Günlük maksimum ödev teslimi sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
+        }
+    }
 }
