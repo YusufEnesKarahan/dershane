@@ -1,0 +1,266 @@
+{
+    "auth": [
+        {
+            "role": "Super Admin",
+            "email": "superadmin@test.com",
+            "status": "PASS",
+            "branch_id": "Global (Super Admin)"
+        },
+        {
+            "role": "Branch Admin 1",
+            "email": "admin1@test.com",
+            "status": "PASS",
+            "branch_id": 1
+        },
+        {
+            "role": "Branch Admin 2",
+            "email": "admin2@test.com",
+            "status": "PASS",
+            "branch_id": 8
+        },
+        {
+            "role": "Branch Admin 3",
+            "email": "admin3@test.com",
+            "status": "PASS",
+            "branch_id": 9
+        },
+        {
+            "role": "Teacher",
+            "email": "teacher1@test.com",
+            "status": "PASS",
+            "branch_id": 1
+        },
+        {
+            "role": "Student",
+            "email": "student1@test.com",
+            "status": "PASS",
+            "branch_id": 1
+        },
+        {
+            "role": "Parent",
+            "email": "parent1@test.com",
+            "status": "PASS",
+            "branch_id": 1
+        }
+    ],
+    "dashboards": [
+        {
+            "role": "Super Admin",
+            "url": "\/admin\/dashboard",
+            "http_status": 500,
+            "result": "500 Exception: NunoMaduro\\Collision\\Handler::setOutput(): Argument #1 ($output) must be of type"
+        },
+        {
+            "role": "Branch Admin 1",
+            "url": "\/admin\/dashboard",
+            "http_status": 500,
+            "result": "500 Exception: NunoMaduro\\Collision\\Handler::setOutput(): Argument #1 ($output) must be of type"
+        },
+        {
+            "role": "Teacher",
+            "url": "\/teacher\/dashboard",
+            "http_status": 500,
+            "result": "500 Exception: NunoMaduro\\Collision\\Handler::setOutput(): Argument #1 ($output) must be of type"
+        },
+        {
+            "role": "Student",
+            "url": "\/student\/dashboard",
+            "http_status": 500,
+            "result": "500 Exception: NunoMaduro\\Collision\\Handler::setOutput(): Argument #1 ($output) must be of type"
+        },
+        {
+            "role": "Parent",
+            "url": "\/parent\/dashboard",
+            "http_status": 500,
+            "result": "500 Exception: NunoMaduro\\Collision\\Handler::setOutput(): Argument #1 ($output) must be of type"
+        }
+    ],
+    "crud": [
+        {
+            "module": "Students",
+            "action": "Index",
+            "url": "\/admin\/students",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Students",
+            "action": "Create",
+            "url": "\/admin\/students\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Teachers",
+            "action": "Index",
+            "url": "\/admin\/teachers",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Teachers",
+            "action": "Create",
+            "url": "\/admin\/teachers\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Classrooms",
+            "action": "Index",
+            "url": "\/admin\/classrooms",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Classrooms",
+            "action": "Create",
+            "url": "\/admin\/classrooms\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Courses",
+            "action": "Index",
+            "url": "\/admin\/courses",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Courses",
+            "action": "Create",
+            "url": "\/admin\/courses\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Attendance",
+            "action": "Index",
+            "url": "\/admin\/attendance",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Attendance",
+            "action": "Create",
+            "url": "\/admin\/attendance\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Homework",
+            "action": "Index",
+            "url": "\/admin\/homework",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Homework",
+            "action": "Create",
+            "url": "\/admin\/homework\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Exams",
+            "action": "Index",
+            "url": "\/admin\/exams",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Exams",
+            "action": "Create",
+            "url": "\/admin\/exams\/create",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "Institution Settings",
+            "action": "Index",
+            "url": "\/admin\/settings\/institution",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "User Management",
+            "action": "Index",
+            "url": "\/admin\/users",
+            "status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "module": "User Management",
+            "action": "Create",
+            "url": "\/admin\/users\/create",
+            "status": 500,
+            "result": "500 Exception"
+        }
+    ],
+    "buttons": [],
+    "file_uploads": [
+        {
+            "type": "Invalid Executable (.exe)",
+            "url": "\/admin\/settings\/institution",
+            "status": 500,
+            "result": "500 Error"
+        }
+    ],
+    "role_security": [
+        {
+            "role": "Teacher",
+            "url": "\/admin\/users",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Teacher",
+            "url": "\/admin\/settings\/institution",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Teacher",
+            "url": "\/admin\/students\/create",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Student",
+            "url": "\/admin\/users",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Student",
+            "url": "\/admin\/settings\/institution",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Student",
+            "url": "\/admin\/students\/create",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Parent",
+            "url": "\/admin\/users",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Parent",
+            "url": "\/admin\/settings\/institution",
+            "http_status": 500,
+            "result": "500 Exception"
+        },
+        {
+            "role": "Parent",
+            "url": "\/admin\/students\/create",
+            "http_status": 500,
+            "result": "500 Exception"
+        }
+    ],
+    "responsive": [],
+    "bugs": []
+}

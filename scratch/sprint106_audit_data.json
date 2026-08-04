@@ -1,0 +1,214 @@
+{
+    "phase1_auth": [
+        {
+            "role": "Super Admin",
+            "email": "superadmin@test.com",
+            "login_page_status": 200,
+            "authenticated_redirect_status": 403,
+            "result": "PASS"
+        },
+        {
+            "role": "Branch Admin 1",
+            "email": "admin1@test.com",
+            "login_page_status": 302,
+            "authenticated_redirect_status": 403,
+            "result": "HTTP 302"
+        },
+        {
+            "role": "Teacher",
+            "email": "teacher1@test.com",
+            "login_page_status": 302,
+            "authenticated_redirect_status": 403,
+            "result": "HTTP 302"
+        },
+        {
+            "role": "Student",
+            "email": "student1@test.com",
+            "login_page_status": 302,
+            "authenticated_redirect_status": 403,
+            "result": "HTTP 302"
+        },
+        {
+            "role": "Parent",
+            "email": "parent1@test.com",
+            "login_page_status": 302,
+            "authenticated_redirect_status": 403,
+            "result": "HTTP 302"
+        }
+    ],
+    "phase2_dashboards": [
+        {
+            "role": "Super Admin",
+            "url": "\/admin\/dashboard",
+            "status": 200,
+            "result": "PASS"
+        },
+        {
+            "role": "Branch Admin 1",
+            "url": "\/admin\/dashboard",
+            "status": 200,
+            "result": "PASS"
+        },
+        {
+            "role": "Teacher",
+            "url": "\/teacher\/dashboard",
+            "status": 200,
+            "result": "PASS"
+        },
+        {
+            "role": "Student",
+            "url": "\/student\/dashboard",
+            "status": 200,
+            "result": "PASS"
+        },
+        {
+            "role": "Parent",
+            "url": "\/parent\/dashboard",
+            "status": 403,
+            "result": "HTTP 403"
+        }
+    ],
+    "phase3_crud": [
+        {
+            "action": "Students Index",
+            "url": "\/admin\/students",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Student Create Form",
+            "url": "\/admin\/students\/create",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Teachers Index",
+            "url": "\/admin\/teachers",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Teacher Create Form",
+            "url": "\/admin\/teachers\/create",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Classrooms Index",
+            "url": "\/admin\/classrooms",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Courses Index",
+            "url": "\/admin\/courses",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Attendance Index",
+            "url": "\/admin\/attendance",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Homework Index",
+            "url": "\/admin\/homework",
+            "status": 404,
+            "result": "HTTP 404"
+        },
+        {
+            "action": "Exams Index",
+            "url": "\/admin\/exams",
+            "status": 403,
+            "result": "HTTP 403"
+        },
+        {
+            "action": "Institution Settings",
+            "url": "\/admin\/settings\/institution",
+            "status": 200,
+            "result": "PASS"
+        },
+        {
+            "action": "User Management Index",
+            "url": "\/admin\/users",
+            "status": 200,
+            "result": "PASS"
+        },
+        {
+            "action": "User Create Form",
+            "url": "\/admin\/users\/create",
+            "status": 200,
+            "result": "PASS"
+        }
+    ],
+    "phase5_file_uploads": [
+        {
+            "upload_type": "Valid Image (.png)",
+            "status": 405,
+            "result": "HTTP 405"
+        },
+        {
+            "upload_type": "Invalid Executable (.exe)",
+            "status": 405,
+            "result": "HTTP 405"
+        }
+    ],
+    "phase6_security": [
+        {
+            "role": "Teacher",
+            "url": "\/admin\/users",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Teacher",
+            "url": "\/admin\/settings\/institution",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Teacher",
+            "url": "\/admin\/students\/create",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Student",
+            "url": "\/admin\/users",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Student",
+            "url": "\/admin\/settings\/institution",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Student",
+            "url": "\/admin\/students\/create",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Parent",
+            "url": "\/admin\/users",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Parent",
+            "url": "\/admin\/settings\/institution",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        },
+        {
+            "role": "Parent",
+            "url": "\/admin\/students\/create",
+            "status": 403,
+            "result": "PASS (403 Forbidden)"
+        }
+    ],
+    "bugs": []
+}
