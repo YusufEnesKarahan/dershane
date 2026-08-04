@@ -41,6 +41,11 @@ class PermissionDictionary
     public const TEACHERS_UPDATE = 'teachers.update';
     public const TEACHERS_DELETE = 'teachers.delete';
 
+    public const TEACHER_VIEW = 'teacher.view';
+    public const TEACHER_CREATE = 'teacher.create';
+    public const TEACHER_UPDATE = 'teacher.update';
+    public const TEACHER_DELETE = 'teacher.delete';
+
     public const TEACHER_DOCUMENTS_MANAGE = 'teacher.documents.manage';
     public const TEACHER_PERFORMANCE_MANAGE = 'teacher.performance.manage';
     public const TEACHER_SCHEDULE_MANAGE = 'teacher.schedule.manage';
@@ -81,11 +86,17 @@ class PermissionDictionary
 
     public const CLASSROOMS_VIEW = 'classrooms.view';
     public const CLASSROOMS_MANAGE = 'classrooms.manage';
+    public const CLASSROOM_VIEW = 'classroom.view';
 
     public const STUDENTS_VIEW = 'students.view';
     public const STUDENTS_CREATE = 'students.create';
     public const STUDENTS_UPDATE = 'students.update';
     public const STUDENTS_DELETE = 'students.delete';
+
+    public const STUDENT_VIEW = 'student.view';
+    public const STUDENT_CREATE = 'student.create';
+    public const STUDENT_UPDATE = 'student.update';
+    public const STUDENT_DELETE = 'student.delete';
 
     public const LEADS_VIEW = 'leads.view';
     public const LEADS_CREATE = 'leads.create';
