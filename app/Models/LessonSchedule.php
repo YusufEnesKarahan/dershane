@@ -16,6 +16,7 @@ class LessonSchedule extends Model
         'academic_term_id',
         'classroom_id',
         'course_id',
+        'lesson_period_id',
         'teacher_id',
         'day_of_week',
         'start_time',
@@ -47,6 +48,11 @@ class LessonSchedule extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function lessonPeriod()
+    {
+        return $this->belongsTo(LessonPeriod::class);
     }
 
     public function teacher()
