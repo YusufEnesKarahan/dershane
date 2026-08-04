@@ -102,10 +102,9 @@ class OnboardingController extends Controller
 
         $branchId = session('active_branch_id', auth()->user()->branch_id);
 
-        AcademicTerm::where('branch_id', $branchId)->update(['is_active' => false]);
+        AcademicTerm::query()->update(['is_active' => false]);
 
         AcademicTerm::create([
-            'branch_id' => $branchId,
             'name' => $validated['name'],
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
@@ -188,7 +187,7 @@ class OnboardingController extends Controller
             'email' => $validated['email'],
             'password' => bcrypt('password123'),
             'branch_id' => $branchId,
-            'status' => 'active',
+            'status' => \App\Enums\UserStatus::ACTIVE,
         ]);
 
         $role = Role::firstOrCreate(['name' => 'Teacher']);
@@ -197,8 +196,7 @@ class OnboardingController extends Controller
         Teacher::create([
             'branch_id' => $branchId,
             'user_id' => $user->id,
-            'branch_subject' => $validated['branch_subject'] ?? 'Genel Öğretmen',
-            'phone' => $validated['phone'] ?? null,
+            'specialties' => $validated['branch_subject'] ?? 'Genel Öğretmen',
             'status' => 'active',
         ]);
 

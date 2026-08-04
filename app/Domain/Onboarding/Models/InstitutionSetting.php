@@ -4,7 +4,7 @@ namespace App\Domain\Onboarding\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\TenantScoped;
+use App\Core\Traits\TenantScoped;
 use App\Models\Branch;
 
 class InstitutionSetting extends Model

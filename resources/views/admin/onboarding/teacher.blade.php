@@ -22,7 +22,7 @@
                         <div class="flex items-center justify-between text-sm bg-white p-3 rounded-lg border border-slate-200/80">
                             <div>
                                 <span class="font-bold text-slate-800">{{ $t->user->name ?? 'Öğretmen' }}</span>
-                                <span class="text-xs text-slate-500 ml-2">({{ $t->branch_subject }})</span>
+                                <span class="text-xs text-slate-500 ml-2">({{ $t->specialties }})</span>
                             </div>
                             <span class="text-xs text-slate-500">{{ $t->user->email ?? '' }}</span>
                         </div>
