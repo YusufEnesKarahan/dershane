@@ -30,9 +30,8 @@ class FakeWebhookHandler implements WebhookHandlerInterface
                 $this->billingService->failPayment($payment, $payload['idempotency_key'] ?? null);
             }
             return true;
-        } catch (\Exception $e) {
-            // Already processed or error
-            return false;
+        } catch (\Throwable $e) {
+            throw $e;
         }
     }
 }

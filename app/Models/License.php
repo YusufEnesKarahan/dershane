@@ -34,12 +34,12 @@ class License extends Model
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class)->whereNull('branch_id');
+        return $this->hasMany(Subscription::class);
     }
 
     public function subscription()
     {
-        return $this->hasOne(Subscription::class)->whereNull('branch_id')->latestOfMany();
+        return $this->hasOne(Subscription::class)->latestOfMany();
     }
 
     public function isActive(): bool

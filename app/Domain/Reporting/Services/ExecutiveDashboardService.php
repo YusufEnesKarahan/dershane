@@ -37,10 +37,9 @@ class ExecutiveDashboardService
             
             $todayAttendanceSessions = AttendanceSession::whereDate('session_date', date('Y-m-d'))->count();
 
-            // Calculate unexcused absence rate
-            $absentStatusId = AttendanceStatus::where('code', 'ABSENT')->value('id');
-            $totalAttendanceCount = Attendance::count();
-            $absentCount = $absentStatusId ? Attendance::where('attendance_status_id', $absentStatusId)->count() : 0;
+            // Calculate absence rate
+            $totalAttendanceCount = \App\Models\AttendanceRecord::count();
+            $absentCount = \App\Models\AttendanceRecord::whereIn('status', ['absent', 'A', 'yok'])->count();
             $absenceRate = $totalAttendanceCount > 0 ? round(($absentCount / $totalAttendanceCount) * 100, 1) : 0.0;
 
             // Exam Net averages

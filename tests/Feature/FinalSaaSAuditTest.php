@@ -85,12 +85,10 @@ class FinalSaaSAuditTest extends TestCase
 
     public function test_admin_can_access_student_list_without_errors()
     {
-        // 5. Admin Dashboard Access (Students list test)
-        $admin = User::factory()->create();
-        $role = Role::where('name', 'Super Admin')->first();
-        if ($role) {
-            $admin->roles()->attach($role);
-        }
+        $admin = User::factory()->create(['branch_id' => $this->branch->id]);
+        $role = Role::firstOrCreate(['name' => 'Super Admin']);
+        $admin->roles()->attach($role);
+        $admin->unsetRelation('roles');
 
         // Just access the empty list
         $response = $this->actingAs($admin)->get('/admin/students');

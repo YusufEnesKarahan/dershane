@@ -79,8 +79,8 @@ class TenantDashboardService
         }
 
         // Upcoming exams
-        $upcomingExams = ExamSession::where('branch_id', $branchId)
-            ->whereDate('session_date', '>=', $today)
+        $upcomingExams = \App\Models\Exam::where('branch_id', $branchId)
+            ->whereDate('exam_date', '>=', $today)
             ->count();
 
         return [

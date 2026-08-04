@@ -14,10 +14,10 @@
                 <a href="{{ route('teacher.classes') }}" class="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-xs font-semibold rounded-xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 transition">
                     Sınıflarım & Derslerim
                 </a>
-                <a href="{{ route('teacher.attendance') }}" class="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-xs font-semibold rounded-xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 transition">
+                <a href="{{ route('teacher.attendance.index') }}" class="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-xs font-semibold rounded-xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 transition">
                     Yoklama Girişi
                 </a>
-                <a href="{{ route('teacher.homework') }}" class="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-xs font-semibold rounded-xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 transition">
+                <a href="{{ route('teacher.homeworks.index') }}" class="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-xs font-semibold rounded-xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 transition">
                     Ödev Yönetimi
                 </a>
                 <a href="{{ route('teacher.analytics') }}" class="px-3 py-2 bg-neutral-100 dark:bg-neutral-800 text-xs font-semibold rounded-xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 transition">

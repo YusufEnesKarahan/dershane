@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,9 +11,16 @@ class RoleMiddleware
 {
     public function __construct(protected AuthorizationService $authService) {}
 
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (! $request->user() || ! $this->authService->hasRole($request->user(), explode('|', $role))) {
+        $roleList = [];
+        foreach ($roles as $role) {
+            foreach (explode('|', $role) as $r) {
+                $roleList[] = trim($r);
+            }
+        }
+
+        if (! $request->user() || ! $this->authService->hasRole($request->user(), $roleList)) {
             abort(403, 'Unauthorized action.');
         }
 

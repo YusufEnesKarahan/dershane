@@ -60,12 +60,9 @@ class ParentPortalService
             ->getClassroomSchedule($student->branch_id, $classroomId, $academicTermId);
     }
 
-    /**
-     * Get attendance records for a specific child.
-     */
     public function getChildAttendance(int $studentId, int $limit = 10): Collection
     {
-        return Attendance::with(['session.course', 'session.classroom'])
+        return \App\Models\AttendanceRecord::with(['session', 'classroom'])
             ->where('student_id', $studentId)
             ->orderByDesc('created_at')
             ->limit($limit)
@@ -77,16 +74,14 @@ class ParentPortalService
      */
     public function getChildAttendanceStats(int $studentId): array
     {
-        $attendances = Attendance::where('student_id', $studentId)->get();
-        
-        $total = $attendances->count();
+        $records = \App\Models\AttendanceRecord::where('student_id', $studentId)->get();
         
         return [
-            'total' => $total,
-            'present' => $attendances->whereIn('attendance_status_id', ['P', 'Present', 'var', '1'])->count(),
-            'absent' => $attendances->whereIn('attendance_status_id', ['A', 'Absent', 'yok', '2'])->count(),
-            'late' => $attendances->whereIn('attendance_status_id', ['L', 'Late', 'gec', '3'])->count(),
-            'excused' => $attendances->whereIn('attendance_status_id', ['E', 'Excused', 'izinli', '4'])->count(),
+            'total' => $records->count(),
+            'present' => $records->whereIn('status', ['present', 'P', 'var'])->count(),
+            'absent' => $records->whereIn('status', ['absent', 'A', 'yok'])->count(),
+            'late' => $records->whereIn('status', ['late', 'L', 'gec'])->count(),
+            'excused' => $records->whereIn('status', ['excused', 'E', 'izinli'])->count(),
         ];
     }
 

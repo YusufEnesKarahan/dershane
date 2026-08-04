@@ -9,8 +9,8 @@ class AuthorizationService
 
     public function hasRole(User $user, string|array $roles): bool
     {
-        $userRoles = $user->roles->pluck('name')->toArray();
-        $checkRoles = is_array($roles) ? $roles : [$roles];
+        $userRoles = array_map('strtolower', $user->roles->pluck('name')->toArray());
+        $checkRoles = is_array($roles) ? array_map('strtolower', $roles) : [strtolower($roles)];
         
         return count(array_intersect($checkRoles, $userRoles)) > 0;
     }

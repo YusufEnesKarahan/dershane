@@ -30,6 +30,8 @@ class DiscountController extends Controller
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['branch_id'] = auth()->user()?->branch_id;
+        $validated['title'] = $request->input('title', $request->input('name', 'İndirim'));
 
         Discount::create($validated);
 

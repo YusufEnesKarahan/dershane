@@ -13,9 +13,16 @@ class PaymentTransaction extends Model
     protected $fillable = [
         'branch_id',
         'payment_id',
+        'subscription_payment_id',
+        'gateway',
+        'transaction_id',
+        'idempotency_key',
+        'status',
         'transaction_type',
         'amount',
-        'description'
+        'description',
+        'payload',
+        'response'
     ];
 
     public function branch()

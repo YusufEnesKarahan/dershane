@@ -16,6 +16,18 @@ class StudentPortalService
         return Student::with(['classrooms', 'enrollments.course'])->where('user_id', $userId)->first();
     }
 
+    public function getSchedule(int $studentId)
+    {
+        $student = Student::find($studentId);
+        if (!$student || !$student->classroom_id) {
+            return collect();
+        }
+
+        return \App\Models\LessonSchedule::with(['course', 'teacher'])
+            ->where('classroom_id', $student->classroom_id)
+            ->get();
+    }
+
     /**
      * Get the weekly schedule for the student.
      */
@@ -32,12 +44,9 @@ class StudentPortalService
             ->getClassroomSchedule($student->branch_id, $classroomId, $academicTermId);
     }
 
-    /**
-     * Get attendance records for the student.
-     */
     public function getAttendance(int $studentId, int $limit = 10): Collection
     {
-        return Attendance::with(['session.course', 'session.classroom'])
+        return \App\Models\AttendanceRecord::with(['session', 'classroom'])
             ->where('student_id', $studentId)
             ->orderByDesc('created_at')
             ->limit($limit)
@@ -49,16 +58,14 @@ class StudentPortalService
      */
     public function getAttendanceStats(int $studentId): array
     {
-        $attendances = Attendance::where('student_id', $studentId)->get();
-        
-        $total = $attendances->count();
+        $records = \App\Models\AttendanceRecord::where('student_id', $studentId)->get();
         
         return [
-            'total' => $total,
-            'present' => $attendances->whereIn('attendance_status_id', ['P', 'Present', 'var', '1'])->count(),
-            'absent' => $attendances->whereIn('attendance_status_id', ['A', 'Absent', 'yok', '2'])->count(),
-            'late' => $attendances->whereIn('attendance_status_id', ['L', 'Late', 'gec', '3'])->count(),
-            'excused' => $attendances->whereIn('attendance_status_id', ['E', 'Excused', 'izinli', '4'])->count(),
+            'total' => $records->count(),
+            'present' => $records->whereIn('status', ['present', 'P', 'var'])->count(),
+            'absent' => $records->whereIn('status', ['absent', 'A', 'yok'])->count(),
+            'late' => $records->whereIn('status', ['late', 'L', 'gec'])->count(),
+            'excused' => $records->whereIn('status', ['excused', 'E', 'izinli'])->count(),
         ];
     }
 

@@ -23,7 +23,7 @@ class RefundController extends Controller
 
     public function store(Request $request)
     {
-        Payment::findOrFail($request->payment_id);
+        $payment = Payment::findOrFail($request->payment_id);
 
         $validated = $request->validate([
             'payment_id' => 'required|exists:payments,id',
@@ -31,6 +31,7 @@ class RefundController extends Controller
             'reason' => 'required|string|max:1000',
             'refund_date' => 'required|date',
         ]);
+        $validated['branch_id'] = $payment->branch_id ?? auth()->user()?->branch_id;
 
         Refund::create($validated);
 

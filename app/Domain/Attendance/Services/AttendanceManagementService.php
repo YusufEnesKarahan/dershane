@@ -38,7 +38,12 @@ class AttendanceManagementService
             ->where('attendance_session_id', $data['attendance_session_id'] ?? null)
             ->first();
 
-        $record = $existing ? $existing : AttendanceRecord::create($data);
+        if ($existing) {
+            $existing->update($data);
+            $record = $existing;
+        } else {
+            $record = AttendanceRecord::create($data);
+        }
 
         if (in_array(strtolower($data['status']), ['absent', 'devamsiz'])) {
             $student = \App\Models\Student::find($data['student_id']);

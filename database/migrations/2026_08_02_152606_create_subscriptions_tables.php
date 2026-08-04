@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('license_id')->constrained('licenses')->cascadeOnDelete();
+            $table->foreignId('license_id')->nullable()->constrained('licenses')->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained('branches')->cascadeOnDelete();
             $table->foreignId('plan_id')->constrained('plans')->restrictOnDelete();
             $table->string('status')->default('trial'); // trial, active, suspended, cancelled, expired

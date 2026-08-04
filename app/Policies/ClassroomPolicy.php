@@ -17,12 +17,12 @@ class ClassroomPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('classrooms.view') || $user->hasPermission('classrooms.manage') || $user->isAdministrator();
+        return $user->hasPermission('classrooms.view') || $user->hasPermission('classrooms.manage') || $user->hasRole('Teacher') || $user->isAdministrator();
     }
 
     public function view(User $user, Classroom $classroom): bool
     {
-        return ($user->hasPermission('classrooms.view') || $user->hasPermission('classrooms.manage') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
+        return ($user->hasPermission('classrooms.view') || $user->hasPermission('classrooms.manage') || $user->hasRole('Teacher') || $user->isAdministrator()) && $this->isSameTenant($user, $classroom);
     }
 
     public function create(User $user): bool

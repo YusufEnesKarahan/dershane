@@ -95,10 +95,10 @@ class CriticalFlowsTest extends TestCase
 
     public function test_can_create_teacher_flow()
     {
-        $user = \App\Models\User::factory()->create(['branch_id' => $this->branch->id]);
-
         $response = $this->actingAs($this->superAdmin)->post(route('admin.teachers.store'), [
-            'user_id' => $user->id,
+            'first_name' => 'Alpha',
+            'last_name' => 'Teacher',
+            'email' => 'alpha.teacher@example.com',
             'branch_id' => $this->branch->id,
             'title' => 'Senior Math Teacher',
             'specialties' => 'Mathematics, Physics',
@@ -108,8 +108,8 @@ class CriticalFlowsTest extends TestCase
         $response->assertRedirect();
         
         $this->assertDatabaseHas('teachers', [
-            'user_id' => $user->id,
-            'title' => 'Senior Math Teacher'
+            'title' => 'Senior Math Teacher',
+            'specialties' => 'Mathematics, Physics'
         ]);
     }
 
@@ -145,7 +145,7 @@ class CriticalFlowsTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseHas('discounts', [
-            'name' => 'Early Bird',
+            'title' => 'Early Bird',
             'value' => 10
         ]);
     }
@@ -207,11 +207,9 @@ class CriticalFlowsTest extends TestCase
         ]);
 
         $paymentId = DB::table('payments')->insertGetId([
-            'invoice_id' => $invoiceId,
             'student_id' => $studentId,
-            'payment_number' => 'PAY-100',
             'amount' => 1000,
-            'payment_method_id' => $paymentMethodId,
+            'payment_method' => 'cash',
             'payment_date' => now(),
             'branch_id' => $this->branch->id
         ]);

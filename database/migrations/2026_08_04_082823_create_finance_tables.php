@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('refunds');
         Schema::dropIfExists('discounts');
-        Schema::dropIfExists('payment_transactions');
         Schema::dropIfExists('payments');
         Schema::dropIfExists('installments');
         Schema::dropIfExists('payment_plans');
@@ -71,24 +70,26 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('payment_transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('payment_id')->constrained()->cascadeOnDelete();
-            
-            $table->string('transaction_type'); // collection, refund, adjustment
-            $table->decimal('amount', 10, 2);
-            $table->string('description')->nullable();
-            
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('payment_transactions')) {
+            Schema::create('payment_transactions', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
+                $table->foreignId('payment_id')->constrained()->cascadeOnDelete();
+                
+                $table->string('transaction_type'); // collection, refund, adjustment
+                $table->decimal('amount', 10, 2);
+                $table->string('description')->nullable();
+                
+                $table->timestamps();
+            });
+        }
 
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('student_id')->nullable()->constrained()->nullOnDelete();
             
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->string('type'); // percentage, fixed
             $table->decimal('value', 10, 2);
             $table->string('reason')->nullable();

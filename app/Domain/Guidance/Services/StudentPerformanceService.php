@@ -63,9 +63,8 @@ class StudentPerformanceService
         $lateSubmissionRate = $completedHomeworks > 0 ? ($lateSubmissions / $completedHomeworks) * 100 : 0;
 
         // 3. Calculate Attendance Rate
-        // Assuming Attendance model exists. If not, fallback to 100
-        $totalDays = class_exists(Attendance::class) ? Attendance::where('student_id', $studentId)->count() : 0;
-        $presentDays = class_exists(Attendance::class) ? Attendance::where('student_id', $studentId)->where('status', 'Present')->count() : 0;
+        $totalDays = \App\Models\AttendanceRecord::where('student_id', $studentId)->count();
+        $presentDays = \App\Models\AttendanceRecord::where('student_id', $studentId)->whereIn('status', ['present', 'P', 'var'])->count();
         $attendanceRate = $totalDays > 0 ? ($presentDays / $totalDays) * 100 : 100;
 
         // 4. Calculate Risk Score

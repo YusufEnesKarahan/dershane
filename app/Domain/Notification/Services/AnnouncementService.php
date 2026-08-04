@@ -56,7 +56,9 @@ class AnnouncementService
             ->where('status', \App\Enums\UserStatus::ACTIVE->value)
             ->get();
 
-        $this->notificationService->send($users, $announcement->title, $announcement->content, NotificationType::from($announcement->type));
+        foreach ($users as $user) {
+            $this->notificationService->send($user, $announcement->title, $announcement->content, NotificationType::from($announcement->type));
+        }
     }
 
     public function sendToRole(Announcement $announcement, string $roleName)
@@ -68,7 +70,9 @@ class AnnouncementService
             ->where('status', \App\Enums\UserStatus::ACTIVE->value)
             ->get();
 
-        $this->notificationService->send($users, $announcement->title, $announcement->content, NotificationType::from($announcement->type));
+        foreach ($users as $user) {
+            $this->notificationService->send($user, $announcement->title, $announcement->content, NotificationType::from($announcement->type));
+        }
     }
 
     public function archive(Announcement $announcement): Announcement

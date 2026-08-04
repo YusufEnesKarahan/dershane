@@ -27,7 +27,7 @@ class BillingService
     {
         return DB::transaction(function () use ($subscription, $paymentData) {
             $payment = SubscriptionPayment::create([
-                'branch_id' => $subscription->license->metadata['branch_id'] ?? $subscription->license->branch_id ?? session('active_branch_id'),
+                'branch_id' => $subscription->branch_id ?? $subscription->license?->branch_id ?? $subscription->license?->metadata['branch_id'] ?? session('active_branch_id'),
                 'subscription_id' => $subscription->id,
                 'amount' => $paymentData['amount'] ?? $subscription->price,
                 'currency' => $paymentData['currency'] ?? 'TRY',
@@ -60,7 +60,7 @@ class BillingService
             }
 
             if ($idempotencyKey) {
-                $transaction = PaymentTransaction::where('idempotency_key', $idempotencyKey)->first();
+                $transaction = PaymentTransaction::withoutGlobalScopes()->where('idempotency_key', $idempotencyKey)->first();
                 if ($transaction) {
                     return $payment; // Idempotent block: transaction already processed
                 }
@@ -86,7 +86,7 @@ class BillingService
             }
 
             // Activate the subscription
-            if ($payment->subscription) {
+            if ($payment->subscription && $payment->subscription->license) {
                 $this->subscriptionService->activateSubscription($payment->subscription->license, $payment->subscription->plan);
             }
 

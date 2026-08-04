@@ -33,6 +33,7 @@ class SubscriptionService
             // Create subscription
             $subscription = Subscription::create([
                 'license_id' => $license->id,
+                'branch_id' => $license->branch_id,
                 'plan_id' => $plan->id,
                 'status' => 'trialing',
                 'starts_at' => $now,
