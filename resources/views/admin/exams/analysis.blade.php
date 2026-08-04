@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
 <div class='container'>
-<h1>Exam Details</h1>
+<h1>Exam Analysis</h1>
 </div>
 @endsection
