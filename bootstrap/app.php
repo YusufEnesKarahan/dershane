@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'limits' => \App\Http\Middleware\EnforceLicenseLimits::class,
             'subscription.feature' => \App\Http\Middleware\SubscriptionFeatureMiddleware::class,
             'feature.access' => \App\Http\Middleware\CheckFeatureAccess::class,
+            'onboarding.completed' => \App\Http\Middleware\EnsureOnboardingCompleted::class,
         ]);
 
         $middleware->appendToGroup('web', [
