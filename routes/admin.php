@@ -474,4 +474,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('attendance/report', [\App\Http\Controllers\Admin\AttendanceController::class, 'report'])->name('attendance.report');
         Route::resource('attendance', \App\Http\Controllers\Admin\AttendanceController::class)->except(['edit', 'update', 'destroy']);
     });
+
+    // Schedule Management
+    Route::middleware(['permission:schedule.view'])->group(function () {
+        Route::resource('schedule', \App\Http\Controllers\Admin\ScheduleController::class)->names('admin.schedule');
+    });
 });

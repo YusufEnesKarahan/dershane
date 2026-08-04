@@ -35,4 +35,7 @@ Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \A
         // Exams
         Route::get('my-exams', [\App\Http\Controllers\Student\StudentExamController::class, 'index'])->name('exams.index');
         Route::get('my-exams/{exam}', [\App\Http\Controllers\Student\StudentExamController::class, 'showResult'])->name('exams.show');
+
+        // Schedule
+        Route::get('my-schedule', [\App\Http\Controllers\Student\StudentScheduleController::class, 'index'])->name('schedule.index');
     });

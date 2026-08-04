@@ -29,4 +29,7 @@ Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\Ensur
     // Homeworks
     Route::get('homeworks', [\App\Http\Controllers\Parent\ParentHomeworkController::class, 'index'])->name('homeworks.index');
     Route::get('homeworks/{homework}', [\App\Http\Controllers\Parent\ParentHomeworkController::class, 'show'])->name('homeworks.show');
+
+    // Schedule
+    Route::get('schedule', [\App\Http\Controllers\Parent\ParentScheduleController::class, 'index'])->name('schedule.index');
 });
