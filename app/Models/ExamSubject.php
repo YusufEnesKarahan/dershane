@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ExamAnswer extends Model
+class ExamSubject extends Model
 {
     use HasFactory, TenantScoped;
 
     protected $fillable = [
         'branch_id',
-        'exam_result_id',
+        'exam_id',
         'course_id',
-        'correct',
-        'wrong',
-        'empty',
+        'question_count',
+        'max_score',
+    ];
+
+    protected $casts = [
+        'max_score' => 'decimal:2',
     ];
 
     public function branch(): BelongsTo
@@ -25,9 +28,9 @@ class ExamAnswer extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function examResult(): BelongsTo
+    public function exam(): BelongsTo
     {
-        return $this->belongsTo(ExamResult::class);
+        return $this->belongsTo(Exam::class);
     }
 
     public function course(): BelongsTo

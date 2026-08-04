@@ -2,44 +2,62 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Core\Traits\TenantScoped;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exam extends Model
 {
-    use TenantScoped;
+    use HasFactory, SoftDeletes, TenantScoped;
 
     protected $fillable = [
-        'branch_id', 'classroom_id', 'title', 'description', 'exam_type_id', 
-        'exam_date', 'duration_minutes', 'total_score', 'status', 'created_by'
+        'branch_id',
+        'academic_term_id',
+        'title',
+        'description',
+        'type', // mock_exam, practice_exam, final_exam, quiz
+        'exam_date',
+        'duration_minutes',
+        'total_score',
+        'status', // draft, published, completed, cancelled
+        'created_by',
     ];
 
     protected $casts = [
         'exam_date' => 'date',
+        'total_score' => 'decimal:2',
     ];
 
-    public function branch()
+    public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
-    public function classroom()
+    public function academicTerm(): BelongsTo
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(AcademicTerm::class);
     }
 
-    public function type()
+    public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(ExamType::class, 'exam_type_id');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function results()
+    public function subjects(): HasMany
+    {
+        return $this->hasMany(ExamSubject::class);
+    }
+
+    public function results(): HasMany
     {
         return $this->hasMany(ExamResult::class);
     }
 
-    public function creator()
+    public function rankings(): HasMany
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->hasMany(ExamRanking::class);
     }
 }

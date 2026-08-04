@@ -1,19 +1,40 @@
 <?php
+
 namespace App\Models;
 
+use App\Core\Traits\TenantScoped;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExamRanking extends Model
 {
-    protected $fillable = ['exam_id', 'student_id', 'branch_id', 'score', 'branch_rank', 'global_rank'];
+    use HasFactory, TenantScoped;
 
-    public function student()
-    {
-        return $this->belongsTo(Student::class);
-    }
+    protected $fillable = [
+        'branch_id',
+        'exam_id',
+        'student_id',
+        'score',
+        'rank',
+    ];
 
-    public function branch()
+    protected $casts = [
+        'score' => 'decimal:2',
+    ];
+
+    public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function exam(): BelongsTo
+    {
+        return $this->belongsTo(Exam::class);
+    }
+
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class);
     }
 }
