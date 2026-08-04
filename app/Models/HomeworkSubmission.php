@@ -18,11 +18,12 @@ class HomeworkSubmission extends Model
         'homework_id',
         'student_id',
         'submitted_at',
-        'score',
-        'feedback',
+        'grade',
+        'teacher_feedback',
         'status',
         'graded_by',
         'graded_at',
+        'attachment_path',
     ];
 
     protected $casts = [

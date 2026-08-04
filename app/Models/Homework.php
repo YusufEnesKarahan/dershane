@@ -21,14 +21,18 @@ class Homework extends Model
         'teacher_id',
         'title',
         'description',
+        'homework_type',
+        'assigned_date',
         'publish_at',
         'due_date',
         'allow_late_submission',
         'max_score',
         'status',
+        'attachment_path',
     ];
 
     protected $casts = [
+        'assigned_date' => 'date',
         'publish_at' => 'datetime',
         'due_date' => 'datetime',
         'allow_late_submission' => 'boolean',
@@ -62,6 +66,11 @@ class Homework extends Model
     public function submissions()
     {
         return $this->hasMany(HomeworkSubmission::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(HomeworkComment::class);
     }
 
     public function files()
