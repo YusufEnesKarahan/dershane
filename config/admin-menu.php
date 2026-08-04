@@ -480,6 +480,11 @@ return [
                 [ 'title' => 'Failed Jobs', 'route' => 'admin.system.jobs.failed', 'permission' => 'system.jobs.manage' ],
                 [ 'title' => 'Automation Logs', 'route' => 'admin.system.jobs.automation', 'permission' => 'system.jobs.manage' ],
                 [
+                    'title' => 'Kurum Ayarları',
+                    'route' => 'admin.settings.institution.index',
+                    'permission' => 'institution.settings.view',
+                ],
+                [
                     'title' => 'Settings',
                     'route' => 'admin.settings.index',
                     'permission' => 'settings.view',

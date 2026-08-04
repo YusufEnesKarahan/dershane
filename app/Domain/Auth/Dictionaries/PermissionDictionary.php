@@ -215,6 +215,9 @@ class PermissionDictionary
     public const ONBOARDING_VIEW = 'onboarding.view';
     public const ONBOARDING_MANAGE = 'onboarding.manage';
 
+    public const INSTITUTION_SETTINGS_VIEW = 'institution.settings.view';
+    public const INSTITUTION_SETTINGS_UPDATE = 'institution.settings.update';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);

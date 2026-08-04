@@ -520,4 +520,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
         Route::resource('notifications', \App\Http\Controllers\Admin\NotificationController::class);
     });
+
+    // Institution Configuration Management (Sprint 10.4)
+    Route::prefix('settings/institution')->name('settings.institution.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'index'])->name('index');
+        Route::post('/general', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateGeneral'])->name('updateGeneral');
+        Route::post('/branding', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateBranding'])->name('updateBranding');
+        Route::post('/regional', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateRegional'])->name('updateRegional');
+        Route::post('/notifications', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateNotifications'])->name('updateNotifications');
+    });
 });
