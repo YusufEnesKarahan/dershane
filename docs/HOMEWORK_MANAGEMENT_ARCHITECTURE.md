@@ -1,52 +1,58 @@
-# Homework Management Architecture
+# Homework & Assignment Management Architecture
 
 ## 1. Overview
-The Homework Management Module (Sprint 9.0) enables branches (Dershanes) to create, assign, and manage homework assignments for classrooms. It strictly enforces tenant isolation and integrates with the role-based access control (RBAC) and subscription limit systems.
+The Homework & Assignment Management Module (Sprint 9.5) handles the lifecycle of assignments, from creation by teachers to submission by students, and tracking by parents. It is integrated with the Notification system for real-time alerts and the Guidance Module's Risk Engine (`StudentPerformanceService`) to track low performance and late submissions.
 
 ## 2. Core Principles
-- **Thin Controller, Fat Service**: All business logic for homework management and submission grading is inside `HomeworkManagementService` and `HomeworkSubmissionService`.
-- **Tenant Isolation**: Every record (`homeworks`, `homework_submissions`, `homework_files`) is tied to a `branch_id`. Global scopes (`TenantScoped`) ensure data does not leak across branches.
-- **Subscription Limits**: `SubscriptionLimitService` validates the maximum number of homeworks a branch can create (`max_homeworks` in the Plan's JSON limits).
+- **Thin Controller, Fat Service**: All logic (limits, risk calculation, business rules) is encapsulated in `HomeworkManagementService`, `HomeworkSubmissionService`, and `HomeworkReportService`.
+- **Tenant Isolation**: `branch_id` is mandatory. The `TenantScoped` global scope ensures no data leaks across branches.
+- **Limit Enforcement**: Subscriptions limits (`max_homeworks` and `max_daily_submissions`) are validated in `SubscriptionLimitService` before any database insertion.
 
 ## 3. Database Schema
 ### `homeworks`
-- Represents a single assignment given to a specific `classroom_id`.
-- Stores metadata: `title`, `description`, `due_date`, `max_score`, `allow_late_submission`.
-- Statuses: `draft`, `published`, `closed`.
+- `branch_id` (Tenant)
+- `classroom_id`, `course_id`, `teacher_id`
+- `title`, `description`, `homework_type`
+- `assigned_date`, `due_date`
+- `allow_late_submission`, `max_score`
+- `attachment_path` (For assignment files)
+- `status` (draft, published, closed)
 
 ### `homework_submissions`
-- Tracks the submission of a single `student_id` for a specific `homework_id`.
-- Statuses: `pending`, `submitted`, `late`, `graded`.
-- Stores `score` and `feedback` provided by the teacher.
+- `branch_id` (Tenant)
+- `homework_id`, `student_id`
+- `submitted_at`, `status` (submitted, late, graded)
+- `grade`, `teacher_feedback`
+- `attachment_path`
+- `graded_by`, `graded_at`
 
-### `homework_files`
-- A unified attachment table for both `homeworks` and `homework_submissions` using foreign keys.
+### `homework_comments`
+- `branch_id`
+- `homework_id`, `user_id`
+- `comment`
 
 ## 4. Workflows
 
-### Creating & Publishing
-- **Drafts**: Homeworks can be created in draft state by Admins/Teachers.
-- **Publishing**: When marked as 'published', a job (or synchronous notification in `NotificationService`) triggers system-wide alerts to Students and Parents.
+### Homework Creation
+1. Teacher submits assignment via `TeacherHomeworkController`.
+2. Controller calls `HomeworkManagementService::createHomework()`.
+3. Service checks `max_homeworks` limit.
+4. If published, `NotificationService` alerts relevant students.
 
-### Submitting
-- Students view published homeworks via `StudentPortalService::getPendingHomeworks`.
-- Students upload files, handled by `HomeworkSubmissionService::submitHomework`.
-- System automatically determines if it is on-time (`submitted`) or `late` based on the `due_date`.
-- Late submissions can be strictly prevented if `allow_late_submission` is false.
+### Homework Submission
+1. Student submits assignment via `StudentHomeworkController`.
+2. `HomeworkSubmissionService::submitHomework()` is called.
+3. Checks `max_daily_submissions` limit.
+4. Determines if submission is `late` based on `due_date`.
+5. If `late`, it triggers `StudentPerformanceService::updateRiskLevel()` to mark student at medium risk.
 
 ### Grading
-- Teachers review submissions through `TeacherPortalService::getPendingHomeworkReviews`.
-- Teachers grade out of `max_score`, optionally adding feedback.
-- Upon grading, `NotificationService` alerts the Student and their Parents.
+1. Teacher grades submission via `TeacherHomeworkController`.
+2. `HomeworkSubmissionService::gradeSubmission()` is called.
+3. If grade is below 40% of `max_score`, `StudentPerformanceService::updateRiskLevel()` marks the student at high risk.
+4. Sends `HOMEWORK_GRADED` notification to the student.
 
-## 5. Security & Roles
-- **Admin**: Has `homework.*` (view, create, update, delete, publish, grade) across the branch.
-- **Teacher**: Can manage and grade only homeworks assigned to them (`teacher_id`).
-- **Student**: Can view and submit homeworks assigned to their `classroom_id`.
-- **Parent**: Can view homework status, grades, and submissions of their linked `student_id`.
-
-## 6. Notification Integration
-This module leverages `App\Domain\Notification\Services\NotificationService` to ensure unified communication across all portals (Portal UI + potential email channels in the future).
-
-## 7. Storage
-Files are stored securely. Mime types and sizes are logged in `homework_files` to provide validation and cleanup logic. Disks can be configured per tenant or via standard `public`/`s3` disks.
+## 5. Security & RBAC
+- **Roles**: Admin, Teacher, Student, Parent.
+- **Permissions**: `homework.view`, `homework.create`, `homework.update`, `homework.delete`, `homework.publish`, `homework.grade`, `homework.submit`, `homework.report`.
+- **Policies**: `HomeworkPolicy` and `HomeworkSubmissionPolicy` enforce branch-level and ownership-level constraints (e.g., Teachers only grade their classes, Students only submit their own homework).

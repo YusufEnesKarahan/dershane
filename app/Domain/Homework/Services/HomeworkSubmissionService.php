@@ -56,9 +56,9 @@ class HomeworkSubmissionService
             if ($homework->teacher) {
                 $this->notificationService->sendToTeacher(
                     $homework->teacher,
-                    NotificationType::HOMEWORK_SUBMITTED,
+                    'Yeni Ödev Teslimi',
                     "Bir öğrenci ödev teslim etti: {$homework->title}",
-                    ['homework_id' => $homework->id, 'student_id' => $studentId]
+                    NotificationType::HOMEWORK_SUBMITTED
                 );
             }
 
@@ -66,7 +66,7 @@ class HomeworkSubmissionService
             if ($status === 'late') {
                 $this->performanceService->updateRiskLevel(
                     $studentId,
-                    'medium',
+                    'Medium',
                     "Geç ödev teslimi: {$homework->title}"
                 );
             }
@@ -94,17 +94,26 @@ class HomeworkSubmissionService
             if ($submission->student) {
                 $this->notificationService->sendToStudent(
                     $submission->student,
-                    NotificationType::HOMEWORK_GRADED,
-                    "Ödeviniz değerlendirildi: {$submission->homework->title}",
-                    ['homework_id' => $submission->homework->id, 'grade' => $data['grade']]
+                    'Ödev Notlandırıldı',
+                    "Ödeviniz değerlendirildi: {$submission->homework->title} (Not: {$data['grade']})",
+                    NotificationType::HOMEWORK_GRADED
                 );
+
+                foreach ($submission->student->guardians as $guardian) {
+                    $this->notificationService->sendToParent(
+                        $guardian,
+                        'Ödev Notlandırıldı',
+                        "Öğrencinizin ödevi değerlendirildi: {$submission->homework->title} (Not: {$data['grade']})",
+                        NotificationType::HOMEWORK_GRADED
+                    );
+                }
             }
             
             // Check performance and update risk if very low score
             if ($data['grade'] < ($submission->homework->max_score * 0.4)) { // Below 40%
                 $this->performanceService->updateRiskLevel(
                     $submission->student_id,
-                    'high',
+                    'High',
                     "Ödevden düşük not aldı: {$submission->homework->title} (Not: {$data['grade']})"
                 );
             }

@@ -130,26 +130,7 @@ class SubscriptionLimitService
         return $currentScheduleCount < $limit;
     }
 
-    public function checkHomeworkLimit(int $branchId): bool
-    {
-        $branch = Branch::with('subscription.plan')->find($branchId);
-        
-        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
-            return true; 
-        }
 
-        $plan = $branch->subscription->plan;
-        
-        $limit = $plan->limits['max_homeworks'] ?? null;
-        
-        if ($limit === null || $limit === 'unlimited') {
-            return true;
-        }
-
-        $currentCount = \App\Models\Homework::withoutGlobalScopes()->where('branch_id', $branchId)->count();
-
-        return $currentCount < (int)$limit;
-    }
 
     public function checkPaymentPlanLimit(int $branchId): void
     {

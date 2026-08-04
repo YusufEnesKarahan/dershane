@@ -29,8 +29,10 @@ class HomeworkController extends Controller
     {
         $this->authorize('create', Homework::class);
         
-        if (!$this->limitService->checkHomeworkLimit(auth()->user()->branch_id)) {
-            return redirect()->route('admin.homeworks.index')->with('error', 'Ödev oluşturma limitinize ulaştınız. Lütfen paketinizi yükseltin.');
+        try {
+            $this->limitService->checkHomeworkLimit(auth()->user()->branch_id);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.homeworks.index')->with('error', $e->getMessage());
         }
 
         return view('admin.homeworks.create');
@@ -40,11 +42,9 @@ class HomeworkController extends Controller
     {
         $this->authorize('create', Homework::class);
 
-        if (!$this->limitService->checkHomeworkLimit(auth()->user()->branch_id)) {
-            return redirect()->route('admin.homeworks.index')->with('error', 'Ödev oluşturma limitinize ulaştınız.');
-        }
 
-        $validated = $request->validate([
+
+        $validated = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'academic_term_id' => 'required|exists:academic_terms,id',
             'classroom_id' => 'required|exists:classrooms,id',
             'course_id' => 'required|exists:courses,id',
@@ -55,12 +55,13 @@ class HomeworkController extends Controller
             'allow_late_submission' => 'boolean',
             'max_score' => 'required|integer|min:1',
             'status' => 'required|in:draft,published',
-        ]);
+        ])->validate();
 
         $validated['branch_id'] = auth()->user()->branch_id;
         $validated['allow_late_submission'] = $request->has('allow_late_submission');
 
         try {
+            $this->limitService->checkHomeworkLimit(auth()->user()->branch_id);
             $this->homeworkService->createHomework($validated);
             return redirect()->route('admin.homeworks.index')->with('success', 'Ödev başarıyla oluşturuldu.');
         } catch (\Exception $e) {

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
 <div class='container'>
     <h1>Ödev Detayı: {{ $homework->title }}</h1>

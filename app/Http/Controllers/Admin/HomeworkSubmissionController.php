@@ -33,12 +33,12 @@ class HomeworkSubmissionController extends Controller
         $this->authorize('grade', $submission);
 
         $validated = $request->validate([
-            'score' => 'required|integer|min:0|max:' . $homework->max_score,
-            'feedback' => 'nullable|string'
+            'grade' => 'required|integer|min:0|max:' . $homework->max_score,
+            'teacher_feedback' => 'nullable|string'
         ]);
 
         try {
-            $this->submissionService->gradeSubmission($submission, auth()->id(), $validated['score'], $validated['feedback'] ?? null);
+            $this->submissionService->gradeSubmission($submission, $validated);
             return redirect()->back()->with('success', 'Ödev notlandırıldı.');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());

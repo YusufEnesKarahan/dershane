@@ -134,10 +134,19 @@ class HomeworkManagementTest extends TestCase
             'course_id' => $this->course->id,
             'teacher_id' => $this->teacher->id,
             'title' => 'Math Assignment 1',
-            'due_date' => now()->addDays(7)->format('Y-m-d H:i:s'),
+            'description' => 'Solve pages 10-15',
+            'due_date' => now()->addDays(5)->format('Y-m-d H:i:s'),
             'max_score' => 100,
-            'status' => 'draft'
+            'allow_late_submission' => false,
+            'status' => 'published'
         ]);
+
+        if (session('errors')) {
+            $this->fail("Validation failed: " . json_encode(session('errors')));
+        }
+        if (session('error')) {
+            $this->fail("Session error: " . json_encode(session('error')));
+        }
 
         $response->assertRedirect(route('admin.homeworks.index'));
         $this->assertDatabaseHas('homeworks', ['title' => 'Math Assignment 1']);
@@ -232,6 +241,12 @@ class HomeworkManagementTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->student->user)->post(route('student.homeworks.submit', $homework));
+        
+        if (session('error')) {
+            dd(session('error'));
+        }
+
+        $response->assertRedirect();
         $response->assertRedirect();
         
         $this->assertDatabaseHas('homework_submissions', [
@@ -243,7 +258,19 @@ class HomeworkManagementTest extends TestCase
 
     public function test_subscription_limit()
     {
-        $this->branch->subscription->plan->update(['limits' => ['max_homeworks' => 0]]);
+        $this->branch->subscription->plan->update(['limits' => ['max_homeworks' => 1]]);
+
+        Homework::create([
+            'branch_id' => $this->branch->id,
+            'academic_term_id' => $this->term->id,
+            'classroom_id' => $this->classroom->id,
+            'course_id' => $this->course->id,
+            'teacher_id' => $this->teacher->id,
+            'title' => 'Math Assignment Existing',
+            'due_date' => now()->addDays(2),
+            'max_score' => 100,
+            'status' => 'published'
+        ]);
 
         $response = $this->actingAs($this->admin)->post(route('admin.homeworks.store'), [
             'academic_term_id' => $this->term->id,
@@ -253,11 +280,12 @@ class HomeworkManagementTest extends TestCase
             'title' => 'Math Assignment 1',
             'due_date' => now()->addDays(7)->format('Y-m-d H:i:s'),
             'max_score' => 100,
+            'allow_late_submission' => false,
             'status' => 'draft'
         ]);
 
         $response->assertSessionHas('error');
-        $this->assertDatabaseCount('homeworks', 0);
+        $this->assertDatabaseCount('homeworks', 1);
     }
 
     public function test_publish_homework()
@@ -307,14 +335,14 @@ class HomeworkManagementTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->teacher->user)->post(route('teacher.homeworks.submissions.grade', [$homework, $submission]), [
-            'score' => 85,
-            'feedback' => 'Good job!'
+            'grade' => 85,
+            'teacher_feedback' => 'Good job!'
         ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('homework_submissions', [
             'id' => $submission->id,
-            'score' => 85,
+            'grade' => 85,
             'status' => 'graded'
         ]);
 
