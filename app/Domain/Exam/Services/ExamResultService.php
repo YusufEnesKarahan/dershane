@@ -46,6 +46,17 @@ class ExamResultService
             }
             
             $this->calculateRankings($exam);
+
+            // Notify student
+            $student = \App\Models\Student::find($data['student_id']);
+            if ($student) {
+                app(\App\Domain\Notification\Services\NotificationService::class)->sendToStudent(
+                    $student,
+                    "Sınav Sonucu Açıklandı: {$exam->title}",
+                    "{$exam->title} sınavı sonucunuz açıklandı. Puanınız: {$result->score}",
+                    'exam'
+                );
+            }
             
             return $result;
         });

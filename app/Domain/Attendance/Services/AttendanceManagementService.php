@@ -38,15 +38,25 @@ class AttendanceManagementService
             ->where('attendance_session_id', $data['attendance_session_id'] ?? null)
             ->first();
 
-        if ($existing) {
-            $existing->update([
-                'status' => $data['status'],
-                'note' => $data['note'] ?? $existing->note,
-            ]);
-            return $existing;
+        $record = $existing ? $existing : AttendanceRecord::create($data);
+
+        if (in_array(strtolower($data['status']), ['absent', 'devamsiz'])) {
+            $student = \App\Models\Student::find($data['student_id']);
+            if ($student) {
+                $notificationService = app(\App\Domain\Notification\Services\NotificationService::class);
+                $guardians = \App\Models\StudentGuardian::where('student_id', $student->id)->get();
+                foreach ($guardians as $guardian) {
+                    $notificationService->sendToParent(
+                        $guardian,
+                        'Devamsızlık Bildirimi',
+                        "Öğrenciniz {$student->first_name} {$student->last_name} bugün devamsızlık yaptı.",
+                        'attendance'
+                    );
+                }
+            }
         }
 
-        return AttendanceRecord::create($data);
+        return $record;
     }
 
     public function bulkMarkAttendance(AttendanceSession $session, array $records, int $createdBy)
