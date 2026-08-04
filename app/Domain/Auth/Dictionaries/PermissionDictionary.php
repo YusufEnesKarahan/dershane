@@ -196,6 +196,11 @@ class PermissionDictionary
     public const GUIDANCE_GOAL = 'guidance.goal';
     public const GUIDANCE_NOTE = 'guidance.note';
 
+    public const NOTIFICATION_VIEW = 'notification.view';
+    public const NOTIFICATION_CREATE = 'notification.create';
+    public const NOTIFICATION_SEND = 'notification.send';
+    public const NOTIFICATION_MANAGE = 'notification.manage';
+
     public static function all(): array
     {
         $oClass = new \ReflectionClass(__CLASS__);
