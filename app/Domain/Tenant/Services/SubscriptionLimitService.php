@@ -83,25 +83,27 @@ class SubscriptionLimitService
     /**
      * Check if the tenant has reached the maximum allowed exams limit.
      */
-    public function checkExamLimit(int $branchId): bool
+    public function checkExamLimit(int $branchId): void
     {
         $branch = Branch::with('subscription.plan')->find($branchId);
         
         if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
-            return true; 
+            return; 
         }
 
         $plan = $branch->subscription->plan;
         
         $limit = $plan->limits['max_exams'] ?? null;
 
-        if ($limit === null || $limit <= 0) {
-            return true;
+        if ($limit === null || $limit === 'unlimited' || (int)$limit <= 0) {
+            return;
         }
 
-        $currentExamCount = \App\Models\Exam::where('branch_id', $branchId)->count();
+        $currentExamCount = \App\Models\Exam::withoutGlobalScopes()->where('branch_id', $branchId)->count();
 
-        return $currentExamCount < $limit;
+        if ($currentExamCount >= (int)$limit) {
+            throw new \Exception("Maksimum sınav oluşturma sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
+        }
     }
 
     /**
