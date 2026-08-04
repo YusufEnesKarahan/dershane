@@ -27,7 +27,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'classrooms.*', 'branches.*', 'crm.*', 'leads.*', 'contacts.*',
                 'hr.*', 'payroll.*', 'assets.*', 'inventory.*', 'purchase.*',
                 'admission.*', 'enrollment.*', 'documents.*', 'settings.*', 'system.*',
-                'finance.*', 'announcements.*', 'notifications.*', 'exams.*', 'schedules.*', 'homework.*'
+                'finance.*', 'announcements.*', 'notifications.*', 'exams.*', 'schedules.*', 'homework.*',
+                'guidance.*', 'attendance.*'
             ],
             'Teacher' => [
                 'dashboard.view',

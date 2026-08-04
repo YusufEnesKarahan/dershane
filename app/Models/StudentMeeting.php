@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\Traits\TenantScoped;
 
-class StudentNote extends Model
+class StudentMeeting extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
@@ -15,8 +15,16 @@ class StudentNote extends Model
         'branch_id',
         'student_id',
         'teacher_id',
-        'note',
-        'visibility'
+        'meeting_date',
+        'meeting_type',
+        'summary',
+        'action_plan',
+        'next_meeting'
+    ];
+
+    protected $casts = [
+        'meeting_date' => 'datetime',
+        'next_meeting' => 'datetime',
     ];
 
     public function branch()

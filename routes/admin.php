@@ -461,5 +461,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::resource('documents', DocumentController::class)->except(['edit']);
 
         Route::resource('document-categories', DocumentCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+        
+        // Guidance
+        Route::resource('guidance', \App\Http\Controllers\Admin\GuidanceController::class);
+        Route::resource('meetings', \App\Http\Controllers\Admin\MeetingController::class);
+        Route::resource('goals', \App\Http\Controllers\Admin\GoalController::class);
+    });
+
+    // Attendance Management
+    Route::middleware(['permission:attendance.view'])->group(function () {
+        Route::get('attendance/report', [\App\Http\Controllers\Admin\AttendanceController::class, 'report'])->name('attendance.report');
+        Route::resource('attendance', \App\Http\Controllers\Admin\AttendanceController::class)->except(['edit', 'update', 'destroy']);
     });
 });

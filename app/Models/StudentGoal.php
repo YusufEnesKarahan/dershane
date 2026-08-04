@@ -7,16 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\Traits\TenantScoped;
 
-class StudentNote extends Model
+class StudentGoal extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
     protected $fillable = [
         'branch_id',
         'student_id',
-        'teacher_id',
-        'note',
-        'visibility'
+        'title',
+        'target_value',
+        'current_value',
+        'deadline',
+        'status'
+    ];
+
+    protected $casts = [
+        'deadline' => 'date',
     ];
 
     public function branch()
@@ -27,10 +33,5 @@ class StudentNote extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
-    }
-
-    public function teacher()
-    {
-        return $this->belongsTo(Teacher::class);
     }
 }

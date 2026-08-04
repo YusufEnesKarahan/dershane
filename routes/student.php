@@ -24,4 +24,11 @@ Route::middleware(['auth', 'role:Student', 'permission:student.view_profile', \A
 
         // Finance
         Route::get('my-payments', [StudentFinanceController::class, 'index'])->name('finance.index');
+        
+        // Guidance & Performance
+        Route::get('my-performance', [\App\Http\Controllers\Student\StudentPerformanceController::class, 'myPerformance'])->name('performance.dashboard');
+        Route::get('my-goals', [\App\Http\Controllers\Student\StudentPerformanceController::class, 'myGoals'])->name('performance.goals');
+        
+        // Attendance
+        Route::get('my-attendance', [\App\Http\Controllers\Student\StudentAttendanceController::class, 'index'])->name('attendance.index');
     });

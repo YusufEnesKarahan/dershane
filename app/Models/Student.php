@@ -83,4 +83,9 @@ class Student extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function riskLevels()
+    {
+        return $this->hasMany(StudentRiskLevel::class);
+    }
 }

@@ -11,12 +11,15 @@ Route::middleware(['auth', 'role:Teacher|Super Admin'])->prefix('teacher')->name
     Route::get('classes', [TeacherClassController::class, 'index'])->name('classes');
     
     // Attendance routes
-    Route::get('attendance', [TeacherAttendanceController::class, 'index'])
+    Route::get('attendance', [TeacherAttendanceController::class, 'myClasses'])
         ->middleware('permission:attendance.view')
-        ->name('attendance');
-    Route::post('attendance', [TeacherAttendanceController::class, 'store'])
+        ->name('attendance.index');
+    Route::get('attendance/{session}', [TeacherAttendanceController::class, 'takeAttendance'])
         ->middleware('permission:attendance.update')
-        ->name('attendance.store');
+        ->name('attendance.create');
+    Route::put('attendance/{session}', [TeacherAttendanceController::class, 'updateAttendance'])
+        ->middleware('permission:attendance.update')
+        ->name('attendance.update');
 
     // Homework routes
     Route::get('homeworks', [TeacherHomeworkController::class, 'index'])
@@ -31,4 +34,8 @@ Route::middleware(['auth', 'role:Teacher|Super Admin'])->prefix('teacher')->name
 
     // Analytics routes
     Route::get('analytics', [TeacherDashboardController::class, 'analytics'])->name('analytics');
+    
+    // Guidance routes
+    Route::get('my-students', [\App\Http\Controllers\Teacher\TeacherGuidanceController::class, 'myStudents'])->name('guidance.students');
+    Route::get('my-guidance', [\App\Http\Controllers\Teacher\TeacherGuidanceController::class, 'myGuidance'])->name('guidance.dashboard');
 });

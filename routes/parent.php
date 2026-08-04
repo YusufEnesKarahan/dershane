@@ -14,4 +14,11 @@ Route::middleware(['auth', 'role:Parent|Super Admin', \App\Http\Middleware\Ensur
 
     // Finance
     Route::get('child-payments', [\App\Http\Controllers\Parent\FinancePortalController::class, 'index'])->name('finance.index');
+    
+    // Guidance
+    Route::get('child-performance', [\App\Http\Controllers\Parent\ParentGuidanceController::class, 'childPerformance'])->name('guidance.performance');
+    Route::get('child-guidance', [\App\Http\Controllers\Parent\ParentGuidanceController::class, 'childGuidance'])->name('guidance.dashboard');
+    
+    // Attendance
+    Route::get('child-attendance', [\App\Http\Controllers\Parent\ParentAttendanceController::class, 'index'])->name('attendance.index');
 });

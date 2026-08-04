@@ -71,7 +71,10 @@ class PermissionDictionary
     public const CRM_MANAGE = 'crm.manage';
 
     public const ATTENDANCE_VIEW = 'attendance.view';
-    public const ATTENDANCE_MANAGE = 'attendance.manage';
+    public const ATTENDANCE_CREATE = 'attendance.create';
+    public const ATTENDANCE_UPDATE = 'attendance.update';
+    public const ATTENDANCE_DELETE = 'attendance.delete';
+    public const ATTENDANCE_REPORT = 'attendance.report';
 
     public const HOMEWORKS_VIEW = 'homeworks.view';
     public const HOMEWORKS_MANAGE = 'homeworks.manage';
@@ -173,6 +176,15 @@ class PermissionDictionary
 
     public const HQ_BACKUP_MANAGE = 'hq.manageBackup';
     public const HQ_AUDIT_VIEW = 'hq.viewAuditLogs';
+    public const EXAM_RESULTS_MANAGE = 'exam_results.manage';
+
+    public const GUIDANCE_VIEW = 'guidance.view';
+    public const GUIDANCE_CREATE = 'guidance.create';
+    public const GUIDANCE_UPDATE = 'guidance.update';
+    public const GUIDANCE_DELETE = 'guidance.delete';
+    public const GUIDANCE_MEETING = 'guidance.meeting';
+    public const GUIDANCE_GOAL = 'guidance.goal';
+    public const GUIDANCE_NOTE = 'guidance.note';
 
     public static function all(): array
     {

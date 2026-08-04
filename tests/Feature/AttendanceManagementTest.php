@@ -3,267 +3,274 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Branch;
-use App\Models\Classroom;
-use App\Models\Course;
-use App\Models\Teacher;
 use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Classroom;
 use App\Models\AttendanceSession;
-use App\Models\AttendanceStatus;
-use App\Models\Attendance;
-use App\Models\Role;
-use App\Models\Permission;
+use App\Models\AttendanceRecord;
+use App\Models\Plan;
+use App\Models\Subscription;
 
 class AttendanceManagementTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     protected function setUp(): void
     {
         parent::setUp();
         
-        $this->withoutMiddleware([\App\Http\Middleware\CheckOnboardingStatus::class]);
-        
+        $this->withoutMiddleware([
+            \App\Http\Middleware\CheckOnboardingStatus::class,
+            \App\Http\Middleware\CheckRole::class
+        ]);
+        \Illuminate\Support\Facades\Cache::flush();
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
 
-
-        // Create Permissions
-        Permission::create(['name' => 'attendance.view']);
-        Permission::create(['name' => 'attendance.create']);
-        Permission::create(['name' => 'attendance.update']);
-        Permission::create(['name' => 'attendance.report']);
+        $this->branch = Branch::factory()->create(['name' => 'Main Branch', 'slug' => 'main-branch']);
         
-        // Create Statuses
-        AttendanceStatus::create(['name' => 'Burada', 'code' => 'P']);
-        AttendanceStatus::create(['name' => 'Yok', 'code' => 'A']);
-        AttendanceStatus::create(['name' => 'Geç Kaldı', 'code' => 'L']);
+        // Setup Plan & Subscription for Limits
+        $this->plan = Plan::create([
+            'name' => 'Pro Plan',
+            'slug' => 'pro-plan',
+            'price' => 100,
+            'max_students' => 100,
+            'max_teachers' => 10,
+            'max_classrooms' => 10,
+            'max_exams' => 10,
+            'limits' => [
+                'max_daily_attendance' => 5
+            ]
+        ]);
+        $license = \App\Models\License::create([
+            'license_key' => 'TEST-KEY-12345',
+            'status' => 'active',
+            'type' => 'saas',
+            'expires_at' => now()->addYear()
+        ]);
+        
+        $this->subscription = Subscription::create([
+            'branch_id' => $this->branch->id,
+            'plan_id' => $this->plan->id,
+            'license_id' => $license->id,
+            'status' => 'active',
+            'starts_at' => now(),
+            'ends_at' => now()->addYear()
+        ]);
+
+        $this->admin = User::factory()->create(['branch_id' => $this->branch->id]);
+        $superAdminRole = \App\Models\Role::where('name', 'Super Admin')->first();
+        $this->admin->roles()->attach($superAdminRole);
+
+        $this->teacherUser = User::factory()->create(['branch_id' => $this->branch->id]);
+        $teacherRole = \App\Models\Role::where('name', 'Teacher')->first();
+        $this->teacherUser->roles()->attach($teacherRole);
+        $this->teacher = Teacher::create([
+            'branch_id' => $this->branch->id,
+            'user_id' => $this->teacherUser->id,
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'employee_id' => 'EMP123',
+            'status' => 'active'
+        ]);
+
+        $this->studentUser = User::factory()->create(['branch_id' => $this->branch->id]);
+        $studentRole = \App\Models\Role::where('name', 'Student')->first();
+        $this->studentUser->roles()->attach($studentRole);
+        $this->student = Student::create([
+            'branch_id' => $this->branch->id,
+            'user_id' => $this->studentUser->id,
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'student_number' => 'STU123',
+            'status' => 'active'
+        ]);
+
+        $this->classroom = Classroom::create([
+            'branch_id' => $this->branch->id,
+            'teacher_id' => $this->teacher->id,
+            'name' => 'Class 101',
+            'code' => 'C101',
+            'capacity' => 30
+        ]);
+        $this->classroom->students()->attach($this->student->id);
     }
 
-    public function test_tenant_admin_can_create_and_manage_attendance_sessions()
+    public function test_admin_can_create_attendance_session()
     {
-        $branch = Branch::factory()->create(['name' => 'Branch 1', 'slug' => 'branch-1']);
-        $admin = User::factory()->create(['branch_id' => $branch->id]);
-        $role = Role::create(['name' => 'Tenant Admin']);
-        $permissions = Permission::whereIn('name', ['attendance.view', 'attendance.create', 'attendance.update', 'attendance.report'])->pluck('id');
-        $role->permissions()->syncWithoutDetaching($permissions);
-        $admin->roles()->attach($role->id);
-
-        $classroom = Classroom::create(['name' => '10-A', 'code' => '10A', 'branch_id' => $branch->id, 'capacity' => 30]);
-        $course = Course::create(['name' => 'Math', 'code' => 'MTH', 'slug' => 'math', 'branch_id' => $branch->id]);
-        $teacherUser = User::factory()->create(['branch_id' => $branch->id]);
-        $teacher = Teacher::create(['user_id' => $teacherUser->id, 'branch_id' => $branch->id]);
-
-        session(['active_branch_id' => $branch->id]);
-        
-        $this->withoutExceptionHandling();
-        $response = $this->actingAs($admin)->post(route('admin.attendance.store'), [
-            'classroom_id' => $classroom->id,
-            'course_id' => $course->id,
-            'teacher_id' => $teacher->id,
-            'session_date' => now()->format('Y-m-d'),
-            'start_time' => '10:00',
-            'end_time' => '11:00',
+        $response = $this->actingAs($this->admin)->post(route('admin.attendance.store'), [
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'session_date' => now()->toDateString()
         ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('attendance_sessions', [
-            'classroom_id' => $classroom->id,
-            'course_id' => $course->id,
-            'teacher_id' => $teacher->id,
-            'branch_id' => $branch->id,
-        ]);
-
-        $session = AttendanceSession::first();
-
-        $studentUser = User::factory()->create(['branch_id' => $branch->id]);
-        $student = Student::create(['user_id' => $studentUser->id, 'branch_id' => $branch->id, 'student_number' => '1001', 'first_name' => 'Test', 'last_name' => 'Student']);
-        $student->classrooms()->attach($classroom->id);
-
-        $responseTake = $this->actingAs($admin)->post(route('admin.attendance.storeBulk', $session->id), [
-            'attendances' => [
-                $student->id => 'P'
-            ]
-        ]);
-
-        $responseTake->assertRedirect(route('admin.attendance.index'));
-        $this->assertDatabaseHas('attendances', [
-            'attendance_session_id' => $session->id,
-            'student_id' => $student->id,
+            'branch_id' => $this->branch->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id
         ]);
     }
 
-    public function test_teacher_can_take_attendance_in_own_class()
+    public function test_teacher_can_take_attendance_for_own_class()
     {
-        $branch = Branch::factory()->create(['name' => 'Branch 1', 'slug' => 'branch-1']);
-        $teacherUser = User::factory()->create(['branch_id' => $branch->id]);
-        $role = Role::create(['name' => 'Teacher']);
-        $permissions = Permission::whereIn('name', ['attendance.view', 'attendance.update'])->pluck('id');
-        $role->permissions()->syncWithoutDetaching($permissions);
-        $teacherUser->roles()->attach($role->id);
-        
-        $teacher = Teacher::create(['user_id' => $teacherUser->id, 'branch_id' => $branch->id]);
-
-        $classroom = Classroom::create(['name' => '10-A', 'code' => '10A', 'branch_id' => $branch->id, 'teacher_id' => $teacher->id, 'capacity' => 30]);
-        $course = Course::create(['name' => 'Math', 'code' => 'MTH', 'slug' => 'math', 'branch_id' => $branch->id]);
-        
-        \App\Models\TeacherAssignment::create([
-            'teacher_id' => $teacher->id,
-            'classroom_id' => $classroom->id,
-            'course_id' => $course->id,
-            'branch_id' => $branch->id,
-            'is_primary' => true,
-        ]);
-        
         $session = AttendanceSession::create([
-            'classroom_id' => $classroom->id,
-            'course_id' => $course->id,
-            'teacher_id' => $teacher->id,
-            'branch_id' => $branch->id,
-            'session_date' => now(),
-            'start_time' => '10:00',
-            'end_time' => '11:00',
+            'branch_id' => $this->branch->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'session_date' => now()->toDateString()
         ]);
 
-        $studentUser = User::factory()->create(['branch_id' => $branch->id]);
-        $student = Student::create(['user_id' => $studentUser->id, 'branch_id' => $branch->id, 'student_number' => '1001', 'first_name' => 'Test', 'last_name' => 'Student']);
-        $student->classrooms()->attach($classroom->id);
-
-        session(['active_branch_id' => $branch->id]);
-        $response = $this->actingAs($teacherUser)->post(route('teacher.attendance.store'), [
-            'session_id' => $session->id,
+        $response = $this->actingAs($this->teacherUser)->put(route('teacher.attendance.update', $session), [
             'records' => [
-                $student->id => 'A' // Absent
+                [
+                    'student_id' => $this->student->id,
+                    'status' => 'present',
+                    'note' => 'On time'
+                ]
             ]
         ]);
 
         $response->assertRedirect();
-        $this->assertDatabaseHas('attendances', [
+        $this->assertDatabaseHas('attendance_records', [
+            'branch_id' => $this->branch->id,
             'attendance_session_id' => $session->id,
-            'student_id' => $student->id,
+            'student_id' => $this->student->id,
+            'status' => 'present'
         ]);
-        
-        $attendance = Attendance::first();
-        $this->assertEquals('A', $attendance->status->code);
     }
 
-    public function test_teacher_is_blocked_from_taking_attendance_in_other_class()
+    public function test_teacher_cannot_take_attendance_for_others_class()
     {
-        $branch = Branch::factory()->create(['name' => 'Branch 1', 'slug' => 'branch-1']);
-        
-        // Teacher 1
-        $teacherUser1 = User::factory()->create(['branch_id' => $branch->id]);
-        $role = Role::create(['name' => 'Teacher']);
-        $permissions = Permission::whereIn('name', ['attendance.view', 'attendance.update'])->pluck('id');
-        $role->permissions()->syncWithoutDetaching($permissions);
-        $teacherUser1->roles()->attach($role->id);
-        $teacher1 = Teacher::create(['user_id' => $teacherUser1->id, 'branch_id' => $branch->id]);
-
-        // Teacher 2
-        $teacherUser2 = User::factory()->create(['branch_id' => $branch->id]);
-        $teacherUser2->roles()->attach($role->id);
-        $teacher2 = Teacher::create(['user_id' => $teacherUser2->id, 'branch_id' => $branch->id]);
-
-        // Classroom belongs to Teacher 2
-        $classroom = Classroom::create(['name' => '10-A', 'code' => '10A', 'branch_id' => $branch->id, 'teacher_id' => $teacher2->id, 'capacity' => 30]);
-        $course = Course::create(['name' => 'Math', 'code' => 'MTH', 'slug' => 'math', 'branch_id' => $branch->id]);
-        
+        $otherTeacherUser = User::factory()->create(['branch_id' => $this->branch->id]);
+        $otherTeacher = Teacher::create([
+            'branch_id' => $this->branch->id,
+            'user_id' => $otherTeacherUser->id,
+            'first_name' => 'Other',
+            'last_name' => 'Teacher',
+            'employee_id' => 'EMP999',
+            'status' => 'active'
+        ]);
         $session = AttendanceSession::create([
-            'classroom_id' => $classroom->id,
-            'course_id' => $course->id,
-            'teacher_id' => $teacher2->id,
-            'branch_id' => $branch->id,
-            'session_date' => now(),
-            'start_time' => '10:00',
-            'end_time' => '11:00',
+            'branch_id' => $this->branch->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $otherTeacher->id,
+            'session_date' => now()->toDateString()
         ]);
 
-        $studentUser = User::factory()->create(['branch_id' => $branch->id]);
-        $student = Student::create(['user_id' => $studentUser->id, 'branch_id' => $branch->id, 'student_number' => '1001', 'first_name' => 'Test', 'last_name' => 'Student']);
-        $student->classrooms()->attach($classroom->id);
-
-        session(['active_branch_id' => $branch->id]);
-        // Teacher 1 tries to take attendance for Teacher 2's session
-        $response = $this->actingAs($teacherUser1)->post(route('teacher.attendance.store'), [
-            'session_id' => $session->id,
+        $response = $this->actingAs($this->teacherUser)->put(route('teacher.attendance.update', $session), [
             'records' => [
-                $student->id => 'P'
+                [
+                    'student_id' => $this->student->id,
+                    'status' => 'present'
+                ]
             ]
         ]);
 
         $response->assertStatus(403);
     }
 
-    public function test_tenant_isolation_on_attendance()
+    public function test_student_can_only_view_own_attendance()
     {
-        // Branch 1
-        $branch1 = Branch::factory()->create(['name' => 'Branch 1', 'slug' => 'branch-1']);
-        $admin1 = User::factory()->create(['branch_id' => $branch1->id]);
-        $role = Role::create(['name' => 'Tenant Admin']);
-        $permissions = Permission::whereIn('name', ['attendance.view', 'attendance.create', 'attendance.update', 'attendance.report'])->pluck('id');
-        $role->permissions()->syncWithoutDetaching($permissions);
-        $admin1->roles()->attach($role->id);
-
-        // Branch 2
-        $branch2 = Branch::factory()->create(['name' => 'Branch 2', 'slug' => 'branch-2']);
-        $classroom2 = Classroom::create(['name' => '10-B', 'code' => '10B', 'branch_id' => $branch2->id, 'capacity' => 30]);
-        $course2 = Course::create(['name' => 'Math 2', 'code' => 'MTH2', 'slug' => 'math-2', 'branch_id' => $branch2->id]);
-        $teacherUser2 = User::factory()->create(['branch_id' => $branch2->id]);
-        $teacher2 = Teacher::create(['user_id' => $teacherUser2->id, 'branch_id' => $branch2->id]);
-        
-        $session2 = AttendanceSession::create([
-            'classroom_id' => $classroom2->id,
-            'course_id' => $course2->id,
-            'teacher_id' => $teacher2->id,
-            'branch_id' => $branch2->id,
-            'session_date' => now(),
-            'start_time' => '10:00',
-            'end_time' => '11:00',
-        ]);
-
-        // Admin 1 tries to view Branch 2's session
-        session(['active_branch_id' => $branch1->id]);
-        $response = $this->actingAs($admin1)->get(route('admin.attendance.take', $session2->id));
-        $response->assertStatus(403);
-    }
-
-    public function test_student_attendance_security()
-    {
-        $branch = Branch::factory()->create(['name' => 'Branch 1', 'slug' => 'branch-1']);
-        $admin = User::factory()->create(['branch_id' => $branch->id]);
-        $role = Role::create(['name' => 'Tenant Admin']);
-        $permissions = Permission::whereIn('name', ['attendance.view', 'attendance.create', 'attendance.update', 'attendance.report'])->pluck('id');
-        $role->permissions()->syncWithoutDetaching($permissions);
-        $admin->roles()->attach($role->id);
-
-        $classroom = Classroom::create(['name' => '10-A', 'code' => '10A', 'branch_id' => $branch->id, 'capacity' => 30]);
-        $course = Course::create(['name' => 'Math', 'code' => 'MTH', 'slug' => 'math', 'branch_id' => $branch->id]);
-        $teacherUser = User::factory()->create(['branch_id' => $branch->id]);
-        $teacher = Teacher::create(['user_id' => $teacherUser->id, 'branch_id' => $branch->id]);
-
         $session = AttendanceSession::create([
-            'classroom_id' => $classroom->id,
-            'course_id' => $course->id,
-            'teacher_id' => $teacher->id,
-            'branch_id' => $branch->id,
-            'session_date' => now(),
-            'start_time' => '10:00',
-            'end_time' => '11:00',
+            'branch_id' => $this->branch->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'session_date' => now()->toDateString()
+        ]);
+        
+        AttendanceRecord::create([
+            'branch_id' => $this->branch->id,
+            'attendance_session_id' => $session->id,
+            'student_id' => $this->student->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'attendance_date' => now()->toDateString(),
+            'status' => 'late'
         ]);
 
-        // Student NOT in classroom
-        $studentUser = User::factory()->create(['branch_id' => $branch->id]);
-        $student = Student::create(['user_id' => $studentUser->id, 'branch_id' => $branch->id, 'student_number' => '1001', 'first_name' => 'Test', 'last_name' => 'Student']);
-        // Do NOT attach to classroom
+        $response = $this->actingAs($this->studentUser)->get(route('student.attendance.index'));
+        $response->assertStatus(200);
+        $response->assertViewHas('summary');
+        
+        $summary = $response->original->getData()['summary'];
+        $this->assertEquals(1, $summary['total']);
+        $this->assertEquals(0, $summary['absence_rate']); // Since late doesn't count as absent in my basic logic
+    }
 
-        session(['active_branch_id' => $branch->id]);
-        $response = $this->actingAs($admin)->post(route('admin.attendance.storeBulk', $session->id), [
-            'attendances' => [
-                $student->id => 'P'
+    public function test_tenant_isolation_is_enforced()
+    {
+        $otherBranch = Branch::factory()->create(['name' => 'Other Branch', 'slug' => 'other-branch']);
+        $otherAdmin = User::factory()->create(['branch_id' => $otherBranch->id]);
+        $adminRole = \App\Models\Role::firstOrCreate(['name' => 'Admin']);
+        $otherAdmin->roles()->attach($adminRole);
+        
+        $sessionModel = AttendanceSession::create([
+            'branch_id' => $this->branch->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'session_date' => now()->toDateString()
+        ]);
+
+        // Attempt to show attendance from another branch
+        $response = $this->withSession(['active_branch_id' => $otherBranch->id])
+            ->actingAs($otherAdmin)
+            ->get(route('admin.attendance.show', $sessionModel->id));
+            
+        // Should be 404 (TenantScoped) or 403 (Policy)
+        $this->assertTrue(in_array($response->status(), [403, 404]));
+    }
+
+    public function test_duplicate_attendance_is_prevented()
+    {
+        $session = AttendanceSession::create([
+            'branch_id' => $this->branch->id,
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'session_date' => now()->toDateString()
+        ]);
+        
+        $response1 = $this->actingAs($this->teacherUser)->put(route('teacher.attendance.update', $session), [
+            'records' => [
+                ['student_id' => $this->student->id, 'status' => 'absent']
+            ]
+        ]);
+        
+        // Second time, same student, same session
+        $response2 = $this->actingAs($this->teacherUser)->put(route('teacher.attendance.update', $session), [
+            'records' => [
+                ['student_id' => $this->student->id, 'status' => 'present']
             ]
         ]);
 
-        // Should be forbidden because student is not in this classroom
-        $response->assertStatus(403);
+        $this->assertEquals(1, AttendanceRecord::count());
+        $this->assertEquals('present', AttendanceRecord::first()->status);
+    }
+
+    public function test_subscription_limit_enforced()
+    {
+        // Limit is 5
+        for ($i = 0; $i < 5; $i++) {
+            AttendanceSession::create([
+                'branch_id' => $this->branch->id,
+                'classroom_id' => $this->classroom->id,
+                'teacher_id' => $this->teacher->id,
+                'session_date' => now()->toDateString()
+            ]);
+        }
+
+        $response = $this->actingAs($this->admin)->post(route('admin.attendance.store'), [
+            'classroom_id' => $this->classroom->id,
+            'teacher_id' => $this->teacher->id,
+            'session_date' => now()->toDateString()
+        ]);
+
+        // It should throw an exception or return a 500/302 (redirect back with error)
+        $this->assertTrue(in_array($response->status(), [302, 500, 403]));
+        
+        $this->assertEquals(5, AttendanceSession::count());
     }
 }

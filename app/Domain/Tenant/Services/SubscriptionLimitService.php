@@ -171,4 +171,53 @@ class SubscriptionLimitService
             throw new \Exception("Maksimum ödeme planı sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
         }
     }
+
+    public function checkGuidanceLimit(int $branchId): void
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_guidance_records'] ?? null;
+        
+        if ($limit === null || $limit === 'unlimited' || (int)$limit <= 0) {
+            return;
+        }
+
+        $currentCount = \App\Models\StudentGuidanceRecord::withoutGlobalScopes()->where('branch_id', $branchId)->count();
+
+        if ($currentCount >= (int)$limit) {
+            throw new \Exception("Maksimum rehberlik kaydı sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
+        }
+    }
+
+    public function checkAttendanceLimit(int $branchId): void
+    {
+        $branch = Branch::with('subscription.plan')->find($branchId);
+        
+        if (!$branch || !$branch->subscription || !$branch->subscription->plan) {
+            return; 
+        }
+
+        $plan = $branch->subscription->plan;
+        
+        $limit = $plan->limits['max_daily_attendance'] ?? null;
+        
+        if ($limit === null || $limit === 'unlimited' || (int)$limit <= 0) {
+            return;
+        }
+
+        $currentCount = \App\Models\AttendanceSession::withoutGlobalScopes()
+            ->where('branch_id', $branchId)
+            ->whereDate('session_date', \Carbon\Carbon::today())
+            ->count();
+
+        if ($currentCount >= (int)$limit) {
+            throw new \Exception("Günlük maksimum yoklama oturumu sınırına ({$limit}) ulaştınız. Lütfen paketinizi yükseltin.");
+        }
+    }
 }

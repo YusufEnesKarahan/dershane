@@ -7,26 +7,36 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\Traits\TenantScoped;
 
-class AttendanceSession extends Model
+class AttendanceRecord extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
     protected $fillable = [
         'branch_id',
+        'attendance_session_id',
+        'student_id',
         'classroom_id',
         'lesson_schedule_id',
         'teacher_id',
-        'session_date',
-        'start_time',
-        'end_time',
-        'status', // open, completed, cancelled
+        'attendance_date',
+        'status', // present, absent, late, excused
+        'note',
+        'created_by',
     ];
 
     protected $casts = [
-        'session_date' => 'date',
-        'start_time' => 'datetime:H:i',
-        'end_time' => 'datetime:H:i',
+        'attendance_date' => 'date',
     ];
+
+    public function session()
+    {
+        return $this->belongsTo(AttendanceSession::class, 'attendance_session_id');
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 
     public function classroom()
     {
@@ -43,8 +53,8 @@ class AttendanceSession extends Model
         return $this->belongsTo(Teacher::class);
     }
 
-    public function records()
+    public function creator()
     {
-        return $this->hasMany(AttendanceRecord::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

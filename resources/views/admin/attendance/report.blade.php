@@ -1,102 +1,57 @@
 @extends('layouts.admin')
 
-@section('title', 'Yoklama Raporları')
-
 @section('content')
-<div class="space-y-6">
-    <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-gray-800">Yoklama Raporları</h2>
-        <a href="{{ route('admin.attendance.index') }}" class="text-gray-500 hover:text-gray-700 font-medium">&larr; Yoklama Yönetimi</a>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-neutral">Genel Yoklama Raporu</h1>
     </div>
 
-    <!-- Filters -->
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-        <form action="{{ route('admin.attendance.report') }}" method="GET" class="flex flex-wrap gap-4 items-end">
+    <!-- Filtreler -->
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+        <form action="{{ route('admin.attendance.report') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700">Başlangıç Tarihi</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <label class="block text-xs text-neutral-500 mb-1">Başlangıç Tarihi</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="w-full text-sm border-neutral-300 rounded-md">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Bitiş Tarihi</label>
-                <input type="date" name="end_date" value="{{ request('end_date') }}" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <label class="block text-xs text-neutral-500 mb-1">Bitiş Tarihi</label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="w-full text-sm border-neutral-300 rounded-md">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Sınıf</label>
-                <select name="classroom_id" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <label class="block text-xs text-neutral-500 mb-1">Sınıf</label>
+                <select name="classroom_id" class="w-full text-sm border-neutral-300 rounded-md">
                     <option value="">Tümü</option>
-                    @foreach($classrooms as $c)
-                        <option value="{{ $c->id }}" {{ request('classroom_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                    @foreach(\App\Models\Classroom::all() as $class)
+                        <option value="{{ $class->id }}" {{ request('classroom_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div>
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow">Filtrele</button>
+            <div class="flex items-end">
+                <button type="submit" class="w-full bg-primary text-white py-2 px-4 rounded-md text-sm hover:bg-primary/90">Filtrele</button>
             </div>
         </form>
     </div>
 
-    <!-- Summary Widgets -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col items-center justify-center">
-            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Katılım Oranı</span>
-            <span class="text-3xl font-bold text-indigo-600">{{ $summary['attendance_rate'] }}%</span>
+    <!-- Özet -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-green-500">
+            <h3 class="text-sm font-medium text-neutral-500">Genel Katılım Oranı</h3>
+            <p class="text-3xl font-bold text-green-600">
+                {{ $reportData['total_records'] > 0 ? round(($reportData['present_count'] / $reportData['total_records']) * 100) : 0 }}%
+            </p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col items-center justify-center">
-            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Toplam Kayıt</span>
-            <span class="text-3xl font-bold text-gray-900">{{ $summary['total'] }}</span>
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-yellow-500">
+            <h3 class="text-sm font-medium text-neutral-500">Geç Kalma Oranı</h3>
+            <p class="text-3xl font-bold text-yellow-600">
+                {{ $reportData['total_records'] > 0 ? round(($reportData['late_count'] / $reportData['total_records']) * 100) : 0 }}%
+            </p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col items-center justify-center">
-            <span class="text-xs font-semibold text-green-600 uppercase tracking-wider mb-2">Mevcut (P)</span>
-            <span class="text-3xl font-bold text-green-600">{{ $summary['present'] }}</span>
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+            <h3 class="text-sm font-medium text-neutral-500">Devamsızlık Oranı</h3>
+            <p class="text-3xl font-bold text-red-600">
+                {{ $reportData['total_records'] > 0 ? round(($reportData['absent_count'] / $reportData['total_records']) * 100) : 0 }}%
+            </p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col items-center justify-center">
-            <span class="text-xs font-semibold text-red-600 uppercase tracking-wider mb-2">Yok (A)</span>
-            <span class="text-3xl font-bold text-red-600">{{ $summary['absent'] }}</span>
-        </div>
-    </div>
-
-    <!-- Details Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h3 class="text-lg font-semibold text-gray-800">Detaylı Kayıtlar</h3>
-        </div>
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Öğrenci</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ders</th>
-                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Durum</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($records as $record)
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ \Carbon\Carbon::parse($record->session->session_date)->format('d.m.Y') }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {{ $record->student->first_name }} {{ $record->student->last_name }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {{ $record->session->course->name ?? '-' }}
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            {{ $record->status->code == 'P' ? 'bg-green-100 text-green-800' : ($record->status->code == 'A' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
-                            {{ $record->status->name }}
-                        </span>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                        Seçilen kriterlere uygun yoklama kaydı bulunamadı.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
     </div>
 </div>
 @endsection
