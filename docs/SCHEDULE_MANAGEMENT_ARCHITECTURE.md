@@ -1,45 +1,52 @@
-# Schedule Management Architecture
+# Schedule & Lesson Management Architecture
 
 ## 1. Overview
-The Schedule (Timetable) Management Module (Sprint 8.9) is designed to handle all aspects of class scheduling for the Dershane SaaS platform. It strictly enforces tenant isolation, handles robust conflict detection (Teacher, Classroom, Room), and integrates seamlessly with the role-based access control (RBAC) and subscription limit systems.
+The **Schedule & Lesson Management Module** (Sprint 9.6) provides classroom schedule management for educational institutions. It allows administrators to create and manage lesson programs, teachers to view their teaching timetables, and students/parents to monitor class schedules in real-time.
 
-## 2. Core Principles
-- **Thin Controller, Fat Service**: All business logic, especially conflict validation and CRUD operations, resides inside `LessonScheduleManagementService`. Controllers only handle basic validation and response routing.
-- **Tenant Isolation**: Every schedule record is tied to a `branch_id`. Global scopes (`TenantScoped`) ensure data does not leak across branches.
-- **Limit Enforcement**: `SubscriptionLimitService` validates the maximum number of schedules a branch can create (`max_schedules` in the Plan's JSON limits).
+## 2. Architecture Principles
+- **Thin Controller, Fat Service**: Business logic (including conflict detection for teachers and classrooms) is entirely encapsulated in `ScheduleManagementService` and `LessonPeriodService`.
+- **Tenant Isolation**: All models (`LessonSchedule`, `LessonPeriod`) enforce tenant boundary protection via `TenantScoped` traits, ensuring strict `branch_id` isolation.
+- **RBAC & Policies**: Access control is governed by permissions (`schedule.view`, `schedule.create`, `schedule.update`, `schedule.delete`) and enforced via `SchedulePolicy`.
 
 ## 3. Database Schema
-### `schedule_slots`
-- Pre-defined time slots for branches (e.g. "Morning Slot 1: 08:00-08:45"). (Optional usage depending on branch preferences).
 
-### `lesson_schedules`
-The core table storing the actual schedule items.
-- `branch_id`: Ensures multi-tenant isolation.
-- `academic_term_id`: Associates the schedule with a specific term.
-- `classroom_id`, `course_id`, `teacher_id`: The core relationships.
-- `day_of_week`, `start_time`, `end_time`: Time definitions.
-- `room`: Physical location.
+### `lesson_schedules` Table
+- `id`: Primary key
+- `branch_id`: Foreign key to `branches`
+- `academic_term_id`: Foreign key to `academic_terms`
+- `classroom_id`: Foreign key to `classrooms`
+- `course_id`: Foreign key to `courses`
+- `teacher_id`: Foreign key to `teachers`
+- `lesson_period_id`: Nullable foreign key to `lesson_periods`
+- `day_of_week`: Day name (`Monday`, `Tuesday`, etc.)
+- `start_time`: Lesson start time (`HH:MM`)
+- `end_time`: Lesson end time (`HH:MM`)
+- `room`: Nullable room/classroom identifier
+- `status`: Schedule status (`active`, `cancelled`)
+- `created_at`, `updated_at`, `deleted_at`
 
-### `lesson_schedule_teachers`
-A pivot table allowing multiple teachers (e.g., co-teachers or assistants) to be assigned to a single lesson schedule block.
+### `lesson_periods` Table
+- `id`: Primary key
+- `branch_id`: Foreign key to `branches`
+- `name`: Slot name (e.g. "1. Ders", "Sabah Etüdü")
+- `start_time`: Time slot start
+- `end_time`: Time slot end
+- `created_at`, `updated_at`
 
-## 4. Services
-### `LessonScheduleManagementService`
-Provides methods like `createSchedule`, `updateSchedule`, `deleteSchedule`, `duplicateWeek`, and handles complex queries like `validateTeacherConflict`.
-
-### Portal Services
-- `TeacherPortalService::getWeeklySchedule()`
-- `StudentPortalService::getWeeklySchedule()`
-- `ParentPortalService::getStudentSchedule()`
-These methods format the schedule specific to the requesting entity, enforcing data visibility strictly based on their relationships.
+## 4. Conflict Engine Logic
+`ScheduleManagementService::checkConflicts()` verifies two critical rules before creating or updating a schedule:
+1. **Teacher Conflict**: A teacher cannot be assigned to two overlapping lessons on the same day (`start_time < end_time_2 AND end_time > start_time_2`).
+2. **Classroom Conflict**: A classroom cannot have two lessons scheduled at overlapping times on the same day.
 
 ## 5. Security & Authorization
-- **Policies**: `LessonSchedulePolicy` uses the predefined permissions (`schedules.view`, `schedules.create`, etc.) to gate access. 
-- Teachers can only view schedules assigned to them (either directly via `teacher_id` or via the pivot table).
-- Administrators with `schedules.*` permissions have full CRUD capabilities.
+- **Admin**: Full CRUD capabilities across all classroom and teacher schedules.
+- **Teacher**: Restricted to viewing their own assigned lesson schedules (`teacher_id === $user->teacher->id`).
+- **Student**: Restricted to viewing schedules belonging to their classroom (`classroom_id === $user->student->classroom_id`).
+- **Parent**: Restricted to viewing schedules belonging to their student's assigned classroom.
 
-## 6. Testing
-`ScheduleManagementTest` covers:
-- Authorized access to create schedules.
-- Strict prevention of overlapping schedules for the same teacher or classroom.
-- Enforcement of `CheckOnboardingStatus` bypass for unit testing standard CRUD logic.
+## 6. Testing Scope
+Feature tests in `tests/Feature/ScheduleManagementTest.php` verify:
+- Admin CRUD operations
+- Teacher/Student/Parent portal schedule visibility
+- Conflict prevention for teacher and classroom overlaps
+- Multi-tenant data isolation (`branch_id`)
