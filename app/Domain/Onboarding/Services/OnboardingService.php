@@ -200,7 +200,20 @@ class OnboardingService
     public function assignDefaultPlan(\App\Models\Branch $branch, string $planSlug): \App\Models\Subscription
     {
         $plan = \App\Models\Plan::where('slug', $planSlug)->first()
+            ?? \App\Models\Plan::where('slug', 'starter')->first()
             ?? \App\Models\Plan::first();
+
+        if (!$plan) {
+            $plan = \App\Models\Plan::create([
+                'name' => 'Standart Plan',
+                'slug' => 'starter',
+                'code' => 'STARTER',
+                'price_monthly' => 100,
+                'max_students' => 100,
+                'max_teachers' => 10,
+                'max_storage_gb' => 5,
+            ]);
+        }
 
         $license = $this->createInitialLicense($branch, $plan);
 

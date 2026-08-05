@@ -84,7 +84,7 @@ class OnboardingController extends Controller
     {
         $progress = $this->onboardingService->getProgress();
         $branchId = session('active_branch_id', auth()->user()->branch_id);
-        $term = AcademicTerm::where('branch_id', $branchId)->where('is_active', true)->first();
+        $term = AcademicTerm::where('is_active', true)->first();
 
         return view('admin.onboarding.academic_year', compact('progress', 'term'));
     }

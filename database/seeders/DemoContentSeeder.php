@@ -37,12 +37,19 @@ class DemoContentSeeder extends Seeder {
             'location' => 'Kadıköy Merkez Şube'
         ]);
 
-        Announcement::create([
-            'title' => 'Erken Kayıt Dönemi Başladı',
-            'slug' => 'erken-kayit-donemi-basladi',
-            'content' => 'Erken kayıt fırsatlarını kaçırmayın.',
-            'is_active' => true,
-            'published_at' => now()
-        ]);
+        $branch = \App\Models\Branch::first();
+        $user = \App\Models\User::first();
+
+        if ($branch && $user) {
+            Announcement::create([
+                'branch_id' => $branch->id,
+                'title' => 'Erken Kayıt Dönemi Başladı',
+                'content' => 'Erken kayıt fırsatlarını kaçırmayın.',
+                'type' => 'general',
+                'created_by' => $user->id,
+                'published_at' => now(),
+                'status' => 'published'
+            ]);
+        }
     }
 }

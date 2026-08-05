@@ -135,4 +135,27 @@ class OnboardingFlowTest extends TestCase
 
         TenantContext::clear();
     }
+
+    public function test_onboarding_requires_unique_company_and_branch_names()
+    {
+        // Create an existing institution and branch
+        Institution::create(['name' => 'Existing Company', 'slug' => 'existing-company', 'uuid' => \Illuminate\Support\Str::uuid()]);
+        Branch::create(['name' => 'Existing Branch', 'slug' => 'existing-branch']);
+
+        // Try submitting company step with duplicate name
+        $response = $this->post(route('onboarding.company.store'), [
+            'name' => 'Existing Company',
+            'phone' => '1234567890',
+            'email' => 'test@company.com',
+            'city' => 'Istanbul',
+        ]);
+        $response->assertSessionHasErrors(['name']);
+
+        // Try submitting branch step with duplicate name
+        $response = $this->post(route('onboarding.branch.store'), [
+            'branch_name' => 'Existing Branch',
+            'address' => 'Istanbul, Turkey',
+        ]);
+        $response->assertSessionHasErrors(['branch_name']);
+    }
 }

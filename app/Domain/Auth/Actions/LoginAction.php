@@ -31,6 +31,6 @@ class LoginAction
 
     protected function audit($user, string $event, array $metadata = [])
     {
-        // TODO: Hook to Activity Log
+        \App\Models\PlatformAuditLog::record($user, $event, null, $metadata);
     }
 }

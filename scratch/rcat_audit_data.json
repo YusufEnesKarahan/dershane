@@ -291,9 +291,9 @@
         "name": "admin.onboarding.academic-year",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
             "Student": 403,
             "Parent": 403
         }

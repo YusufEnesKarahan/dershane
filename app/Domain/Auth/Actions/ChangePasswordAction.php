@@ -14,6 +14,6 @@ class ChangePasswordAction
 
     protected function audit($user, string $event)
     {
-        // TODO: Hook to Activity Log
+        \App\Models\PlatformAuditLog::record($user, $event);
     }
 }

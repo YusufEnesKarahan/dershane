@@ -172,17 +172,10 @@ class ClassroomManagementTest extends TestCase
         $this->actingAs($this->tenantAdmin);
         session(['active_branch_id' => $this->branch1->id]);
 
-        $countBefore = \App\Models\Classroom::count();
-        // dump("Classrooms before limit test:", $countBefore); // debug
-
         $response = $this->post(route('admin.classrooms.store'), [
             'name' => 'Limit Class',
             'capacity' => 20,
         ]);
-
-        if (!session()->has('error')) {
-            dump(session()->all());
-        }
 
         $response->assertSessionHas('error'); // Limit ulaştı
         $this->assertDatabaseMissing('classrooms', ['name' => 'Limit Class']);

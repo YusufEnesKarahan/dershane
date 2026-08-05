@@ -32,7 +32,7 @@ class DemoDataSeederService
             $classrooms[] = Classroom::create([
                 'branch_id' => $branchId,
                 'name' => $cName,
-                'code' => Str::slug($cName),
+                'code' => Str::slug($cName) . '-' . $branchId,
                 'capacity' => 30,
                 'is_active' => true,
             ]);
@@ -40,9 +40,9 @@ class DemoDataSeederService
 
         // 2. Create Teachers
         $teachersData = [
-            ['first_name' => 'Ahmet', 'last_name' => 'Yılmaz', 'email' => 'ahmet.yilmaz@demo.com'],
-            ['first_name' => 'Mehmet', 'last_name' => 'Kaya', 'email' => 'mehmet.kaya@demo.com'],
-            ['first_name' => 'Ayşe', 'last_name' => 'Şahin', 'email' => 'ayse.sahin@demo.com'],
+            ['first_name' => 'Ahmet', 'last_name' => 'Yılmaz', 'email' => 'ahmet.yilmaz.' . $branchId . '@demo.com'],
+            ['first_name' => 'Mehmet', 'last_name' => 'Kaya', 'email' => 'mehmet.kaya.' . $branchId . '@demo.com'],
+            ['first_name' => 'Ayşe', 'last_name' => 'Şahin', 'email' => 'ayse.sahin.' . $branchId . '@demo.com'],
         ];
 
         $teachers = [];
@@ -61,8 +61,8 @@ class DemoDataSeederService
             $courses[] = Course::create([
                 'branch_id' => $branchId,
                 'name' => $cName,
-                'code' => Str::slug($cName),
-                'slug' => Str::slug($cName),
+                'code' => Str::slug($cName) . '-' . $branchId,
+                'slug' => Str::slug($cName) . '-' . $branchId,
                 'description' => "Demo {$cName} dersi.",
                 'is_active' => true,
             ]);
@@ -87,8 +87,8 @@ class DemoDataSeederService
         foreach ($studentsData as $sData) {
             $classroom = $classrooms[$i % count($classrooms)];
             $students[] = $this->studentService->createStudent([
-                'student_number' => 'DEMO-' . (100 + $i),
-                'identity_number' => '100000000' . (10 + $i),
+                'student_number' => 'DEMO-' . $branchId . '-' . (100 + $i),
+                'identity_number' => sprintf('9%02d%08d', $branchId % 100, 10000000 + $i),
                 'first_name' => $sData['first_name'],
                 'last_name' => $sData['last_name'],
                 'classroom_id' => $classroom->id,

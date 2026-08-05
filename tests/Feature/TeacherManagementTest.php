@@ -107,9 +107,6 @@ class TeacherManagementTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        if (session()->has('error')) {
-            dd(session('error'));
-        }
         $response->assertSessionMissing('error');
         
         $this->assertDatabaseHas('users', [

@@ -29,10 +29,12 @@ class OnboardingWizardController extends Controller
     public function storeCompany(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:institutions,name',
             'phone' => 'required|string|max:50',
             'email' => 'required|email|max:255',
             'city' => 'required|string|max:100',
+        ], [
+            'name.unique' => 'Bu dershane adı sistemde zaten kayıtlı.',
         ]);
 
         session(['onboarding.company' => $validated]);
@@ -66,8 +68,10 @@ class OnboardingWizardController extends Controller
     public function storeBranch(Request $request)
     {
         $validated = $request->validate([
-            'branch_name' => 'required|string|max:255',
+            'branch_name' => 'required|string|max:255|unique:branches,name',
             'address' => 'required|string',
+        ], [
+            'branch_name.unique' => 'Bu şube adı sistemde zaten kayıtlı.',
         ]);
 
         session(['onboarding.branch' => $validated]);
@@ -130,7 +134,7 @@ class OnboardingWizardController extends Controller
             PlatformAuditLog::record($admin, 'demo_data.seeded', $branch);
         }
 
-        // Initialize onboarding progress checklist
+        // Initialize onboarding progress checklist (New Wizard)
         $progress = OnboardingProgress::create([
             'branch_id' => $branch->id,
             'company_info_completed' => true,
@@ -140,6 +144,36 @@ class OnboardingWizardController extends Controller
             'course_created' => $request->filled('seed_demo') ? true : false,
             'exam_created' => $request->filled('seed_demo') ? true : false,
         ]);
+
+        // Complete legacy onboarding checklist so that CheckOnboardingStatus / EnsureOnboardingCompleted middlewares pass
+        \App\Domain\Onboarding\Models\OnboardingStep::updateOrCreate(
+            ['branch_id' => $branch->id],
+            ['step' => 5, 'status' => 'completed']
+        );
+        foreach (\App\Domain\Onboarding\Services\OnboardingService::CHECKLIST_KEYS as $key) {
+            \App\Domain\Onboarding\Models\OnboardingChecklist::updateOrCreate(
+                ['branch_id' => $branch->id, 'key' => $key],
+                ['completed' => true]
+            );
+        }
+
+        // Ensure default SystemIdentity exists
+        if (!\App\Models\SystemIdentity::exists()) {
+            \App\Models\SystemIdentity::create([
+                'company_name' => $companyData['name'],
+                'brand_name' => $companyData['name'],
+            ]);
+        }
+
+        // Ensure default AcademicTerm exists
+        if (!\App\Models\AcademicTerm::where('is_active', true)->exists()) {
+            \App\Models\AcademicTerm::create([
+                'name' => '2026-2027 Eğitim Öğretim Yılı',
+                'start_date' => now()->startOfYear(),
+                'end_date' => now()->endOfYear(),
+                'is_active' => true,
+            ]);
+        }
 
         // Auto log in new user
         Auth::login($admin);

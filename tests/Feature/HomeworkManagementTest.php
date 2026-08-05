@@ -242,11 +242,6 @@ class HomeworkManagementTest extends TestCase
 
         $response = $this->actingAs($this->student->user)->post(route('student.homeworks.submit', $homework));
         
-        if (session('error')) {
-            dd(session('error'));
-        }
-
-        $response->assertRedirect();
         $response->assertRedirect();
         
         $this->assertDatabaseHas('homework_submissions', [
