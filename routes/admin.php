@@ -79,7 +79,7 @@ use App\Http\Controllers\Admin\SaaSHealthController;
 use App\Http\Controllers\Admin\SubscriptionController;
 
 // Admin Framework Routes
-Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher'])->prefix('admin')->name('admin.')->group(function () {
     
     // Onboarding Wizard Routes (Sprint 10.2)
     Route::prefix('onboarding')->name('onboarding.')->group(function () {
@@ -120,8 +120,15 @@ Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|ten
     Route::post('profile/avatar', [UserProfileController::class, 'avatar'])->name('profile.avatar');
     Route::post('preferences', [UserPreferenceController::class, 'update'])->name('preferences.update');
 
-    // Access Management - Users
+    // Access Management - Users & Activity Logs
     Route::middleware(['permission:users.view'])->group(function () {
+        Route::get('activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('subscription', [\App\Http\Controllers\Admin\SubscriptionDashboardController::class, 'index'])->name('subscription.index');
+        Route::get('licenses', [\App\Http\Controllers\Admin\LicenseController::class, 'index'])->name('licenses.index');
+        Route::post('licenses/{license}/activate', [\App\Http\Controllers\Admin\LicenseController::class, 'activate'])->name('licenses.activate');
+        Route::post('licenses/{license}/renew', [\App\Http\Controllers\Admin\LicenseController::class, 'renew'])->name('licenses.renew');
+        Route::post('licenses/{license}/suspend', [\App\Http\Controllers\Admin\LicenseController::class, 'suspend'])->name('licenses.suspend');
+        Route::post('licenses/{license}/cancel', [\App\Http\Controllers\Admin\LicenseController::class, 'cancel'])->name('licenses.cancel');
         Route::post('users/bulk', [UserController::class, 'bulk'])->name('users.bulk');
         Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
         Route::post('users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');
@@ -523,7 +530,7 @@ Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|ten
     });
 
     // Institution Configuration Management (Sprint 10.4)
-    Route::middleware(['role:Super Admin|Admin|Tenant Admin|tenant_admin|admin'])->prefix('settings/institution')->name('settings.institution.')->group(function () {
+    Route::middleware(['role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|admin'])->prefix('settings/institution')->name('settings.institution.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'index'])->name('index');
         Route::post('/general', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateGeneral'])->name('updateGeneral');
         Route::post('/branding', [\App\Http\Controllers\Admin\InstitutionSettingController::class, 'updateBranding'])->name('updateBranding');

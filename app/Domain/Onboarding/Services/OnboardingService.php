@@ -163,4 +163,71 @@ class OnboardingService
 
         return TenantContext::getActiveBranchId();
     }
+
+    public function createTenant(array $data): \App\Models\Institution
+    {
+        return \App\Models\Institution::create([
+            'name' => $data['name'],
+            'slug' => \Illuminate\Support\Str::slug($data['name']),
+            'status' => 'active',
+        ]);
+    }
+
+    public function createAdminUser(\App\Models\Institution $tenant, array $data): \App\Models\User
+    {
+        $user = \App\Models\User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'status' => \App\Enums\UserStatus::ACTIVE,
+        ]);
+
+        $role = \App\Models\Role::firstOrCreate(['name' => 'Branch Admin']);
+        $user->roles()->sync([$role->id]);
+
+        return $user;
+    }
+
+    public function createDefaultBranch(\App\Models\Institution $tenant, array $data): \App\Models\Branch
+    {
+        return \App\Models\Branch::create([
+            'name' => $data['branch_name'],
+            'slug' => \Illuminate\Support\Str::slug($data['branch_name']),
+            'address' => $data['address'] ?? 'Merkez Şube Adresi',
+        ]);
+    }
+
+    public function assignDefaultPlan(\App\Models\Branch $branch, string $planSlug): \App\Models\Subscription
+    {
+        $plan = \App\Models\Plan::where('slug', $planSlug)->first()
+            ?? \App\Models\Plan::first();
+
+        $license = $this->createInitialLicense($branch, $plan);
+
+        return \App\Models\Subscription::create([
+            'license_id' => $license->id,
+            'branch_id' => $branch->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'starts_at' => now(),
+            'ends_at' => now()->addYear(),
+            'expires_at' => now()->addYear(),
+        ]);
+    }
+
+    public function createInitialLicense(\App\Models\Branch $branch, \App\Models\Plan $plan): \App\Models\License
+    {
+        return \App\Models\License::create([
+            'license_key' => 'LIC-' . strtoupper(\Illuminate\Support\Str::random(12)),
+            'status' => 'active',
+            'plan_id' => $plan->id,
+            'starts_at' => now(),
+            'expires_at' => now()->addYear(),
+        ]);
+    }
+
+    public function seedDemoData(\App\Models\Branch $branch, \App\Models\User $adminUser): void
+    {
+        app(DemoDataSeederService::class)->seed($branch->id, $adminUser->id);
+    }
 }

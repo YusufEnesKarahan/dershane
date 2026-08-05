@@ -25,19 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/health/queue', [\App\Http\Controllers\HealthController::class, 'queue']);
     Route::middleware(['role:Super Admin'])->get('/health/details', [\App\Http\Controllers\HealthController::class, 'details']);
 
-    Route::get('/dashboard', function () {
-        $user = auth()->user();
-        if ($user->hasRole(['Super Admin', 'Admin', 'Branch Admin'])) {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->hasRole('Teacher')) {
-            return redirect()->route('teacher.dashboard');
-        } elseif ($user->hasRole('Student')) {
-            return redirect()->route('student.dashboard');
-        } elseif ($user->hasRole('Parent')) {
-            return redirect()->route('parent.dashboard');
-        }
-        abort(403);
-    })->name('tenant.dashboard');
+    Route::middleware(['role:tenant_admin|Tenant Admin|Branch Admin'])->get('/dashboard', [\App\Http\Controllers\Dashboard\TenantDashboardController::class, 'index'])->name('tenant.dashboard');
 });
 
 // Installation Wizard Routes
@@ -50,4 +38,22 @@ Route::prefix('install')->name('install.')->group(function () {
     Route::get('/admin', [\App\Http\Controllers\InstallController::class, 'admin'])->name('admin');
     Route::post('/admin', [\App\Http\Controllers\InstallController::class, 'storeAdmin'])->name('storeAdmin');
     Route::get('/finish', [\App\Http\Controllers\InstallController::class, 'finish'])->name('finish');
+});
+
+Route::get('/setup-wizard', function() {
+    return redirect()->route('onboarding.welcome');
+});
+
+Route::prefix('onboarding')->name('onboarding.')->group(function () {
+    Route::get('/welcome', [\App\Http\Controllers\OnboardingWizardController::class, 'welcome'])->name('welcome');
+    Route::get('/company', [\App\Http\Controllers\OnboardingWizardController::class, 'company'])->name('company');
+    Route::post('/company', [\App\Http\Controllers\OnboardingWizardController::class, 'storeCompany'])->name('company.store');
+    Route::get('/admin', [\App\Http\Controllers\OnboardingWizardController::class, 'admin'])->name('admin');
+    Route::post('/admin', [\App\Http\Controllers\OnboardingWizardController::class, 'storeAdmin'])->name('admin.store');
+    Route::get('/branch', [\App\Http\Controllers\OnboardingWizardController::class, 'branch'])->name('branch');
+    Route::post('/branch', [\App\Http\Controllers\OnboardingWizardController::class, 'storeBranch'])->name('branch.store');
+    Route::get('/plan', [\App\Http\Controllers\OnboardingWizardController::class, 'plan'])->name('plan');
+    Route::post('/plan', [\App\Http\Controllers\OnboardingWizardController::class, 'storePlan'])->name('plan.store');
+    Route::get('/completed', [\App\Http\Controllers\OnboardingWizardController::class, 'completed'])->name('completed');
+    Route::post('/complete', [\App\Http\Controllers\OnboardingWizardController::class, 'complete'])->name('complete');
 });

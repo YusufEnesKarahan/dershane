@@ -20,8 +20,10 @@ class EnsureOnboardingCompleted
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Don't intercept onboarding, logout, profile, branch switch or API/AJAX requests
+        // Don't intercept onboarding, setup-wizard, logout, profile, branch switch or API/AJAX requests
         if ($request->is('admin/onboarding*') || 
+            $request->is('setup-wizard*') || 
+            $request->is('onboarding*') || 
             $request->is('logout') || 
             $request->is('admin/profile*') || 
             $request->is('admin/branch/switch*') || 
@@ -46,7 +48,7 @@ class EnsureOnboardingCompleted
                     return $next($request);
                 }
 
-                return redirect()->route('admin.onboarding.index')
+                return redirect('/setup-wizard')
                     ->with('warning', 'Kurum kurulumu tamamlanmadı. Lütfen kurulum adımlarını tamamlayın.');
             }
         }

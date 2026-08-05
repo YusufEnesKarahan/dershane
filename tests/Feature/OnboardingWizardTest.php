@@ -254,7 +254,7 @@ class OnboardingWizardTest extends TestCase
         });
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals(route('admin.onboarding.index'), $response->headers->get('Location'));
+        $this->assertEquals(url('/setup-wizard'), $response->headers->get('Location'));
     }
 
     public function test_completed_onboarding_allows_access_to_critical_routes(): void

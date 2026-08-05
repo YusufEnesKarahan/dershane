@@ -1,23 +1,33 @@
 @props([
-    'title' => 'Kayıt Bulunamadı',
-    'description' => 'Arama kriterlerinize uygun veya sistemde kayıtlı herhangi bir veri bulunamadı.',
-    'icon' => 'M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z',
-    'actionText' => null,
-    'actionRoute' => null
+    'title' => 'Henüz kayıt bulunmuyor',
+    'message' => 'Burada görüntülenecek herhangi bir veri bulunamadı.',
+    'actionUrl' => null,
+    'actionLabel' => null,
 ])
 
-<div class="flex flex-col items-center justify-center p-12 text-center bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
-    <div class="p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-full mb-4">
-        <svg class="w-8 h-8 text-neutral-400 dark:text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $icon }}" />
+<div {{ $attributes->merge(['class' => 'flex flex-col items-center justify-center text-center p-8 sm:p-12 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 text-gray-700 my-4']) }}>
+    <div class="h-12 w-12 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mb-4">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
         </svg>
     </div>
-    <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-1">{{ $title }}</h3>
-    <p class="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto mb-6">{{ $description }}</p>
     
-    @if($actionText && $actionRoute)
-        <x-admin.button href="{{ $actionRoute }}" variant="primary" icon="M12 4v16m8-8H4">
-            {{ $actionText }}
-        </x-admin.button>
+    <h3 class="text-base font-semibold text-gray-900">
+        {{ $title }}
+    </h3>
+    <p class="text-sm text-gray-500 max-w-sm mt-1">
+        {{ $message }}
+    </p>
+    
+    @if ($actionUrl && $actionLabel)
+        <div class="mt-5">
+            <a href="{{ $actionUrl }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                {{ $actionLabel }}
+            </a>
+        </div>
+    @elseif (isset($actions))
+        <div class="mt-5 flex flex-wrap gap-2 justify-center">
+            {{ $actions }}
+        </div>
     @endif
 </div>

@@ -3,101 +3,78 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Domain\Platform\Services\LicenseService;
+use App\Models\License;
+use App\Models\Branch;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Classroom;
+use App\Domain\License\Services\LicenseService;
 use Illuminate\Http\Request;
-
-use App\Domain\Platform\Services\SubscriptionService;
-use App\Domain\Billing\Services\BillingService;
-use App\Models\PlatformAuditLog;
-use App\Models\Plan;
-use App\Models\SubscriptionPayment;
 
 class LicenseController extends Controller
 {
     public function __construct(
-        protected LicenseService $licenseService,
-        protected SubscriptionService $subscriptionService,
-        protected BillingService $billingService
+        protected LicenseService $licenseService
     ) {}
 
     public function index()
     {
-        $licenseStatus = $this->licenseService->checkLicense();
-        $license = $this->licenseService->getCurrentLicense();
-        $plans = Plan::where('is_active', true)->get();
+        $this->authorize('viewAny', \App\Models\User::class);
 
-        if ($license && $license->subscription) {
-            $license->subscription->load(['payments', 'payments.invoice']);
-        }
+        $licenses = License::with(['planModel', 'subscription.branch'])
+            ->orderBy('id', 'desc')
+            ->paginate(15);
 
-        return view('admin.platform.licenses.index', compact('licenseStatus', 'license', 'plans'));
+        // Fetch usage stats per branch
+        $branches = Branch::all()->map(function ($branch) {
+            $sCount = Student::where('branch_id', $branch->id)->count();
+            $tCount = Teacher::where('branch_id', $branch->id)->count();
+            $cCount = Classroom::where('branch_id', $branch->id)->count();
+
+            $branch->student_usage = "{$sCount} / 200";
+            $branch->teacher_usage = "{$tCount} / 10";
+            $branch->classroom_usage = "{$cCount} / 5";
+
+            return $branch;
+        });
+
+        return view('admin.licenses.index', compact('licenses', 'branches'));
     }
 
-    public function activate(Request $request)
+    public function activate(License $license)
     {
-        $license = $this->licenseService->getCurrentLicense();
-        if (!$license || !$license->subscription) {
-            return back()->with('error', 'Lisans veya abonelik bulunamadı.');
-        }
+        $this->authorize('update', \App\Models\User::class);
 
-        // Create pending payment for current plan
-        $this->billingService->createSubscriptionPayment($license->subscription, [
-            'amount' => $license->subscription->plan->price,
-            'currency' => 'TRY'
-        ]);
-        
-        return back()->with('success', 'Ödeme kaydı oluşturuldu. Lütfen işlemi tamamlayın.');
+        $this->licenseService->activateLicense($license);
+
+        return back()->with('success', 'Lisans başarıyla aktifleştirildi.');
     }
 
-    public function changePlan(Request $request)
+    public function renew(Request $request, License $license)
     {
-        $request->validate([
-            'plan_id' => 'required|exists:plans,id'
-        ]);
+        $this->authorize('update', \App\Models\User::class);
 
-        $license = $this->licenseService->getCurrentLicense();
-        $plan = Plan::find($request->plan_id);
+        $days = (int) $request->input('days', 365);
+        $this->licenseService->renewLicense($license, $days);
 
-        if (!$license || !$plan || !$license->subscription) {
-            return back()->with('error', 'Geçersiz talep.');
-        }
-
-        // Apply plan change via SubscriptionService
-        $subscription = $this->subscriptionService->changePlan($license, $plan);
-        PlatformAuditLog::record(auth()->user(), 'license.changed', $license, [
-            'description' => 'Lisans planı değiştirildi.',
-            'old_plan_id' => $license->subscription?->plan_id,
-            'new_plan_id' => $plan->id,
-        ]);
-
-        // Create pending payment for new plan
-        $this->billingService->createSubscriptionPayment($subscription, [
-            'amount' => $plan->price,
-            'currency' => 'TRY'
-        ]);
-
-        return back()->with('success', "Plan değiştirildi ve ödeme kaydı oluşturuldu. Lütfen işlemi tamamlayın.");
+        return back()->with('success', "Lisans süresi {$days} gün uzatıldı.");
     }
 
-    public function pay(Request $request)
+    public function suspend(License $license)
     {
-        $request->validate([
-            'payment_id' => 'required|exists:subscription_payments,id'
-        ]);
+        $this->authorize('update', \App\Models\User::class);
 
-        $payment = SubscriptionPayment::findOrFail($request->payment_id);
-        
-        if ($payment->status === 'paid') {
-            return back()->with('error', 'Bu ödeme zaten tamamlanmış.');
-        }
+        $this->licenseService->suspendLicense($license);
 
-        $this->billingService->completePayment($payment);
-        PlatformAuditLog::record(auth()->user(), 'subscription.payment.completed', $payment, [
-            'description' => 'Abonelik ödemesi tamamlandı.',
-            'subscription_id' => $payment->subscription_id,
-            'payment_id' => $payment->id,
-        ]);
+        return back()->with('warning', 'Lisans askıya alındı.');
+    }
 
-        return back()->with('success', 'Ödeme başarıyla tamamlandı ve abonelik aktifleştirildi.');
+    public function cancel(License $license)
+    {
+        $this->authorize('update', \App\Models\User::class);
+
+        $this->licenseService->cancelLicense($license);
+
+        return back()->with('danger', 'Lisans iptal edildi.');
     }
 }

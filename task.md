@@ -1,16 +1,7 @@
-# Sprint 7.7 Task List
-
-- [x] Mevcut migration ve subscription yapılarını analiz et.
-- [x] Plan, subscription ve history şemalarını genişlet.
-- [x] Subscription management ve limit servislerini oluştur.
-- [x] Admin controller, routes ve UI ekranlarını ekle.
-- [x] Dashboard KPI alanlarını genişlet.
-- [x] Feature testleri yaz.
-- [ ] `php artisan test` çalıştır ve sonucu doğrula.# Sprint 7.6 Task List
-
-- [x] Add centralized system health service and health dashboard route.
-- [x] Extend tenant usage statistics with activity and size estimates.
-- [x] Add platform audit logging for Super Admin operations.
-- [x] Expand tenant detail UI with health, activity, and subscription sections.
-- [x] Add feature tests for access control, usage metrics, and audit log creation.
-- [ ] Run `php artisan test` and fix any regressions.
+- `[x]` Modify routes/admin.php top-level role group to include `Teacher` role.
+- `[x]` Modify routes/admin.php institution settings group to include `Branch Admin` role.
+- `[x]` Modify routes/web.php `/dashboard` route back to `TenantDashboardController` with middleware.
+- `[x]` Modify app/Http/Controllers/Auth/LoginController.php fallback redirect path.
+- `[x]` Modify tests/Feature/OnboardingWizardTest.php redirect assertions.
+- `[x]` Execute test suite to confirm 100% success.
+- `[x]` Create and compile walkthrough.md and SPRINT_10_8_9_STABILIZATION_REPORT.md.

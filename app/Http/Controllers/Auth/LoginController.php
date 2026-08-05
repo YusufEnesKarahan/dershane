@@ -31,7 +31,7 @@ class LoginController extends Controller
                 return redirect()->intended(route('parent.dashboard'));
             }
 
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('tenant.dashboard'));
         }
 
         $request->hitRateLimiter();
