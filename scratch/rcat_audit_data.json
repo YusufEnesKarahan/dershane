@@ -393,10 +393,10 @@
         "uri": "admin\/licenses",
         "testUrl": "\/admin\/licenses",
         "name": "admin.licenses.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:users.view",
         "roles": {
             "Super Admin": 200,
-            "Branch Admin": 403,
+            "Branch Admin": 200,
             "Teacher": 403,
             "Student": 403,
             "Parent": 403

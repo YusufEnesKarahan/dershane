@@ -343,11 +343,7 @@ Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|ten
         Route::post('settings/import', [PlatformSettingController::class, 'import'])->name('settings.import');
         Route::post('settings/reset', [PlatformSettingController::class, 'reset'])->name('settings.reset');
         
-        // License & Subscription Management
-        Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
-        Route::post('licenses/activate', [LicenseController::class, 'activate'])->name('licenses.activate');
-        Route::post('licenses/change-plan', [LicenseController::class, 'changePlan'])->name('licenses.change-plan');
-        Route::post('licenses/pay', [LicenseController::class, 'pay'])->name('licenses.pay');
+
 
         // V1/V2/V3 Package & Feature Licensing System
         Route::get('packages', [\App\Http\Controllers\Admin\PackageController::class, 'index'])->name('packages.index');
