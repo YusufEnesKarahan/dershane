@@ -12,7 +12,7 @@ class FinanceAnalyticsService
     {
         return \Illuminate\Support\Facades\Cache::remember('finance.analytics.summary', 600, function () {
             $totalInvoiced = Invoice::where('status', '!=', 'Cancelled')->sum('total_amount');
-            $totalCollected = Payment::where('status', 'Completed')->sum('amount');
+            $totalCollected = Payment::sum('amount');
             $totalPendingDebt = StudentDebt::where('status', '!=', 'Paid')->sum('remaining_amount');
             $collectionRate = $totalInvoiced > 0 ? round(($totalCollected / $totalInvoiced) * 100, 1) : 0;
 

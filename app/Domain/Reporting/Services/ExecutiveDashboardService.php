@@ -7,12 +7,10 @@ use App\Models\Teacher;
 use App\Models\Branch;
 use App\Models\ClassSchedule;
 use App\Models\AttendanceSession;
-use App\Models\Attendance;
-use App\Models\AttendanceStatus;
 use App\Models\ExamResult;
 use App\Models\Invoice;
 use App\Models\Payment;
-use App\Models\AssignmentSubmission;
+use App\Models\HomeworkSubmission;
 use App\Models\Notification;
 use App\Models\DashboardSnapshot;
 use App\Core\Repositories\Interfaces\ReportingRepositoryInterface;
@@ -42,23 +40,33 @@ class ExecutiveDashboardService
             $absentCount = \App\Models\AttendanceRecord::whereIn('status', ['absent', 'A', 'yok'])->count();
             $absenceRate = $totalAttendanceCount > 0 ? round(($absentCount / $totalAttendanceCount) * 100, 1) : 0.0;
 
-            // Exam Net averages
+            // Practice Exam Net averages (TYT, AYT, LGS, YKS)
             $avgTytNet = ExamResult::whereHas('exam', function ($q) {
-                $q->where('exam_type', 'TYT');
+                $q->where('type', 'TYT');
             })->avg('total_net') ?? 0.0;
 
             $avgAytNet = ExamResult::whereHas('exam', function ($q) {
-                $q->where('exam_type', 'AYT');
+                $q->where('type', 'AYT');
             })->avg('total_net') ?? 0.0;
+
+            $avgLgsNet = ExamResult::whereHas('exam', function ($q) {
+                $q->where('type', 'LGS');
+            })->avg('total_net') ?? 0.0;
+
+            $avgYksNet = ExamResult::whereHas('exam', function ($q) {
+                $q->whereIn('type', ['YKS', 'Kurumsal Deneme']);
+            })->avg('total_net') ?? 0.0;
+
+            // Study Program Completion %
+            $totalHomeworkSubmissions = HomeworkSubmission::count();
+            $completedSubmissions = HomeworkSubmission::whereIn('task_status', ['Completed', 'graded', 'submitted'])->count();
+            $studyProgramCompletionRate = $totalHomeworkSubmissions > 0 ? round(($completedSubmissions / $totalHomeworkSubmissions) * 100, 1) : 0.0;
 
             // Finance
             $totalCollected = Payment::sum('amount') ?? 0.0;
             $totalInvoiced = Invoice::sum('total_amount') ?? 0.0;
             $totalPaidInvoices = Invoice::sum('paid_amount') ?? 0.0;
             $pendingDebt = max(0, $totalInvoiced - $totalPaidInvoices);
-
-            // Homework
-            $totalSubmissions = AssignmentSubmission::count();
 
             // Notification stats
             $totalNotifications = Notification::count();
@@ -72,9 +80,12 @@ class ExecutiveDashboardService
                 'absence_rate' => $absenceRate,
                 'avg_tyt_net' => round($avgTytNet, 2),
                 'avg_ayt_net' => round($avgAytNet, 2),
+                'avg_lgs_net' => round($avgLgsNet, 2),
+                'avg_yks_net' => round($avgYksNet, 2),
+                'study_program_completion_rate' => $studyProgramCompletionRate,
                 'total_collected' => round($totalCollected, 2),
                 'pending_debt' => round($pendingDebt, 2),
-                'total_submissions' => $totalSubmissions,
+                'total_submissions' => $totalHomeworkSubmissions,
                 'total_notifications' => $totalNotifications,
                 'calculated_at' => now()->toDateTimeString(),
             ];

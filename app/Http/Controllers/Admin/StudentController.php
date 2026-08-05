@@ -9,6 +9,8 @@ use App\Models\Classroom;
 use App\Domain\Student\Services\StudentManagementService;
 use App\Domain\Tenant\Services\SubscriptionLimitService;
 use App\Core\Context\TenantContext;
+use App\Http\Requests\Admin\StoreStudentRequest;
+use App\Http\Requests\Admin\UpdateStudentRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,12 +51,12 @@ class StudentController extends Controller
             return redirect()->route('admin.students.index')->with('error', 'Mevcut abonelik planınız öğrenci limitine ulaştı. Yeni öğrenci eklemek için paketinizi yükseltin.');
         }
 
-        $classrooms = Classroom::select('id', 'name')->get();
+        $classrooms = Classroom::select('id', 'name', 'code')->get();
 
         return view('admin.students.create', compact('classrooms'));
     }
 
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
         $this->authorize('create', Student::class);
 
@@ -64,29 +66,11 @@ class StudentController extends Controller
             return redirect()->back()->with('error', 'Mevcut abonelik planınız öğrenci limitine ulaştı.');
         }
 
-        $validated = $request->validate([
-            'student_number' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::unique('students', 'student_number')->where('branch_id', $branchId)],
-            'identity_number' => ['nullable', 'string', 'max:20', \Illuminate\Validation\Rule::unique('students', 'identity_number')->whereNotNull('identity_number')],
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'birth_date' => 'nullable|date',
-            'gender' => 'nullable|string',
-            'classroom_id' => 'nullable|exists:classrooms,id',
-            'status' => 'nullable|string',
-            'guardian_name' => 'nullable|string|max:255',
-            'guardian_relation' => 'nullable|string|max:255',
-            'guardian_phone' => 'nullable|string|max:20',
-            'guardian_email' => 'nullable|email',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
-            'city' => 'nullable|string|max:255',
-            'district' => 'nullable|string|max:255',
-            'address_text' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         try {
             $student = $this->studentService->createStudent($validated, $branchId, Auth::id());
-            return redirect()->route('admin.students.show', $student->id)->with('success', 'Öğrenci kaydı başarıyla oluşturuldu.');
+            return redirect()->route('admin.students.show', $student->id)->with('success', 'Öğrenci kaydı ve ilişkili kullanıcı hesapları başarıyla oluşturuldu.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Öğrenci oluşturulurken bir hata oluştu: ' . $e->getMessage())->withInput();
         }
@@ -105,37 +89,17 @@ class StudentController extends Controller
     {
         $this->authorize('update', $student);
 
-        $classrooms = Classroom::select('id', 'name')->get();
-        $student->load(['primaryGuardian', 'contact', 'address']);
+        $classrooms = Classroom::select('id', 'name', 'code')->get();
+        $student->load(['primaryGuardian', 'contact', 'address', 'user']);
 
         return view('admin.students.edit', compact('student', 'classrooms'));
     }
 
-    public function update(Request $request, Student $student)
+    public function update(UpdateStudentRequest $request, Student $student)
     {
         $this->authorize('update', $student);
 
-        $branchId = $this->getActiveBranchId();
-
-        $validated = $request->validate([
-            'student_number' => ['nullable', 'string', 'max:255', \Illuminate\Validation\Rule::unique('students', 'student_number')->where('branch_id', $branchId)->ignore($student->id)],
-            'identity_number' => ['nullable', 'string', 'max:20', \Illuminate\Validation\Rule::unique('students', 'identity_number')->whereNotNull('identity_number')->ignore($student->id)],
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
-            'gender' => 'nullable|string',
-            'classroom_id' => 'nullable|exists:classrooms,id',
-            'status' => 'nullable|string',
-            'guardian_name' => 'nullable|string|max:255',
-            'guardian_relation' => 'nullable|string|max:255',
-            'guardian_phone' => 'nullable|string|max:20',
-            'guardian_email' => 'nullable|email',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
-            'city' => 'nullable|string|max:255',
-            'district' => 'nullable|string|max:255',
-            'address_text' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         try {
             $this->studentService->updateStudent($student, $validated, Auth::id());

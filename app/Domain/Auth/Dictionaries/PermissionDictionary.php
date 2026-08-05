@@ -21,21 +21,6 @@ class PermissionDictionary
     public const PERMISSIONS_VIEW = 'permissions.view';
     public const PERMISSIONS_ASSIGN = 'permissions.assign';
 
-    public const PAGES_VIEW = 'pages.view';
-    public const PAGES_CREATE = 'pages.create';
-    public const PAGES_UPDATE = 'pages.update';
-    public const PAGES_DELETE = 'pages.delete';
-    public const PAGES_PUBLISH = 'pages.publish';
-    public const PAGES_ARCHIVE = 'pages.archive';
-    public const PAGES_RESTORE = 'pages.restore';
-    public const PAGES_PREVIEW = 'pages.preview';
-    public const PAGES_REVISION = 'pages.revision';
-
-    public const BLOGS_VIEW = 'blogs.view';
-    public const BLOGS_CREATE = 'blogs.create';
-    public const BLOGS_UPDATE = 'blogs.update';
-    public const BLOGS_DELETE = 'blogs.delete';
-
     public const TEACHERS_VIEW = 'teachers.view';
     public const TEACHERS_CREATE = 'teachers.create';
     public const TEACHERS_UPDATE = 'teachers.update';
@@ -49,31 +34,12 @@ class PermissionDictionary
     public const TEACHER_DOCUMENTS_MANAGE = 'teacher.documents.manage';
     public const TEACHER_PERFORMANCE_MANAGE = 'teacher.performance.manage';
     public const TEACHER_SCHEDULE_MANAGE = 'teacher.schedule.manage';
-    public const TEACHER_SALARY_MANAGE = 'teacher.salary.manage';
-    public const TEACHER_CONTRACTS_MANAGE = 'teacher.contracts.manage';
     public const TEACHER_ANALYTICS_MANAGE = 'teacher.analytics.manage';
 
     public const COURSES_VIEW = 'courses.view';
     public const COURSES_CREATE = 'courses.create';
     public const COURSES_UPDATE = 'courses.update';
     public const COURSES_DELETE = 'courses.delete';
-
-    public const GALLERY_VIEW = 'gallery.view';
-    public const GALLERY_CREATE = 'gallery.create';
-    public const GALLERY_DELETE = 'gallery.delete';
-
-    public const MEDIA_VIEW = 'media.view';
-    public const MEDIA_CREATE = 'media.create';
-    public const MEDIA_UPDATE = 'media.update';
-    public const MEDIA_DELETE = 'media.delete';
-    public const MEDIA_MOVE = 'media.move';
-    public const MEDIA_DOWNLOAD = 'media.download';
-
-    public const SETTINGS_VIEW = 'settings.view';
-    public const SETTINGS_UPDATE = 'settings.update';
-
-    public const CRM_VIEW = 'crm.view';
-    public const CRM_MANAGE = 'crm.manage';
 
     public const ATTENDANCE_VIEW = 'attendance.view';
     public const ATTENDANCE_CREATE = 'attendance.create';
@@ -97,16 +63,6 @@ class PermissionDictionary
     public const STUDENT_CREATE = 'student.create';
     public const STUDENT_UPDATE = 'student.update';
     public const STUDENT_DELETE = 'student.delete';
-
-    public const LEADS_VIEW = 'leads.view';
-    public const LEADS_CREATE = 'leads.create';
-    public const LEADS_UPDATE = 'leads.update';
-    public const LEADS_DELETE = 'leads.delete';
-
-    public const CONTACTS_VIEW = 'contacts.view';
-    public const CONTACTS_CREATE = 'contacts.create';
-    public const CONTACTS_UPDATE = 'contacts.update';
-    public const CONTACTS_DELETE = 'contacts.delete';
 
     public const REGISTRATIONS_VIEW = 'registrations.view';
     public const REGISTRATIONS_CREATE = 'registrations.create';
@@ -135,7 +91,6 @@ class PermissionDictionary
     public const HR_CREATE = 'hr.create';
     public const HR_UPDATE = 'hr.update';
     public const HR_APPROVE = 'hr.approve';
-    public const PAYROLL_MANAGE = 'payroll.manage';
 
     public const ASSETS_VIEW = 'assets.view';
     public const ASSETS_MANAGE = 'assets.manage';
@@ -159,13 +114,14 @@ class PermissionDictionary
     public const FINANCE_DISCOUNT = 'finance.discount';
 
     public const NOTIFICATIONS_READ = 'notifications.read';
-    // Parent & Student Portal (Sprint 8.6)
+
+    // Parent & Student Portal
     public const PARENT_VIEW_CHILD = 'parent.view_child';
     public const PARENT_VIEW_ATTENDANCE = 'parent.view_attendance';
     public const STUDENT_VIEW_PROFILE = 'student.view_profile';
     public const STUDENT_VIEW_SCHEDULE = 'student.view_schedule';
 
-    // Exams (Sprint 9.4)
+    // Exams
     public const EXAM_VIEW = 'exam.view';
     public const EXAM_CREATE = 'exam.create';
     public const EXAM_UPDATE = 'exam.update';

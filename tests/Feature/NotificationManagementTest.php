@@ -288,4 +288,42 @@ class NotificationManagementTest extends TestCase
             'type' => 'exam'
         ]);
     }
+
+    public function test_admin_can_view_notification_dashboard()
+    {
+        Notification::create([
+            'branch_id' => $this->branch->id,
+            'receiver_id' => $this->student->user_id,
+            'user_id' => $this->student->user_id,
+            'receiver_type' => 'student',
+            'title' => 'Dashboard Test Notice',
+            'message' => 'Hello',
+            'type' => 'system',
+            'status' => 'Read',
+            'read_at' => now(),
+            'sent_at' => now(),
+            'channel' => 'sms',
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.notifications.dashboard'));
+        $response->assertStatus(200);
+        $response->assertSee('Toplam bildirim');
+    }
+
+    public function test_admin_can_manage_preferences()
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.notifications.preferences'));
+        $response->assertStatus(200);
+
+        $response = $this->actingAs($this->admin)->put(route('admin.notifications.preferences.update'), [
+            'panel_enabled' => '1',
+            'email_enabled' => '1',
+        ]);
+        $response->assertRedirect();
+        
+        $userPreferences = $this->admin->fresh()->preferences;
+        $this->assertTrue($userPreferences['panel_enabled']);
+        $this->assertTrue($userPreferences['email_enabled']);
+        $this->assertFalse($userPreferences['sms_enabled']);
+    }
 }

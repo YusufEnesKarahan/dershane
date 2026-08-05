@@ -54,4 +54,9 @@ class ExamResult extends Model
     {
         return $this->hasMany(ExamAnswer::class);
     }
+
+    public function branchResults(): HasMany
+    {
+        return $this->hasMany(ExamBranchResult::class);
+    }
 }

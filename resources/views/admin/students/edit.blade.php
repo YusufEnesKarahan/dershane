@@ -17,6 +17,17 @@
             </div>
         @endif
 
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-rose-50 border-l-4 border-rose-500 text-rose-700 rounded-r-lg shadow-sm">
+                <div class="font-bold mb-1">Lütfen aşağıdaki hataları düzeltiniz:</div>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="bg-white dark:bg-neutral-900 p-6 sm:p-8 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
             <h3 class="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2 mb-6 border-b border-neutral-100 dark:border-neutral-800 pb-4">
                 <i class="fas fa-user-edit text-indigo-500"></i>
@@ -28,18 +39,18 @@
                 <h4 class="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-4 mt-6">Kişisel Bilgiler</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <x-admin.form.field-group label="Öğrenci No" id="student_number" required>
-                        <input type="text" name="student_number" id="student_number" required value="{{ old('student_number', $student->student_number) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
+                        <input type="text" name="student_number" id="student_number" required value="{{ old('student_number', $student->student_number) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white font-mono">
                     </x-admin.form.field-group>
 
-                    <x-admin.form.field-group label="TC / Pasaport No" id="identity_number">
-                        <input type="text" name="identity_number" id="identity_number" value="{{ old('identity_number', $student->identity_number) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white font-mono uppercase">
+                    <x-admin.form.field-group label="TC Kimlik No (11 Hane)" id="identity_number">
+                        <input type="text" name="identity_number" id="identity_number" maxlength="11" value="{{ old('identity_number', $student->identity_number) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white font-mono">
                     </x-admin.form.field-group>
                     
-                    <x-admin.form.field-group label="Cinsiyet" id="gender">
-                        <select name="gender" id="gender" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
-                            <option value="">Seçiniz</option>
-                            <option value="Male" {{ old('gender', $student->gender) == 'Male' ? 'selected' : '' }}>Erkek</option>
-                            <option value="Female" {{ old('gender', $student->gender) == 'Female' ? 'selected' : '' }}>Kadın</option>
+                    <x-admin.form.field-group label="Cinsiyet" id="gender" required>
+                        <select name="gender" id="gender" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
+                            <option value="">Cinsiyet Seçiniz</option>
+                            <option value="Kadın" {{ old('gender', $student->gender) == 'Kadın' || old('gender', $student->gender) == 'Female' ? 'selected' : '' }}>Kadın</option>
+                            <option value="Erkek" {{ old('gender', $student->gender) == 'Erkek' || old('gender', $student->gender) == 'Male' ? 'selected' : '' }}>Erkek</option>
                         </select>
                     </x-admin.form.field-group>
                 </div>
@@ -66,7 +77,7 @@
                         <select name="classroom_id" id="classroom_id" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
                             <option value="">Sınıf Atanmadı</option>
                             @foreach($classrooms as $c)
-                                <option value="{{ $c->id }}" {{ old('classroom_id', $student->classroom_id) == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                                <option value="{{ $c->id }}" {{ old('classroom_id', $student->classroom_id) == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->code }})</option>
                             @endforeach
                         </select>
                     </x-admin.form.field-group>
@@ -76,7 +87,7 @@
                             <option value="Active" {{ old('status', $student->status) == 'Active' ? 'selected' : '' }}>Aktif</option>
                             <option value="Inactive" {{ old('status', $student->status) == 'Inactive' ? 'selected' : '' }}>Pasif</option>
                             <option value="Graduated" {{ old('status', $student->status) == 'Graduated' ? 'selected' : '' }}>Mezun</option>
-                            <option value="Left" {{ old('status', $student->status) == 'Left' ? 'selected' : '' }}>Ayrıldı</option>
+                            <option value="Suspended" {{ old('status', $student->status) == 'Suspended' ? 'selected' : '' }}>Ayrıldı / Donduruldu</option>
                         </select>
                     </x-admin.form.field-group>
                 </div>
@@ -98,12 +109,12 @@
                             <input type="text" name="guardian_relation" value="{{ old('guardian_relation', $student->primaryGuardian?->relation) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Veli Telefon</label>
-                            <input type="text" name="guardian_phone" value="{{ old('guardian_phone', $student->primaryGuardian?->phone) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Veli Telefon (TR)</label>
+                            <input type="text" name="guardian_phone" id="guardian_phone" value="{{ old('guardian_phone', $student->primaryGuardian?->phone) }}" placeholder="+90 (5XX) XXX XX XX" oninput="formatTrPhone(this)" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Öğrenci Telefon</label>
-                            <input type="text" name="phone" value="{{ old('phone', $student->contact?->phone) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Öğrenci Telefon (TR)</label>
+                            <input type="text" name="phone" id="phone" value="{{ old('phone', $student->contact?->phone) }}" placeholder="+90 (5XX) XXX XX XX" oninput="formatTrPhone(this)" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono">
                         </div>
                     </div>
                     <div class="mt-4">
@@ -120,4 +131,28 @@
             </x-admin.form.layout>
         </div>
     </x-admin.crud.index-layout>
+
+    <script>
+    function formatTrPhone(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.startsWith('90')) value = value.substring(2);
+        if (value.startsWith('0')) value = value.substring(1);
+        if (value.length > 10) value = value.substring(0, 10);
+
+        let formatted = '';
+        if (value.length > 0) {
+            formatted = '+90 (' + value.substring(0, 3);
+        }
+        if (value.length >= 3) {
+            formatted += ') ' + value.substring(3, 6);
+        }
+        if (value.length >= 6) {
+            formatted += ' ' + value.substring(6, 8);
+        }
+        if (value.length >= 8) {
+            formatted += ' ' + value.substring(8, 10);
+        }
+        input.value = formatted;
+    }
+    </script>
 @endsection

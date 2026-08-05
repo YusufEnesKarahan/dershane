@@ -204,13 +204,13 @@
                                 @endforelse
                             </div>
                         </div>
-                        <a href="{{ route('admin.platform.subscriptions.plans') }}" class="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                        <a href="{{ route('admin.platform.subscriptions.index') }}" class="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
                             Paketi Güncelle
                         </a>
                     </div>
                 @else
                     <p class="text-sm text-gray-500">Bu tenant için aktif abonelik bulunamadı.</p>
-                    <a href="{{ route('admin.platform.subscriptions.plans') }}" class="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 mt-4">
+                    <a href="{{ route('admin.platform.subscriptions.index') }}" class="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 mt-4">
                         Abonelik Ata
                     </a>
                 @endif

@@ -21,6 +21,8 @@ class HomeworkSubmission extends Model
         'grade',
         'teacher_feedback',
         'status',
+        'task_status',
+        'progress_percentage',
         'graded_by',
         'graded_at',
         'attachment_path',

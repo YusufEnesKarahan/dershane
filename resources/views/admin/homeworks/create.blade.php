@@ -1,111 +1,144 @@
 @extends('layouts.admin')
 
-@section('title', 'Yeni Ödev Ekle')
+@section('title', 'Yeni Haftalık Çalışma Programı')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Yeni Ödev Ekle</h1>
-        <a href="{{ route('admin.homeworks.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Geri
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-black text-neutral-900 dark:text-white">Yeni Haftalık Çalışma Programı Hazırla</h1>
+            <p class="text-sm text-neutral-500">Öğrenciler için konu, kaynak kitap, sayfa aralığı ve hedef süreleri tanımlayın.</p>
+        </div>
+        <a href="{{ route('admin.homeworks.index') }}" class="px-4 py-2 bg-white border border-neutral-200 text-neutral-700 rounded-xl text-sm font-semibold hover:bg-neutral-50 transition-colors">
+            İptal / Dön
         </a>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <form action="{{ route('admin.homeworks.store') }}" method="POST">
-                @csrf
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label>Başlık <span class="text-danger">*</span></label>
-                        <input type="text" name="title" class="form-control" value="{{ old('title') }}" required>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label>Öğretmen <span class="text-danger">*</span></label>
-                        <select name="teacher_id" class="form-control" required>
-                            <option value="">Seçiniz</option>
-                            @foreach(\App\Models\Teacher::with('user')->get() as $teacher)
-                                <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
-                                    {{ $teacher->user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label>Dönem <span class="text-danger">*</span></label>
-                        <select name="academic_term_id" class="form-control" required>
-                            <option value="">Seçiniz</option>
-                            @foreach(\App\Models\AcademicTerm::all() as $term)
-                                <option value="{{ $term->id }}" {{ old('academic_term_id') == $term->id ? 'selected' : '' }}>
-                                    {{ $term->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label>Ders <span class="text-danger">*</span></label>
-                        <select name="course_id" class="form-control" required>
-                            <option value="">Seçiniz</option>
-                            @foreach(\App\Models\Course::all() as $course)
-                                <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
-                                    {{ $course->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label>Sınıf <span class="text-danger">*</span></label>
-                        <select name="classroom_id" class="form-control" required>
-                            <option value="">Seçiniz</option>
-                            @foreach(\App\Models\Classroom::all() as $classroom)
-                                <option value="{{ $classroom->id }}" {{ old('classroom_id') == $classroom->id ? 'selected' : '' }}>
-                                    {{ $classroom->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label>Açıklama</label>
-                        <textarea name="description" class="form-control" rows="4">{{ old('description') }}</textarea>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label>Son Teslim Tarihi <span class="text-danger">*</span></label>
-                        <input type="datetime-local" name="due_date" class="form-control" value="{{ old('due_date') }}" required>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label>Max Puan <span class="text-danger">*</span></label>
-                        <input type="number" name="max_score" class="form-control" value="{{ old('max_score', 100) }}" min="1" required>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label>Durum <span class="text-danger">*</span></label>
-                        <select name="status" class="form-control" required>
-                            <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Taslak</option>
-                            <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Yayınla</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="allowLate" name="allow_late_submission" {{ old('allow_late_submission') ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="allowLate">Geç Teslime İzin Ver</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-right">
-                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                </div>
-            </form>
+    @if(session('error'))
+        <div class="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl font-bold text-sm">
+            {{ session('error') }}
         </div>
-    </div>
+    @endif
+
+    <form action="{{ route('admin.homeworks.store') }}" method="POST" class="bg-white dark:bg-neutral-900 p-6 sm:p-8 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-6">
+        @csrf
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Program / Ödev Başlığı *</label>
+                <input type="text" name="title" required value="{{ old('title') }}" placeholder="Örn: 3. Hafta - Türev & İntegral Soru Çözümü" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                @error('title') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Hafta No</label>
+                <input type="number" name="week_number" value="{{ old('week_number', 1) }}" min="1" max="52" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Konu Adı</label>
+                <input type="text" name="subject" value="{{ old('subject') }}" placeholder="Örn: Trigonometri III" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Sınıf *</label>
+                <select name="classroom_id" required class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+                    <option value="">Sınıf Seçiniz</option>
+                    @foreach($classrooms as $c)
+                        <option value="{{ $c->id }}" {{ old('classroom_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Ders *</label>
+                <select name="course_id" required class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+                    <option value="">Ders Seçiniz</option>
+                    @foreach($courses as $co)
+                        <option value="{{ $co->id }}" {{ old('course_id') == $co->id ? 'selected' : '' }}>{{ $co->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Öğretmen *</label>
+                <select name="teacher_id" required class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+                    <option value="">Öğretmen Seçiniz</option>
+                    @foreach($teachers as $t)
+                        <option value="{{ $t->id }}" {{ old('teacher_id') == $t->id ? 'selected' : '' }}>{{ $t->user?->name ?? 'Öğretmen #' . $t->id }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Başlangıç Tarihi</label>
+                <input type="date" name="start_date" value="{{ old('start_date', date('Y-m-d')) }}" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Son Teslim / Bitiş Tarihi *</label>
+                <input type="datetime-local" name="due_date" required value="{{ old('due_date', date('Y-m-d\TH:i', strtotime('+7 days'))) }}" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Öncelik Seviyesi *</label>
+                <select name="priority" required class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+                    <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Düşük</option>
+                    <option value="medium" {{ old('priority', 'medium') == 'medium' ? 'selected' : '' }}>Orta</option>
+                    <option value="high" {{ old('priority') == 'high' ? 'selected' : '' }}>Yüksek</option>
+                    <option value="urgent" {{ old('priority') == 'urgent' ? 'selected' : '' }}>Acil</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Tahmini Süre (Dakika) *</label>
+                <input type="number" name="estimated_minutes" required value="{{ old('estimated_minutes', 60) }}" min="5" max="600" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Kaynak Kitap</label>
+                <input type="text" name="source_book" value="{{ old('source_book') }}" placeholder="Örn: Çap Yayınları AYT Soru Bankası" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Sayfa Aralığı</label>
+                <input type="text" name="page_range" value="{{ old('page_range') }}" placeholder="Örn: S. 142 - 158 (Test 1-6)" class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Video Anlatım Linki</label>
+                <input type="url" name="video_url" value="{{ old('video_url') }}" placeholder="https://youtube.com/..." class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold uppercase text-neutral-600 dark:text-neutral-300 mb-2">Açıklama & Çalışma Notları</label>
+            <textarea name="description" rows="4" placeholder="Çalışma programı detayları, dikkat edilecek hususlar..." class="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl px-4 py-2.5 text-sm">{{ old('description') }}</textarea>
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-neutral-100 dark:border-neutral-800">
+            <div class="flex items-center gap-4">
+                <label class="inline-flex items-center gap-2 cursor-pointer text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                    <input type="radio" name="status" value="published" checked class="text-indigo-600 focus:ring-indigo-500">
+                    Hemen Yayınla
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                    <input type="radio" name="status" value="draft" class="text-amber-600 focus:ring-amber-500">
+                    Taslak Olarak Kaydet
+                </label>
+            </div>
+
+            <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-colors shadow-sm">
+                <i class="fas fa-save mr-1"></i> Programı Kaydet
+            </button>
+        </div>
+    </form>
 </div>
 @endsection

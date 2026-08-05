@@ -17,7 +17,18 @@
             </div>
         @endif
 
-        <div class="bg-white dark:bg-neutral-900 p-6 sm:p-8 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-rose-50 border-l-4 border-rose-500 text-rose-700 rounded-r-lg shadow-sm">
+                <div class="font-bold mb-1">Lütfen aşağıdaki hataları düzeltiniz:</div>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="bg-white dark:bg-neutral-900 p-6 sm:p-8 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm" x-data="{ createUser: {{ old('create_user_account') ? 'true' : 'false' }}, createParent: {{ old('create_parent_account') ? 'true' : 'false' }} }">
             <h3 class="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2 mb-6 border-b border-neutral-100 dark:border-neutral-800 pb-4">
                 <i class="fas fa-user-graduate text-indigo-500"></i>
                 Öğrenci Bilgileri Formu
@@ -28,18 +39,18 @@
                 <h4 class="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-4 mt-6">Kişisel Bilgiler</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <x-admin.form.field-group label="Öğrenci No" id="student_number" required>
-                        <input type="text" name="student_number" id="student_number" required value="{{ old('student_number', 'OGR-' . rand(1000, 9999)) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
+                        <input type="text" name="student_number" id="student_number" required value="{{ old('student_number', 'OGR-' . rand(1000, 9999)) }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white font-mono">
                     </x-admin.form.field-group>
 
-                    <x-admin.form.field-group label="TC / Pasaport No" id="identity_number">
-                        <input type="text" name="identity_number" id="identity_number" value="{{ old('identity_number') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white font-mono uppercase">
+                    <x-admin.form.field-group label="TC Kimlik No (11 Hane)" id="identity_number">
+                        <input type="text" name="identity_number" id="identity_number" maxlength="11" value="{{ old('identity_number') }}" placeholder="10000000000" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white font-mono">
                     </x-admin.form.field-group>
                     
-                    <x-admin.form.field-group label="Cinsiyet" id="gender">
-                        <select name="gender" id="gender" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
-                            <option value="">Seçiniz</option>
-                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Erkek</option>
-                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Kadın</option>
+                    <x-admin.form.field-group label="Cinsiyet" id="gender" required>
+                        <select name="gender" id="gender" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
+                            <option value="">Cinsiyet Seçiniz</option>
+                            <option value="Kadın" {{ old('gender') == 'Kadın' || old('gender') == 'Female' ? 'selected' : '' }}>Kadın</option>
+                            <option value="Erkek" {{ old('gender') == 'Erkek' || old('gender') == 'Male' ? 'selected' : '' }}>Erkek</option>
                         </select>
                     </x-admin.form.field-group>
                 </div>
@@ -58,6 +69,35 @@
                     </x-admin.form.field-group>
                 </div>
 
+                <!-- Sisteme Giriş Hesabı Toggle -->
+                <div class="my-6">
+                    <div class="flex items-center justify-between p-4 bg-indigo-50/50 dark:bg-indigo-950/30 rounded-xl border border-indigo-100 dark:border-indigo-900/50 mb-4">
+                        <div>
+                            <span class="text-sm font-bold text-indigo-900 dark:text-indigo-200">Sisteme Giriş Hesabı Oluştur</span>
+                            <p class="text-xs text-indigo-700/80 dark:text-indigo-300/80">Açılırsa öğrenci e-posta ve şifresi ile Öğrenci Portalına giriş yapabilir.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="create_user_account" value="1" x-model="createUser" class="sr-only peer">
+                            <div class="w-11 h-6 bg-neutral-300 peer-focus:outline-none rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                    </div>
+
+                    <div x-show="createUser" x-transition class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-indigo-50/30 dark:bg-neutral-800/40 rounded-xl border border-indigo-100 dark:border-neutral-700">
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">E-Posta Adresi <span class="text-rose-500">*</span></label>
+                            <input type="email" name="user_email" value="{{ old('user_email') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="ogrenci@dershane.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Şifre <span class="text-rose-500">*</span></label>
+                            <input type="password" name="user_password" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Şifre Tekrar <span class="text-rose-500">*</span></label>
+                            <input type="password" name="user_password_confirmation" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="border-t border-neutral-100 dark:border-neutral-800 my-6"></div>
                 <h4 class="text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-4">Akademik Bilgiler</h4>
                 
@@ -66,14 +106,14 @@
                         <select name="classroom_id" id="classroom_id" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
                             <option value="">Sonra Atanacak</option>
                             @foreach($classrooms as $c)
-                                <option value="{{ $c->id }}" {{ old('classroom_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                                <option value="{{ $c->id }}" {{ old('classroom_id') == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->code }})</option>
                             @endforeach
                         </select>
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Durum" id="status" required>
                         <select name="status" id="status" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-neutral-900 dark:text-white">
-                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Aktif</option>
+                            <option value="Active" {{ old('status', 'Active') == 'Active' ? 'selected' : '' }}>Aktif</option>
                             <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Pasif</option>
                         </select>
                     </x-admin.form.field-group>
@@ -84,29 +124,58 @@
                     <i class="fas fa-users text-neutral-400"></i>
                     Veli & İletişim Bilgileri
                 </h4>
+
+                <!-- Veli Hesabı da Oluştur Toggle -->
+                <div class="my-4">
+                    <div class="flex items-center justify-between p-4 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl border border-emerald-100 dark:border-emerald-900/50 mb-4">
+                        <div>
+                            <span class="text-sm font-bold text-emerald-900 dark:text-emerald-200">Veli Hesabı da Oluştur</span>
+                            <p class="text-xs text-emerald-700/80 dark:text-emerald-300/80">Açılırsa veli için Veli Portalı giriş hesabı otomatik oluşturulur.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="create_parent_account" value="1" x-model="createParent" class="sr-only peer">
+                            <div class="w-11 h-6 bg-neutral-300 peer-focus:outline-none rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div>
+
+                    <div x-show="createParent" x-transition class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-emerald-50/30 dark:bg-neutral-800/40 rounded-xl border border-emerald-100 dark:border-neutral-700 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Veli E-Posta <span class="text-rose-500">*</span></label>
+                            <input type="email" name="guardian_email" value="{{ old('guardian_email') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="veli@dershane.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Veli Şifresi <span class="text-rose-500">*</span></label>
+                            <input type="password" name="guardian_password" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Veli Şifre Tekrar <span class="text-rose-500">*</span></label>
+                            <input type="password" name="guardian_password_confirmation" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="p-5 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700/50 mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Veli Ad Soyad</label>
-                            <input type="text" name="guardian_name" value="{{ old('guardian_name') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="text" name="guardian_name" value="{{ old('guardian_name') }}" placeholder="Ahmet Yılmaz" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Yakınlık (Örn: Baba)</label>
-                            <input type="text" name="guardian_relation" value="{{ old('guardian_relation') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <input type="text" name="guardian_relation" value="{{ old('guardian_relation', 'Veli') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Veli Telefon</label>
-                            <input type="text" name="guardian_phone" value="{{ old('guardian_phone') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Veli Telefon (TR)</label>
+                            <input type="text" name="guardian_phone" id="guardian_phone" value="{{ old('guardian_phone') }}" placeholder="+90 (5XX) XXX XX XX" oninput="formatTrPhone(this)" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Öğrenci Telefon</label>
-                            <input type="text" name="phone" value="{{ old('phone') }}" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Öğrenci Telefon (TR)</label>
+                            <input type="text" name="phone" id="phone" value="{{ old('phone') }}" placeholder="+90 (5XX) XXX XX XX" oninput="formatTrPhone(this)" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono">
                         </div>
                     </div>
                     <div class="mt-4">
                         <label class="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">Adres</label>
-                        <textarea name="address_text" rows="2" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ old('address_text') }}</textarea>
+                        <textarea name="address_text" rows="2" placeholder="Açık adres bilgisi..." class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ old('address_text') }}</textarea>
                     </div>
                 </div>
 
@@ -118,4 +187,28 @@
             </x-admin.form.layout>
         </div>
     </x-admin.crud.index-layout>
+
+    <script>
+    function formatTrPhone(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.startsWith('90')) value = value.substring(2);
+        if (value.startsWith('0')) value = value.substring(1);
+        if (value.length > 10) value = value.substring(0, 10);
+
+        let formatted = '';
+        if (value.length > 0) {
+            formatted = '+90 (' + value.substring(0, 3);
+        }
+        if (value.length >= 3) {
+            formatted += ') ' + value.substring(3, 6);
+        }
+        if (value.length >= 6) {
+            formatted += ' ' + value.substring(6, 8);
+        }
+        if (value.length >= 8) {
+            formatted += ' ' + value.substring(8, 10);
+        }
+        input.value = formatted;
+    }
+    </script>
 @endsection

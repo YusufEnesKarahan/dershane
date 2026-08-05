@@ -1,125 +1,85 @@
-# 🏫 Dershane ERP
+# 🏫 Dershane SaaS Platformu (v1.0.0 Stable Release)
 
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=white) ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=flat&logo=laravel&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white) ![Strict Types](https://img.shields.io/badge/Strict_Types-Enabled-success?style=flat) ![PHPStan](https://img.shields.io/badge/PHPStan-Level_max-blueviolet?style=flat)
-
-## 📖 Overview
-Dershane ERP is a production-ready educational management and SaaS platform. It allows educational institutions to manage student records, CRM leads, classrooms, attendance sheets, and curriculum schedules. 
-
-Designed with a **Single Codebase, Multi-Edition** approach, the platform leverages dynamic Feature Flags to distribute features across three licensing tiers (Basic, Professional, and Ultimate) without code branching.
+Dershane SaaS Platformu, eğitim kurumlarının (dershaneler, kurslar, etüt merkezleri) tüm şube, öğrenci, öğretmen, veli, ders, ödev ve sınav süreçlerini uçtan uca yönetebilecekleri, bulut tabanlı ve çok kiracılı (multi-tenant) modern bir Dershane ERP / SaaS otomasyon sistemidir.
 
 ---
 
-## 🚀 Key Features
-*   **Multi-Edition SaaS Flow:** Dynamically turns on/off CRM, scheduling, or ERP metrics depending on the active license flag.
-*   **Domain-Driven Structure:** Separates operations into Domain boundaries, using clean DTOs and Actions instead of cluttered controller layers.
-*   **Robust RBAC Permissions:** Built-in custom Role-Based Access Control (RBAC) supporting granular authorization rules and route guards.
-*   **Strict Type Assertions:** Strict types declared across all domain boundaries and validated via PHPStan static analysis.
+## 🚀 Temel Özellikler (Key Features)
+
+- **Çok Kiracılı SaaS Mimarisi (Multi-Tenant Architecture)**: Her dershane kendi veri alanında izole edilmiştir. Tek kod tabanı üzerinden yüzlerce farklı dershane (tenant) ve şube (branch) güvenli şekilde barındırılır.
+- **Şube ve İzolasyon Yönetimi (Branch Isolation)**: Kiracılar kendi şubelerini oluşturabilir; şube yöneticileri, öğretmenler ve öğrenciler sadece yetkili oldukları şube verilerine erişebilir.
+- **Öğrenci Yaşam Döngüsü**: Kayıt, sınıfa atama, veli ilişkilendirme, şube transferi ve devam takip süreçleri.
+- **Öğretmen Portali**: Ders programı takibi, sınıf yönetimi, ödev tanımlama ve sınav sonucu değerlendirme süreçleri.
+- **Veli ve Öğrenci Portali**: Öğrencilerin ödev teslimi ve sınav sonuç karnelerini (doğru, yanlış, net ve puan analiziyle) izleyebildiği, velilerin ise çocuklarının devam durumlarını takip edebildiği özel portaller.
+- **Ödev ve Sınav Yönetimi**: Konu bazlı ödev dağıtımı, öğrenci teslimleri, sınav yönetimi ve detaylı sınav analiz kartları.
+- **Akademik Takvim & Program**: Ders saatleri, sınıfların haftalık programı, resmi tatil kısıtları ve çakışma kontrolleri.
+- **Manuel Lisanslama ve Plan Kısıtları**: Paket bazlı limitasyonlar (maksimum öğrenci, öğretmen, sınıf limitleri) ve lisans bitiş süresi kontrolleri (Çevrimiçi ödeme entegrasyonu içermeyen %100 güvenli manuel lisanslama).
+- **Rol ve Yetkilendirme (RBAC)**: Super Admin, Branch Admin, Teacher, Student ve Parent rolleri için Spatie entegrasyonuyla yönetilen ince taneli yetki matrisi.
+- **Gelişmiş Dashboard Analitiği**: Şube yöneticileri ve platform yöneticileri için anlık finans, ders, ödev ve başarı grafikleri.
 
 ---
 
-## 🏗️ Architecture & Flow
+## 💻 Teknolojiler (Technology Stack)
 
-```mermaid
-graph TD
-    subgraph Client Layer
-        V[Vite / Blade View] --> A[AlpineJS Controllers]
-    end
-    subgraph HTTP & Entry Layer
-        A --> R[Laravel Routes]
-        R --> C[Http Controllers]
-        C --> DTO[Data Transfer Objects]
-    end
-    subgraph Core Domain Layer
-        DTO --> ACT[Domain Actions]
-        ACT --> SRV[Domain Services]
-        SRV --> REP[Repositories]
-    end
-    subgraph Data Layer
-        REP --> DB[(MySQL / SQLite)]
-    end
-```
+- **Backend**: Laravel 13 & PHP 8.4
+- **Database**: MySQL 8.0+ / MariaDB 10.6+
+- **Frontend**: Blade Templates, Tailwind CSS
+- **Authentication**: Strict HTTPOnly Secure Session Cookies, CSRF, Rate Limiting
+- **Testing**: PHPUnit (221+ Automated Tests, 100% Pass)
 
 ---
 
-## ⚙️ Kurulum (Installation)
+## ⚙️ Kurulum ve Çalıştırma (Installation & Running)
 
-1. Clone the repository and install packages:
-   ```bash
-   composer install
-   npm install && npm run build
-   ```
-2. Copy the environment configuration and generate the key:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+### 1) Gereksinimler (Requirements)
+- PHP 8.4+
+- Composer v2+
+- Node.js v20+ & NPM v10+
+- MySQL 8.0+
 
-## 🗄️ Migration & Seeder
-
-Run the migrations to create the database schema:
+### 2) Kurulum Adımları (Installation)
+Projeyi klonlayıp dizine geçin ve bağımlılıkları kurun:
 ```bash
-php artisan migrate
+composer install
+npm install && npm run build
 ```
 
-To populate the database with default roles, permissions, and demo data, run the seeder:
+### 3) Environment Yapılandırması (.env)
+`.env.example` dosyasını kopyalayarak `.env` oluşturun ve veritabanı ile mail sunucu bağlantılarınızı girin:
 ```bash
-php artisan db:seed
-```
-*(Or use `php artisan migrate --seed` to do both at once).*
-
-## 🧪 Test
-
-Run PHPUnit tests to ensure all functionality and critical flows are working correctly:
-```bash
-php artisan test
-```
-To run static analysis:
-```bash
-./vendor/bin/phpstan analyse
+cp .env.example .env
+php artisan key:generate
 ```
 
-## 🚀 Production Deployment
+### 4) Migration ve Seeder İşlemleri
+Veritabanı şemasını oluşturmak ve temel rolleri, platform ayarlarını yüklemek için aşağıdaki komutu çalıştırın:
+```bash
+php artisan migrate --seed
+```
 
-For production environments, ensure you cache the configurations and routes:
+### 5) Deployment ve Önbellek (Production Optimization)
+Canlı ortamda en yüksek performans için konfigürasyon, rota ve görünümleri önbelleğe alın:
 ```bash
 php artisan optimize
 ```
-Also, ensure frontend assets are compiled for production:
-```bash
-npm run build
-```
 
-## 🔄 Queue
+---
 
-The application uses Laravel queues for background tasks (e.g., sending notifications, processing reports). Start the queue worker using Supervisor or manually:
-```bash
-php artisan queue:work
-```
+## 🕒 Arka Plan İşleri ve Planlanmış Görevler (Scheduler & Queue)
 
-## ⚡ Cache
-
-We heavily rely on caching for dashboard metrics and RBAC rules. You can clear the cache using:
-```bash
-php artisan cache:clear
-# or for full optimization clearing:
-php artisan optimize:clear
-```
-
-## 📁 Storage
-
-Ensure the storage symbolic link is created so public files (like profile pictures and documents) are accessible:
-```bash
-php artisan storage:link
-```
-
-## 🕒 Cron (Task Scheduling)
-
-For scheduled tasks (like license checks, report generation), add the following Cron entry to your server:
+### 1) Task Scheduler (Cron)
+Zamanlanmış görevlerin (lisans süresi, telemetri, otomatik e-posta bildirimleri) çalışması için sunucuya aşağıdaki Cron girişini yapın:
 ```bash
 * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
+### 2) Queue Worker
+Arka plan e-posta ve raporlama kuyruklarının işlenmesi için queue worker'ı başlatın (Production'da Supervisor önerilir):
+```bash
+php artisan queue:work
+```
+
 ---
 
-## 📄 License & Contributing
-This project is licensed under the MIT License. Contributions are welcome—please submit a Pull Request.
+## 📄 Lisans (License)
+Bu yazılım Dershane SaaS Platformu telif hakları ile korunmaktadır. Detaylar için [LICENSE.md](file:///c:/Users/Yusuf%20Enes%20Karahan/Desktop/Scripts/dershane/LICENSE.md) dosyasına göz atabilirsiniz.

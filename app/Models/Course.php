@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -51,7 +52,17 @@ class Course extends Model
 
     public function teachers()
     {
-        return $this->belongsToMany(Teacher::class, 'course_teachers');
+        return $this->belongsToMany(Teacher::class, 'course_teachers')->withPivot(['is_primary', 'role'])->withTimestamps();
+    }
+
+    public function primaryTeacher()
+    {
+        return $this->teachers()->wherePivot('is_primary', true)->first();
+    }
+
+    public function assistantTeachers()
+    {
+        return $this->teachers()->wherePivot('is_primary', false);
     }
 
     public function branches()

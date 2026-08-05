@@ -70,10 +70,13 @@ class InvoiceController extends Controller
     public function show(Invoice $invoice)
     {
         $this->authorize('view', $invoice);
-        $invoice = $this->repository->findById($invoice->id);
-        $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->get();
+        $invoiceModel = $this->repository->findById($invoice->id) ?? $invoice;
+        $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->get() ?? collect();
 
-        return view('admin.invoices.show', compact('invoice', 'paymentMethods'));
+        return view('admin.invoices.show', [
+            'invoice' => $invoiceModel,
+            'paymentMethods' => $paymentMethods,
+        ]);
     }
 
     public function cancel(Invoice $invoice, CancelInvoice $action)
@@ -84,9 +87,14 @@ class InvoiceController extends Controller
 
     public function dashboard()
     {
-        $summary = $this->analyticsService->getSummary();
-        $recentInvoices = Invoice::with(['student'])->orderBy('issue_date', 'desc')->take(10)->get();
-        $recentPayments = \App\Models\Payment::with(['student', 'paymentMethod'])->orderBy('payment_date', 'desc')->take(10)->get();
+        $summary = $this->analyticsService->getSummary() ?? [
+            'total_invoiced' => 0.0,
+            'total_collected' => 0.0,
+            'total_pending_debt' => 0.0,
+            'collection_rate' => 0.0,
+        ];
+        $recentInvoices = Invoice::with(['student'])->orderBy('issue_date', 'desc')->take(10)->get() ?? collect();
+        $recentPayments = \App\Models\Payment::with(['student'])->orderBy('payment_date', 'desc')->take(10)->get() ?? collect();
 
         return view('admin.invoices.dashboard', compact('summary', 'recentInvoices', 'recentPayments'));
     }

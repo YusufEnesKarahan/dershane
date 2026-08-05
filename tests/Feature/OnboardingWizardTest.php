@@ -118,7 +118,7 @@ class OnboardingWizardTest extends TestCase
                 'end_date' => '2027-06-30',
             ]);
 
-        $response->assertRedirect(route('admin.onboarding.package'));
+        $response->assertRedirect(route('admin.onboarding.teacher'));
 
         $this->assertDatabaseHas('academic_terms', [
             'name' => '2026-2027 YKS Sezonu',
@@ -134,28 +134,7 @@ class OnboardingWizardTest extends TestCase
 
     public function test_package_can_be_selected_and_persisted_to_branch_packages(): void
     {
-        $pkgV2 = Package::where('code', 'V2')->firstOrFail();
-
-        $response = $this->actingAs($this->adminUser1)
-            ->post(route('admin.onboarding.selectPackage'), [
-                'package_id' => $pkgV2->id,
-                'license_type' => 'three_year',
-            ]);
-
-        $response->assertRedirect(route('admin.onboarding.teacher'));
-
-        $this->assertDatabaseHas('branch_packages', [
-            'branch_id' => $this->branch1->id,
-            'package_id' => $pkgV2->id,
-            'license_type' => 'three_year',
-            'status' => 'active',
-        ]);
-
-        $this->assertDatabaseHas('onboarding_checklists', [
-            'branch_id' => $this->branch1->id,
-            'key' => 'package_selected',
-            'completed' => true,
-        ]);
+        $this->markTestSkipped('Package selection step removed in Sprint 10.10 cleanup.');
     }
 
     public function test_teacher_can_be_created_via_onboarding(): void

@@ -86,7 +86,7 @@ class Student extends Model
 
     public function attendances()
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(AttendanceRecord::class);
     }
 
     public function riskLevels()

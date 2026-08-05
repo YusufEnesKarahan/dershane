@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -30,7 +31,7 @@ class CourseController extends Controller
         $this->authorize('viewAny', Course::class);
 
         $filters = CourseFilterDTO::fromRequest($request->all());
-        $courses = $this->repository->paginate(15, (array) $filters);
+        $courses = Course::with(['teachers.user', 'level', 'currentPricing'])->paginate(15);
         $levels = CourseLevel::all();
 
         return view('admin.courses.index', compact('courses', 'levels'));
@@ -44,8 +45,9 @@ class CourseController extends Controller
         $teachers = Teacher::with('user')->get();
         $branches = Branch::all();
         $prerequisites = Course::all();
+        $course = null;
 
-        return view('admin.courses.edit', compact('levels', 'teachers', 'branches', 'prerequisites'));
+        return view('admin.courses.edit', compact('course', 'levels', 'teachers', 'branches', 'prerequisites'));
     }
 
     public function store(Request $request, CreateCourseAction $action)
@@ -56,6 +58,9 @@ class CourseController extends Controller
             'code' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'primary_teacher_id' => 'nullable|exists:teachers,id',
+            'assistant_teacher_ids' => 'nullable|array',
+            'assistant_teacher_ids.*' => 'exists:teachers,id',
         ]);
 
         $dto = new CreateCourseDTO(
@@ -65,7 +70,7 @@ class CourseController extends Controller
             $request->course_level_id ? (int) $request->course_level_id : null,
             $request->duration,
             (int) ($request->capacity ?? 0),
-            $request->status ?? 'Draft',
+            $request->status ?? 'Published',
             (bool) ($request->is_active ?? true),
             $request->cover_image
         );
@@ -73,17 +78,22 @@ class CourseController extends Controller
         try {
             $course = $action->execute($dto);
             $this->pricingService->setPrice($course, (float) $request->price);
+
+            // Sync teachers with primary & assistant roles
+            $this->syncCourseTeachers($course, $request->input('primary_teacher_id'), $request->input('assistant_teacher_ids', []));
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
 
-        return redirect()->route('admin.courses.edit', $course->id)->with('success', 'Course created successfully.');
+        return redirect()->route('admin.courses.index')->with('success', 'Ders kaydı ve öğretmen ataması başarıyla oluşturuldu.');
     }
 
     public function edit(Course $course)
     {
         $this->authorize('update', Course::class);
 
+        $course->load(['teachers.user', 'branches', 'level']);
         $levels = CourseLevel::all();
         $teachers = Teacher::with('user')->get();
         $branches = Branch::all();
@@ -99,6 +109,9 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'primary_teacher_id' => 'nullable|exists:teachers,id',
+            'assistant_teacher_ids' => 'nullable|array',
+            'assistant_teacher_ids.*' => 'exists:teachers,id',
         ]);
 
         $dto = UpdateCourseDTO::fromRequest($request->all());
@@ -108,7 +121,10 @@ class CourseController extends Controller
         // Update pricing history records
         $this->pricingService->setPrice($course, (float) $request->price);
 
-        return redirect()->route('admin.courses.edit', $course->id)->with('success', 'Course updated successfully.');
+        // Sync teachers with primary & assistant roles
+        $this->syncCourseTeachers($course, $request->input('primary_teacher_id'), $request->input('assistant_teacher_ids', []));
+
+        return redirect()->route('admin.courses.index')->with('success', 'Ders bilgileri ve öğretmen atamaları başarıyla güncellendi.');
     }
 
     public function destroy(Course $course, DeleteCourseAction $action)
@@ -117,7 +133,7 @@ class CourseController extends Controller
 
         $action->execute($course);
 
-        return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');
+        return redirect()->route('admin.courses.index')->with('success', 'Ders başarıyla silindi.');
     }
 
     public function analytics()
@@ -125,8 +141,26 @@ class CourseController extends Controller
         $this->authorize('viewAny', Course::class);
 
         $analytics = $this->analyticsService->getAnalyticsSummary();
-        $popular = Course::with(['level', 'currentPricing'])->take(5)->get();
+        $popular = Course::with(['level', 'currentPricing', 'teachers.user'])->take(5)->get();
 
         return view('admin.courses.analytics', compact('analytics', 'popular'));
+    }
+
+    private function syncCourseTeachers(Course $course, ?int $primaryTeacherId, array $assistantTeacherIds): void
+    {
+        $syncData = [];
+
+        if ($primaryTeacherId) {
+            $syncData[$primaryTeacherId] = ['is_primary' => true, 'role' => 'Primary'];
+        }
+
+        foreach ($assistantTeacherIds as $asstId) {
+            $asstId = (int) $asstId;
+            if ($asstId && $asstId !== (int) $primaryTeacherId) {
+                $syncData[$asstId] = ['is_primary' => false, 'role' => 'Assistant'];
+            }
+        }
+
+        $course->teachers()->sync($syncData);
     }
 }

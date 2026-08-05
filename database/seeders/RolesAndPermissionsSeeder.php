@@ -24,16 +24,16 @@ class RolesAndPermissionsSeeder extends Seeder
             'Super Admin' => [], // Gets all implicitly via Gate::before
             'Admin' => [
                 'dashboard.view', 'users.*', 'roles.*', 'teachers.*', 'courses.*', 
-                'classrooms.*', 'branches.*', 'crm.*', 'leads.*', 'contacts.*',
-                'hr.*', 'payroll.*', 'assets.*', 'inventory.*', 'purchase.*',
-                'admission.*', 'enrollment.*', 'documents.*', 'settings.*', 'system.*',
+                'classrooms.*', 'branches.*',
+                'hr.*', 'assets.*', 'inventory.*', 'purchase.*',
+                'admission.*', 'enrollment.*', 'documents.*', 'system.*',
                 'finance.*', 'announcements.*', 'notifications.*', 'exams.*', 'schedules.*', 'homework.*',
                 'guidance.*', 'attendance.*', 'students.*'
             ],
             'Branch Admin' => [
                 'dashboard.view', 'students.*', 'teachers.*', 'courses.*', 
-                'classrooms.*', 'branches.*', 'crm.*', 'leads.*', 'contacts.*',
-                'hr.*', 'payroll.*', 'assets.*', 'inventory.*', 'purchase.*',
+                'classrooms.*', 'branches.*',
+                'hr.*', 'assets.*', 'inventory.*', 'purchase.*',
                 'admission.*', 'enrollment.*', 'documents.*',
                 'finance.*', 'announcements.*', 'notifications.*', 'exams.*', 'schedules.*', 'homework.*',
                 'guidance.*', 'attendance.*', 'users.*'
@@ -48,12 +48,12 @@ class RolesAndPermissionsSeeder extends Seeder
             ],
             'Secretary' => [
                 'dashboard.view',
-                'students.*', 'registrations.*', 'leads.*', 'contacts.*',
+                'students.*', 'registrations.*',
                 'admission.*', 'enrollment.*'
             ],
             'Accountant' => [
                 'dashboard.view',
-                'registrations.*', 'payroll.*', 'hr.view',
+                'registrations.*', 'hr.view',
                 'assets.*', 'inventory.*', 'purchase.*', 'finance.*'
             ],
             'Parent' => [

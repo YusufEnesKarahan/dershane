@@ -5,12 +5,8 @@
 <div class="space-y-6">
     <div class="bg-gradient-to-r from-slate-900 to-indigo-900 p-8 rounded-3xl text-white shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
-            <h1 class="text-2xl font-black mt-2">SaaS Abonelik & Plan Yönetimi</h1>
-            <p class="text-xs text-slate-300 mt-1">Planlar, tenant atamaları, trial durumları ve abonelik yaşam döngüsü burada yönetilir.</p>
-        </div>
-        <div class="flex gap-2">
-            <a href="{{ route('admin.platform.subscriptions.plans') }}" class="bg-white/20 hover:bg-white/30 text-white font-semibold py-2 px-4 rounded-lg text-sm">Planlar</a>
-            <a href="{{ route('admin.platform.subscriptions.plans.create') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg text-sm">Yeni Plan</a>
+            <h1 class="text-2xl font-black mt-2">SaaS Abonelik Yönetimi</h1>
+            <p class="text-xs text-slate-300 mt-1">Tenant atamaları, trial durumları ve abonelik yaşam döngüsü burada yönetilir.</p>
         </div>
     </div>
 
@@ -39,7 +35,6 @@
                 <h3 class="text-lg font-bold">Son Abonelikler</h3>
                 <p class="text-xs text-gray-500">Tenant bazlı aboneliklerin son durumları.</p>
             </div>
-            <a href="{{ route('admin.platform.subscriptions.plans') }}" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">Plan listesine git</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

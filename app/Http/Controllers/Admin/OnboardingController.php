@@ -113,7 +113,7 @@ class OnboardingController extends Controller
 
         $this->onboardingService->completeStep(null, 2, 'academic_year_created');
 
-        return redirect()->route('admin.onboarding.package')
+        return redirect()->route('admin.onboarding.teacher')
             ->with('success', 'Akademik yıl dönemi başarıyla tanımlandı.');
     }
 
@@ -181,8 +181,6 @@ class OnboardingController extends Controller
         $branchId = session('active_branch_id', auth()->user()->branch_id);
 
         $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
             'name' => $validated['first_name'] . ' ' . $validated['last_name'],
             'email' => $validated['email'],
             'password' => bcrypt('password123'),

@@ -19,8 +19,17 @@ class Homework extends Model
         'classroom_id',
         'course_id',
         'teacher_id',
+        'week_number',
+        'start_date',
         'title',
+        'subject',
         'description',
+        'source_book',
+        'page_range',
+        'video_url',
+        'attachment_path',
+        'priority',
+        'estimated_minutes',
         'homework_type',
         'assigned_date',
         'publish_at',
@@ -28,11 +37,11 @@ class Homework extends Model
         'allow_late_submission',
         'max_score',
         'status',
-        'attachment_path',
     ];
 
     protected $casts = [
         'assigned_date' => 'date',
+        'start_date' => 'date',
         'publish_at' => 'datetime',
         'due_date' => 'datetime',
         'allow_late_submission' => 'boolean',
@@ -76,5 +85,13 @@ class Homework extends Model
     public function files()
     {
         return $this->hasMany(HomeworkFile::class);
+    }
+
+    public function getProgressPercentageAttribute(): int
+    {
+        $total = $this->submissions()->count();
+        if ($total === 0) return 0;
+        $completed = $this->submissions()->whereIn('task_status', ['Completed', 'graded', 'submitted'])->count();
+        return (int) round(($completed / $total) * 100);
     }
 }

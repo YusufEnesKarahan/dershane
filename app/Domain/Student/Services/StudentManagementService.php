@@ -7,6 +7,8 @@ use App\Models\StudentGuardian;
 use App\Models\StudentContact;
 use App\Models\StudentAddress;
 use App\Models\PlatformAuditLog;
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -17,7 +19,7 @@ class StudentManagementService
      */
     public function getStudents(int $branchId, array $filters = []): LengthAwarePaginator
     {
-        $query = Student::where('branch_id', $branchId)->with(['classroom']);
+        $query = Student::where('branch_id', $branchId)->with(['classroom', 'user', 'primaryGuardian']);
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];
@@ -36,13 +38,32 @@ class StudentManagementService
     }
 
     /**
-     * Create a new student with relations
+     * Create a new student with relations, optional User account and Parent account
      */
     public function createStudent(array $data, int $branchId, int $userId = null): Student
     {
         return DB::transaction(function () use ($data, $branchId, $userId) {
+            // 1. Optional Student User Account Creation
+            $studentUser = null;
+            if (!empty($data['create_user_account']) && !empty($data['user_email']) && !empty($data['user_password'])) {
+                $studentUser = User::create([
+                    'name' => trim($data['first_name'] . ' ' . $data['last_name']),
+                    'email' => $data['user_email'],
+                    'password' => bcrypt($data['user_password']),
+                    'branch_id' => $branchId,
+                    'status' => \App\Enums\UserStatus::ACTIVE ?? 'active',
+                ]);
+                $studentRole = Role::firstOrCreate(['name' => 'Student']);
+                $studentUser->roles()->syncWithoutDetaching([$studentRole->id]);
+            }
+
+            $phoneCleaned = $data['phone_cleaned'] ?? (isset($data['phone']) ? preg_replace('/[^0-9]/', '', $data['phone']) : null);
+            $guardianPhoneCleaned = $data['guardian_phone_cleaned'] ?? (isset($data['guardian_phone']) ? preg_replace('/[^0-9]/', '', $data['guardian_phone']) : null);
+
+            // 2. Create Student Record
             $student = Student::create([
                 'branch_id' => $branchId,
+                'user_id' => $studentUser?->id,
                 'student_number' => $data['student_number'],
                 'identity_number' => $data['identity_number'] ?? null,
                 'first_name' => $data['first_name'],
@@ -53,25 +74,43 @@ class StudentManagementService
                 'status' => $data['status'] ?? 'Active',
             ]);
 
-            if (!empty($data['guardian_name']) || !empty($data['guardian_phone'])) {
+            // 3. Optional Parent User Account Creation
+            $parentUser = null;
+            if (!empty($data['create_parent_account']) && !empty($data['guardian_email']) && !empty($data['guardian_password'])) {
+                $parentUser = User::create([
+                    'name' => $data['guardian_name'] ?? ($data['first_name'] . ' Velisi'),
+                    'email' => $data['guardian_email'],
+                    'password' => bcrypt($data['guardian_password']),
+                    'branch_id' => $branchId,
+                    'status' => \App\Enums\UserStatus::ACTIVE ?? 'active',
+                ]);
+                $parentRole = Role::firstOrCreate(['name' => 'Parent']);
+                $parentUser->roles()->syncWithoutDetaching([$parentRole->id]);
+            }
+
+            // 4. Guardian Record Creation
+            if (!empty($data['guardian_name']) || !empty($data['guardian_phone']) || $parentUser) {
                 StudentGuardian::create([
                     'student_id' => $student->id,
+                    'user_id' => $parentUser?->id,
                     'guardian_name' => $data['guardian_name'] ?? 'Belirtilmedi',
                     'relation' => $data['guardian_relation'] ?? 'Veli',
-                    'phone' => $data['guardian_phone'] ?? '',
+                    'phone' => $guardianPhoneCleaned ?? $data['guardian_phone'] ?? '',
                     'email' => $data['guardian_email'] ?? null,
                     'is_primary' => true,
                 ]);
             }
 
-            if (!empty($data['phone']) || !empty($data['email'])) {
+            // 5. Contact Record
+            if (!empty($phoneCleaned) || !empty($data['email'])) {
                 StudentContact::create([
                     'student_id' => $student->id,
-                    'phone' => $data['phone'] ?? null,
+                    'phone' => $phoneCleaned ?? $data['phone'] ?? null,
                     'email' => $data['email'] ?? null,
                 ]);
             }
 
+            // 6. Address Record
             if (!empty($data['city']) || !empty($data['address_text'])) {
                 StudentAddress::create([
                     'student_id' => $student->id,
@@ -82,7 +121,7 @@ class StudentManagementService
             }
 
             if ($userId) {
-                $this->logActivity('created', Student::class, $student->id, $userId, 'Öğrenci kaydı oluşturuldu.');
+                $this->logActivity('created', Student::class, $student->id, $userId, 'Öğrenci kaydı ve ilişkili hesaplar oluşturuldu.');
             }
 
             return $student;
@@ -95,6 +134,9 @@ class StudentManagementService
     public function updateStudent(Student $student, array $data, int $userId = null): Student
     {
         return DB::transaction(function () use ($student, $data, $userId) {
+            $phoneCleaned = $data['phone_cleaned'] ?? (isset($data['phone']) ? preg_replace('/[^0-9]/', '', $data['phone']) : null);
+            $guardianPhoneCleaned = $data['guardian_phone_cleaned'] ?? (isset($data['guardian_phone']) ? preg_replace('/[^0-9]/', '', $data['guardian_phone']) : null);
+
             $student->update([
                 'student_number' => $data['student_number'] ?? $student->student_number,
                 'identity_number' => $data['identity_number'] ?? $student->identity_number,
@@ -110,14 +152,14 @@ class StudentManagementService
                 $guardian = $student->primaryGuardian ?: new StudentGuardian(['student_id' => $student->id, 'is_primary' => true]);
                 $guardian->guardian_name = $data['guardian_name'] ?? $guardian->guardian_name ?? 'Belirtilmedi';
                 $guardian->relation = $data['guardian_relation'] ?? $guardian->relation ?? 'Veli';
-                $guardian->phone = $data['guardian_phone'] ?? $guardian->phone ?? '';
+                $guardian->phone = $guardianPhoneCleaned ?? $data['guardian_phone'] ?? $guardian->phone ?? '';
                 $guardian->email = $data['guardian_email'] ?? $guardian->email;
                 $guardian->save();
             }
 
             if (isset($data['phone']) || isset($data['email'])) {
                 $contact = $student->contact ?: new StudentContact(['student_id' => $student->id]);
-                $contact->phone = $data['phone'] ?? $contact->phone;
+                $contact->phone = $phoneCleaned ?? $data['phone'] ?? $contact->phone;
                 $contact->email = $data['email'] ?? $contact->email;
                 $contact->save();
             }
@@ -169,21 +211,34 @@ class StudentManagementService
      */
     public function getStudentDetail(Student $student): array
     {
-        $student->load(['primaryGuardian', 'contact', 'address', 'classroom', 'attendances.session', 'statusHistories']);
+        $student->load(['primaryGuardian.user', 'contact', 'address', 'classroom', 'attendances.session', 'statusHistories', 'user']);
+
+        $userAccount = $student->user;
+        $primaryGuardian = $student->primaryGuardian;
+        $guardianUserAccount = $primaryGuardian?->user;
+
+        $loginStatus = [
+            'has_account' => $userAccount !== null,
+            'email' => $userAccount?->email ?? '-',
+            'user_id' => $userAccount?->id,
+            'last_login_at' => $userAccount?->updated_at ?? null,
+            'is_active' => $userAccount ? true : false,
+        ];
+
+        $parentLoginStatus = [
+            'has_account' => $guardianUserAccount !== null,
+            'email' => $guardianUserAccount?->email ?? '-',
+            'user_id' => $guardianUserAccount?->id,
+            'name' => $primaryGuardian?->guardian_name ?? '-',
+            'phone' => $primaryGuardian?->phone ?? '-',
+            'relation' => $primaryGuardian?->relation ?? 'Veli',
+        ];
 
         $attendances = $student->attendances;
         $present = 0;
         $absent = 0;
-        $late = 0;
 
         foreach ($attendances as $attendance) {
-            if ($attendance->status && clone $attendance->status->is_absence) { // Wait, status->is_absence
-                // Let's just use status model if loaded, or logic. We will assume some basic count.
-                // Assuming $attendance->status is an instance with `is_absence` property
-            }
-            // For safety and MVP:
-            // Since we might not have `status` loaded everywhere without error, let's just do a basic string check or assume missing.
-            // In the previous task, we did: `$attendance->status && $attendance->status->is_absence`
             if (isset($attendance->status) && $attendance->status->is_absence) {
                 $absent++;
             } else {
@@ -199,6 +254,11 @@ class StudentManagementService
 
         return [
             'student' => $student,
+            'user_account' => $userAccount,
+            'primary_guardian' => $primaryGuardian,
+            'guardian_user_account' => $guardianUserAccount,
+            'login_status' => $loginStatus,
+            'parent_login_status' => $parentLoginStatus,
             'attendance_summary' => [
                 'present' => $present,
                 'absent' => $absent,

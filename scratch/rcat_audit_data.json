@@ -278,9 +278,9 @@
         "name": "admin.onboarding.profile",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
             "Student": 403,
             "Parent": 403
         }
@@ -299,27 +299,14 @@
         }
     },
     {
-        "uri": "admin\/onboarding\/package",
-        "testUrl": "\/admin\/onboarding\/package",
-        "name": "admin.onboarding.package",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
         "uri": "admin\/onboarding\/teacher",
         "testUrl": "\/admin\/onboarding\/teacher",
         "name": "admin.onboarding.teacher",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
             "Student": 403,
             "Parent": 403
         }
@@ -330,9 +317,9 @@
         "name": "admin.onboarding.classroom",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
             "Student": 403,
             "Parent": 403
         }
@@ -507,195 +494,13 @@
         }
     },
     {
-        "uri": "admin\/pages\/{page}\/preview",
-        "testUrl": "\/admin\/pages\/1\/preview",
-        "name": "admin.pages.preview",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:pages.view",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/pages",
-        "testUrl": "\/admin\/pages",
-        "name": "admin.pages.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:pages.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/pages\/create",
-        "testUrl": "\/admin\/pages\/create",
-        "name": "admin.pages.create",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:pages.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/pages\/{page}\/edit",
-        "testUrl": "\/admin\/pages\/1\/edit",
-        "name": "admin.pages.edit",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:pages.view",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/blogs\/analytics",
-        "testUrl": "\/admin\/blogs\/analytics",
-        "name": "admin.blogs.analytics",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/blogs",
-        "testUrl": "\/admin\/blogs",
-        "name": "admin.blogs.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/blogs\/create",
-        "testUrl": "\/admin\/blogs\/create",
-        "name": "admin.blogs.create",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/blogs\/{blog}\/edit",
-        "testUrl": "\/admin\/blogs\/1\/edit",
-        "name": "admin.blogs.edit",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/blog\/categories",
-        "testUrl": "\/admin\/blog\/categories",
-        "name": "admin.blog-categories.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/tags",
-        "testUrl": "\/admin\/tags",
-        "name": "admin.tags.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/comments",
-        "testUrl": "\/admin\/comments",
-        "name": "admin.comments.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:blogs.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/media-picker",
-        "testUrl": "\/admin\/media-picker",
-        "name": "admin.media.picker-list",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:media.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/media\/{media}\/download",
-        "testUrl": "\/admin\/media\/1\/download",
-        "name": "admin.media.download",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:media.view",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/media",
-        "testUrl": "\/admin\/media",
-        "name": "admin.media.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:media.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
         "uri": "admin\/notifications\/dashboard",
         "testUrl": "\/admin\/notifications\/dashboard",
         "name": "admin.notifications.dashboard",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:notifications.view",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
             "Teacher": 403,
             "Student": 403,
             "Parent": 403
@@ -707,8 +512,8 @@
         "name": "admin.notifications.preferences",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:notifications.view",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
             "Teacher": 403,
             "Student": 403,
             "Parent": 403
@@ -744,11 +549,11 @@
         "uri": "admin\/notifications",
         "testUrl": "\/admin\/notifications",
         "name": "admin.notifications.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:notification",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:notifications.view",
         "roles": {
             "Super Admin": 200,
             "Branch Admin": 200,
-            "Teacher": 200,
+            "Teacher": 403,
             "Student": 403,
             "Parent": 403
         }
@@ -850,9 +655,9 @@
         "name": "admin.students.show",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:students.view",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
             "Student": 403,
             "Parent": 403
         }
@@ -866,6 +671,19 @@
             "Super Admin": 200,
             "Branch Admin": 200,
             "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/parents\/{id}",
+        "testUrl": "\/admin\/parents\/1",
+        "name": "admin.parents.show",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:students.view",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
             "Student": 403,
             "Parent": 403
         }
@@ -894,6 +712,19 @@
             "Teacher": 404,
             "Student": 404,
             "Parent": 404
+        }
+    },
+    {
+        "uri": "admin\/students\/{student}\/academic-analytics",
+        "testUrl": "\/admin\/students\/1\/academic-analytics",
+        "name": "admin.students.academic-analytics",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:exam",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
+            "Student": 403,
+            "Parent": 403
         }
     },
     {
@@ -1222,45 +1053,6 @@
         }
     },
     {
-        "uri": "admin\/assignments\/analytics",
-        "testUrl": "\/admin\/assignments\/analytics",
-        "name": "admin.assignments.analytics",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:homeworks.view, feature.access:homework",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/assignments\/{assignment}\/submissions",
-        "testUrl": "\/admin\/assignments\/1\/submissions",
-        "name": "admin.assignments.submissions.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:homeworks.view, feature.access:homework",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/assignments",
-        "testUrl": "\/admin\/assignments",
-        "name": "admin.assignments.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:homeworks.view, feature.access:homework",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
         "uri": "admin\/invoices\/dashboard",
         "testUrl": "\/admin\/invoices\/dashboard",
         "name": "admin.invoices.dashboard",
@@ -1586,62 +1378,10 @@
         }
     },
     {
-        "uri": "admin\/teachers-salary",
-        "testUrl": "\/admin\/teachers-salary",
-        "name": "admin.teachers.salary.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:teachers.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/teachers-contracts",
-        "testUrl": "\/admin\/teachers-contracts",
-        "name": "admin.teachers.contracts.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:teachers.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
         "uri": "admin\/teachers\/{teacher}",
         "testUrl": "\/admin\/teachers\/1",
         "name": "admin.teachers.show",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/courses\/analytics",
-        "testUrl": "\/admin\/courses\/analytics",
-        "name": "admin.courses.analytics",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:courses.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/courses-levels",
-        "testUrl": "\/admin\/courses-levels",
-        "name": "admin.courses.levels.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:courses.view",
         "roles": {
             "Super Admin": 200,
             "Branch Admin": 200,
@@ -1669,8 +1409,8 @@
         "name": "admin.courses.create",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:courses.view",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
             "Teacher": 403,
             "Student": 403,
             "Parent": 403
@@ -1807,396 +1547,6 @@
         }
     },
     {
-        "uri": "admin\/settings",
-        "testUrl": "\/admin\/settings",
-        "name": "admin.settings.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/settings\/export",
-        "testUrl": "\/admin\/settings\/export",
-        "name": "admin.settings.export",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/packages",
-        "testUrl": "\/admin\/packages",
-        "name": "admin.packages.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/packages\/create",
-        "testUrl": "\/admin\/packages\/create",
-        "name": "admin.packages.create",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/packages\/{package}\/edit",
-        "testUrl": "\/admin\/packages\/1\/edit",
-        "name": "admin.packages.edit",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/branch-package",
-        "testUrl": "\/admin\/branch-package",
-        "name": "admin.branch-package.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:settings.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/saas\/tenants",
-        "testUrl": "\/admin\/saas\/tenants",
-        "name": "admin.saas.tenants.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/saas\/tenants\/{tenant}",
-        "testUrl": "\/admin\/saas\/tenants\/1",
-        "name": "admin.saas.tenants.show",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/saas\/system-health",
-        "testUrl": "\/admin\/saas\/system-health",
-        "name": "admin.saas.system-health.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/platform\/subscriptions",
-        "testUrl": "\/admin\/platform\/subscriptions",
-        "name": "admin.platform.subscriptions.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/platform\/subscriptions\/plans",
-        "testUrl": "\/admin\/platform\/subscriptions\/plans",
-        "name": "admin.platform.subscriptions.plans",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/platform\/subscriptions\/plans\/create",
-        "testUrl": "\/admin\/platform\/subscriptions\/plans\/create",
-        "name": "admin.platform.subscriptions.plans.create",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/platform\/subscriptions\/plans\/{plan}",
-        "testUrl": "\/admin\/platform\/subscriptions\/plans\/1",
-        "name": "admin.platform.subscriptions.plans.show",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/platform\/subscriptions\/plans\/{plan}\/edit",
-        "testUrl": "\/admin\/platform\/subscriptions\/plans\/1\/edit",
-        "name": "admin.platform.subscriptions.plans.edit",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/reporting\/dashboard",
-        "testUrl": "\/admin\/reporting\/dashboard",
-        "name": "admin.reporting.dashboard",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/reporting\/analytics",
-        "testUrl": "\/admin\/reporting\/analytics",
-        "name": "admin.reporting.analytics",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/reporting\/reports",
-        "testUrl": "\/admin\/reporting\/reports",
-        "name": "admin.reporting.reports",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/reporting\/reports\/{id}\/download",
-        "testUrl": "\/admin\/reporting\/reports\/1\/download",
-        "name": "admin.reporting.download",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/crm\/dashboard",
-        "testUrl": "\/admin\/crm\/dashboard",
-        "name": "admin.crm.dashboard",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:crm.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/crm\/pipeline",
-        "testUrl": "\/admin\/crm\/pipeline",
-        "name": "admin.crm.pipeline",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:crm.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/crm\/analytics",
-        "testUrl": "\/admin\/crm\/analytics",
-        "name": "admin.crm.analytics",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:crm.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/crm\/followups",
-        "testUrl": "\/admin\/crm\/followups",
-        "name": "admin.crm.followups",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:crm.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/leads",
-        "testUrl": "\/admin\/leads",
-        "name": "admin.leads.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:crm.view",
-        "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/leads\/{lead}",
-        "testUrl": "\/admin\/leads\/1",
-        "name": "admin.leads.show",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:crm.view",
-        "roles": {
-            "Super Admin": 302,
-            "Branch Admin": 302,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/admission\/dashboard",
-        "testUrl": "\/admin\/admission\/dashboard",
-        "name": "admin.admission.dashboard",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:admission.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/admission\/workflow",
-        "testUrl": "\/admin\/admission\/workflow",
-        "name": "admin.admission.workflow",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:admission.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/admission\/documents",
-        "testUrl": "\/admin\/admission\/documents",
-        "name": "admin.admission.documents",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:admission.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/admission",
-        "testUrl": "\/admin\/admission",
-        "name": "admin.admission.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:admission.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/admission\/{admission}",
-        "testUrl": "\/admin\/admission\/1",
-        "name": "admin.admission.show",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:admission.view",
-        "roles": {
-            "Super Admin": 302,
-            "Branch Admin": 302,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/contracts",
-        "testUrl": "\/admin\/contracts",
-        "name": "admin.contracts.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:admission.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
         "uri": "admin\/hr\/dashboard",
         "testUrl": "\/admin\/hr\/dashboard",
         "name": "admin.hr.dashboard",
@@ -2223,35 +1573,9 @@
         }
     },
     {
-        "uri": "admin\/departments",
-        "testUrl": "\/admin\/departments",
-        "name": "admin.departments.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:hr.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
         "uri": "admin\/employees",
         "testUrl": "\/admin\/employees",
         "name": "admin.employees.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:hr.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/payroll",
-        "testUrl": "\/admin\/payroll",
-        "name": "admin.payroll.index",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:hr.view",
         "roles": {
             "Super Admin": 200,
@@ -2291,19 +1615,6 @@
         "uri": "admin\/expenses",
         "testUrl": "\/admin\/expenses",
         "name": "admin.expenses.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:hr.view",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/advances",
-        "testUrl": "\/admin\/advances",
-        "name": "admin.advances.index",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:hr.view",
         "roles": {
             "Super Admin": 200,
@@ -2769,10 +2080,88 @@
         }
     },
     {
-        "uri": "admin\/notifications\/create",
-        "testUrl": "\/admin\/notifications\/create",
-        "name": "admin.notifications.create",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:notification",
+        "uri": "admin\/saas\/tenants",
+        "testUrl": "\/admin\/saas\/tenants",
+        "name": "admin.saas.tenants.index",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/saas\/tenants\/{tenant}",
+        "testUrl": "\/admin\/saas\/tenants\/1",
+        "name": "admin.saas.tenants.show",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/saas\/system-health",
+        "testUrl": "\/admin\/saas\/system-health",
+        "name": "admin.saas.system-health.index",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/platform\/subscriptions",
+        "testUrl": "\/admin\/platform\/subscriptions",
+        "name": "admin.platform.subscriptions.index",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, role:Super Admin",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/reporting\/dashboard",
+        "testUrl": "\/admin\/reporting\/dashboard",
+        "name": "admin.reporting.dashboard",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/reporting\/analytics",
+        "testUrl": "\/admin\/reporting\/analytics",
+        "name": "admin.reporting.analytics",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/reporting\/reports",
+        "testUrl": "\/admin\/reporting\/reports",
+        "name": "admin.reporting.reports",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
         "roles": {
             "Super Admin": 500,
             "Branch Admin": 500,
@@ -2782,27 +2171,14 @@
         }
     },
     {
-        "uri": "admin\/notifications\/{notification}",
-        "testUrl": "\/admin\/notifications\/1",
-        "name": "admin.notifications.show",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:notification",
+        "uri": "admin\/reporting\/reports\/{id}\/download",
+        "testUrl": "\/admin\/reporting\/reports\/1\/download",
+        "name": "admin.reporting.download",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:dashboard.view",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 500,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/notifications\/{notification}\/edit",
-        "testUrl": "\/admin\/notifications\/1\/edit",
-        "name": "admin.notifications.edit",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:notification",
-        "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 500,
+            "Super Admin": 404,
+            "Branch Admin": 404,
+            "Teacher": 404,
             "Student": 403,
             "Parent": 403
         }

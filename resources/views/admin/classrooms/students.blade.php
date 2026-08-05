@@ -44,7 +44,7 @@
             <form action="{{ route('admin.classrooms.students.attach', $classroom->id) }}" method="POST" class="flex flex-col flex-1 min-h-0">
                 @csrf
                 <div class="p-3 border-b border-slate-200 dark:border-slate-700">
-                    <input type="text" id="search-available" placeholder="İsim ile ara..." class="form-input w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white text-sm">
+                    <input type="text" id="search-available" placeholder="Numara veya Ad Soyad ile ara..." class="form-input w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white text-sm">
                 </div>
                 
                 <div class="flex-1 overflow-y-auto p-2">
@@ -56,8 +56,10 @@
                                     <input type="checkbox" name="student_ids[]" value="{{ $student->id }}" class="form-checkbox h-5 w-5 text-primary-600 rounded border-slate-300 focus:ring-primary-500 dark:border-slate-600 dark:bg-slate-700">
                                     <div class="ml-3 flex-1 flex justify-between items-center">
                                         <div>
-                                            <p class="text-sm font-medium text-slate-900 dark:text-white student-name">{{ $student->user->name ?? 'Bilinmiyor' }}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $student->student_number }}</p>
+                                            <p class="text-sm font-bold text-slate-900 dark:text-white student-name font-mono">
+                                                {{ $student->student_number }} - {{ $student->full_name }}
+                                            </p>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400">Veli: {{ $student->primaryGuardian?->guardian_name ?? 'Girilmedi' }}</p>
                                         </div>
                                     </div>
                                 </label>
@@ -97,7 +99,7 @@
             <form action="{{ route('admin.classrooms.students.detach', $classroom->id) }}" method="POST" class="flex flex-col flex-1 min-h-0">
                 @csrf
                 <div class="p-3 border-b border-slate-200 dark:border-slate-700">
-                    <input type="text" id="search-enrolled" placeholder="İsim ile ara..." class="form-input w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white text-sm">
+                    <input type="text" id="search-enrolled" placeholder="Numara veya Ad Soyad ile ara..." class="form-input w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white text-sm">
                 </div>
                 
                 <div class="flex-1 overflow-y-auto p-2">
@@ -109,8 +111,10 @@
                                     <input type="checkbox" name="student_ids[]" value="{{ $student->id }}" class="form-checkbox h-5 w-5 text-rose-600 rounded border-slate-300 focus:ring-rose-500 dark:border-slate-600 dark:bg-slate-700">
                                     <div class="ml-3 flex-1 flex justify-between items-center">
                                         <div>
-                                            <p class="text-sm font-medium text-slate-900 dark:text-white student-name">{{ $student->user->name ?? 'Bilinmiyor' }}</p>
-                                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ $student->student_number }}</p>
+                                            <p class="text-sm font-bold text-slate-900 dark:text-white student-name font-mono">
+                                                {{ $student->student_number }} - {{ $student->full_name }}
+                                            </p>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400">Veli: {{ $student->primaryGuardian?->guardian_name ?? 'Girilmedi' }}</p>
                                         </div>
                                     </div>
                                 </label>
@@ -139,7 +143,6 @@
 </div>
 
 <script>
-    // Simple client-side search for the lists
     function setupSearch(inputId, listId) {
         const input = document.getElementById(inputId);
         const list = document.getElementById(listId);
@@ -147,12 +150,12 @@
         if (!input || !list) return;
         
         input.addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
+            const term = e.target.value.toLowerCase().trim();
             const items = list.querySelectorAll('li');
             
             items.forEach(item => {
-                const name = item.querySelector('.student-name').textContent.toLowerCase();
-                if (name.includes(term)) {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(term)) {
                     item.style.display = '';
                 } else {
                     item.style.display = 'none';

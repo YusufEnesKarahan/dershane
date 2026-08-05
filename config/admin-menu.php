@@ -12,7 +12,7 @@ return [
         [
             'title' => 'Access Management',
             'icon' => 'users',
-            'permission' => 'users.view', // checked by visibility resolver
+            'permission' => 'users.view',
             'sort' => 2,
             'children' => [
                 [
@@ -28,48 +28,10 @@ return [
             ],
         ],
         [
-            'title' => 'CMS',
-            'icon' => 'document-text',
-            'permission' => 'pages.view',
-            'sort' => 3,
-            'children' => [
-                [
-                    'title' => 'Pages',
-                    'route' => 'admin.pages.index',
-                    'permission' => 'pages.view',
-                ],
-                [
-                    'title' => 'Media Library',
-                    'route' => 'admin.media.index',
-                    'permission' => 'media.view',
-                ],
-                [
-                    'title' => 'Blogs',
-                    'route' => 'admin.blogs.index',
-                    'permission' => 'blogs.view',
-                ],
-                [
-                    'title' => 'Blog Categories',
-                    'route' => 'admin.blog-categories.index',
-                    'permission' => 'blogs.view',
-                ],
-                [
-                    'title' => 'Blog Tags',
-                    'route' => 'admin.tags.index',
-                    'permission' => 'blogs.view',
-                ],
-                [
-                    'title' => 'Comments Moderation',
-                    'route' => 'admin.comments.index',
-                    'permission' => 'blogs.view',
-                ],
-            ],
-        ],
-        [
             'title' => 'Education',
             'icon' => 'academic-cap',
             'permission' => 'teachers.view',
-            'sort' => 4,
+            'sort' => 3,
             'children' => [
                 [
                     'title' => 'Students',
@@ -100,20 +62,8 @@ return [
                     'feature' => 'exam',
                 ],
                 [
-                    'title' => 'Exam Analytics',
-                    'route' => 'admin.exams.analytics',
-                    'permission' => 'students.view',
-                    'feature' => 'exam',
-                ],
-                [
-                    'title' => 'Assignments',
-                    'route' => 'admin.assignments.index',
-                    'permission' => 'homeworks.view',
-                    'feature' => 'homework',
-                ],
-                [
-                    'title' => 'Homework Analytics',
-                    'route' => 'admin.assignments.analytics',
+                    'title' => 'Homeworks',
+                    'route' => 'admin.homeworks.index',
                     'permission' => 'homeworks.view',
                     'feature' => 'homework',
                 ],
@@ -148,16 +98,6 @@ return [
                     'feature' => 'notification',
                 ],
                 [
-                    'title' => 'Parent Portal',
-                    'route' => 'parent.dashboard',
-                    'permission' => 'students.view',
-                ],
-                [
-                    'title' => 'Teacher Portal',
-                    'route' => 'teacher.dashboard',
-                    'permission' => 'students.view',
-                ],
-                [
                     'title' => 'Teachers',
                     'route' => 'admin.teachers.index',
                     'permission' => 'teachers.view',
@@ -168,28 +108,8 @@ return [
                     'permission' => 'teachers.view',
                 ],
                 [
-                    'title' => 'Teacher Salary',
-                    'route' => 'admin.teachers.salary.index',
-                    'permission' => 'teachers.view',
-                ],
-                [
-                    'title' => 'Teacher Contracts',
-                    'route' => 'admin.teachers.contracts.index',
-                    'permission' => 'teachers.view',
-                ],
-                [
-                    'title' => 'Courses',
+                    'title' => 'Dersler',
                     'route' => 'admin.courses.index',
-                    'permission' => 'courses.view',
-                ],
-                [
-                    'title' => 'Course Levels',
-                    'route' => 'admin.courses.levels.index',
-                    'permission' => 'courses.view',
-                ],
-                [
-                    'title' => 'Course Analytics',
-                    'route' => 'admin.courses.analytics',
                     'permission' => 'courses.view',
                 ],
                 [
@@ -231,7 +151,7 @@ return [
                     'permission' => 'dashboard.view',
                 ],
                 [
-                    'title' => 'Reports & Schedules',
+                    'title' => 'Reports',
                     'route' => 'admin.reporting.reports',
                     'permission' => 'dashboard.view',
                 ],
@@ -254,42 +174,9 @@ return [
                     'permission' => 'hq.viewAuditLogs',
                 ],
                 [
-                    'title' => 'Abonelik & Planlar',
+                    'title' => 'Abonelik Listesi',
                     'route' => 'admin.platform.subscriptions.index',
                     'permission' => 'hq.viewAuditLogs',
-                ],
-            ],
-        ],
-        [
-            'title' => 'CRM',
-            'icon' => 'phone',
-            'permission' => 'crm.view',
-            'sort' => 6,
-            'children' => [
-                [
-                    'title' => 'CRM Dashboard',
-                    'route' => 'admin.crm.dashboard',
-                    'permission' => 'crm.view',
-                ],
-                [
-                    'title' => 'Leads',
-                    'route' => 'admin.leads.index',
-                    'permission' => 'crm.view',
-                ],
-                [
-                    'title' => 'Pipeline',
-                    'route' => 'admin.crm.pipeline',
-                    'permission' => 'crm.view',
-                ],
-                [
-                    'title' => 'Takipler (Followups)',
-                    'route' => 'admin.crm.followups',
-                    'permission' => 'crm.view',
-                ],
-                [
-                    'title' => 'CRM Analiz',
-                    'route' => 'admin.crm.analytics',
-                    'permission' => 'crm.view',
                 ],
             ],
         ],
@@ -343,16 +230,6 @@ return [
                     'permission' => 'hr.view',
                 ],
                 [
-                    'title' => 'Departmanlar',
-                    'route' => 'admin.departments.index',
-                    'permission' => 'hr.view',
-                ],
-                [
-                    'title' => 'Maaş & Bordro',
-                    'route' => 'admin.payroll.index',
-                    'permission' => 'hr.view',
-                ],
-                [
                     'title' => 'İzin İstekleri',
                     'route' => 'admin.leaves.index',
                     'permission' => 'hr.view',
@@ -370,11 +247,6 @@ return [
                 [
                     'title' => 'Masraflar',
                     'route' => 'admin.expenses.index',
-                    'permission' => 'hr.view',
-                ],
-                [
-                    'title' => 'Avanslar',
-                    'route' => 'admin.advances.index',
                     'permission' => 'hr.view',
                 ],
                 [
@@ -474,7 +346,7 @@ return [
             'title' => 'System',
             'icon' => 'cog',
             'permission' => 'settings.view',
-            'sort' => 6,
+            'sort' => 8,
             'children' => [
                 [ 'title' => 'Queue Dashboard', 'route' => 'admin.system.jobs.dashboard', 'permission' => 'system.jobs.manage' ],
                 [ 'title' => 'Failed Jobs', 'route' => 'admin.system.jobs.failed', 'permission' => 'system.jobs.manage' ],
@@ -484,13 +356,7 @@ return [
                     'route' => 'admin.settings.institution.index',
                     'permission' => 'institution.settings.view',
                 ],
-                [
-                    'title' => 'Settings',
-                    'route' => 'admin.settings.index',
-                    'permission' => 'settings.view',
-                ],
             ],
         ],
     ],
-
 ];

@@ -82,4 +82,61 @@ class NotificationController extends Controller
 
         return back()->with('success', 'Tüm bildirimler okundu olarak işaretlendi.');
     }
+
+    public function dashboard()
+    {
+        $this->authorize('viewAny', Notification::class);
+
+        $total = Notification::count();
+        $read = Notification::where(function ($q) {
+            $q->whereNotNull('read_at')->orWhere('status', 'Read');
+        })->count();
+        $delivered = Notification::where(function ($q) {
+            $q->whereNotNull('sent_at')->orWhereIn('status', ['Sent', 'Read', 'Delivered']);
+        })->count();
+
+        $readRate = $total > 0 ? round(($read / $total) * 100, 1) : 100.0;
+        $deliveryRate = $total > 0 ? round(($delivered / $total) * 100, 1) : 100.0;
+
+        $channels = Notification::selectRaw('channel, count(*) as count')
+            ->whereNotNull('channel')
+            ->groupBy('channel')
+            ->pluck('count', 'channel')
+            ->toArray();
+
+        $summary = [
+            'total_notifications' => $total,
+            'read_rate' => $readRate,
+            'delivery_rate' => $deliveryRate,
+            'channel_distribution' => $channels,
+        ];
+
+        return view('admin.notifications.dashboard', compact('summary'));
+    }
+
+    public function preferences()
+    {
+        $user = auth()->user();
+        $preference = (object) array_merge([
+            'panel_enabled' => true,
+            'email_enabled' => true,
+            'sms_enabled' => true,
+        ], $user->preferences ?? []);
+
+        return view('admin.notifications.preferences', compact('preference'));
+    }
+
+    public function updatePreferences(Request $request)
+    {
+        $user = auth()->user();
+        $user->update([
+            'preferences' => [
+                'panel_enabled' => $request->has('panel_enabled'),
+                'email_enabled' => $request->has('email_enabled'),
+                'sms_enabled' => $request->has('sms_enabled'),
+            ],
+        ]);
+
+        return back()->with('success', 'Bildirim tercihleri güncellendi.');
+    }
 }

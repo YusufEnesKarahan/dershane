@@ -32,41 +32,45 @@ class HRAnalyticsService
 
             $pendingLeaves = LeaveRequest::where('status', 'Pending')->count();
             $pendingExpenses = Expense::where('status', 'Pending')->count();
-            $pendingAdvances = Advance::where('status', 'Pending')->count();
+            $pendingAdvances = class_exists(Advance::class) && \Illuminate\Support\Facades\Schema::hasTable('advances') ? Advance::where('status', 'Pending')->count() : 0;
 
             // Performance average
             $performanceAvg = PerformanceReview::avg('score') ?? 0.0;
 
             // Department distribution
-            $departments = Department::select('id', 'name')->withCount('employees')->get();
             $deptDistribution = [];
-            foreach ($departments as $dept) {
-                $deptDistribution[] = [
-                    'name' => $dept->name,
-                    'count' => $dept->employees_count
-                ];
+            if (class_exists(Department::class) && \Illuminate\Support\Facades\Schema::hasTable('departments')) {
+                $departments = Department::select('id', 'name')->withCount('employees')->get();
+                foreach ($departments as $dept) {
+                    $deptDistribution[] = [
+                        'name' => $dept->name,
+                        'count' => $dept->employees_count
+                    ];
+                }
             }
 
-            // Salary history chart values (single grouped query instead of 12 queries in loop)
-            $payrollsGrouped = Payroll::selectRaw('year, month, SUM(net_salary) as total_net, SUM(gross_salary) as total_gross')
-                ->groupBy('year', 'month')
-                ->get()
-                ->keyBy(fn ($item) => $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT));
-
+            // Salary history chart values
             $salaryChart = [];
-            for ($i = 5; $i >= 0; $i--) {
-                $date = now()->subMonths($i);
-                $key = $date->format('Y-m');
+            if (class_exists(Payroll::class) && \Illuminate\Support\Facades\Schema::hasTable('payrolls')) {
+                $payrollsGrouped = Payroll::selectRaw('year, month, SUM(net_salary) as total_net, SUM(gross_salary) as total_gross')
+                    ->groupBy('year', 'month')
+                    ->get()
+                    ->keyBy(fn ($item) => $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT));
 
-                $found = $payrollsGrouped->get($key);
-                $totalNet = $found ? $found->total_net : 0.0;
-                $totalGross = $found ? $found->total_gross : 0.0;
+                for ($i = 5; $i >= 0; $i--) {
+                    $date = now()->subMonths($i);
+                    $key = $date->format('Y-m');
 
-                $salaryChart[] = [
-                    'label' => $date->format('M Y'),
-                    'net' => (float)$totalNet,
-                    'gross' => (float)$totalGross
-                ];
+                    $found = $payrollsGrouped->get($key);
+                    $totalNet = $found ? $found->total_net : 0.0;
+                    $totalGross = $found ? $found->total_gross : 0.0;
+
+                    $salaryChart[] = [
+                        'label' => $date->format('M Y'),
+                        'net' => (float)$totalNet,
+                        'gross' => (float)$totalGross
+                    ];
+                }
             }
 
             return [
