@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="h3 mb-4 text-gray-800">Çocuklarımın Ödemeleri</h2>
+    <h2 class="h3 mb-4 text-slate-800">Çocuklarımın Ödemeleri</h2>
 
     @forelse($students as $student)
     <div class="card shadow mb-4">

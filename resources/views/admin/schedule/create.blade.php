@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Yeni Ders Programı Ekle</h1>
+        <h1 class="h3 mb-0 text-slate-800">Yeni Ders Programı Ekle</h1>
         <a href="{{ route('admin.schedule.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Geri Dön
         </a>

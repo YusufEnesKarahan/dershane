@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Ders Programı Düzenle</h1>
+    <h1 class="h3 mb-4 text-slate-800">Ders Programı Düzenle</h1>
 
     @if($errors->any())
         <div class="alert alert-danger">

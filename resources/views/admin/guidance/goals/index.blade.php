@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">Student Goals</h2>
+        <h2 class="h3 mb-0 text-slate-800">Student Goals</h2>
         <button class="btn btn-primary shadow-sm" data-toggle="modal" data-target="#createGoalModal">
             <i class="fas fa-bullseye fa-sm text-white-50"></i> Set Goal
         </button>

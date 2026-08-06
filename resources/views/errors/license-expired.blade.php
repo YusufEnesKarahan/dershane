@@ -17,10 +17,10 @@
         <span class="text-xs font-semibold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full border border-red-200 mb-4 select-none">
             LİSANS UYARISI
         </span>
-        <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-gray-900 tracking-tight mb-4 leading-none">
+        <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 tracking-tight mb-4 leading-none">
             Lisans Süreniz Sona Ermiştir
         </h1>
-        <p class="text-sm text-gray-600 max-w-md mb-8 leading-relaxed">
+        <p class="text-sm text-slate-600 max-w-md mb-8 leading-relaxed">
             Dershane abonelik ve lisans süreniz sona erdiği için bu işleme erişilemiyor. Lütfen sistem yöneticiniz ile iletişime geçin.
         </p>
         <div class="flex gap-3">

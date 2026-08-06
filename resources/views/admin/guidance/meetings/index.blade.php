@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">Student Meetings</h2>
+        <h2 class="h3 mb-0 text-slate-800">Student Meetings</h2>
         <a href="{{ route('admin.meetings.create') }}" class="btn btn-primary shadow-sm">
             <i class="fas fa-calendar-plus fa-sm text-white-50"></i> Schedule Meeting
         </a>

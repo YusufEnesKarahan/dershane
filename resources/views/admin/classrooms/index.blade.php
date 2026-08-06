@@ -115,7 +115,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end space-x-3">
                                 @can('update', $classroom)
-                                <a href="{{ route('admin.classrooms.students', $classroom->id) }}" class="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400" title="Öğrenci Yönetimi">
+                                <a href="{{ route('admin.classrooms.students', $classroom->id) }}" class="text-slate-400 hover:text-blue-600 dark:hover:text-blue-400" title="Öğrenci Yönetimi">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                     </svg>

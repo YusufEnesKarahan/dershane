@@ -11,32 +11,32 @@
         @if($discounts->count() > 0)
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İndirim Adı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Kod</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Tür</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Değer</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Durum</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider text-right">İşlemler</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">İndirim Adı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Kod</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tür</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Değer</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Durum</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider text-right">İşlemler</th>
                 </x-slot>
                 <x-slot name="body">
                     @foreach($discounts as $discount)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
-                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+                            <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                                 {{ $discount->name }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 font-mono">
+                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400 font-mono">
                                 {{ $discount->code }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                                <span class="px-2.5 py-1 text-xs font-medium bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
+                                <span class="px-2.5 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-800 rounded-lg">
                                     {{ $discount->type === 'percentage' ? 'Yüzdelik (%)' : 'Sabit Tutar' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm font-semibold text-neutral-900 dark:text-white">
+                            <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">
                                 {{ $discount->type === 'percentage' ? $discount->value . '%' : number_format($discount->value, 2) . ' TL' }}
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full {{ $discount->is_active ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-500' : 'bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-400' }}">
+                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full {{ $discount->is_active ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-500' : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400' }}">
                                     @if($discount->is_active)
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
                                     @endif

@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200">Merkezi Yapılandırma</span>
+            <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest bg-blue-50 text-blue-700 rounded-full border border-blue-200">Merkezi Yapılandırma</span>
             <h1 class="text-2xl font-bold text-slate-900 mt-1">Kurum Sistem Ayarları</h1>
             <p class="text-xs text-slate-500 mt-0.5">Kurum kimliği, marka görselleri, bölgesel tercihler ve bildirim ayarlarını yönetin.</p>
         </div>
@@ -60,42 +60,42 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 mb-1">Kurum Resmi Adı</label>
-                    <input type="text" name="institution_name" required value="{{ old('institution_name', $settings->institution_name) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" name="institution_name" required value="{{ old('institution_name', $settings->institution_name) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 mb-1">Kurum Açıklaması / Tanıtım</label>
-                    <textarea name="description" rows="3" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Kurumunuz hakkında kısa açıklama">{{ old('description', $settings->description) }}</textarea>
+                    <textarea name="description" rows="3" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Kurumunuz hakkında kısa açıklama">{{ old('description', $settings->description) }}</textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Telefon Numarası</label>
-                    <input type="text" name="phone" required value="{{ old('phone', $settings->phone) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" name="phone" required value="{{ old('phone', $settings->phone) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">E-posta Adresi</label>
-                    <input type="email" name="email" required value="{{ old('email', $settings->email) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="email" name="email" required value="{{ old('email', $settings->email) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Şehir / İl</label>
-                    <input type="text" name="city" value="{{ old('city', $settings->city) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" name="city" value="{{ old('city', $settings->city) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">İlçe</label>
-                    <input type="text" name="district" value="{{ old('district', $settings->district) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" name="district" value="{{ old('district', $settings->district) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 mb-1">Web Sitesi</label>
-                    <input type="url" name="website" value="{{ old('website', $settings->website) }}" placeholder="https://www.kurum.com" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="url" name="website" value="{{ old('website', $settings->website) }}" placeholder="https://www.kurum.com" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 mb-1">Açık Adres</label>
-                    <textarea name="address" rows="3" required class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('address', $settings->address) }}</textarea>
+                    <textarea name="address" rows="3" required class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">{{ old('address', $settings->address) }}</textarea>
                 </div>
             </div>
 
@@ -105,23 +105,23 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Vergi Numarası / T.C.</label>
-                        <input type="text" name="tax_number" value="{{ old('tax_number', $settings->tax_number) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <input type="text" name="tax_number" value="{{ old('tax_number', $settings->tax_number) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Fatura Ünvanı</label>
-                        <input type="text" name="invoice_title" value="{{ old('invoice_title', $settings->invoice_information['title'] ?? '') }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <input type="text" name="invoice_title" value="{{ old('invoice_title', $settings->invoice_information['title'] ?? '') }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Vergi Dairesi</label>
-                        <input type="text" name="invoice_tax_office" value="{{ old('invoice_tax_office', $settings->invoice_information['tax_office'] ?? '') }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <input type="text" name="invoice_tax_office" value="{{ old('invoice_tax_office', $settings->invoice_information['tax_office'] ?? '') }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-end pt-4 border-t border-slate-100">
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
                     Genel Bilgileri Kaydet
                 </button>
             </div>
@@ -148,7 +148,7 @@
                         </div>
                     @endif
 
-                    <input type="file" name="logo" accept="image/jpeg,image/png,image/svg+xml,image/webp" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <input type="file" name="logo" accept="image/jpeg,image/png,image/svg+xml,image/webp" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                 </div>
 
                 <!-- Favicon Upload -->
@@ -162,7 +162,7 @@
                         </div>
                     @endif
 
-                    <input type="file" name="favicon" accept="image/x-icon,image/png,image/svg+xml,image/vnd.microsoft.icon" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <input type="file" name="favicon" accept="image/x-icon,image/png,image/svg+xml,image/vnd.microsoft.icon" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                 </div>
 
                 <!-- Colors -->
@@ -170,7 +170,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">Ana Tema Rengi (Primary Color)</label>
                     <div class="flex items-center gap-3">
                         <input type="color" name="primary_color" value="{{ old('primary_color', $settings->primary_color ?? '#4f46e5') }}" class="w-12 h-10 rounded-lg border-0 cursor-pointer">
-                        <input type="text" value="{{ old('primary_color', $settings->primary_color ?? '#4f46e5') }}" class="rounded-xl border-slate-200 text-sm font-mono focus:ring-indigo-500">
+                        <input type="text" value="{{ old('primary_color', $settings->primary_color ?? '#4f46e5') }}" class="rounded-xl border-slate-200 text-sm font-mono focus:ring-blue-500">
                     </div>
                 </div>
 
@@ -178,13 +178,13 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">Yardımcı Tema Rengi (Secondary Color)</label>
                     <div class="flex items-center gap-3">
                         <input type="color" name="secondary_color" value="{{ old('secondary_color', $settings->secondary_color ?? '#0f172a') }}" class="w-12 h-10 rounded-lg border-0 cursor-pointer">
-                        <input type="text" value="{{ old('secondary_color', $settings->secondary_color ?? '#0f172a') }}" class="rounded-xl border-slate-200 text-sm font-mono focus:ring-indigo-500">
+                        <input type="text" value="{{ old('secondary_color', $settings->secondary_color ?? '#0f172a') }}" class="rounded-xl border-slate-200 text-sm font-mono focus:ring-blue-500">
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-end pt-4 border-t border-slate-100">
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
                     Görsel Ayarları Kaydet
                 </button>
             </div>
@@ -202,7 +202,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Sistem Dili</label>
-                    <select name="language" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500">
+                    <select name="language" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500">
                         <option value="tr" {{ old('language', $settings->language) === 'tr' ? 'selected' : '' }}>Türkçe (TR)</option>
                         <option value="en" {{ old('language', $settings->language) === 'en' ? 'selected' : '' }}>English (US)</option>
                     </select>
@@ -210,7 +210,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Saat Dilimi (Timezone)</label>
-                    <select name="timezone" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500">
+                    <select name="timezone" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500">
                         <option value="Europe/Istanbul" {{ old('timezone', $settings->timezone) === 'Europe/Istanbul' ? 'selected' : '' }}>Europe / Istanbul (GMT+3)</option>
                         <option value="Europe/London" {{ old('timezone', $settings->timezone) === 'Europe/London' ? 'selected' : '' }}>Europe / London (GMT+0)</option>
                         <option value="UTC" {{ old('timezone', $settings->timezone) === 'UTC' ? 'selected' : '' }}>UTC (Coordinated Universal Time)</option>
@@ -219,7 +219,7 @@
             </div>
 
             <div class="flex justify-end pt-4 border-t border-slate-100">
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
                     Bölgesel Ayarları Kaydet
                 </button>
             </div>
@@ -244,7 +244,7 @@
                         <span class="font-bold text-slate-800 text-sm block">E-posta Bildirimleri</span>
                         <span class="text-xs text-slate-500">Kritik duyurular ve raporlar kurum e-postasına gönderilsin.</span>
                     </div>
-                    <input type="checkbox" name="email_notifications" value="1" {{ !empty($prefs['email_notifications']) ? 'checked' : '' }} class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500">
+                    <input type="checkbox" name="email_notifications" value="1" {{ !empty($prefs['email_notifications']) ? 'checked' : '' }} class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
                 </label>
 
                 <label class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200/80 cursor-pointer">
@@ -252,7 +252,7 @@
                         <span class="font-bold text-slate-800 text-sm block">Sistem İçi Bildirimler</span>
                         <span class="text-xs text-slate-500">Yönetim panelinde anlık sistem bildirim merkezi aktif olsun.</span>
                     </div>
-                    <input type="checkbox" name="system_notifications" value="1" {{ !empty($prefs['system_notifications']) ? 'checked' : '' }} class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500">
+                    <input type="checkbox" name="system_notifications" value="1" {{ !empty($prefs['system_notifications']) ? 'checked' : '' }} class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
                 </label>
 
                 <label class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200/80 cursor-pointer">
@@ -260,12 +260,12 @@
                         <span class="font-bold text-slate-800 text-sm block">Veli Portalı Bildirimleri</span>
                         <span class="text-xs text-slate-500">Devamsızlık ve sınav sonuçları veli portalına otomatik iletilsin.</span>
                     </div>
-                    <input type="checkbox" name="parent_notifications" value="1" {{ !empty($prefs['parent_notifications']) ? 'checked' : '' }} class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500">
+                    <input type="checkbox" name="parent_notifications" value="1" {{ !empty($prefs['parent_notifications']) ? 'checked' : '' }} class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
                 </label>
             </div>
 
             <div class="flex justify-end pt-4 border-t border-slate-100">
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">
                     Bildirim Tercihlerini Kaydet
                 </button>
             </div>

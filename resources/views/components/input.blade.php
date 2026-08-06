@@ -13,18 +13,18 @@
     $hasError = $errors->has($name) || $error;
     $errorMessage = $errors->first($name) ?? $error;
 
-    $inputBase = 'block w-full text-sm font-sans rounded-lg shadow-sm border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 dark:focus:ring-offset-neutral-900 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 disabled:bg-neutral-100 dark:disabled:bg-neutral-800 disabled:text-neutral-400 dark:disabled:text-neutral-600';
+    $inputBase = 'block w-full text-sm font-sans rounded-lg shadow-sm border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 dark:focus:ring-offset-slate-900 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600';
     
     $inputStates = $hasError 
         ? 'border-red-500 text-red-900 dark:text-red-300 placeholder-red-300 focus:ring-red-500 focus:border-red-500' 
-        : 'border-neutral-300 dark:border-neutral-700 focus:ring-blue-500 focus:border-blue-500';
+        : 'border-slate-300 dark:border-slate-700 focus:ring-blue-500 focus:border-blue-500';
 
     $classes = $inputBase . ' ' . $inputStates;
 @endphp
 
 <div class="space-y-1">
     @if ($label)
-        <label for="input_{{ $name }}" class="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 select-none">
+        <label for="input_{{ $name }}" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 select-none">
             {{ $label }}
             @if ($required)
                 <span class="text-red-500 dark:text-red-400" aria-hidden="true">*</span>
@@ -66,6 +66,6 @@
             {{ $errorMessage }}
         </p>
     @elseif ($hint)
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 font-sans select-none">{{ $hint }}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-sans select-none">{{ $hint }}</p>
     @endif
 </div>

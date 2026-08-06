@@ -12,9 +12,9 @@
             
             <!-- Sol Form: Ders Ekleme -->
             <div class="space-y-6">
-                <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden flex flex-col h-full">
-                    <div class="p-6 border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/30">
-                        <h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-full">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                             <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                             Programa Ders Ekle
                         </h3>
@@ -25,7 +25,7 @@
                             
                             <div class="space-y-5">
                                 <x-admin.form.field-group label="Derslik" id="classroom_id" required>
-                                    <select name="classroom_id" id="classroom_id" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
+                                    <select name="classroom_id" id="classroom_id" required class="w-full bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors">
                                         @foreach($classrooms as $c)
                                             <option value="{{ $c->id }}" {{ $selectedClassroomId == $c->id ? 'selected' : '' }}>{{ $c->code }} - {{ $c->name }}</option>
                                         @endforeach
@@ -33,7 +33,7 @@
                                 </x-admin.form.field-group>
 
                                 <x-admin.form.field-group label="Eğitmen" id="teacher_id" required>
-                                    <select name="teacher_id" id="teacher_id" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
+                                    <select name="teacher_id" id="teacher_id" required class="w-full bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors">
                                         @foreach($teachers as $t)
                                             <option value="{{ $t->id }}">{{ $t->user->name }}</option>
                                         @endforeach
@@ -41,7 +41,7 @@
                                 </x-admin.form.field-group>
 
                                 <x-admin.form.field-group label="Kurs / Ders" id="course_id" required>
-                                    <select name="course_id" id="course_id" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
+                                    <select name="course_id" id="course_id" required class="w-full bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors">
                                         @foreach($courses as $co)
                                             <option value="{{ $co->id }}">{{ $co->name }}</option>
                                         @endforeach
@@ -49,7 +49,7 @@
                                 </x-admin.form.field-group>
 
                                 <x-admin.form.field-group label="Gün" id="day_of_week" required>
-                                    <select name="day_of_week" id="day_of_week" required class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
+                                    <select name="day_of_week" id="day_of_week" required class="w-full bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors">
                                         <option value="1">Pazartesi</option>
                                         <option value="2">Salı</option>
                                         <option value="3">Çarşamba</option>
@@ -62,15 +62,15 @@
 
                                 <div class="grid grid-cols-2 gap-4">
                                     <x-admin.form.field-group label="Başlangıç" id="start_time" required>
-                                        <input type="time" name="start_time" id="start_time" required value="09:00" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
+                                        <input type="time" name="start_time" id="start_time" required value="09:00" class="w-full bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors">
                                     </x-admin.form.field-group>
                                     <x-admin.form.field-group label="Bitiş" id="end_time" required>
-                                        <input type="time" name="end_time" id="end_time" required value="10:30" class="w-full bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors">
+                                        <input type="time" name="end_time" id="end_time" required value="10:30" class="w-full bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors">
                                     </x-admin.form.field-group>
                                 </div>
                             </div>
 
-                            <div class="pt-6 mt-6 border-t border-neutral-100 dark:border-neutral-800">
+                            <div class="pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
                                 <x-admin.button type="submit" variant="primary" icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" class="w-full justify-center">
                                     Ekle & Kontrol Et
                                 </x-admin.button>
@@ -83,15 +83,15 @@
 
             <!-- Sağ Panel: Derslik Program Listesi / Gridi -->
             <div class="lg:col-span-3">
-                <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden flex flex-col h-full">
-                    <div class="p-6 border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/30">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-full">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                                 <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                 Derslik Haftalık Görünümü
                             </h3>
                             <form method="GET" class="flex items-center gap-2">
-                                <select name="classroom_id" onchange="this.form.submit()" class="w-full sm:w-auto bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-neutral-900 dark:text-white transition-colors font-medium">
+                                <select name="classroom_id" onchange="this.form.submit()" class="w-full sm:w-auto bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white transition-colors font-medium">
                                     @foreach($classrooms as $c)
                                         <option value="{{ $c->id }}" {{ $selectedClassroomId == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->code }})</option>
                                     @endforeach
@@ -104,11 +104,11 @@
                         <div class="grid grid-cols-7 gap-3 min-w-[700px]">
                             @php $days = [1 => 'Pzt', 2 => 'Sal', 3 => 'Çar', 4 => 'Per', 5 => 'Cum', 6 => 'Cmt', 7 => 'Paz']; @endphp
                             @foreach($days as $num => $dayName)
-                                <div class="text-center font-bold text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-widest py-2 border-b border-neutral-100 dark:border-neutral-800 mb-2">{{ $dayName }}</div>
+                                <div class="text-center font-bold text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest py-2 border-b border-slate-100 dark:border-slate-800 mb-2">{{ $dayName }}</div>
                             @endforeach
 
                             @foreach($days as $num => $dayName)
-                                <div class="min-h-[300px] bg-neutral-50/50 dark:bg-neutral-800/20 p-2 rounded-xl border border-dashed border-neutral-200 dark:border-neutral-700 space-y-3 flex flex-col">
+                                <div class="min-h-[300px] bg-slate-50/50 dark:bg-slate-800/20 p-2 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 space-y-3 flex flex-col">
                                     @php $daySchedules = $schedules->where('day_of_week', $num)->sortBy('start_time'); @endphp
                                     @forelse($daySchedules as $sch)
                                         <div class="p-3 rounded-xl text-white shadow-sm font-medium space-y-2 transition-transform hover:scale-[1.02] border border-white/10 relative group" style="background-color: {{ $sch->color_code }}">
@@ -136,7 +136,7 @@
                                             </div>
                                         </div>
                                     @empty
-                                        <div class="flex-1 flex flex-col items-center justify-center text-center opacity-50 text-neutral-400">
+                                        <div class="flex-1 flex flex-col items-center justify-center text-center opacity-50 text-slate-400">
                                             <svg class="w-5 h-5 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                             <div class="text-[9px] font-bold uppercase tracking-widest">Boş Slot</div>
                                         </div>

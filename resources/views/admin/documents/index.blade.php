@@ -9,14 +9,14 @@
         </x-slot>
 
         <!-- Arama ve Filtreler -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm mb-6">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm mb-6">
             <form method="GET" action="{{ route('admin.documents.search') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <x-admin.form.field-group label="Arama Metni" id="query">
-                    <input type="text" name="query" value="{{ request('query') }}" placeholder="Başlık, dosya adı veya açıklama..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                    <input type="text" name="query" value="{{ request('query') }}" placeholder="Başlık, dosya adı veya açıklama..." class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                 </x-admin.form.field-group>
 
                 <x-admin.form.field-group label="Kategori" id="category_id">
-                    <select name="category_id" id="category_id" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                    <select name="category_id" id="category_id" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                         <option value="">Tüm Kategoriler</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -25,7 +25,7 @@
                 </x-admin.form.field-group>
 
                 <x-admin.form.field-group label="Dosya Türü" id="file_type">
-                    <select name="file_type" id="file_type" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                    <select name="file_type" id="file_type" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                         <option value="">Tümü</option>
                         <option value="pdf" {{ request('file_type') == 'pdf' ? 'selected' : '' }}>PDF</option>
                         <option value="docx" {{ request('file_type') == 'docx' ? 'selected' : '' }}>Word (DOCX)</option>
@@ -42,37 +42,37 @@
         </div>
 
         <!-- Doküman Tablosu -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Doküman Başlığı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Kategori</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Tür / Boyut</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Yükleyen</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Tarih</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İşlem</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Doküman Başlığı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Kategori</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tür / Boyut</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Yükleyen</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tarih</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">İşlem</th>
                 </x-slot>
                 <x-slot name="body">
                     @forelse($documents as $doc)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40">
-                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                            <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                                 <a href="{{ route('admin.documents.show', $doc->id) }}" class="hover:text-primary transition flex items-center gap-2">
-                                    <span class="p-1.5 bg-neutral-100 dark:bg-neutral-800 rounded">📄</span>
+                                    <span class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded">📄</span>
                                     {{ $doc->title }}
                                 </a>
-                                <div class="text-[11px] font-mono text-neutral-500 mt-0.5">{{ $doc->file_name }}</div>
+                                <div class="text-[11px] font-mono text-slate-500 mt-0.5">{{ $doc->file_name }}</div>
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-sm" style="background-color: {{ $doc->category->color ?? '#0d9488' }}">
                                     {{ $doc->category->name ?? 'Genel' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm uppercase font-mono text-neutral-700 dark:text-neutral-300">
+                            <td class="px-6 py-4 text-sm uppercase font-mono text-slate-700 dark:text-slate-300">
                                 {{ $doc->file_type }}
-                                <div class="text-[11px] font-normal text-neutral-500 mt-0.5">{{ round($doc->file_size / 1024, 1) }} KB</div>
+                                <div class="text-[11px] font-normal text-slate-500 mt-0.5">{{ round($doc->file_size / 1024, 1) }} KB</div>
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">{{ $doc->uploader->name ?? 'Sistem' }}</td>
-                            <td class="px-6 py-4 text-sm font-mono text-neutral-600 dark:text-neutral-400">{{ $doc->created_at->format('d.m.Y H:i') }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{{ $doc->uploader->name ?? 'Sistem' }}</td>
+                            <td class="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">{{ $doc->created_at->format('d.m.Y H:i') }}</td>
                             <td class="px-6 py-4 text-sm space-x-2">
                                 <x-admin.button href="{{ route('admin.documents.show', $doc->id) }}" variant="secondary" size="sm">Detay</x-admin.button>
                                 <x-admin.button href="{{ route('admin.documents.download', $doc->id) }}" variant="success" size="sm">İndir</x-admin.button>
@@ -85,7 +85,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-xs text-neutral-400">Kayıtlı doküman bulunmamaktadır.</td>
+                            <td colspan="6" class="px-4 py-6 text-center text-xs text-slate-400">Kayıtlı doküman bulunmamaktadır.</td>
                         </tr>
                     @endforelse
                 </x-slot>

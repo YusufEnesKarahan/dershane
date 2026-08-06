@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 text-gray-800">Ders Programları</h1>
+        <h1 class="h3 text-slate-800">Ders Programları</h1>
         <div>
             @can('schedules.create')
                 <a href="{{ route('admin.schedules.create') }}" class="btn btn-primary">

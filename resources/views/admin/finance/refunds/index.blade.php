@@ -11,25 +11,25 @@
         @if($refunds->count() > 0)
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Öğrenci</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Ödeme İzni</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İade Tutarı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İade Tarihi</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider text-right">İşlemler</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Öğrenci</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Ödeme İzni</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">İade Tutarı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">İade Tarihi</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider text-right">İşlemler</th>
                 </x-slot>
                 <x-slot name="body">
                     @foreach($refunds as $refund)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
-                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+                            <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                                 {{ optional(optional($refund->payment)->student)->first_name }} {{ optional(optional($refund->payment)->student)->last_name }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
                                 {{ optional($refund->payment)->payment_number ?? 'Ödeme #' . $refund->payment_id }}
                             </td>
                             <td class="px-6 py-4 text-sm font-semibold text-rose-600 dark:text-rose-500">
                                 {{ number_format($refund->amount, 2) }} TL
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
+                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400 font-medium">
                                 {{ \Carbon\Carbon::parse($refund->refund_date)->format('d.m.Y') }}
                             </td>
                             <td class="px-6 py-4 text-sm space-x-3 text-right">

@@ -41,28 +41,28 @@
 
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 mb-1">Ad Soyad</label>
-                    <input type="text" name="name" required value="{{ old('name', $user->name) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" name="name" required value="{{ old('name', $user->name) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">E-Posta Adresi</label>
-                    <input type="email" name="email" required value="{{ old('email', $user->email) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="email" name="email" required value="{{ old('email', $user->email) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Telefon Numarası</label>
-                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Yeni Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
-                    <input type="password" name="password" placeholder="••••••••" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="password" name="password" placeholder="••••••••" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Hesap Durumu</label>
                     @php $currStatus = is_object($user->status) ? $user->status->value : $user->status; @endphp
-                    <select name="status" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <select name="status" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="ACTIVE" {{ old('status', $currStatus) === 'ACTIVE' ? 'selected' : '' }}>Aktif</option>
                         <option value="PASSIVE" {{ old('status', $currStatus) === 'PASSIVE' ? 'selected' : '' }}>Pasif</option>
                         <option value="SUSPENDED" {{ old('status', $currStatus) === 'SUSPENDED' ? 'selected' : '' }}>Askıda</option>
@@ -71,7 +71,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Bağlı Şube</label>
-                    <select name="branch_id" class="w-full rounded-xl border-slate-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <select name="branch_id" class="w-full rounded-xl border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Tüm Şubeler (Merkez)</option>
                         @foreach($branches as $b)
                             <option value="{{ $b->id }}" {{ old('branch_id', $user->branch_id) == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
@@ -81,7 +81,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Profil Resmi (Avatar)</label>
-                    <input type="file" name="avatar" accept="image/jpeg,image/png,image/jpg,image/webp" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <input type="file" name="avatar" accept="image/jpeg,image/png,image/jpg,image/webp" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                 </div>
 
                 <div class="sm:col-span-2">
@@ -90,7 +90,7 @@
                         @php $userRoleIds = $user->roles->pluck('id')->toArray(); @endphp
                         @foreach($roles as $role)
                             <label class="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700">
-                                <input type="checkbox" name="roles[]" value="{{ $role->id }}" {{ in_array($role->id, old('roles', $userRoleIds)) ? 'checked' : '' }} class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                                <input type="checkbox" name="roles[]" value="{{ $role->id }}" {{ in_array($role->id, old('roles', $userRoleIds)) ? 'checked' : '' }} class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                                 <span>{{ $role->name }}</span>
                             </label>
                         @endforeach
@@ -100,7 +100,7 @@
 
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                 <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition-all">İptal</a>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">Değişiklikleri Kaydet</button>
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm">Değişiklikleri Kaydet</button>
             </div>
         </form>
     </div>

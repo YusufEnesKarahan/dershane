@@ -17,49 +17,49 @@
 
         <x-admin.table.layout>
             <x-slot name="head">
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider w-24">Kod</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Ders Adı</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Atanan Öğretmenler</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Seviye</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Fiyat</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider w-24">Durum</th>
-                <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider w-24">İşlemler</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-24">Kod</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Ders Adı</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Atanan Öğretmenler</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Seviye</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Fiyat</th>
+                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-24">Durum</th>
+                <th class="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider w-24">İşlemler</th>
             </x-slot>
             <x-slot name="body">
                 @forelse($courses as $course)
-                    <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-mono font-bold">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono font-bold">
                                 {{ $course->code }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-neutral-900 dark:text-white">{{ $course->name }}</div>
-                            <div class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 font-mono">/{{ $course->slug }}</div>
+                            <div class="text-sm font-bold text-slate-900 dark:text-white">{{ $course->name }}</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-mono">/{{ $course->slug }}</div>
                         </td>
                         <td class="px-6 py-4">
                             @if($course->teachers->count() > 0)
                                 <div class="space-y-1">
                                     @foreach($course->teachers as $t)
                                         <div class="text-xs flex items-center gap-1.5">
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold {{ $t->pivot->is_primary ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300' : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400' }}">
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold {{ $t->pivot->is_primary ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' }}">
                                                 {{ $t->pivot->is_primary ? 'Ana Öğretmen' : 'Yardımcı' }}
                                             </span>
-                                            <span class="font-medium text-neutral-800 dark:text-neutral-200">{{ $t->user?->name ?? 'Öğretmen #' . $t->id }}</span>
+                                            <span class="font-medium text-slate-800 dark:text-slate-200">{{ $t->user?->name ?? 'Öğretmen #' . $t->id }}</span>
                                         </div>
                                     @endforeach
                                 </div>
                             @else
-                                <span class="text-xs text-neutral-400 italic">Öğretmen Atanmadı</span>
+                                <span class="text-xs text-slate-400 italic">Öğretmen Atanmadı</span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300">
                                 {{ $course->level ? $course->level->name : 'Genel Seviye' }}
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-neutral-900 dark:text-white">
+                            <div class="text-sm font-bold text-slate-900 dark:text-white">
                                 {{ $course->currentPricing ? number_format($course->currentPricing->price, 2) . ' ₺' : 'Fiyat Tanımsız' }}
                             </div>
                         </td>
@@ -70,21 +70,21 @@
                                     Aktif
                                 </span>
                             @else
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-1.5"></span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
                                     Pasif
                                 </span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('admin.courses.edit', $course->id) }}" class="p-2 text-neutral-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Düzenle">
+                                <a href="{{ route('admin.courses.edit', $course->id) }}" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Düzenle">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                 </a>
                                 <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu dersi silmek istediğinize emin misiniz?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Sil">
+                                    <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Sil">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     </button>
                                 </form>

@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-gradient-to-r from-slate-900 to-indigo-900 p-8 rounded-3xl text-white shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl text-slate-900 dark:text-slate-100 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
             <h1 class="text-2xl font-black mt-2">SaaS Abonelik Yönetimi</h1>
             <p class="text-xs text-slate-300 mt-1">Tenant atamaları, trial durumları ve abonelik yaşam döngüsü burada yönetilir.</p>
@@ -12,19 +12,19 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <x-card>
-            <span class="text-xs text-gray-500 block mb-1">Total Plans</span>
+            <span class="text-xs text-slate-500 block mb-1">Total Plans</span>
             <div class="text-2xl font-black text-slate-900 dark:text-white">{{ $metrics['total_plans'] }}</div>
         </x-card>
         <x-card>
-            <span class="text-xs text-gray-500 block mb-1">Active Subscriptions</span>
+            <span class="text-xs text-slate-500 block mb-1">Active Subscriptions</span>
             <div class="text-2xl font-black text-slate-900 dark:text-white">{{ $metrics['active_subscriptions'] }}</div>
         </x-card>
         <x-card>
-            <span class="text-xs text-gray-500 block mb-1">Trial Tenants</span>
+            <span class="text-xs text-slate-500 block mb-1">Trial Tenants</span>
             <div class="text-2xl font-black text-slate-900 dark:text-white">{{ $metrics['trial_tenants'] }}</div>
         </x-card>
         <x-card>
-            <span class="text-xs text-gray-500 block mb-1">Monthly Revenue Estimate</span>
+            <span class="text-xs text-slate-500 block mb-1">Monthly Revenue Estimate</span>
             <div class="text-2xl font-black text-slate-900 dark:text-white">₺{{ number_format($metrics['monthly_revenue_estimate'], 2) }}</div>
         </x-card>
     </div>
@@ -33,12 +33,12 @@
         <div class="flex items-center justify-between mb-4 gap-4">
             <div>
                 <h3 class="text-lg font-bold">Son Abonelikler</h3>
-                <p class="text-xs text-gray-500">Tenant bazlı aboneliklerin son durumları.</p>
+                <p class="text-xs text-slate-500">Tenant bazlı aboneliklerin son durumları.</p>
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-neutral-800 dark:text-gray-400">
+            <table class="w-full text-sm text-left text-slate-500 dark:text-slate-400">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-800 dark:text-slate-400">
                     <tr>
                         <th class="px-4 py-3">Tenant</th>
                         <th class="px-4 py-3">Plan</th>
@@ -48,7 +48,7 @@
                 </thead>
                 <tbody>
                     @forelse($recentSubscriptions as $subscription)
-                        <tr class="border-b dark:border-neutral-700">
+                        <tr class="border-b dark:border-slate-700">
                             <td class="px-4 py-3 font-semibold text-slate-900 dark:text-white">{{ $subscription->branch?->name ?? '-' }}</td>
                             <td class="px-4 py-3">{{ $subscription->plan?->name ?? '-' }}</td>
                             <td class="px-4 py-3 uppercase text-xs font-bold">{{ $subscription->status }}</td>
@@ -56,7 +56,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-6 text-center text-gray-500">Kayıtlı abonelik bulunamadı.</td>
+                            <td colspan="4" class="px-4 py-6 text-center text-slate-500">Kayıtlı abonelik bulunamadı.</td>
                         </tr>
                     @endforelse
                 </tbody>

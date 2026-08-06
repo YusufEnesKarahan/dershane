@@ -29,7 +29,7 @@
         <div class="flex space-x-3">
             <a href="{{ route('admin.classrooms.index') }}" class="btn-secondary">Listeye Dön</a>
             @can('update', $classroom)
-            <a href="{{ route('admin.classrooms.students', $classroom->id) }}" class="btn-primary bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500">Öğrenci Yönetimi</a>
+            <a href="{{ route('admin.classrooms.students', $classroom->id) }}" class="btn-primary bg-blue-600 hover:bg-blue-700 focus:ring-blue-500">Öğrenci Yönetimi</a>
             <a href="{{ route('admin.classrooms.edit', $classroom->id) }}" class="btn-primary bg-amber-600 hover:bg-amber-700 focus:ring-amber-500 border-amber-600">Düzenle</a>
             @endcan
         </div>

@@ -13,7 +13,7 @@
     <!-- Scripts and Styles (Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased text-gray-900 bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="font-sans antialiased text-slate-900 bg-slate-100 flex items-center justify-center min-h-screen">
     <div class="w-full max-w-lg p-8">
         {{ $slot ?? '' }}
         @yield('content')

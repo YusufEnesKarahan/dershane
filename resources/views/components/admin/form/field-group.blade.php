@@ -1,7 +1,7 @@
 @props(['label', 'id' => null, 'error' => null, 'required' => false, 'help' => null])
 <div class="space-y-1.5">
     @if($label)
-        <label {{ $id ? 'for='.$id : '' }} class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        <label {{ $id ? 'for='.$id : '' }} class="block text-sm font-medium text-slate-700 dark:text-slate-300">
             {{ $label }}
             @if($required)
                 <span class="text-rose-500 ml-0.5" title="Zorunlu Alan">*</span>
@@ -14,7 +14,7 @@
     </div>
 
     @if($help && !$error)
-        <p class="text-[13px] text-neutral-500 dark:text-neutral-400 flex items-start gap-1">
+        <p class="text-[13px] text-slate-500 dark:text-slate-400 flex items-start gap-1">
             <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             {{ $help }}
         </p>

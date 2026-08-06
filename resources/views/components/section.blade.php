@@ -6,8 +6,8 @@
 @php
     $bgClasses = [
         'white' => 'bg-white',
-        'gray' => 'bg-neutral-50/50',
-        'dark' => 'bg-neutral-900 text-white',
+        'gray' => 'bg-slate-50/50',
+        'dark' => 'bg-slate-900 text-white',
     ];
 
     $pyClasses = [

@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Ödev İncele: {{ $submission->student->user->name }}</h1>
+        <h1 class="h3 mb-0 text-slate-800">Ödev İncele: {{ $submission->student->user->name }}</h1>
         <a href="{{ route('admin.homeworks.submissions.index', $homework) }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Geri
         </a>

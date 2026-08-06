@@ -4,8 +4,8 @@
 <div class="container mx-auto px-4 py-6">
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Platform Lisans Yönetimi</h1>
-            <p class="text-sm text-gray-500 mt-1">Dershane lisanslarının manuel aktifleştirilmesi, süre uzatılması ve askıya alınması</p>
+            <h1 class="text-2xl font-bold text-slate-900">Platform Lisans Yönetimi</h1>
+            <p class="text-sm text-slate-500 mt-1">Dershane lisanslarının manuel aktifleştirilmesi, süre uzatılması ve askıya alınması</p>
         </div>
     </div>
 
@@ -21,36 +21,36 @@
     @endif
 
     <!-- Table -->
-    <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+    <div class="bg-white rounded-lg shadow overflow-hidden border border-slate-200">
         @if($licenses->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full divide-y divide-slate-200 text-sm">
+                    <thead class="bg-slate-50">
                         <tr>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Lisans Anahtarı / Şube</th>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Paket</th>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Başlangıç</th>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Bitiş</th>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Durum</th>
-                            <th class="px-6 py-3 text-right font-semibold text-gray-600">Manuel İşlemler</th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">Lisans Anahtarı / Şube</th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">Paket</th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">Başlangıç</th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">Bitiş</th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">Durum</th>
+                            <th class="px-6 py-3 text-right font-semibold text-slate-600">Manuel İşlemler</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 bg-white">
+                    <tbody class="divide-y divide-slate-200 bg-white">
                         @foreach($licenses as $lic)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-slate-900">
                                     {{ $lic->license_key }}
                                     @if($lic->subscription && $lic->subscription->branch)
-                                        <span class="block text-xs text-indigo-600 font-semibold">{{ $lic->subscription->branch->name }}</span>
+                                        <span class="block text-xs text-blue-600 font-semibold">{{ $lic->subscription->branch->name }}</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">
+                                <td class="px-6 py-4 whitespace-nowrap text-slate-600">
                                     {{ $lic->planModel ? $lic->planModel->name : ($lic->plan ?? 'Standart') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500">
                                     {{ $lic->starts_at ? $lic->starts_at->format('d.m.Y') : '-' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500">
                                     {{ $lic->expires_at ? $lic->expires_at->format('d.m.Y') : '-' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -69,7 +69,7 @@
                                     <form method="POST" action="{{ route('admin.licenses.renew', $lic->id) }}" class="inline">
                                         @csrf
                                         <input type="hidden" name="days" value="365">
-                                        <button type="submit" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white py-1 px-2.5 rounded">+1 Yıl Uzat</button>
+                                        <button type="submit" class="text-xs bg-blue-600 hover:bg-blue-700 text-white py-1 px-2.5 rounded">+1 Yıl Uzat</button>
                                     </form>
 
                                     @if($lic->status !== 'suspended')
@@ -84,7 +84,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-4 border-t border-gray-200">
+            <div class="p-4 border-t border-slate-200">
                 {{ $licenses->links() }}
             </div>
         @else

@@ -26,7 +26,7 @@
     <!-- Additional Custom Styles Stack -->
     @stack('styles')
 </head>
-<body class="h-full bg-background text-neutral font-sans antialiased flex flex-col min-h-screen">
+<body class="h-full bg-background text-slate font-sans antialiased flex flex-col min-h-screen">
     <!-- Navbar Layout -->
     <x-navbar />
 

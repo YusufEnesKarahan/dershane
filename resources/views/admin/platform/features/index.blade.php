@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-gradient-to-r from-indigo-900 to-slate-900 p-8 rounded-3xl text-white shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl text-slate-900 dark:text-slate-100 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
             <h1 class="text-2xl font-black mt-2">Özellik Yönetimi (Feature Flags)</h1>
             <p class="text-xs text-slate-300 mt-1">SaaS modüllerini ve platform özelliklerini açıp kapatın.</p>
@@ -16,11 +16,11 @@
         </div>
     @endif
 
-    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
         
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="text-xs text-neutral-500 uppercase bg-neutral-50 dark:bg-neutral-800/50">
+                <thead class="text-xs text-slate-500 uppercase bg-slate-50 dark:bg-slate-800/50">
                     <tr>
                         <th class="px-4 py-3 rounded-tl-lg">Özellik (Name)</th>
                         <th class="px-4 py-3">Durum</th>
@@ -28,9 +28,9 @@
                         <th class="px-4 py-3 rounded-tr-lg text-right">İşlem</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     @forelse($flags as $flag)
-                    <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
                         <td class="px-4 py-4 font-medium">{{ $flag->name }}</td>
                         <td class="px-4 py-4">
                             @if($flag->enabled)
@@ -40,7 +40,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-4">
-                            <span class="text-xs text-gray-500 font-mono">
+                            <span class="text-xs text-slate-500 font-mono">
                                 {{ $flag->metadata ? json_encode($flag->metadata) : '-' }}
                             </span>
                         </td>
@@ -55,7 +55,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-4 py-8 text-center text-neutral-500">Kayıtlı özellik (feature flag) bulunamadı.</td>
+                        <td colspan="4" class="px-4 py-8 text-center text-slate-500">Kayıtlı özellik (feature flag) bulunamadı.</td>
                     </tr>
                     @endforelse
                 </tbody>

@@ -21,22 +21,22 @@
 
         <div class="flex overflow-x-auto gap-4 pb-6 snap-x">
             @foreach($stages as $stageKey => $stageTitle)
-                <div class="snap-start shrink-0 w-[280px] bg-neutral-50/50 dark:bg-neutral-800/20 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 flex flex-col max-h-[calc(100vh-200px)]">
+                <div class="snap-start shrink-0 w-[280px] bg-slate-50/50 dark:bg-slate-800/20 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[calc(100vh-200px)]">
                     
                     @php
                         $stageAdmissions = $admissions->filter(fn($a) => $a->status === $stageKey);
                     @endphp
 
                     <!-- Kolon Başlığı -->
-                    <div class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-4 sticky top-0 bg-neutral-50/90 dark:bg-neutral-900/90 backdrop-blur z-10">
-                        <span class="text-xs font-black text-neutral-800 dark:text-neutral-200 truncate pr-2">{{ $stageTitle }}</span>
-                        <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-black bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-full text-neutral-600 dark:text-neutral-400 shadow-sm">{{ $stageAdmissions->count() }}</span>
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4 sticky top-0 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur z-10">
+                        <span class="text-xs font-black text-slate-800 dark:text-slate-200 truncate pr-2">{{ $stageTitle }}</span>
+                        <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-black bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full text-slate-600 dark:text-slate-400 shadow-sm">{{ $stageAdmissions->count() }}</span>
                     </div>
 
                     <!-- Kartlar -->
                     <div class="space-y-3 overflow-y-auto flex-1 pr-1 custom-scrollbar">
                         @forelse($stageAdmissions as $adm)
-                            <div class="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800 shadow-sm hover:shadow-md transition-all group relative">
+                            <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group relative">
                                 
                                 <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <a href="{{ route('admin.admission.show', $adm->id) }}" class="p-1 text-primary hover:bg-primary/10 rounded-md transition-colors tooltip-trigger" data-tooltip="Detaya Git">
@@ -44,23 +44,23 @@
                                     </a>
                                 </div>
 
-                                <div class="text-sm font-bold text-neutral-900 dark:text-white pr-6">
+                                <div class="text-sm font-bold text-slate-900 dark:text-white pr-6">
                                     <a href="{{ route('admin.admission.show', $adm->id) }}" class="hover:text-primary transition-colors">
                                         {{ $adm->first_name }} {{ $adm->last_name }}
                                     </a>
                                 </div>
-                                <div class="text-[10px] text-neutral-400 font-mono mt-0.5">{{ $adm->admission_no }}</div>
+                                <div class="text-[10px] text-slate-400 font-mono mt-0.5">{{ $adm->admission_no }}</div>
                                 
                                 <div class="mt-3 flex items-center justify-between">
-                                    <div class="inline-flex items-center gap-1 text-[10px] font-bold text-neutral-500 bg-neutral-50 dark:bg-neutral-800 px-2 py-1 rounded-md">
+                                    <div class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded-md">
                                         <svg class="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                         ₺{{ number_format($adm->total_amount, 2) }}
                                     </div>
                                 </div>
                                 
-                                <form method="POST" action="{{ route('admin.admission.status.update', $adm->id) }}" class="pt-3 border-t border-neutral-50 dark:border-neutral-800/60 mt-3">
+                                <form method="POST" action="{{ route('admin.admission.status.update', $adm->id) }}" class="pt-3 border-t border-slate-50 dark:border-slate-800/60 mt-3">
                                     @csrf
-                                    <select name="status" onchange="this.form.submit()" class="w-full text-[10px] font-medium bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-neutral-600 dark:text-neutral-300 transition-colors">
+                                    <select name="status" onchange="this.form.submit()" class="w-full text-[10px] font-medium bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-slate-600 dark:text-slate-300 transition-colors">
                                         <option value="">Aşama Değiştir</option>
                                         @foreach($stages as $k => $v)
                                             <option value="{{ $k }}" {{ $adm->status === $k ? 'selected' : '' }}>{{ $v }}</option>
@@ -69,9 +69,9 @@
                                 </form>
                             </div>
                         @empty
-                            <div class="flex flex-col items-center justify-center py-8 text-center bg-white/50 dark:bg-neutral-900/50 rounded-xl border border-dashed border-neutral-200 dark:border-neutral-700">
-                                <svg class="w-6 h-6 text-neutral-300 dark:text-neutral-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
-                                <span class="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium">Bu aşamada başvuru yok</span>
+                            <div class="flex flex-col items-center justify-center py-8 text-center bg-white/50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
+                                <svg class="w-6 h-6 text-slate-300 dark:text-slate-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                                <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Bu aşamada başvuru yok</span>
                             </div>
                         @endforelse
                     </div>

@@ -3,7 +3,7 @@
 ])
 
 @php
-    $baseClass = 'animate-pulse bg-neutral-200 dark:bg-neutral-800 rounded-lg';
+    $baseClass = 'animate-pulse bg-slate-200 dark:bg-slate-800 rounded-lg';
     
     $types = [
         'text' => 'h-4 w-3/4',

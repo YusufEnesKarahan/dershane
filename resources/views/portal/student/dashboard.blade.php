@@ -6,7 +6,7 @@
 
     <div class="bg-white shadow rounded-lg p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4">Profil: {{ $student->first_name }} {{ $student->last_name }}</h2>
-        <p class="text-gray-600">Öğrenci No: {{ $student->student_number }}</p>
+        <p class="text-slate-600">Öğrenci No: {{ $student->student_number }}</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -19,42 +19,42 @@
                 @endif
             </h3>
             @if(auth()->user()->notifications->count() > 0)
-                <ul class="divide-y divide-gray-200">
+                <ul class="divide-y divide-slate-200">
                     @foreach(auth()->user()->notifications->take(5) as $notification)
-                        <li class="py-4 {{ !$notification->isRead() ? 'bg-indigo-50/50 -mx-6 px-6' : '' }}">
+                        <li class="py-4 {{ !$notification->isRead() ? 'bg-blue-50/50 -mx-6 px-6' : '' }}">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h4 class="font-bold text-gray-900">{{ $notification->data['title'] ?? 'Bildirim' }}</h4>
-                                    <p class="text-gray-600 mt-1">{{ $notification->data['message'] ?? '' }}</p>
+                                    <h4 class="font-bold text-slate-900">{{ $notification->data['title'] ?? 'Bildirim' }}</h4>
+                                    <p class="text-slate-600 mt-1">{{ $notification->data['message'] ?? '' }}</p>
                                 </div>
-                                <span class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                <span class="text-xs text-slate-500">{{ $notification->created_at->diffForHumans() }}</span>
                             </div>
                             @if(!$notification->isRead())
                                 <form action="{{ route('student.notifications.read', $notification->id) }}" method="POST" class="mt-2">
                                     @csrf
-                                    <button type="submit" class="text-xs text-indigo-600 font-semibold hover:text-indigo-800">Okundu Olarak İşaretle</button>
+                                    <button type="submit" class="text-xs text-blue-600 font-semibold hover:text-blue-800">Okundu Olarak İşaretle</button>
                                 </form>
                             @endif
                         </li>
                     @endforeach
                 </ul>
                 <div class="mt-4 text-right">
-                    <a href="{{ route('student.notifications.index') }}" class="text-indigo-600 text-sm font-semibold hover:underline">Tümünü Gör &rarr;</a>
+                    <a href="{{ route('student.notifications.index') }}" class="text-blue-600 text-sm font-semibold hover:underline">Tümünü Gör &rarr;</a>
                 </div>
             @else
-                <p class="text-gray-500 text-center py-4">Henüz bir bildiriminiz bulunmuyor.</p>
+                <p class="text-slate-500 text-center py-4">Henüz bir bildiriminiz bulunmuyor.</p>
             @endif
         </div>
 
         <!-- Schedule -->
         <div class="bg-white shadow rounded-lg p-6">
             <h3 class="text-2xl font-semibold mb-4">Ders Programı & Kayıtlar</h3>
-            <ul class="divide-y divide-gray-200">
+            <ul class="divide-y divide-slate-200">
                 @foreach($schedule as $item)
                 <li class="py-3">
                     <div class="flex justify-between">
                         <span class="font-medium">{{ $item['name'] }}</span>
-                        <span class="text-sm text-gray-500">{{ $item['type'] }}</span>
+                        <span class="text-sm text-slate-500">{{ $item['type'] }}</span>
                     </div>
                 </li>
                 @endforeach
@@ -136,10 +136,10 @@
                                 <td class="border-b py-3">{{ optional($result->exam)->exam_date ? $result->exam->exam_date->format('d.m.Y') : '-' }}</td>
                                 <td class="border-b py-3 font-medium">{{ optional($result->exam)->title }}</td>
                                 <td class="border-b py-3">{{ optional(optional($result->exam)->type)->name ?? '-' }}</td>
-                                <td class="border-b py-3 font-bold text-indigo-600">{{ $result->score }}</td>
+                                <td class="border-b py-3 font-bold text-blue-600">{{ $result->score }}</td>
                                 <td class="border-b py-3">
                                     @if($result->rank)
-                                        <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-semibold">{{ $result->rank }}. Sıra</span>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">{{ $result->rank }}. Sıra</span>
                                     @else
                                         -
                                     @endif
@@ -150,7 +150,7 @@
                     </table>
                 </div>
             @else
-                <p class="text-gray-500 text-center py-4">Henüz açıklanan bir sınav sonucunuz bulunmuyor.</p>
+                <p class="text-slate-500 text-center py-4">Henüz açıklanan bir sınav sonucunuz bulunmuyor.</p>
             @endif
         </div>
     </div>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">Tüm Taksitler</h2>
+        <h2 class="h3 mb-0 text-slate-800">Tüm Taksitler</h2>
     </div>
 
     <div class="card shadow mb-4">

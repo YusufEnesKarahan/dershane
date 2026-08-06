@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 text-gray-800">Ders Programı Takvimi</h1>
+        <h1 class="h3 text-slate-800">Ders Programı Takvimi</h1>
         <div>
             <a href="{{ route('admin.schedules.index') }}" class="btn btn-secondary">
                 <i class="fas fa-list"></i> Liste Görünümü
@@ -23,8 +23,8 @@
             <!-- FullCalendar placeholder -->
             <div id="calendar">
                 <div class="text-center py-5">
-                    <i class="fas fa-calendar-alt fa-3x text-gray-300 mb-3"></i>
-                    <p class="text-gray-500">Takvim görünümü yakında drag-and-drop özelliğiyle burada olacak.</p>
+                    <i class="fas fa-calendar-alt fa-3x text-slate-300 mb-3"></i>
+                    <p class="text-slate-500">Takvim görünümü yakında drag-and-drop özelliğiyle burada olacak.</p>
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@
     action="{{ $action }}" 
     method="{{ $method === 'GET' ? 'GET' : 'POST' }}" 
     {{ $enctype ? 'enctype='.$enctype : '' }} 
-    {{ $attributes->merge(['class' => 'space-y-6 bg-white dark:bg-neutral-900']) }}
+    {{ $attributes->merge(['class' => 'space-y-6 bg-white dark:bg-slate-900']) }}
 >
     @if($method !== 'GET')
         @csrf

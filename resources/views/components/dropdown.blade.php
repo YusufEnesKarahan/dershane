@@ -29,7 +29,7 @@
          x-transition:leave="transition ease-in duration-75"
          x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95"
-         class="absolute z-50 mt-2 {{ $widthClass }} rounded-premium-lg shadow-premium-lg border border-neutral-100 bg-white {{ $alignmentClasses }}"
+         class="absolute z-50 mt-2 {{ $widthClass }} rounded-premium-lg shadow-premium-lg border border-slate-100 bg-white {{ $alignmentClasses }}"
          style="display: none;"
          @click="open = false">
         <div class="py-1">

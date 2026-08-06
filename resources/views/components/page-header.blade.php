@@ -3,7 +3,7 @@
     'breadcrumbs' => [],
 ])
 
-<div {{ $attributes->merge(['class' => 'bg-gradient-to-br from-neutral-900 via-neutral-800 to-primary/20 text-white py-12 relative overflow-hidden']) }}>
+<div {{ $attributes->merge(['class' => 'bg-gradient-to-br from-slate-900 via-slate-800 to-primary/20 text-white py-12 relative overflow-hidden']) }}>
     <!-- Grid pattern overlay -->
     <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:24px_24px]" aria-hidden="true"></div>
 

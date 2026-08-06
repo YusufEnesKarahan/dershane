@@ -4,23 +4,32 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    /* Fonts family */
-    --font-sans: var(--brand-font, 'Inter'), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-display: var(--brand-font, 'Inter'), ui-sans-serif, system-ui, sans-serif;
+    /* ──────────────────────────────────────────────
+     * Typography
+     * Standard: Inter — consistent across all views
+     * ────────────────────────────────────────────── */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-    /* Theme colors mapped to dynamic white-label CSS variables */
-    --color-primary: var(--brand-primary, #4f46e5);
+    /* ──────────────────────────────────────────────
+     * Color System — Blue Primary, Slate Neutrals
+     * White-label: override via --brand-primary
+     * ────────────────────────────────────────────── */
+    --color-primary: var(--brand-primary, #2563eb);
     --color-secondary: var(--brand-secondary, #0891b2);
-    --color-accent: #6366f1;
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-danger: #ef4444;
     --color-info: #3b82f6;
-    --color-neutral: #1f2937;
-    --color-surface: #ffffff;
-    --color-background: #f9fafb;
 
-    /* Spacing grids (4px system scale) */
+    /* Surface & Background (light defaults) */
+    --color-surface: #ffffff;
+    --color-surface-alt: #f8fafc;
+    --color-background: #f1f5f9;
+
+    /* ──────────────────────────────────────────────
+     * Spacing (4px grid)
+     * ────────────────────────────────────────────── */
     --spacing-1: 4px;
     --spacing-2: 8px;
     --spacing-3: 12px;
@@ -34,28 +43,68 @@
     --spacing-20: 80px;
     --spacing-24: 96px;
 
-    /* Border Radius Scale */
+    /* ──────────────────────────────────────────────
+     * Border Radius Scale
+     * ────────────────────────────────────────────── */
     --radius-premium-xs: 4px;
     --radius-premium-sm: 8px;
     --radius-premium-md: 12px;
     --radius-premium-lg: 16px;
     --radius-premium-xl: 24px;
 
-    /* Custom Shadows Scale */
+    /* ──────────────────────────────────────────────
+     * Shadow Scale (subtle, premium feel)
+     * ────────────────────────────────────────────── */
     --shadow-premium-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-premium-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     --shadow-premium-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
     --shadow-premium-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
 
-    /* Animation Transitions default settings */
+    /* ──────────────────────────────────────────────
+     * Animations
+     * ────────────────────────────────────────────── */
     --animate-fade-in: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-slide-down: slide-down 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ──────────────────────────────────────────────
+ * Keyframes
+ * ────────────────────────────────────────────── */
 @keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slide-up {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ──────────────────────────────────────────────
+ * Custom scrollbar (sidebar, dropdowns)
+ * ────────────────────────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(148 163 184 / 0.3);
+    border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(148 163 184 / 0.5);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(71 85 105 / 0.4);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(71 85 105 / 0.6);
 }

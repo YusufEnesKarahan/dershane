@@ -3,19 +3,19 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-gradient-to-r from-indigo-900 to-slate-900 p-8 rounded-3xl text-white shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl text-slate-900 dark:text-slate-100 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
             <h1 class="text-2xl font-black mt-2">Lisans Durumu</h1>
             <p class="text-xs text-slate-300 mt-1">SaaS Lisans yönetim ve kontrol paneli.</p>
         </div>
     </div>
 
-    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
         <h3 class="text-lg font-bold mb-4">Mevcut Lisans Bilgileri</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Durum</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Durum</span>
                 <span class="font-bold text-lg capitalize">
                     @if($license && $license->status == 'trial' && !$licenseStatus['expired'])
                         <span class="text-blue-600">Deneme Sürümü</span>
@@ -29,29 +29,29 @@
                 </span>
             </div>
 
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Domain</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Domain</span>
                 <span class="font-bold text-lg">{{ config('app.url') }}</span>
             </div>
 
             @if($license)
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Lisans Anahtarı</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Lisans Anahtarı</span>
                 <span class="font-mono text-sm break-all">{{ $license->license_key }}</span>
             </div>
 
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Plan</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Plan</span>
                 <span class="font-bold text-lg capitalize">{{ $license->planModel ? $license->planModel->name : ($license->plan ?? 'Belirtilmemiş') }}</span>
             </div>
 
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Başlangıç Tarihi</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Başlangıç Tarihi</span>
                 <span class="font-bold">{{ $license->starts_at ? $license->starts_at->format('d M Y, H:i') : $license->created_at->format('d M Y, H:i') }}</span>
             </div>
 
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Bitiş Tarihi</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Bitiş Tarihi</span>
                 <span class="font-bold">
                     @if($license->status == 'trial' && $license->trial_ends_at)
                         {{ $license->trial_ends_at->format('d M Y, H:i') }}
@@ -62,8 +62,8 @@
             </div>
 
             @if(($license->status == 'trial' && $license->trial_ends_at) || $license->expires_at)
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl">
-                <span class="text-xs text-gray-500 block">Kalan Gün</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <span class="text-xs text-slate-500 block">Kalan Gün</span>
                 <span class="font-bold text-lg">
                     @php
                         $endDate = $license->status == 'trial' && $license->trial_ends_at ? $license->trial_ends_at : $license->expires_at;
@@ -84,8 +84,8 @@
             </div>
             @endif
 
-            <div class="p-4 bg-gray-50 dark:bg-neutral-800 rounded-xl md:col-span-2">
-                <span class="text-xs text-gray-500 block mb-2">Plan Limitleri</span>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl md:col-span-2">
+                <span class="text-xs text-slate-500 block mb-2">Plan Limitleri</span>
                 @php
                     $limitService = app(\App\Domain\Platform\Services\LicenseLimitService::class);
                     $studentLimit = $limitService->getLimit('students', $limitService->getLimit('max_students'));
@@ -93,16 +93,16 @@
                     $userLimit = $limitService->getLimit('users');
                 @endphp
                 <div class="flex gap-4">
-                    <div class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-3 rounded-lg flex-1">
-                        <span class="text-xs text-gray-500 block">Öğrenci</span>
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg flex-1">
+                        <span class="text-xs text-slate-500 block">Öğrenci</span>
                         <span class="font-bold">{{ $studentLimit === PHP_INT_MAX ? 'Sınırsız' : $studentLimit }}</span>
                     </div>
-                    <div class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-3 rounded-lg flex-1">
-                        <span class="text-xs text-gray-500 block">Şube</span>
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg flex-1">
+                        <span class="text-xs text-slate-500 block">Şube</span>
                         <span class="font-bold">{{ $branchLimit === PHP_INT_MAX ? 'Sınırsız' : $branchLimit }}</span>
                     </div>
-                    <div class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-3 rounded-lg flex-1">
-                        <span class="text-xs text-gray-500 block">Kullanıcı</span>
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg flex-1">
+                        <span class="text-xs text-slate-500 block">Kullanıcı</span>
                         <span class="font-bold">{{ $userLimit === PHP_INT_MAX ? 'Sınırsız' : $userLimit }}</span>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
             @endif
         </div>
     @if($license)
-    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm mt-6">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm mt-6">
         <h3 class="text-lg font-bold mb-4">Abonelik Yönetimi</h3>
         
         <div class="flex flex-wrap gap-4 mb-6">
@@ -125,7 +125,7 @@
 
             <form action="{{ route('admin.licenses.change-plan') }}" method="POST" class="flex gap-2 items-center">
                 @csrf
-                <select name="plan_id" class="border border-gray-300 rounded-lg p-2 dark:bg-neutral-800 dark:border-neutral-700" required>
+                <select name="plan_id" class="border border-slate-300 rounded-lg p-2 dark:bg-slate-800 dark:border-slate-700" required>
                     <option value="">Plan Seçin</option>
                     @foreach($plans ?? [] as $planOption)
                         <option value="{{ $planOption->id }}" {{ $license->plan_id == $planOption->id ? 'selected' : '' }}>
@@ -142,8 +142,8 @@
         @if($license->subscription && $license->subscription->logs->count() > 0)
         <h4 class="font-bold text-md mb-3 mt-6">İşlem Geçmişi</h4>
         <div class="overflow-x-auto mb-6">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-neutral-800 dark:text-gray-400">
+            <table class="w-full text-sm text-left text-slate-500 dark:text-slate-400">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-800 dark:text-slate-400">
                     <tr>
                         <th class="px-4 py-3">Tarih</th>
                         <th class="px-4 py-3">İşlem</th>
@@ -154,7 +154,7 @@
                 </thead>
                 <tbody>
                     @foreach($license->subscription->logs()->latest()->get() as $log)
-                        <tr class="border-b dark:border-neutral-700">
+                        <tr class="border-b dark:border-slate-700">
                             <td class="px-4 py-3">{{ $log->created_at->format('d M Y, H:i') }}</td>
                             <td class="px-4 py-3 capitalize">{{ str_replace('_', ' ', $log->action) }}</td>
                             <td class="px-4 py-3">{{ $log->oldPlan ? $log->oldPlan->name : '-' }}</td>
@@ -170,8 +170,8 @@
         @if($license->subscription && $license->subscription->payments->count() > 0)
         <h4 class="font-bold text-md mb-3 mt-6">Ödeme ve Fatura Geçmişi</h4>
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-neutral-800 dark:text-gray-400">
+            <table class="w-full text-sm text-left text-slate-500 dark:text-slate-400">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-800 dark:text-slate-400">
                     <tr>
                         <th class="px-4 py-3">Tarih</th>
                         <th class="px-4 py-3">Tutar</th>
@@ -183,7 +183,7 @@
                 </thead>
                 <tbody>
                     @foreach($license->subscription->payments()->latest()->get() as $payment)
-                        <tr class="border-b dark:border-neutral-700">
+                        <tr class="border-b dark:border-slate-700">
                             <td class="px-4 py-3">{{ $payment->created_at->format('d M Y, H:i') }}</td>
                             <td class="px-4 py-3 font-bold">{{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
                             <td class="px-4 py-3 text-xs">{{ $payment->gateway ?? '-' }}</td>

@@ -4,9 +4,9 @@
     'icon' => null,
 ])
 
-<div {{ $attributes->merge(['class' => 'flex flex-col items-center justify-center text-center p-8 sm:p-12 border-2 border-dashed border-neutral-200 dark:border-neutral-800 rounded-2xl bg-white/50 dark:bg-neutral-900/50 text-neutral-800 dark:text-neutral-200 font-sans']) }}>
+<div {{ $attributes->merge(['class' => 'flex flex-col items-center justify-center text-center p-8 sm:p-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-sans']) }}>
     <!-- Search / empty icon placeholder -->
-    <div class="h-14 w-14 rounded-2xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-4 text-neutral-400 dark:text-neutral-500 shadow-inner">
+    <div class="h-14 w-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 text-slate-400 dark:text-slate-500 shadow-inner">
         @if ($icon)
             {{ $icon }}
         @else
@@ -16,10 +16,10 @@
         @endif
     </div>
     
-    <h4 class="text-base font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">
+    <h4 class="text-base font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
         {{ $title }}
     </h4>
-    <p class="text-xs text-neutral-500 dark:text-neutral-400 max-w-sm mt-1.5 leading-relaxed">
+    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-1.5 leading-relaxed">
         {{ $subtitle }}
     </p>
     

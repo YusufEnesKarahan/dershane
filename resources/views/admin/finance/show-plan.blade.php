@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">Ödeme Planı Detayı: {{ $plan->title }}</h2>
+        <h2 class="h3 mb-0 text-slate-800">Ödeme Planı Detayı: {{ $plan->title }}</h2>
         <a href="{{ route('admin.finance.index') }}" class="btn btn-secondary shadow-sm">
             <i class="fas fa-arrow-left fa-sm text-white-50"></i> Geri
         </a>
@@ -22,7 +22,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Öğrenci Bilgisi</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $plan->student->user->name ?? 'Bilinmiyor' }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-slate-800">{{ $plan->student->user->name ?? 'Bilinmiyor' }}</div>
                             <div class="mt-2">
                                 <p class="mb-1">Toplam: {{ number_format($plan->total_amount, 2) }} {{ $plan->currency }}</p>
                                 <p class="mb-1 text-success">İndirim: {{ number_format($plan->discount_amount, 2) }} {{ $plan->currency }}</p>
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                            <i class="fas fa-user fa-2x text-slate-300"></i>
                         </div>
                     </div>
                     <div class="mt-3">

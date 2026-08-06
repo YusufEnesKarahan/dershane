@@ -119,7 +119,7 @@
                         <div class="mt-2 flex flex-wrap gap-2">
                             @if($teacher->specialties)
                                 @foreach(explode(',', $teacher->specialties) as $spec)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/30">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800/30">
                                         {{ trim($spec) }}
                                     </span>
                                 @endforeach

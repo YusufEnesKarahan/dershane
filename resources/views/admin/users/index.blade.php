@@ -7,13 +7,13 @@
     <!-- Page Header -->
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200">Kullanıcı & Rol Yönetimi</span>
+            <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest bg-blue-50 text-blue-700 rounded-full border border-blue-200">Kullanıcı & Rol Yönetimi</span>
             <h1 class="text-2xl font-bold text-slate-900 mt-1">Sistem Kullanıcıları</h1>
             <p class="text-xs text-slate-500 mt-0.5">Dershane çalışanları, yöneticiler, öğretmenler ve sisteme erişimi olan tüm kullanıcıları yönetin.</p>
         </div>
         <div>
             @permission('users.create')
-                <a href="{{ route('admin.users.create') }}" class="inline-flex items-center justify-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-sm transition-all">
+                <a href="{{ route('admin.users.create') }}" class="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-sm transition-all">
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     Yeni Kullanıcı Ekle
                 </a>
@@ -31,10 +31,10 @@
     <div class="bg-white rounded-2xl border border-slate-200 p-4 mb-6 shadow-sm">
         <form method="GET" action="{{ route('admin.users.index') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Ad, e-posta veya telefon ile ara..." class="w-full text-xs rounded-xl border-slate-200 focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Ad, e-posta veya telefon ile ara..." class="w-full text-xs rounded-xl border-slate-200 focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div>
-                <select name="role" class="w-full text-xs rounded-xl border-slate-200 focus:ring-indigo-500 focus:border-indigo-500">
+                <select name="role" class="w-full text-xs rounded-xl border-slate-200 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Tüm Roller</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->name }}" {{ request('role') == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
@@ -42,7 +42,7 @@
                 </select>
             </div>
             <div>
-                <select name="status" class="w-full text-xs rounded-xl border-slate-200 focus:ring-indigo-500 focus:border-indigo-500">
+                <select name="status" class="w-full text-xs rounded-xl border-slate-200 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Tüm Durumlar</option>
                     <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Aktif</option>
                     <option value="PASSIVE" {{ request('status') == 'PASSIVE' ? 'selected' : '' }}>Pasif</option>
@@ -82,7 +82,7 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50/50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                            <th class="p-4 w-10"><input type="checkbox" onclick="document.querySelectorAll('.user-cb').forEach(c => c.checked = this.checked)" class="rounded border-slate-300 text-indigo-600"></th>
+                            <th class="p-4 w-10"><input type="checkbox" onclick="document.querySelectorAll('.user-cb').forEach(c => c.checked = this.checked)" class="rounded border-slate-300 text-blue-600"></th>
                             <th class="p-4">Kullanıcı</th>
                             <th class="p-4">İletişim</th>
                             <th class="p-4">Rol(ler)</th>
@@ -96,7 +96,7 @@
                         @forelse($users as $user)
                             <tr class="hover:bg-slate-50/80 transition-colors">
                                 <td class="p-4">
-                                    <input type="checkbox" name="ids[]" value="{{ $user->id }}" class="user-cb rounded border-slate-300 text-indigo-600">
+                                    <input type="checkbox" name="ids[]" value="{{ $user->id }}" class="user-cb rounded border-slate-300 text-blue-600">
                                 </td>
                                 <td class="p-4">
                                     <div class="flex items-center gap-3">
@@ -114,7 +114,7 @@
                                 <td class="p-4">
                                     <div class="flex flex-wrap gap-1">
                                         @forelse($user->roles as $r)
-                                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+                                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
                                                 {{ $r->name }}
                                             </span>
                                         @empty
@@ -141,7 +141,7 @@
                                 <td class="p-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         @permission('users.update')
-                                            <a href="{{ route('admin.users.edit', $user) }}" class="p-1.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Düzenle">
+                                            <a href="{{ route('admin.users.edit', $user) }}" class="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Düzenle">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             </a>
                                         @endpermission

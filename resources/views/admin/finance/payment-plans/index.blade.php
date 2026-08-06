@@ -11,25 +11,25 @@
         @if($plans->count() > 0)
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Öğrenci</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Taksit Sayısı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Taksit Tutarı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Başlangıç Tarihi</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider text-right">İşlemler</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Öğrenci</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Taksit Sayısı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Taksit Tutarı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Başlangıç Tarihi</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider text-right">İşlemler</th>
                 </x-slot>
                 <x-slot name="body">
                     @foreach($plans as $plan)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
-                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+                            <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                                 {{ optional($plan->student)->first_name }} {{ optional($plan->student)->last_name }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
+                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400 font-medium">
                                 {{ $plan->total_installments }} Taksit
                             </td>
-                            <td class="px-6 py-4 text-sm font-semibold text-neutral-900 dark:text-white">
+                            <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">
                                 {{ number_format($plan->installment_amount, 2) }} TL
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
                                 {{ \Carbon\Carbon::parse($plan->start_date)->format('d.m.Y') }}
                             </td>
                             <td class="px-6 py-4 text-sm space-x-3 text-right">

@@ -33,7 +33,7 @@
     </div>
 
     @if ($dismissible)
-        <button type="button" @click="show = false" class="text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 focus:outline-none transition-colors duration-150 p-0.5 rounded" aria-label="Kapat">
+        <button type="button" @click="show = false" class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none transition-colors duration-150 p-0.5 rounded" aria-label="Kapat">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
             </svg>

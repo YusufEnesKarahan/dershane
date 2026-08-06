@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50 dark:bg-slate-950" x-data="{ darkMode: false, sidebarOpen: false, miniSidebar: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; $watch('darkMode', val => localStorage.setItem('darkMode', val)); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-100 dark:bg-slate-950" x-data="{ darkMode: false, sidebarOpen: false, miniSidebar: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; $watch('darkMode', val => localStorage.setItem('darkMode', val)); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name')) - Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/theme_custom.css') }}">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="h-full text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-600 selection:text-white font-sans" :class="{ 'dark': darkMode }">
     <div id="app" class="flex h-screen overflow-hidden">
@@ -26,7 +26,7 @@
             <x-admin.topbar.layout />
 
             <!-- Content Area -->
-            <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 lg:p-8">
+            <main class="flex-1 overflow-y-auto bg-slate-100 dark:bg-slate-950 p-4 sm:p-6 lg:p-8">
                 @yield('content')
             </main>
         </div>

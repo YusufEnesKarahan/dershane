@@ -13,7 +13,7 @@
 
     $colors = [
         'primary' => 'text-blue-600 dark:text-blue-400',
-        'secondary' => 'text-neutral-500 dark:text-neutral-400',
+        'secondary' => 'text-slate-500 dark:text-slate-400',
         'current' => 'text-current',
         'white' => 'text-white',
     ];

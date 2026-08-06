@@ -4,17 +4,17 @@
 <div class="container mx-auto px-4 py-8">
     <div class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
-            <p class="text-gray-600 mt-2">Stay updated on important system alerts and activities.</p>
+            <h1 class="text-3xl font-bold text-slate-900">Notifications</h1>
+            <p class="text-slate-600 mt-2">Stay updated on important system alerts and activities.</p>
         </div>
         <button class="text-sm text-blue-600 hover:underline">Mark all as read</button>
     </div>
 
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul class="divide-y divide-gray-200">
+        <ul class="divide-y divide-slate-200">
             @forelse($notifications ?? [] as $notification)
             <li class="{{ is_null($notification->read_at) ? 'bg-blue-50' : 'bg-white' }}">
-                <a href="#" class="block hover:bg-gray-50">
+                <a href="#" class="block hover:bg-slate-50">
                     <div class="px-4 py-4 sm:px-6">
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-medium text-blue-600 truncate">
@@ -32,11 +32,11 @@
                         </div>
                         <div class="mt-2 sm:flex sm:justify-between">
                             <div class="sm:flex">
-                                <p class="flex items-center text-sm text-gray-500">
+                                <p class="flex items-center text-sm text-slate-500">
                                     {{ Str::limit($notification->message, 100) }}
                                 </p>
                             </div>
-                            <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                            <div class="mt-2 flex items-center text-sm text-slate-500 sm:mt-0">
                                 <p>
                                     {{ $notification->created_at->diffForHumans() }}
                                 </p>
@@ -47,7 +47,7 @@
             </li>
             @empty
             <li>
-                <div class="px-4 py-8 text-center text-gray-500">
+                <div class="px-4 py-8 text-center text-slate-500">
                     No notifications available.
                 </div>
             </li>

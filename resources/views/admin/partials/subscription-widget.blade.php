@@ -10,14 +10,14 @@
 @endphp
 
 @if($subscription && $plan)
-<x-card class="bg-gradient-to-br from-indigo-900 to-purple-900 text-white overflow-hidden relative">
+<x-card class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-white overflow-hidden relative">
     <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-5 blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-indigo-500 opacity-10 blur-2xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-blue-500 opacity-10 blur-2xl pointer-events-none"></div>
     
     <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
             <div class="flex items-center gap-3 mb-2">
-                <span class="bg-indigo-500/30 text-indigo-200 text-xs font-bold px-3 py-1 rounded-full border border-indigo-400/30">
+                <span class="bg-blue-500/30 text-blue-200 text-xs font-bold px-3 py-1 rounded-full border border-blue-400/30">
                     {{ ucfirst($subscription->status) }}
                 </span>
                 @if($subscription->isTrialing())
@@ -27,7 +27,7 @@
                 @endif
             </div>
             <h2 class="text-2xl font-black mb-1">{{ $plan->name }} Planı</h2>
-            <p class="text-indigo-200 text-sm">
+            <p class="text-blue-200 text-sm">
                 Bitiş: <span class="font-semibold text-white">{{ $subscription->expires_at?->format('d M Y') ?? $subscription->ends_at?->format('d M Y') ?? 'Süresiz' }}</span>
                 @if($subscription->trial_ends_at && $subscription->isTrialing())
                     (Deneme Bitiş: <span class="font-semibold text-white">{{ $subscription->trial_ends_at->format('d M Y') }}</span>)
@@ -38,11 +38,11 @@
         <div class="grid grid-cols-3 gap-4 w-full md:w-auto">
             @foreach($limits as $key => $data)
             <div class="bg-white/10 p-3 rounded-xl backdrop-blur-sm border border-white/10 text-center min-w-[90px]">
-                <span class="text-[10px] uppercase font-bold text-indigo-200 block mb-1">
+                <span class="text-[10px] uppercase font-bold text-blue-200 block mb-1">
                     {{ $key === 'users' ? 'Kullanıcı' : ($key === 'students' ? 'Öğrenci' : 'Öğretmen') }}
                 </span>
                 <div class="text-lg font-black">
-                    {{ $data['used'] }}<span class="text-indigo-300 text-xs">/{{ $data['max'] === PHP_INT_MAX || $data['max'] === null ? '∞' : $data['max'] }}</span>
+                    {{ $data['used'] }}<span class="text-blue-300 text-xs">/{{ $data['max'] === PHP_INT_MAX || $data['max'] === null ? '∞' : $data['max'] }}</span>
                 </div>
                 @if($data['max'] !== null && $data['max'] !== PHP_INT_MAX && $data['max'] > 0)
                     @php $percent = min(100, round(($data['used'] / $data['max']) * 100)); @endphp
@@ -55,7 +55,7 @@
         </div>
         
         <div class="flex-shrink-0">
-            <a href="#" class="inline-flex items-center justify-center bg-white text-indigo-900 hover:bg-indigo-50 font-bold py-2.5 px-6 rounded-xl transition-colors shadow-lg">
+            <a href="#" class="inline-flex items-center justify-center bg-white text-blue-900 hover:bg-blue-50 font-bold py-2.5 px-6 rounded-xl transition-colors shadow-lg">
                 Paketi Yükselt
             </a>
         </div>

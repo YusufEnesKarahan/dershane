@@ -8,11 +8,11 @@
             <!-- Timeline dot -->
             <div class="absolute -left-[31px] top-1.5 bg-primary border-4 border-white w-4 h-4 rounded-full shadow-premium-sm transition-transform duration-300 hover:scale-125"></div>
             
-            <h4 class="text-sm font-semibold text-neutral tracking-tight">
+            <h4 class="text-sm font-semibold text-slate tracking-tight">
                 {{ $title }}
             </h4>
             @if ($desc)
-                <p class="text-xs text-neutral/60 mt-1 leading-relaxed">
+                <p class="text-xs text-slate/60 mt-1 leading-relaxed">
                     {{ $desc }}
                 </p>
             @endif

@@ -9,26 +9,26 @@
         </x-slot>
 
         <!-- Kategori Listesi -->
-        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
             <x-admin.table.layout>
                 <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Renk / Kategori Adı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Slug</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Belge Sayısı</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Durum</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">İşlem</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Renk / Kategori Adı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Slug</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Belge Sayısı</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Durum</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">İşlem</th>
                 </x-slot>
                 <x-slot name="body">
                     @forelse($categories as $cat)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40">
-                            <td class="px-6 py-4 text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                            <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                                 <span class="w-3 h-3 rounded-full" style="background-color: {{ $cat->color }}"></span>
                                 {{ $cat->name }}
                             </td>
-                            <td class="px-6 py-4 text-sm font-mono text-neutral-500">{{ $cat->slug }}</td>
+                            <td class="px-6 py-4 text-sm font-mono text-slate-500">{{ $cat->slug }}</td>
                             <td class="px-6 py-4 text-sm font-bold font-mono">{{ $cat->documents_count }} Belge</td>
                             <td class="px-6 py-4 text-sm">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $cat->is_active ? 'bg-emerald-100 text-emerald-800 border-emerald-200/50 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/20' : 'bg-neutral-100 text-neutral-800 border-neutral-200/50 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700' }}">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $cat->is_active ? 'bg-emerald-100 text-emerald-800 border-emerald-200/50 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/20' : 'bg-slate-100 text-slate-800 border-slate-200/50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700' }}">
                                     {{ $cat->is_active ? 'Aktif' : 'Pasif' }}
                                 </span>
                             </td>
@@ -43,7 +43,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-xs text-neutral-400">Kategori bulunmamaktadır.</td>
+                            <td colspan="5" class="px-4 py-6 text-center text-xs text-slate-400">Kategori bulunmamaktadır.</td>
                         </tr>
                     @endforelse
                 </x-slot>
@@ -51,11 +51,11 @@
         </div>
 
         <!-- Kategori Modal -->
-        <div id="category-modal" class="fixed inset-0 z-50 hidden bg-neutral-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 p-6 max-w-md w-full shadow-sm space-y-4">
+        <div id="category-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 max-w-md w-full shadow-sm space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 id="modal-title" class="text-lg font-bold text-neutral-900 dark:text-white">Yeni Doküman Kategorisi</h3>
-                    <button onclick="toggleModal('category-modal')" class="text-neutral-400 hover:text-neutral-600 transition-colors">
+                    <h3 id="modal-title" class="text-lg font-bold text-slate-900 dark:text-white">Yeni Doküman Kategorisi</h3>
+                    <button onclick="toggleModal('category-modal')" class="text-slate-400 hover:text-slate-600 transition-colors">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -67,11 +67,11 @@
                     <input type="hidden" id="form-method" name="_method" value="POST">
                     
                     <x-admin.form.field-group label="Kategori Adı" id="cat-name" required>
-                        <input type="text" name="name" id="cat-name" required placeholder="Örn: Öğrenci Sözleşmeleri" class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                        <input type="text" name="name" id="cat-name" required placeholder="Örn: Öğrenci Sözleşmeleri" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
                     </x-admin.form.field-group>
 
                     <x-admin.form.field-group label="Renk Kodu" id="cat-color">
-                        <input type="color" name="color" id="cat-color" value="#0d9488" class="w-full h-10 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-2 py-1 cursor-pointer">
+                        <input type="color" name="color" id="cat-color" value="#0d9488" class="w-full h-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1 cursor-pointer">
                     </x-admin.form.field-group>
 
                     <div class="flex justify-end gap-2 pt-2">

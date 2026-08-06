@@ -17,37 +17,37 @@
             @endif
         </h3>
         @if(auth()->user()->notifications->count() > 0)
-            <ul class="divide-y divide-gray-200">
+            <ul class="divide-y divide-slate-200">
                 @foreach(auth()->user()->notifications->take(5) as $notification)
-                    <li class="py-4 {{ !$notification->isRead() ? 'bg-indigo-50/50 -mx-6 px-6' : '' }}">
+                    <li class="py-4 {{ !$notification->isRead() ? 'bg-blue-50/50 -mx-6 px-6' : '' }}">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h4 class="font-bold text-gray-900">{{ $notification->data['title'] ?? 'Bildirim' }}</h4>
-                                <p class="text-gray-600 mt-1">{{ $notification->data['message'] ?? '' }}</p>
+                                <h4 class="font-bold text-slate-900">{{ $notification->data['title'] ?? 'Bildirim' }}</h4>
+                                <p class="text-slate-600 mt-1">{{ $notification->data['message'] ?? '' }}</p>
                             </div>
-                            <span class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                            <span class="text-xs text-slate-500">{{ $notification->created_at->diffForHumans() }}</span>
                         </div>
                         @if(!$notification->isRead())
                             <form action="{{ route('parent.notifications.read', $notification->id) }}" method="POST" class="mt-2">
                                 @csrf
-                                <button type="submit" class="text-xs text-indigo-600 font-semibold hover:text-indigo-800">Okundu Olarak İşaretle</button>
+                                <button type="submit" class="text-xs text-blue-600 font-semibold hover:text-blue-800">Okundu Olarak İşaretle</button>
                             </form>
                         @endif
                     </li>
                 @endforeach
             </ul>
             <div class="mt-4 text-right">
-                <a href="{{ route('parent.notifications.index') }}" class="text-indigo-600 text-sm font-semibold hover:underline">Tümünü Gör &rarr;</a>
+                <a href="{{ route('parent.notifications.index') }}" class="text-blue-600 text-sm font-semibold hover:underline">Tümünü Gör &rarr;</a>
             </div>
         @else
-            <p class="text-gray-500 text-center py-4">Henüz bir bildiriminiz bulunmuyor.</p>
+            <p class="text-slate-500 text-center py-4">Henüz bir bildiriminiz bulunmuyor.</p>
         @endif
     </div>
 
     @foreach($childrenData as $data)
     <div class="bg-white shadow rounded-lg p-6 mb-6">
         <h3 class="text-2xl font-semibold mb-2">Öğrenci: {{ $data['student']->first_name }} {{ $data['student']->last_name }}</h3>
-        <p class="text-gray-600 mb-4">Öğrenci No: {{ $data['student']->student_number }}</p>
+        <p class="text-slate-600 mb-4">Öğrenci No: {{ $data['student']->student_number }}</p>
         
         <h4 class="text-lg font-semibold mb-2">Devam Durumu</h4>
         <div class="grid grid-cols-4 gap-4 mb-6">
@@ -121,10 +121,10 @@
                             <td class="border-b py-2">{{ optional($result->exam)->exam_date ? $result->exam->exam_date->format('d.m.Y') : '-' }}</td>
                             <td class="border-b py-2 font-medium">{{ optional($result->exam)->title }}</td>
                             <td class="border-b py-2">{{ optional(optional($result->exam)->type)->name ?? '-' }}</td>
-                            <td class="border-b py-2 font-bold text-indigo-600">{{ $result->score }}</td>
+                            <td class="border-b py-2 font-bold text-blue-600">{{ $result->score }}</td>
                             <td class="border-b py-2">
                                 @if($result->rank)
-                                    <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-semibold">{{ $result->rank }}. Sıra</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">{{ $result->rank }}. Sıra</span>
                                 @else
                                     -
                                 @endif
@@ -135,7 +135,7 @@
                 </table>
             </div>
         @else
-            <p class="text-gray-500 text-sm mb-4">Açıklanan sınav sonucu bulunmuyor.</p>
+            <p class="text-slate-500 text-sm mb-4">Açıklanan sınav sonucu bulunmuyor.</p>
         @endif
     </div>
     @endforeach

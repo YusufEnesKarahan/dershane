@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0 text-gray-800">Teslimler: {{ $homework->title }}</h1>
+            <h1 class="h3 mb-0 text-slate-800">Teslimler: {{ $homework->title }}</h1>
             <p class="text-muted mb-0">Son Teslim: {{ $homework->due_date->format('d.m.Y H:i') }} | Max Puan: {{ $homework->max_score }}</p>
         </div>
         <a href="{{ route('admin.homeworks.index') }}" class="btn btn-secondary">

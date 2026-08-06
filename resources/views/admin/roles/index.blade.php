@@ -11,9 +11,9 @@
         </x-slot>
 
         <!-- Filtreler -->
-        <form method="GET" action="{{ route('admin.roles.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-100 dark:border-neutral-800">
+        <form method="GET" action="{{ route('admin.roles.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
             <div class="md:col-span-3">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Rol adı veya açıklama ara..." class="w-full text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-800 dark:text-neutral-200">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Rol adı veya açıklama ara..." class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-800 dark:text-slate-200">
             </div>
             <div>
                 <x-admin.button type="submit" variant="secondary" class="w-full">
@@ -25,8 +25,8 @@
         <!-- Toplu İşlem Formu -->
         <form method="POST" action="{{ route('admin.roles.bulk') }}">
             @csrf
-            <div class="flex items-center gap-2 mb-4 bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-100 dark:border-neutral-800">
-                <select name="bulk_action" required class="text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2.5 text-neutral-800 dark:text-neutral-200">
+            <div class="flex items-center gap-2 mb-4 bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+                <select name="bulk_action" required class="text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-slate-800 dark:text-slate-200">
                     <option value="">Seçilenlere Uygula...</option>
                     <option value="delete">Sil</option>
                 </select>
@@ -49,19 +49,19 @@
                 </x-slot>
                 <x-slot name="body">
                     @forelse($roles as $role)
-                        <tr class="hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30">
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
                             <td class="px-6 py-4">
                                 @if(!$role->isSystemRole())
                                     <input type="checkbox" name="ids[]" value="{{ $role->id }}" class="role-checkbox">
                                 @else
-                                    <span class="text-neutral-300 dark:text-neutral-700">-</span>
+                                    <span class="text-slate-300 dark:text-slate-700">-</span>
                                 @endif
                             </td>
                             <x-admin.table.td>
                                 <div class="flex items-center gap-2">
-                                    <span class="font-medium text-neutral-900 dark:text-white">{{ $role->name }}</span>
+                                    <span class="font-medium text-slate-900 dark:text-white">{{ $role->name }}</span>
                                     @if($role->isSystemRole())
-                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 rounded-full border border-neutral-200 dark:border-neutral-700">Sistem</span>
+                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700">Sistem</span>
                                     @endif
                                 </div>
                             </x-admin.table.td>
@@ -74,7 +74,7 @@
                             <x-admin.table.td>{{ $role->created_at->format('d.m.Y H:i') }}</x-admin.table.td>
                             <x-admin.table.td>
                                 <div class="flex items-center gap-2 text-sm">
-                                    <a href="{{ route('admin.roles.show', $role) }}" class="text-neutral-500 hover:text-neutral-700 dark:hover:text-white">İncele</a>
+                                    <a href="{{ route('admin.roles.show', $role) }}" class="text-slate-500 hover:text-slate-700 dark:hover:text-white">İncele</a>
                                     @permission('roles.update')
                                         <a href="{{ route('admin.roles.edit', $role) }}" class="text-primary hover:text-primary-dark ml-2">Düzenle</a>
                                     @endpermission
