@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\LessonScheduleController;
 use App\Http\Controllers\Admin\HomeworkController;
 use App\Http\Controllers\Admin\HomeworkSubmissionController;
 use App\Http\Controllers\Admin\FinanceController;
+use App\Http\Controllers\Admin\PreRegistrationController;
+use App\Http\Controllers\Admin\FinanceDashboardController;
 use App\Http\Controllers\Admin\InstallmentController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\AssetController;
@@ -160,8 +162,19 @@ Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|ten
         Route::resource('exams', ExamController::class);
     });
 
-    // Finance
+    // Finance & Invoices
     Route::middleware(['feature.access:finance'])->group(function () {
+        Route::get('finance/dashboard', [FinanceDashboardController::class, 'index'])->name('finance.dashboard');
+        Route::get('invoices/dashboard', [FinanceDashboardController::class, 'index'])->name('invoices.dashboard');
+        Route::get('invoices/search-students', [InvoiceController::class, 'searchStudents'])->name('invoices.search-students');
+        Route::post('invoices/{invoice}/payments', [InvoiceController::class, 'storePayment'])->name('invoices.payments.store');
+        Route::delete('payments/{payment}', [InvoiceController::class, 'destroyPayment'])->name('invoices.payments.destroy');
+        Route::resource('invoices', InvoiceController::class);
+        
+        Route::get('pre-registrations/{pre_registration}/convert', [PreRegistrationController::class, 'showConvertForm'])->name('pre-registrations.convert');
+        Route::post('pre-registrations/{pre_registration}/convert', [PreRegistrationController::class, 'convertToStudent'])->name('pre-registrations.convert.store');
+        Route::resource('pre-registrations', PreRegistrationController::class);
+
         Route::post('finance/{plan}/discount', [FinanceController::class, 'applyDiscount'])->name('finance.discount');
         Route::resource('finance', FinanceController::class);
         Route::post('installments/{installment}/collect', [InstallmentController::class, 'collect'])->name('installments.collect');
@@ -189,7 +202,9 @@ Route::middleware(['auth', 'role:Super Admin|Admin|Branch Admin|Tenant Admin|ten
     // Education - Announcements (CMS Official Module)
     Route::middleware(['permission:announcements.view'])->group(function () {
         Route::post('announcements/{announcement}/publish', [AnnouncementController::class, 'publish'])->name('announcements.publish');
-        Route::resource('announcements', AnnouncementController::class)->only(['index', 'store', 'destroy']);
+        Route::post('announcements/{announcement}/archive', [AnnouncementController::class, 'archive'])->name('announcements.archive');
+        Route::post('announcements/{announcement}/popup-seen', [AnnouncementController::class, 'markPopupSeen'])->name('announcements.popup-seen');
+        Route::resource('announcements', AnnouncementController::class);
     });
 
     // Education - Attendance

@@ -1,165 +1,247 @@
 @extends('layouts.admin')
-@section('title', 'Duyurular & Bildirimler')
-@section('content')
-    <x-admin.crud.index-layout title="Duyurular" description="Öğrenci, Veli ve Personele yönelik duyuru ve bildirimleri yönetin.">
-        <x-slot name="actions">
-            <!-- Modal Trigger Button for Create -->
-            <button type="button" onclick="document.getElementById('createAnnouncementModal').classList.remove('hidden')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm flex items-center gap-2">
-                <i class="fas fa-plus"></i> Yeni Duyuru
-            </button>
-        </x-slot>
 
-        <div class="mb-6 bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-            <form action="{{ route('admin.announcements.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                <select name="status" class="px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Tüm Durumlar</option>
-                    <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Taslak</option>
-                    <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Yayınlandı</option>
-                </select>
-                <button type="submit" class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition-colors">
-                    Filtrele
-                </button>
-            </form>
+@section('title', 'Duyuru ve Portal CMS Yönetimi')
+
+@section('content')
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-black text-neutral-900 dark:text-white flex items-center gap-3">
+                <i class="fas fa-bullhorn text-emerald-600"></i> Duyuru & Portal CMS Yönetimi
+            </h1>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                Öğrenci, veli, öğretmen portalları ve dashboard için yayınlanacak duyuru ve haberleri yönetin.
+            </p>
+        </div>
+        <div>
+            <a href="{{ route('admin.announcements.create') }}" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-colors shadow-sm flex items-center gap-2">
+                <i class="fas fa-plus"></i> Yeni Duyuru Ekle
+            </a>
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl font-bold text-sm flex items-center gap-2">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Dashboard Widgetları -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-lg">
+                <i class="fas fa-check-double"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Yayındaki Duyurular</div>
+                <div class="text-2xl font-black text-neutral-900 dark:text-white mt-0.5">{{ $widgetData['published_count'] }}</div>
+            </div>
         </div>
 
-        @if($announcements->count() > 0)
-            <x-admin.table.layout>
-                <x-slot name="head">
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Başlık</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Tip</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Hedef Kitle</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Durum</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">İşlemler</th>
-                </x-slot>
-                <x-slot name="body">
-                    @foreach($announcements as $announcement)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors group">
+        <div class="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">
+                <i class="fas fa-file-signature"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Taslak Sayısı</div>
+                <div class="text-2xl font-black text-neutral-900 dark:text-white mt-0.5">{{ $widgetData['draft_count'] }}</div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black text-lg">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Zamanlanmış Yayınlar</div>
+                <div class="text-2xl font-black text-neutral-900 dark:text-white mt-0.5">{{ count($widgetData['upcoming']) }}</div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-neutral-900 p-5 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center font-black text-lg">
+                <i class="fas fa-th-list"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Toplam Duyuru</div>
+                <div class="text-2xl font-black text-neutral-900 dark:text-white mt-0.5">{{ $announcements->total() }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtreleme ve Arama Çubuğu -->
+    <form action="{{ route('admin.announcements.index') }}" method="GET" class="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <!-- Canlı Arama -->
+            <div class="md:col-span-2">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Başlık, özet, içerik veya kategoride ara..." class="w-full pl-10 pr-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+                    <i class="fas fa-search absolute left-3.5 top-3.5 text-neutral-400 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Kategori Filtresi -->
+            <div>
+                <select name="category_id" onchange="this.form.submit()" class="w-full py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl text-sm">
+                    <option value="">Tüm Kategoriler</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Durum Filtresi -->
+            <div>
+                <select name="status" onchange="this.form.submit()" class="w-full py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl text-sm">
+                    <option value="">Tüm Durumlar</option>
+                    <option value="Published" {{ request('status') === 'Published' ? 'selected' : '' }}>Yayında</option>
+                    <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Taslak</option>
+                    <option value="Scheduled" {{ request('status') === 'Scheduled' ? 'selected' : '' }}>Zamanlanmış</option>
+                    <option value="Archived" {{ request('status') === 'Archived' ? 'selected' : '' }}>Arşivde</option>
+                </select>
+            </div>
+
+            <!-- Filtre Sıfırla -->
+            <div>
+                <a href="{{ route('admin.announcements.index') }}" class="w-full py-2.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 text-neutral-700 dark:text-neutral-300 font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                    <i class="fas fa-undo"></i> Filtreleri Temizle
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Duyuru Listesi Tablosu -->
+    <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-neutral-50 dark:bg-neutral-800/50 border-b border-neutral-100 dark:border-neutral-800 text-xs font-bold uppercase text-neutral-500 tracking-wider">
+                        <th class="px-6 py-4">Başlık & Kategori</th>
+                        <th class="px-6 py-4">Hedef & Şube</th>
+                        <th class="px-6 py-4">Öncelik / Mod</th>
+                        <th class="px-6 py-4">Tarih / Yayın</th>
+                        <th class="px-6 py-4">Durum</th>
+                        <th class="px-6 py-4 text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800 text-sm">
+                    @forelse($announcements as $ann)
+                        @php
+                            $statusColors = [
+                                'Published' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+                                'published' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+                                'Draft' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+                                'draft' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+                                'Scheduled' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+                                'Archived' => 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300',
+                            ];
+                        @endphp
+                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="font-semibold text-neutral-900 dark:text-white">{{ $announcement->title }}</div>
-                                <div class="text-xs text-neutral-500 mt-1">{{ Str::limit($announcement->content, 50) }}</div>
-                                <div class="text-xs text-neutral-400 mt-1"><i class="fas fa-clock mr-1"></i> {{ $announcement->created_at->format('d M Y, H:i') }}</div>
+                                <div class="flex items-start gap-3">
+                                    @if($ann->cover_image)
+                                        <img src="{{ asset('storage/' . $ann->cover_image) }}" alt="Cover" class="w-12 h-12 object-cover rounded-xl border border-neutral-200">
+                                    @else
+                                        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg">
+                                            <i class="fas {{ $ann->category?->icon ?? 'fa-bullhorn' }}"></i>
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <div class="font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                                            {{ $ann->title }}
+                                            @if($ann->is_pinned)
+                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300" title="Sabitlenmiş Duyuru">
+                                                    <i class="fas fa-thumbtack mr-0.5"></i> Sabit
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            @if($ann->category)
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                                                    {{ $ann->category->name }}
+                                                </span>
+                                            @endif
+                                            @if($ann->attachments->count() > 0)
+                                                <span class="text-xs text-neutral-400"><i class="fas fa-paperclip mr-1"></i> {{ $ann->attachments->count() }} Ek</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="px-6 py-4 text-sm">
-                                <span class="px-2 py-1 rounded text-xs font-semibold
-                                    {{ $announcement->type === 'system' ? 'bg-purple-100 text-purple-700' : '' }}
-                                    {{ $announcement->type === 'announcement' ? 'bg-blue-100 text-blue-700' : '' }}
-                                    {{ $announcement->type === 'absence' ? 'bg-amber-100 text-amber-700' : '' }}
-                                    {{ $announcement->type === 'payment' ? 'bg-emerald-100 text-emerald-700' : '' }}
-                                ">
-                                    {{ ucfirst($announcement->type) }}
+                            <td class="px-6 py-4">
+                                <div class="text-xs space-y-1">
+                                    <div class="font-semibold text-neutral-800 dark:text-neutral-200">
+                                        Hedef: <span class="capitalize">{{ $ann->target_role ?: 'Tümü' }}</span>
+                                    </div>
+                                    <div class="text-neutral-500">
+                                        {{ $ann->is_all_branches ? 'Tüm Şubeler' : ($ann->branch?->name ?? 'Şube Özel') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    @if($ann->is_popup)
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300">
+                                            <i class="fas fa-window-restore mr-1"></i> Popup Modu
+                                        </span>
+                                    @else
+                                        <span class="text-xs text-neutral-400">Standart</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-xs text-neutral-500 font-mono">
+                                    <div>Yayın: {{ $ann->published_at ? $ann->published_at->format('d.m.Y H:i') : ($ann->publish_at ? $ann->publish_at->format('d.m.Y H:i') : '-') }}</div>
+                                    @if($ann->expire_at)
+                                        <div class="text-rose-500">Bitiş: {{ $ann->expire_at->format('d.m.Y') }}</div>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold {{ $statusColors[$ann->status] ?? 'bg-neutral-100 text-neutral-700' }}">
+                                    {{ $ann->status }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-400">
-                                {{ $announcement->target_role ?? 'Herkese Açık' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                @if($announcement->status === 'published')
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
-                                        <i class="fas fa-check-circle mr-1"></i> Yayınlandı
-                                    </span>
-                                @else
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
-                                        <i class="fas fa-edit mr-1"></i> Taslak
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-sm text-right">
+                            <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    @if($announcement->status === 'draft')
-                                        <form action="{{ route('admin.announcements.publish', $announcement) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu duyuruyu yayınlamak istediğinize emin misiniz? Yayınlandıktan sonra tüm hedef kitleye bildirim gidecektir.');">
+                                    <a href="{{ route('admin.announcements.edit', $ann->id) }}" class="p-2 text-neutral-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Düzenle">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @if($ann->status !== 'Published')
+                                        <form action="{{ route('admin.announcements.publish', $ann->id) }}" method="POST" class="inline-block">
                                             @csrf
-                                            <button type="submit" class="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-lg transition-colors tooltip" data-tip="Yayınla">
+                                            <button type="submit" class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Yayınla">
                                                 <i class="fas fa-paper-plane"></i>
                                             </button>
                                         </form>
                                     @endif
-                                    <form action="{{ route('admin.announcements.destroy', $announcement) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu duyuruyu silmek istediğinize emin misiniz?');">
+                                    <form action="{{ route('admin.announcements.destroy', $ann->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Duyuruyu silmek istediğinize emin misiniz?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors tooltip" data-tip="Sil">
+                                        <button type="submit" class="p-2 text-neutral-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Sil">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
-                </x-slot>
-                
-                @if(method_exists($announcements, 'links'))
-                    <x-slot name="pagination">
-                        {{ $announcements->links() }}
-                    </x-slot>
-                @endif
-            </x-admin.table.layout>
-        @else
-            <x-admin.empty-state 
-                title="Duyuru Bulunamadı" 
-                description="Sistemde henüz bir duyuru bulunmuyor."
-                actionText="Yeni Duyuru Oluştur"
-                actionRoute="javascript:document.getElementById('createAnnouncementModal').classList.remove('hidden')"
-                icon="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
-            />
-        @endif
-    </x-admin.crud.index-layout>
-
-    <!-- Create Announcement Modal -->
-    <div id="createAnnouncementModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-neutral-900/75 transition-opacity" aria-hidden="true" onclick="document.getElementById('createAnnouncementModal').classList.add('hidden')"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-neutral-900 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-neutral-200 dark:border-neutral-800">
-                <form action="{{ route('admin.announcements.store') }}" method="POST">
-                    @csrf
-                    <div class="px-6 pt-6 pb-4">
-                        <h3 class="text-lg font-bold text-neutral-900 dark:text-white mb-6" id="modal-title">Yeni Duyuru Oluştur</h3>
-                        
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Başlık <span class="text-rose-500">*</span></label>
-                                <input type="text" name="title" required class="w-full px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Tip <span class="text-rose-500">*</span></label>
-                                <select name="type" required class="w-full px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500">
-                                    <option value="announcement">Genel Duyuru</option>
-                                    <option value="system">Sistem Mesajı</option>
-                                    <option value="absence">Yoklama Bilgilendirmesi</option>
-                                    <option value="payment">Ödeme Hatırlatması</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Hedef Kitle</label>
-                                <select name="target_role" class="w-full px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500">
-                                    <option value="">Herkese Açık (Tüm Kullanıcılar)</option>
-                                    @foreach($roles as $role)
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                                <p class="text-xs text-neutral-500 mt-1">Belirli bir role sahip kullanıcıları hedefler. Boş bırakılırsa tüm kullanıcılara gönderilir.</p>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">İçerik <span class="text-rose-500">*</span></label>
-                                <textarea name="content" required rows="5" class="w-full px-4 py-2 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-800 text-sm focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50 flex flex-col-reverse sm:flex-row justify-end gap-3 rounded-b-2xl">
-                        <button type="button" onclick="document.getElementById('createAnnouncementModal').classList.add('hidden')" class="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
-                            İptal
-                        </button>
-                        <button type="submit" name="save_draft" value="1" class="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
-                            Taslak Kaydet
-                        </button>
-                        <button type="submit" name="publish" value="1" class="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm flex justify-center items-center gap-2">
-                            <i class="fas fa-paper-plane"></i> Kaydet ve Yayınla
-                        </button>
-                    </div>
-                </form>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="p-8 text-center text-neutral-500 italic">
+                                Seçilen filtrelere uygun duyuru bulunamadı. Yeni bir duyuru ekleyerek yayınlayabilirsiniz.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+
+        @if($announcements->hasPages())
+            <div class="p-4 border-t border-neutral-100 dark:border-neutral-800">
+                {{ $announcements->links() }}
+            </div>
+        @endif
     </div>
+</div>
 @endsection

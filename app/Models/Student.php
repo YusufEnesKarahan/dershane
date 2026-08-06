@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\Traits\TenantScoped;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
@@ -11,7 +12,8 @@ class Student extends Model
 
     protected $fillable = [
         'student_number', 'identity_number', 'first_name', 'last_name',
-        'birth_date', 'gender', 'photo', 'branch_id', 'classroom_id', 'status', 'user_id'
+        'birth_date', 'gender', 'photo', 'branch_id', 'classroom_id', 'status', 'user_id',
+        'guardian_id', 'phone', 'tc_no'
     ];
 
     public function getFullNameAttribute(): string
@@ -19,14 +21,19 @@ class Student extends Model
         return "{$this->first_name} {$this->last_name}";
     }
 
-    public function branch()
+    public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function guardian(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'guardian_id');
     }
 
     public function classrooms()
@@ -34,7 +41,7 @@ class Student extends Model
         return $this->belongsToMany(Classroom::class, 'classroom_student');
     }
 
-    public function classroom()
+    public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
     }

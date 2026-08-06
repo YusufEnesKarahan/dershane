@@ -2,45 +2,28 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Payment;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\User;
 
 class PaymentPolicy
 {
-    use HandlesAuthorization;
-
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
-        return $user->hasPermission('finance.view') || $user->hasRole('Student') || $user->hasRole('Parent');
+        return $user->hasPermission('finance.view') || $user->hasRole('Super Admin');
     }
 
-    public function view(User $user, Payment $payment)
+    public function view(User $user, Payment $payment): bool
     {
-        if ($payment->branch_id !== $user->branch_id) {
-            return false;
-        }
-
-        if ($user->hasRole('Admin') && $user->hasPermission('finance.view')) {
-            return true;
-        }
-
-        if ($user->hasRole('Student')) {
-            return $payment->student_id === ($user->student->id ?? null);
-        }
-
-        if ($user->hasRole('Parent')) {
-            $guardian = $user->guardian;
-            if (!$guardian) return false;
-            return app(\App\Domain\Portal\Services\ParentPortalService::class)->canAccessStudent($guardian->id, $payment->student_id);
-        }
-
-        return false;
+        return $user->hasRole('Super Admin') || $user->branch_id === $payment->branch_id;
     }
 
-    public function refund(User $user, Payment $payment)
+    public function create(User $user): bool
     {
-        if ($payment->branch_id !== $user->branch_id) return false;
-        return $user->hasRole('Admin') && $user->hasPermission('finance.refund');
+        return $user->hasPermission('finance.collect') || $user->hasPermission('finance.create') || $user->hasRole('Super Admin');
+    }
+
+    public function delete(User $user, Payment $payment): bool
+    {
+        return $user->hasPermission('finance.delete') || $user->hasRole('Super Admin');
     }
 }

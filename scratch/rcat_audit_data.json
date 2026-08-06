@@ -780,6 +780,149 @@
         }
     },
     {
+        "uri": "admin\/finance\/dashboard",
+        "testUrl": "\/admin\/finance\/dashboard",
+        "name": "admin.finance.dashboard",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/invoices\/search-students",
+        "testUrl": "\/admin\/invoices\/search-students",
+        "name": "admin.invoices.search-students",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/invoices",
+        "testUrl": "\/admin\/invoices",
+        "name": "admin.invoices.index",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
+        "roles": {
+            "Super Admin": 500,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/invoices\/create",
+        "testUrl": "\/admin\/invoices\/create",
+        "name": "admin.invoices.create",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/invoices\/{invoice}",
+        "testUrl": "\/admin\/invoices\/1",
+        "name": "admin.invoices.show",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
+        "roles": {
+            "Super Admin": 404,
+            "Branch Admin": 404,
+            "Teacher": 404,
+            "Student": 404,
+            "Parent": 404
+        }
+    },
+    {
+        "uri": "admin\/invoices\/{invoice}\/edit",
+        "testUrl": "\/admin\/invoices\/1\/edit",
+        "name": "admin.invoices.edit",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/pre-registrations\/{pre_registration}\/convert",
+        "testUrl": "\/admin\/pre-registrations\/1\/convert",
+        "name": "admin.pre-registrations.convert",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 404,
+            "Branch Admin": 404,
+            "Teacher": 404,
+            "Student": 404,
+            "Parent": 404
+        }
+    },
+    {
+        "uri": "admin\/pre-registrations",
+        "testUrl": "\/admin\/pre-registrations",
+        "name": "admin.pre-registrations.index",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/pre-registrations\/create",
+        "testUrl": "\/admin\/pre-registrations\/create",
+        "name": "admin.pre-registrations.create",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/pre-registrations\/{pre_registration}",
+        "testUrl": "\/admin\/pre-registrations\/1",
+        "name": "admin.pre-registrations.show",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/pre-registrations\/{pre_registration}\/edit",
+        "testUrl": "\/admin\/pre-registrations\/1\/edit",
+        "name": "admin.pre-registrations.edit",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, feature.access:finance",
+        "roles": {
+            "Super Admin": 404,
+            "Branch Admin": 404,
+            "Teacher": 404,
+            "Student": 404,
+            "Parent": 404
+        }
+    },
+    {
         "uri": "admin\/finance",
         "testUrl": "\/admin\/finance",
         "name": "admin.finance.index",
@@ -1001,6 +1144,45 @@
         }
     },
     {
+        "uri": "admin\/announcements\/create",
+        "testUrl": "\/admin\/announcements\/create",
+        "name": "admin.announcements.create",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:announcements.view",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/announcements\/{announcement}",
+        "testUrl": "\/admin\/announcements\/1",
+        "name": "admin.announcements.show",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:announcements.view",
+        "roles": {
+            "Super Admin": 500,
+            "Branch Admin": 500,
+            "Teacher": 500,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
+        "uri": "admin\/announcements\/{announcement}\/edit",
+        "testUrl": "\/admin\/announcements\/1\/edit",
+        "name": "admin.announcements.edit",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:announcements.view",
+        "roles": {
+            "Super Admin": 404,
+            "Branch Admin": 404,
+            "Teacher": 404,
+            "Student": 404,
+            "Parent": 404
+        }
+    },
+    {
         "uri": "admin\/attendance\/report",
         "testUrl": "\/admin\/attendance\/report",
         "name": "admin.attendance.report",
@@ -1056,32 +1238,6 @@
         "uri": "admin\/invoices\/dashboard",
         "testUrl": "\/admin\/invoices\/dashboard",
         "name": "admin.invoices.dashboard",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/invoices",
-        "testUrl": "\/admin\/invoices",
-        "name": "admin.invoices.index",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 403,
-            "Teacher": 403,
-            "Student": 403,
-            "Parent": 403
-        }
-    },
-    {
-        "uri": "admin\/invoices\/{invoice}",
-        "testUrl": "\/admin\/invoices\/1",
-        "name": "admin.invoices.show",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
         "roles": {
             "Super Admin": 404,
