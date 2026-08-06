@@ -76,22 +76,6 @@ class OnboardingWizardController extends Controller
 
         session(['onboarding.branch' => $validated]);
 
-        return redirect()->route('onboarding.plan');
-    }
-
-    public function plan()
-    {
-        return view('onboarding.plan');
-    }
-
-    public function storePlan(Request $request)
-    {
-        $validated = $request->validate([
-            'plan' => 'required|string|in:starter,professional,enterprise',
-        ]);
-
-        session(['onboarding.plan' => $validated['plan']]);
-
         return redirect()->route('onboarding.completed');
     }
 
@@ -105,7 +89,7 @@ class OnboardingWizardController extends Controller
         $companyData = session('onboarding.company');
         $adminData = session('onboarding.admin');
         $branchData = session('onboarding.branch');
-        $planSlug = session('onboarding.plan', 'starter');
+        $planSlug = 'starter'; // HQ managed default plan
 
         if (!$companyData || !$adminData || !$branchData) {
             return redirect()->route('onboarding.welcome')->with('error', 'Eksik onboarding bilgisi. Lütfen baştan başlayın.');

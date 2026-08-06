@@ -16,7 +16,7 @@
                 @endforeach
             </tr>
         </thead>
-        <tbody class="divide-y divide-slate-200 dark:divide-slate-800 @if($striped) [&>tr:nth-child(even)]:bg-slate-50/50 dark:[&>tr:nth-child(even)]:bg-slate-850/30 @endif [&>tr]:transition-colors [&>tr]:duration-150 [&>tr:hover]:bg-slate-50/80 dark:[&>tr:hover]:bg-slate-800/60">
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 @if($striped) [&>tr:nth-child(even)]:bg-slate-50/30 dark:[&>tr:nth-child(even)]:bg-slate-800/20 @endif [&>tr]:transition-colors [&>tr]:duration-200 [&>tr:hover]:bg-slate-50/50 dark:[&>tr:hover]:bg-white/[0.02]">
             {{ $slot }}
         </tbody>
     </table>

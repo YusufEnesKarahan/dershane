@@ -3198,19 +3198,6 @@
         }
     },
     {
-        "uri": "onboarding\/plan",
-        "testUrl": "\/onboarding\/plan",
-        "name": "onboarding.plan",
-        "middleware": "web",
-        "roles": {
-            "Super Admin": 200,
-            "Branch Admin": 200,
-            "Teacher": 200,
-            "Student": 200,
-            "Parent": 200
-        }
-    },
-    {
         "uri": "onboarding\/completed",
         "testUrl": "\/onboarding\/completed",
         "name": "onboarding.completed",

@@ -41,12 +41,12 @@
                     @if ($paginator->onFirstPage())
                         <span class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-slate/30 bg-slate-50/50 border border-slate-200 cursor-default" aria-disabled="true">
                             <span class="sr-only">Önceki</span>
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+                            <i data-lucide="chevron-left" class="h-5 w-5"></i>
                         </span>
                     @else
                         <a href="{{ $paginator->previousPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-slate bg-white border border-slate-200 hover:bg-slate-50 transition duration-150">
                             <span class="sr-only">Önceki</span>
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+                            <i data-lucide="chevron-left" class="h-5 w-5"></i>
                         </a>
                     @endif
 
@@ -54,12 +54,12 @@
                     @if ($paginator->hasMorePages())
                         <a href="{{ $paginator->nextPageUrl() }}" class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-slate bg-white border border-slate-200 hover:bg-slate-50 transition duration-150">
                             <span class="sr-only">Sonraki</span>
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                            <i data-lucide="chevron-right" class="h-5 w-5"></i>
                         </a>
                     @else
                         <span class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-slate/30 bg-slate-50/50 border border-slate-200 cursor-default" aria-disabled="true">
                             <span class="sr-only">Sonraki</span>
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                            <i data-lucide="chevron-right" class="h-5 w-5"></i>
                         </span>
                     @endif
                 </span>

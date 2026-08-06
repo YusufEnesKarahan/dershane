@@ -34,23 +34,23 @@
 
             <!-- Workflow Adımları Visual -->
             <div class="grid grid-cols-2 md:grid-cols-6 gap-3 pt-4 text-center text-[11px] font-bold relative z-10">
-                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['pre_registration','student_info_completed','document_pending','document_completed','contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-slate-900 dark:text-slate-100 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
-                    1. Ön Kayıt
+                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['pre_registration','student_info_completed','document_pending','document_completed','contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
+                    <div class="font-semibold text-sm">1. Ön Kayıt</div>
                 </div>
-                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['document_pending','document_completed','contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-slate-900 dark:text-slate-100 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
-                    2. Evraklar
+                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['document_pending','document_completed','contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
+                    <div class="font-semibold text-sm">2. Evraklar</div>
                 </div>
-                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['document_completed','contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-slate-900 dark:text-slate-100 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
-                    3. Evrak Onayı
+                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['document_completed','contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
+                    <div class="font-semibold text-sm">3. Sözleşme</div>
                 </div>
-                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-slate-900 dark:text-slate-100 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
-                    4. Sözleşme
+                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['contract_ready','payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
+                    <div class="font-semibold text-sm">4. Ödeme Planı</div>
                 </div>
-                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-slate-900 dark:text-slate-100 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
-                    5. Finans / Peşinat
+                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['payment_pending','enrolled','active_student']) ? 'bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
+                    <div class="font-semibold text-sm">5. Kesin Kayıt</div>
                 </div>
-                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['enrolled','active_student']) ? 'bg-emerald-600 text-slate-900 dark:text-slate-100 shadow-sm ring-2 ring-emerald-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
-                    6. Kesin Kayıt
+                <div class="p-3 rounded-xl transition-colors {{ in_array($admission->status, ['enrolled','active_student']) ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' }}">
+                    <div class="font-semibold text-sm">6. Aktif Öğrenci</div>
                 </div>
             </div>
         </div>

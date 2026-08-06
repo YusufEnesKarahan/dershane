@@ -16,7 +16,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, Traits\HasProfiles;
 
     /**
      * Get the attributes that should be cast.
@@ -37,15 +37,6 @@ class User extends Authenticatable
 
     public function roles() {
         return $this->belongsToMany(Role::class);
-    }
-    public function teacher() {
-        return $this->hasOne(Teacher::class);
-    }
-    public function student() {
-        return $this->hasOne(Student::class);
-    }
-    public function guardian() {
-        return $this->hasOne(StudentGuardian::class);
     }
     public function branch() {
         return $this->belongsTo(Branch::class);

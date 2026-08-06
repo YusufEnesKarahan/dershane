@@ -8,11 +8,13 @@
     <!-- Search / empty icon placeholder -->
     <div class="h-14 w-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 text-slate-400 dark:text-slate-500 shadow-inner">
         @if ($icon)
-            {{ $icon }}
+            @if(str_contains($icon, '<svg') || str_contains($icon, '<i'))
+                {{ $icon }}
+            @else
+                <i data-lucide="{{ $icon }}" class="h-7 w-7"></i>
+            @endif
         @else
-            <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            <i data-lucide="search" class="h-7 w-7"></i>
         @endif
     </div>
     

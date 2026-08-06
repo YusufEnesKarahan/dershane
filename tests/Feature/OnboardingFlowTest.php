@@ -72,12 +72,6 @@ class OnboardingFlowTest extends TestCase
             'branch_name' => 'Kızılay Merkez Şubesi',
             'address' => 'Kızılay, Ankara',
         ]);
-        $response->assertRedirect(route('onboarding.plan'));
-
-        // 4. Submit Plan step
-        $response = $this->post(route('onboarding.plan.store'), [
-            'plan' => 'starter',
-        ]);
         $response->assertRedirect(route('onboarding.completed'));
 
         // 5. Submit Completed step with demo data enabled

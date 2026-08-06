@@ -52,8 +52,6 @@ Route::prefix('onboarding')->name('onboarding.')->group(function () {
     Route::post('/admin', [\App\Http\Controllers\OnboardingWizardController::class, 'storeAdmin'])->name('admin.store');
     Route::get('/branch', [\App\Http\Controllers\OnboardingWizardController::class, 'branch'])->name('branch');
     Route::post('/branch', [\App\Http\Controllers\OnboardingWizardController::class, 'storeBranch'])->name('branch.store');
-    Route::get('/plan', [\App\Http\Controllers\OnboardingWizardController::class, 'plan'])->name('plan');
-    Route::post('/plan', [\App\Http\Controllers\OnboardingWizardController::class, 'storePlan'])->name('plan.store');
     Route::get('/completed', [\App\Http\Controllers\OnboardingWizardController::class, 'completed'])->name('completed');
     Route::post('/complete', [\App\Http\Controllers\OnboardingWizardController::class, 'complete'])->name('complete');
 });
