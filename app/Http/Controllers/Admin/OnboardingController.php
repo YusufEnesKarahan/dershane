@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Domain\Onboarding\Services\OnboardingService;
-use App\Domain\Package\Services\PackageService;
 use App\Models\AcademicTerm;
 use App\Models\Classroom;
 use App\Models\User;
@@ -15,8 +14,7 @@ use App\Models\Teacher;
 class OnboardingController extends Controller
 {
     public function __construct(
-        protected OnboardingService $onboardingService,
-        protected PackageService $packageService
+        protected OnboardingService $onboardingService
     ) {}
 
     /**
@@ -35,9 +33,8 @@ class OnboardingController extends Controller
         return match ($step) {
             1 => redirect()->route('admin.onboarding.profile'),
             2 => redirect()->route('admin.onboarding.academic-year'),
-            3 => redirect()->route('admin.onboarding.package'),
-            4 => redirect()->route('admin.onboarding.teacher'),
-            5 => redirect()->route('admin.onboarding.classroom'),
+            3 => redirect()->route('admin.onboarding.teacher'),
+            4 => redirect()->route('admin.onboarding.classroom'),
             default => redirect()->route('admin.onboarding.profile'),
         };
     }
@@ -83,7 +80,6 @@ class OnboardingController extends Controller
     public function academicYear()
     {
         $progress = $this->onboardingService->getProgress();
-        $branchId = session('active_branch_id', auth()->user()->branch_id);
         $term = AcademicTerm::where('is_active', true)->first();
 
         return view('admin.onboarding.academic_year', compact('progress', 'term'));
@@ -99,8 +95,6 @@ class OnboardingController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
         ]);
-
-        $branchId = session('active_branch_id', auth()->user()->branch_id);
 
         AcademicTerm::query()->update(['is_active' => false]);
 
@@ -118,43 +112,7 @@ class OnboardingController extends Controller
     }
 
     /**
-     * STEP 3 — Paket Seçimi View.
-     */
-    public function package()
-    {
-        $progress = $this->onboardingService->getProgress();
-        $packages = $this->packageService->listPackages();
-        $activePackage = $this->packageService->getActivePackage();
-
-        return view('admin.onboarding.package', compact('progress', 'packages', 'activePackage'));
-    }
-
-    /**
-     * STEP 3 — Select & Save Package.
-     */
-    public function selectPackage(Request $request)
-    {
-        $validated = $request->validate([
-            'package_id' => 'required|exists:packages,id',
-            'license_type' => 'required|in:yearly,three_year',
-        ]);
-
-        $branchId = session('active_branch_id', auth()->user()->branch_id);
-
-        $this->packageService->changeBranchPackage(
-            $branchId,
-            $validated['package_id'],
-            $validated['license_type']
-        );
-
-        $this->onboardingService->completeStep(null, 3, 'package_selected');
-
-        return redirect()->route('admin.onboarding.teacher')
-            ->with('success', 'Lisans paketi başarıyla seçildi ve tanımlandı.');
-    }
-
-    /**
-     * STEP 4 — İlk Öğretmen Ekleme View.
+     * STEP 3 — İlk Öğretmen Ekleme View.
      */
     public function teacher()
     {
@@ -166,7 +124,7 @@ class OnboardingController extends Controller
     }
 
     /**
-     * STEP 4 — Create Teacher.
+     * STEP 3 — Create Teacher.
      */
     public function createTeacher(Request $request)
     {
@@ -198,14 +156,14 @@ class OnboardingController extends Controller
             'status' => 'active',
         ]);
 
-        $this->onboardingService->completeStep(null, 4, 'teacher_added');
+        $this->onboardingService->completeStep(null, 3, 'teacher_added');
 
         return redirect()->route('admin.onboarding.classroom')
             ->with('success', 'İlk öğretmen başarıyla eklendi.');
     }
 
     /**
-     * STEP 5 — İlk Sınıf Ekleme View.
+     * STEP 4 — İlk Sınıf Ekleme View.
      */
     public function classroom()
     {
@@ -217,7 +175,7 @@ class OnboardingController extends Controller
     }
 
     /**
-     * STEP 5 — Create Classroom.
+     * STEP 4 — Create Classroom.
      */
     public function createClassroom(Request $request)
     {
@@ -236,7 +194,7 @@ class OnboardingController extends Controller
             'capacity' => $validated['capacity'],
         ]);
 
-        $this->onboardingService->completeStep(null, 5, 'classroom_created');
+        $this->onboardingService->completeStep(null, 4, 'classroom_created');
 
         return redirect()->route('admin.onboarding.complete')
             ->with('success', 'İlk sınıf başarıyla oluşturuldu.');

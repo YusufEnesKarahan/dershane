@@ -19,6 +19,11 @@ class InvoiceController extends Controller
 
     public function __construct(protected FinanceManagementService $financeService) {}
 
+    public function dashboard(Request $request)
+    {
+        return $this->index($request);
+    }
+
     /**
      * Ajax Live Search Students (min 3 chars)
      */
@@ -97,8 +102,9 @@ class InvoiceController extends Controller
 
         $invoices = $query->paginate(15)->withQueryString();
         $branches = Branch::all();
+        $students = Student::where('branch_id', $branchId)->get();
 
-        return view('admin.invoices.index', compact('invoices', 'branches'));
+        return view('admin.invoices.index', compact('invoices', 'branches', 'students'));
     }
 
     public function create()

@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Installment;
-use App\Models\PaymentPlan;
+use App\Models\Payment;
 use App\Domain\Finance\Services\FinanceManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Str;
 
 class InstallmentController extends Controller
 {
@@ -38,13 +39,25 @@ class InstallmentController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        $validated['branch_id'] = $installment->branch_id;
-        $validated['student_id'] = $installment->paymentPlan->student_id;
-        $validated['payment_date'] = now();
-        $validated['received_by'] = auth()->id();
-        $validated['installment_id'] = $installment->id;
+        $amount = (float) $validated['amount'];
+        $installment->paid_amount = (float) ($installment->paid_amount ?? 0) + $amount;
+        $installment->remaining_amount = max(0, (float) $installment->amount - (float) $installment->paid_amount);
+        $installment->status = $installment->remaining_amount <= 0 ? 'paid' : 'partial';
+        $installment->save();
 
-        $this->financeService->recordPayment($validated, $installment);
+        Payment::create([
+            'branch_id' => $installment->branch_id,
+            'payment_number' => 'PAY-' . date('Ymd') . '-' . Str::upper(Str::random(4)),
+            'installment_id' => $installment->id,
+            'student_id' => $installment->paymentPlan?->student_id,
+            'amount' => $amount,
+            'payment_method' => $validated['payment_method'],
+            'payment_date' => now(),
+            'reference_no' => $validated['reference_no'] ?? null,
+            'received_by' => auth()->id() ?? 1,
+            'notes' => $validated['notes'] ?? null,
+            'status' => 'Completed',
+        ]);
 
         return back()->with('success', 'Tahsilat başarıyla alındı.');
     }

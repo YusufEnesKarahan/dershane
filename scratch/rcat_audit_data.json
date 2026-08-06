@@ -278,9 +278,9 @@
         "name": "admin.onboarding.profile",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
             "Student": 403,
             "Parent": 403
         }
@@ -304,9 +304,9 @@
         "name": "admin.onboarding.teacher",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
             "Student": 403,
             "Parent": 403
         }
@@ -317,9 +317,9 @@
         "name": "admin.onboarding.classroom",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher",
         "roles": {
-            "Super Admin": 500,
-            "Branch Admin": 500,
-            "Teacher": 500,
+            "Super Admin": 200,
+            "Branch Admin": 200,
+            "Teacher": 200,
             "Student": 403,
             "Parent": 403
         }
@@ -793,6 +793,19 @@
         }
     },
     {
+        "uri": "admin\/invoices\/dashboard",
+        "testUrl": "\/admin\/invoices\/dashboard",
+        "name": "admin.invoices.dashboard",
+        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
+        "roles": {
+            "Super Admin": 200,
+            "Branch Admin": 403,
+            "Teacher": 403,
+            "Student": 403,
+            "Parent": 403
+        }
+    },
+    {
         "uri": "admin\/invoices\/search-students",
         "testUrl": "\/admin\/invoices\/search-students",
         "name": "admin.invoices.search-students",
@@ -811,7 +824,7 @@
         "name": "admin.invoices.index",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
         "roles": {
-            "Super Admin": 500,
+            "Super Admin": 200,
             "Branch Admin": 403,
             "Teacher": 403,
             "Student": 403,
@@ -1226,19 +1239,6 @@
         "testUrl": "\/admin\/attendance\/1",
         "name": "admin.attendance.show",
         "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:attendance.view, feature.access:attendance",
-        "roles": {
-            "Super Admin": 404,
-            "Branch Admin": 404,
-            "Teacher": 404,
-            "Student": 404,
-            "Parent": 404
-        }
-    },
-    {
-        "uri": "admin\/invoices\/dashboard",
-        "testUrl": "\/admin\/invoices\/dashboard",
-        "name": "admin.invoices.dashboard",
-        "middleware": "web, auth, role:Super Admin|Admin|Branch Admin|Tenant Admin|tenant_admin|staff|admin|Teacher, permission:finance.view, feature.access:finance",
         "roles": {
             "Super Admin": 404,
             "Branch Admin": 404,

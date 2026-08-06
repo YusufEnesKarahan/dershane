@@ -11,12 +11,11 @@ use App\Core\Context\TenantContext;
 
 class OnboardingService
 {
-    public const TOTAL_STEPS = 5;
+    public const TOTAL_STEPS = 4;
 
     public const CHECKLIST_KEYS = [
         'institution_profile_completed',
         'academic_year_created',
-        'package_selected',
         'teacher_added',
         'classroom_created',
     ];
@@ -82,7 +81,7 @@ class OnboardingService
             'completed_steps' => $completedCount,
             'percentage' => min(100, $percentage),
             'remaining_steps' => max(0, self::TOTAL_STEPS - $completedCount),
-            'current_step' => $stepRecord ? $stepRecord->step : 1,
+            'current_step' => $stepRecord ? min(self::TOTAL_STEPS, $stepRecord->step) : 1,
             'is_completed' => $isCompleted,
             'checklists' => $checklists->pluck('completed', 'key')->toArray(),
         ];

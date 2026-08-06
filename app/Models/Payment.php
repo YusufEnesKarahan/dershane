@@ -16,6 +16,7 @@ class Payment extends Model
         'branch_id',
         'payment_number',
         'invoice_id',
+        'installment_id',
         'student_id',
         'payment_method_id',
         'amount',
@@ -45,6 +46,11 @@ class Payment extends Model
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
+    }
+
+    public function installment(): BelongsTo
+    {
+        return $this->belongsTo(Installment::class);
     }
 
     public function receiver(): BelongsTo

@@ -26,6 +26,15 @@ class Installment extends Model
         'due_date' => 'date',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function ($installment) {
+            if (is_null($installment->remaining_amount)) {
+                $installment->remaining_amount = max(0, (float)$installment->amount - (float)($installment->paid_amount ?? 0));
+            }
+        });
+    }
+
     public function branch()
     {
         return $this->belongsTo(Branch::class);

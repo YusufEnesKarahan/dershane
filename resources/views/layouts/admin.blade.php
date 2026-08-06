@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-50 dark:bg-neutral-900" x-data="{ darkMode: false, sidebarOpen: false, miniSidebar: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; $watch('darkMode', val => localStorage.setItem('darkMode', val)); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50 dark:bg-slate-950" x-data="{ darkMode: false, sidebarOpen: false, miniSidebar: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) || false; $watch('darkMode', val => localStorage.setItem('darkMode', val)); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="{{ asset('css/theme_custom.css') }}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="h-full text-neutral-800 dark:text-neutral-200 antialiased selection:bg-primary selection:text-white" :class="{ 'dark': darkMode }">
+<body class="h-full text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-600 selection:text-white font-sans" :class="{ 'dark': darkMode }">
     <div id="app" class="flex h-screen overflow-hidden">
         <!-- Mobile Sidebar Overlay -->
-        <div x-show="sidebarOpen" class="fixed inset-0 z-40 bg-neutral-900/80 backdrop-blur-sm lg:hidden" @click="sidebarOpen = false" x-transition.opacity></div>
+        <div x-show="sidebarOpen" class="fixed inset-0 z-40 bg-slate-900/80 backdrop-blur-sm lg:hidden" @click="sidebarOpen = false" x-transition.opacity></div>
 
         <!-- Sidebar -->
         <x-admin.sidebar.layout />
@@ -26,7 +26,7 @@
             <x-admin.topbar.layout />
 
             <!-- Content Area -->
-            <main class="flex-1 overflow-y-auto bg-neutral-50 dark:bg-neutral-950 p-4 sm:p-6 lg:p-8">
+            <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 lg:p-8">
                 @yield('content')
             </main>
         </div>

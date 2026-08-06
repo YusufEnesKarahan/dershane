@@ -1,18 +1,19 @@
 @props([
-    'type' => 'card', // text, avatar, card, table
+    'type' => 'card', // text, avatar, card, table, button
 ])
 
 @php
-    $baseClass = 'animate-pulse bg-neutral-200/80 rounded-premium-sm';
+    $baseClass = 'animate-pulse bg-neutral-200 dark:bg-neutral-800 rounded-lg';
     
     $types = [
         'text' => 'h-4 w-3/4',
-        'avatar' => 'h-12 w-12 rounded-full',
-        'card' => 'h-48 w-full rounded-premium-xl',
-        'table' => 'h-10 w-full rounded-premium-md',
+        'avatar' => 'h-10 w-10 rounded-full',
+        'card' => 'h-48 w-full rounded-xl',
+        'table' => 'h-12 w-full rounded-lg',
+        'button' => 'h-9 w-24 rounded-lg',
     ];
 
     $classes = $baseClass . ' ' . ($types[$type] ?? $types['text']);
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}></div>
+<div {{ $attributes->merge(['class' => $classes]) }} aria-hidden="true"></div>

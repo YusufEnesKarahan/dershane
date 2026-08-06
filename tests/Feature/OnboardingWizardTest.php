@@ -196,22 +196,21 @@ class OnboardingWizardTest extends TestCase
         // Initially 0%
         $progress = $this->onboardingService->getProgress($this->branch1);
         $this->assertEquals(0, $progress['percentage']);
-        $this->assertEquals(5, $progress['remaining_steps']);
+        $this->assertEquals(4, $progress['remaining_steps']);
         $this->assertFalse($progress['is_completed']);
 
-        // Complete 3 steps
+        // Complete 2 steps
         $this->onboardingService->completeStep($this->branch1, 1, 'institution_profile_completed');
         $this->onboardingService->completeStep($this->branch1, 2, 'academic_year_created');
-        $this->onboardingService->completeStep($this->branch1, 3, 'package_selected');
 
         $updatedProgress = $this->onboardingService->getProgress($this->branch1);
-        $this->assertEquals(60, $updatedProgress['percentage']);
+        $this->assertEquals(50, $updatedProgress['percentage']);
         $this->assertEquals(2, $updatedProgress['remaining_steps']);
         $this->assertFalse($updatedProgress['is_completed']);
 
         // Complete remaining 2 steps
-        $this->onboardingService->completeStep($this->branch1, 4, 'teacher_added');
-        $this->onboardingService->completeStep($this->branch1, 5, 'classroom_created');
+        $this->onboardingService->completeStep($this->branch1, 3, 'teacher_added');
+        $this->onboardingService->completeStep($this->branch1, 4, 'classroom_created');
 
         $finalProgress = $this->onboardingService->getProgress($this->branch1);
         $this->assertEquals(100, $finalProgress['percentage']);
@@ -243,9 +242,8 @@ class OnboardingWizardTest extends TestCase
         // Mark all steps completed for Branch 1
         $this->onboardingService->completeStep($this->branch1, 1, 'institution_profile_completed');
         $this->onboardingService->completeStep($this->branch1, 2, 'academic_year_created');
-        $this->onboardingService->completeStep($this->branch1, 3, 'package_selected');
-        $this->onboardingService->completeStep($this->branch1, 4, 'teacher_added');
-        $this->onboardingService->completeStep($this->branch1, 5, 'classroom_created');
+        $this->onboardingService->completeStep($this->branch1, 3, 'teacher_added');
+        $this->onboardingService->completeStep($this->branch1, 4, 'classroom_created');
 
         $middleware = new \App\Http\Middleware\EnsureOnboardingCompleted($this->onboardingService);
 
@@ -267,7 +265,7 @@ class OnboardingWizardTest extends TestCase
         $progress1 = $this->onboardingService->getProgress($this->branch1);
         $progress2 = $this->onboardingService->getProgress($this->branch2);
 
-        $this->assertEquals(20, $progress1['percentage']);
+        $this->assertEquals(25, $progress1['percentage']);
         $this->assertEquals(0, $progress2['percentage']);
 
         $this->assertTrue($progress1['checklists']['institution_profile_completed']);

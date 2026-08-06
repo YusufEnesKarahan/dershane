@@ -1,7 +1,7 @@
 @props([
     'name',
     'title' => null,
-    'size' => 'md', // sm, md, lg, xl
+    'size' => 'md', // sm, md, lg, xl, 2xl, 3xl, 4xl, full
 ])
 
 @php
@@ -10,6 +10,10 @@
         'md' => 'sm:max-w-md',
         'lg' => 'sm:max-w-lg',
         'xl' => 'sm:max-w-xl',
+        '2xl' => 'sm:max-w-2xl',
+        '3xl' => 'sm:max-w-3xl',
+        '4xl' => 'sm:max-w-4xl',
+        'full' => 'sm:max-w-full sm:m-4',
     ];
 
     $sizeClass = $sizes[$size] ?? $sizes['md'];
@@ -27,7 +31,7 @@
      aria-labelledby="modal_title_{{ $name }}">
     
     <!-- Backdrop Overlay -->
-    <div class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm transition-opacity duration-300" 
+    <div class="fixed inset-0 bg-neutral-950/60 backdrop-blur-sm transition-opacity duration-300" 
          x-show="open"
          x-transition:enter="ease-out duration-300"
          x-transition:enter-start="opacity-0"
@@ -39,7 +43,7 @@
 
     <!-- Modal Wrapper -->
     <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
-        <div class="relative bg-white rounded-premium-xl text-left overflow-hidden shadow-premium-xl transform transition-all sm:my-8 sm:align-middle w-full {{ $sizeClass }}"
+        <div class="relative bg-white dark:bg-neutral-900 rounded-xl text-left overflow-hidden shadow-2xl border border-neutral-200 dark:border-neutral-800 transform transition-all sm:my-8 sm:align-middle w-full {{ $sizeClass }}"
              x-show="open"
              x-transition:enter="ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -49,11 +53,11 @@
              x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             
             <!-- Header -->
-            <div class="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
-                <h3 class="text-base font-display font-semibold text-neutral tracking-tight" id="modal_title_{{ $name }}">
+            <div class="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between bg-neutral-50 dark:bg-neutral-850">
+                <h3 class="text-base font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight" id="modal_title_{{ $name }}">
                     {{ $title ?? 'İşlem Penceresi' }}
                 </h3>
-                <button type="button" @click="open = false" class="text-neutral/40 hover:text-neutral/60 focus:outline-none transition-colors duration-150" aria-label="Kapat">
+                <button type="button" @click="open = false" class="text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1 transition-colors duration-150" aria-label="Kapat">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -61,13 +65,13 @@
             </div>
 
             <!-- Body -->
-            <div class="px-6 py-5 text-sm font-sans text-neutral/80 leading-relaxed bg-white">
+            <div class="px-6 py-5 text-sm font-sans text-neutral-700 dark:text-neutral-300 leading-relaxed bg-white dark:bg-neutral-900">
                 {{ $slot }}
             </div>
 
             <!-- Footer -->
             @if (isset($footer))
-                <div class="px-6 py-4 border-t border-neutral-100 bg-neutral-50/50 flex justify-end gap-2">
+                <div class="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-850 flex justify-end gap-2">
                     {{ $footer }}
                 </div>
             @endif
